@@ -1,5 +1,5 @@
-import { HealthCheck } from "../types/health";
 import { BaseRepository } from "./baseRepository";
+import { HealthCheck } from "../types/health";
 
 export class HealthRepository extends BaseRepository {
   protected tableName = "_";
