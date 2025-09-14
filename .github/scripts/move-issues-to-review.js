@@ -18,7 +18,6 @@ async function main(github, context) {
     console.log(
       "❌ ERROR: Project IDs not configured. Please run the GraphQL queries to find your project IDs."
     );
-    console.log("📖 See .github/README.md for setup instructions");
     return;
   }
 
