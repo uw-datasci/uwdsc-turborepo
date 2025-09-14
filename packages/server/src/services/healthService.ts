@@ -1,5 +1,5 @@
-import { HealthRepository } from "@/server/repositories/healthRepository";
-import { ApiError } from "@/server/types/common";
+import { HealthRepository } from "../repository/healthRepository";
+import { ApiError } from "../types/common";
 import { HealthCheck } from "../types/health";
 
 export class HealthService {
