@@ -213,11 +213,9 @@ export default function Home() {
               <div className="space-y-2">
                 <h4 className="font-medium">2. Add More Components</h4>
                 <p className="text-sm text-muted-foreground">
-                  Run{" "}
                   <code className="bg-muted px-1 py-0.5 rounded text-xs">
-                    npx shadcn@latest add [component]
-                  </code>{" "}
-                  to add more UI components.
+                    cd packages/ui && pnpm dlx shadcn@canary add [COMPONENT]
+                  </code>
                 </p>
               </div>
               <div className="space-y-2">
