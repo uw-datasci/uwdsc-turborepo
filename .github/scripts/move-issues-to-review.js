@@ -10,12 +10,13 @@ const {
 } = require("./project-utils.js");
 
 async function main(github, context) {
+  return; // TODO: Remove this when app is live
   console.log("🚀 Starting issue processing workflow...");
 
   // Check if IDs are configured
   if (config.PROJECT_ID === "YOUR_PROJECT_ID_HERE") {
     console.log(
-      "❌ ERROR: Project IDs not configured. Please run the GraphQL queries to find your project IDs.",
+      "❌ ERROR: Project IDs not configured. Please run the GraphQL queries to find your project IDs."
     );
     console.log("📖 See .github/README.md for setup instructions");
     return;
@@ -37,7 +38,7 @@ async function main(github, context) {
     github,
     context.repo.owner,
     context.repo.repo,
-    context.issue.number,
+    context.issue.number
   );
 
   // Combine both methods and remove duplicates
@@ -47,7 +48,7 @@ async function main(github, context) {
   console.log(
     `🔗 Found issues in Development section: [${
       linkedIssues.join(", ") || "none"
-    }]`,
+    }]`
   );
   console.log(`📋 Total unique issues to process: [${allIssues.join(", ")}]`);
 
