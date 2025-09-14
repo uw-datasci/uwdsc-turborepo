@@ -1,17 +1,22 @@
-import { Geist, Geist_Mono } from "next/font/google";
-
 import "@uwdsc/ui/globals.css";
-import { Providers } from "@/components/providers";
+import { Geist, Geist_Mono } from "next/font/google";
+import { ThemeProvider } from "@/components/theme-provider";
+import { Metadata } from "next";
 
-const fontSans = Geist({
+const geistSans = Geist({
+  variable: "--font-geist-sans",
   subsets: ["latin"],
-  variable: "--font-sans",
 });
 
-const fontMono = Geist_Mono({
+const geistMono = Geist_Mono({
+  variable: "--font-geist-mono",
   subsets: ["latin"],
-  variable: "--font-mono",
 });
+
+export const metadata: Metadata = {
+  title: "UWaterloo Data Science Club",
+  description: "University of Waterloo Data Science Club website",
+};
 
 export default function RootLayout({
   children,
@@ -19,11 +24,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" className="dark" suppressHydrationWarning>
       <body
-        className={`${fontSans.variable} ${fontMono.variable} font-sans antialiased `}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <Providers>{children}</Providers>
+        <ThemeProvider>{children}</ThemeProvider>
       </body>
     </html>
   );
