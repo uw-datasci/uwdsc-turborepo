@@ -1,0 +1,24 @@
+{
+  "name": "@uwdsc/server",
+  "version": "0.0.0",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "lint": "eslint . --max-warnings 0"
+  },
+  "dependencies": {
+    "@uwdsc/supabase": "workspace:*"
+  },
+  "devDependencies": {
+    "@uwdsc/eslint-config": "workspace:*",
+    "@uwdsc/typescript-config": "workspace:*",
+    "@types/node": "^20.19.9",
+    "typescript": "^5.9.2"
+  },
+  "exports": {
+    "./services/*": "./src/services/*.ts",
+    "./repository/*": "./src/repository/*.ts",
+    "./types/*": "./src/types/*.ts",
+    "./middleware/*": "./src/middleware/*.ts"
+  }
+}

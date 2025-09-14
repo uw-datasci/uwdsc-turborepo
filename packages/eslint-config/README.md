@@ -1,3 +1,3 @@
-# `@workspace/eslint-config`
+# `@uwdsc/eslint-config`
 
 Shared eslint configuration for the workspace.
