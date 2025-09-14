@@ -18,4 +18,4 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             const { main } = require('./.github/scripts/move-issues-to-review.js');
-            await main(github, context);
+            # await main(github, context);
