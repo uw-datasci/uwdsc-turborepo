@@ -1,4 +1,4 @@
-import { supabase, SupabaseClient } from "@uwdsc/supabase";
+import { supabase, SupabaseClient } from "../database/client";
 
 export class BaseRepository {
   protected client: SupabaseClient;

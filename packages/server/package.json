@@ -7,15 +7,18 @@
     "lint": "eslint . --max-warnings 0"
   },
   "dependencies": {
-    "@uwdsc/supabase": "workspace:*"
+    "@prisma/client": "^6.16.1",
+    "@supabase/supabase-js": "^2.49.0"
   },
   "devDependencies": {
+    "@types/node": "^20.19.9",
     "@uwdsc/eslint-config": "workspace:*",
     "@uwdsc/typescript-config": "workspace:*",
-    "@types/node": "^20.19.9",
+    "prisma": "^6.16.1",
     "typescript": "^5.9.2"
   },
   "exports": {
+    "./database/*": "./src/database/*.ts",
     "./services/*": "./src/services/*.ts",
     "./repository/*": "./src/repository/*.ts",
     "./types/*": "./src/types/*.ts",
