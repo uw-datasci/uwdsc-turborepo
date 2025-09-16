@@ -15,18 +15,18 @@ export class HealthRepository extends BaseRepository {
     // Test Supabase connection
     let supabaseConnected = false;
     let supabaseError = null;
-
+    let projectInfo = null;
     try {
-      const { error } = await this.client
+      const { data, error } = await this.client
         .from(this.tableName)
-        .select()
-        .limit(1);
+        .select("*");
 
       // If we get a specific error about the table not existing, connection is working
       supabaseConnected = !error || error.message.includes("does not exist");
       if (error && !error.message.includes("does not exist")) {
         supabaseError = error.message;
       }
+      projectInfo = data;
     } catch {
       supabaseConnected = false;
       supabaseError = "Connection failed";
@@ -35,6 +35,7 @@ export class HealthRepository extends BaseRepository {
     const healthData: HealthCheck = {
       id: "system-health",
       service: "uwdsc-website-v3",
+      project: projectInfo,
       status: supabaseConnected ? "healthy" : "degraded",
       timestamp: new Date().toISOString(),
       version: "0.1.0",
