@@ -7,7 +7,7 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@uwdsc/ui/components/card";
+} from "@uwdsc/ui";
 import { MotionCard } from "@/components/MotionCard";
 import { useEffect, useState } from "react";
 import { ThemeToggle } from "@/components/theme-toggle";

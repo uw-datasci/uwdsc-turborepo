@@ -2,13 +2,13 @@
 
 import { motion } from "framer-motion";
 import {
+  Button,
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@uwdsc/ui/components/card";
-import { Button } from "@uwdsc/ui/components/button";
+} from "@uwdsc/ui";
 import { useState } from "react";
 
 export function MotionCard() {
