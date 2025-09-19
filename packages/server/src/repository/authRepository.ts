@@ -1,17 +1,17 @@
 import { BaseRepository } from "./baseRepository";
+import { LoginData, RegisterData } from "../types/auth";
 
 export class AuthRepository extends BaseRepository {
-  async createUser(email: string, password: string, metadata?: Record<string, any>) {
+  async createUser(data: RegisterData) {
     return await this.client.auth.signUp({
-      email,
-      password,
-      options: { data: metadata || {} }
+      email: data.email,
+      password: data.password
     });
   }
-  async authenticateUser(email: string, password: string) {
+  async authenticateUser(data: LoginData) {
     return await this.client.auth.signInWithPassword({
-      email,
-      password
+      email: data.email,
+      password: data.password
     });
   }
 

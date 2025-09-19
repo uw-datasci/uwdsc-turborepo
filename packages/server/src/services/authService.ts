@@ -1,5 +1,5 @@
 import { AuthRepository } from "../repository/authRepository";
-import { RegisterData, LoginData, AuthResponse, UserResponse } from "../types/auth";
+import { RegisterData, LoginData, AuthResponse, UserResponse, SignOutResponse } from "../types/auth";
 
 export class AuthService {
   private authRepository: AuthRepository;
@@ -12,10 +12,10 @@ export class AuthService {
     try {
       const email = data.email.toLowerCase().trim();
 
-      const { data: authData, error } = await this.authRepository.createUser(
+      const { data: authData, error } = await this.authRepository.createUser({
         email,
-        data.password
-      );
+        password: data.password
+      });
 
       if (error) {
         return {
@@ -46,10 +46,10 @@ export class AuthService {
     try {
       const email = data.email.toLowerCase().trim();
 
-      const { data: authData, error } = await this.authRepository.authenticateUser(
+      const { data: authData, error } = await this.authRepository.authenticateUser({
         email,
-        data.password
-      );
+        password: data.password
+      });
 
       if (error) {
         return {
@@ -93,7 +93,7 @@ export class AuthService {
     }
   }
 
-  async signOut(): Promise<{ success: boolean; error: string | null }> {
+  async signOut(): Promise<SignOutResponse> {
     try {
       const { error } = await this.authRepository.signOutUser();
       return { success: !error, error: error?.message || null };
