@@ -2,7 +2,6 @@
  * Vercel deployment utilities for GitHub Actions
  */
 
-
 /**
  * Gets commit information for a given ref
  * @param {Object} github - GitHub API instance
@@ -42,6 +41,7 @@ function extractDeploymentFromEvent(context) {
 
   return {
     ref: deployment.ref,
+    deploymentUrl: deploymentStatus.environment_url,
     state: deploymentStatus.state,
     deployment: deployment,
     status: deploymentStatus,
@@ -55,13 +55,16 @@ function extractDeploymentFromEvent(context) {
  */
 function isSuccessfulVercelDeployment(deploymentInfo) {
   const isSuccess = deploymentInfo.state === "success";
+  const hasUrl =
+    deploymentInfo.deploymentUrl && deploymentInfo.deploymentUrl !== "";
 
   // Check if it's likely a Vercel deployment
   const isVercel =
     deploymentInfo.deployment.creator?.login === "vercel[bot]" ||
-    deploymentInfo.deployment.environment?.includes("Preview");
+    deploymentInfo.deployment.environment?.includes("Preview") ||
+    deploymentInfo.deploymentUrl?.includes("vercel.app");
 
-  return isSuccess && isVercel;
+  return isSuccess && hasUrl && isVercel;
 }
 
 module.exports = {
