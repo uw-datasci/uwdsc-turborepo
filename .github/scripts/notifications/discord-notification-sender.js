@@ -2,8 +2,6 @@
  * Discord Notification Sender - Combines PR and deployment info to send Discord notification
  */
 
-const { createDeploymentInfo } = require("./discord-notification.js");
-
 /**
  * Creates deployment info object from separated PR and deployment data
  * @param {Object} prInfo - PR information from CXC checker

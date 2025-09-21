@@ -105,29 +105,8 @@ async function sendDiscordNotification(webhookUrl, deploymentInfo) {
   console.log("Discord notification sent successfully!");
 }
 
-/**
- * Creates deployment info object from GitHub PR context
- * @param {Object} pr - GitHub PR object
- * @param {string} deploymentUrl - Vercel deployment URL
- * @param {Object} commitInfo - Optional commit information
- * @returns {Object} Deployment info object
- */
-function createDeploymentInfo(pr, deploymentUrl, commitInfo = {}) {
-  return {
-    prNumber: pr.number,
-    prTitle: pr.title,
-    prUrl: pr.html_url,
-    prAuthor: pr.user.login,
-    prAuthorAvatar: pr.user.avatar_url,
-    branchName: pr.head.ref,
-    deploymentUrl: deploymentUrl,
-    commitMessage: commitInfo.message?.split("\n")[0] || "", // First line only
-    commitSha: commitInfo.sha?.substring(0, 7) || "",
-  };
-}
 
 module.exports = {
   createDiscordEmbed,
   sendDiscordNotification,
-  createDeploymentInfo,
 };

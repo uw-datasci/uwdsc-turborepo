@@ -13,6 +13,74 @@ const PROJECT_NAME = "uwdsc-website-v3-cxc";
 const TEAM_SLUG = "uwdsc";
 
 /**
+ * Finds PR from the deployment event
+ * @param {Object} github - GitHub API instance
+ * @param {Object} context - GitHub context
+ * @returns {Promise<Object|null>} PR object or null if not found
+ */
+async function findPullRequestFromDeployment(github, context) {
+  try {
+    const deploymentRef = context.payload.deployment?.ref;
+    if (!deploymentRef) {
+      console.log("❌ No deployment ref found");
+      return null;
+    }
+
+    console.log(`🔍 Looking for PR with deployment ref: ${deploymentRef}`);
+
+    // First, try to find PR by ref as a branch name
+    try {
+      const { data: pulls } = await github.rest.pulls.list({
+        owner: context.repo.owner,
+        repo: context.repo.repo,
+        head: `${context.repo.owner}:${deploymentRef}`,
+        state: "open",
+      });
+
+      if (pulls.length > 0) {
+        const pr = pulls[0];
+        console.log(`✅ Found PR #${pr.number} by branch name: ${pr.title}`);
+        return pr;
+      }
+    } catch (error) {
+      console.log(
+        "⚠️ Could not find PR by branch name, trying commit SHA method..."
+      );
+    }
+
+    // If ref is a commit SHA, get all open PRs and find the one with matching head commit
+    console.log(`🔍 Searching for PR with commit SHA: ${deploymentRef}`);
+
+    const { data: allPulls } = await github.rest.pulls.list({
+      owner: context.repo.owner,
+      repo: context.repo.repo,
+      state: "open",
+    });
+
+    console.log(`Found ${allPulls.length} open PRs to check`);
+
+    for (const pr of allPulls) {
+      // Check if the PR's head SHA matches the deployment ref
+      if (
+        pr.head.sha === deploymentRef ||
+        pr.head.sha.startsWith(deploymentRef.substring(0, 7))
+      ) {
+        console.log(`✅ Found PR #${pr.number} by commit SHA: ${pr.title}`);
+        console.log(`  PR head SHA: ${pr.head.sha}`);
+        console.log(`  Deployment ref: ${deploymentRef}`);
+        return pr;
+      }
+    }
+
+    console.log("❌ No open PR found for this deployment");
+    return null;
+  } catch (error) {
+    console.error("❌ Error finding PR:", error.message);
+    return null;
+  }
+}
+
+/**
  * Sanitizes branch name for URL construction
  * @param {string} branchName - Raw branch name
  * @returns {string} Sanitized branch name safe for URLs
@@ -69,10 +137,24 @@ async function main(github, context) {
 
     console.log("✅ Successful Vercel deployment detected");
 
-    // Construct the deployment URL using the standard format
+    // Find the associated PR to get the correct branch name
+    const pr = await findPullRequestFromDeployment(github, context);
+    if (!pr) {
+      console.log("❌ No associated PR found, cannot construct deployment URL");
+      return {
+        shouldNotify: false,
+        reason: "no_pr_found",
+      };
+    }
+
+    // Use the branch name from the PR, not the deployment ref (which might be a commit SHA)
+    const branchName = pr.head.ref;
+    console.log(`🌿 Using branch name from PR: ${branchName}`);
+
+    // Construct the deployment URL using the correct branch name
     const constructedUrl = constructDeploymentUrl(
       PROJECT_NAME,
-      deploymentInfo.ref,
+      branchName,
       TEAM_SLUG
     );
     console.log(`🔗 Constructed deployment URL: ${constructedUrl}`);
@@ -87,7 +169,7 @@ async function main(github, context) {
       shouldNotify: true,
       deploymentInfo: {
         url: constructedUrl,
-        ref: deploymentInfo.ref,
+        ref: branchName, // Use the branch name, not the commit SHA
         state: deploymentInfo.state,
         commitSha: commitInfo.sha?.substring(0, 7) || "",
         commitMessage: commitInfo.message?.split("\n")[0] || "", // First line only

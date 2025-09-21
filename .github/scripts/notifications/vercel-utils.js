@@ -2,37 +2,6 @@
  * Vercel deployment utilities for GitHub Actions
  */
 
-/**
- * Finds PR associated with a deployment ref
- * @param {Object} github - GitHub API instance
- * @param {Object} context - GitHub context
- * @param {string} ref - Git reference (branch name)
- * @returns {Promise<Object|null>} PR object or null if not found
- */
-async function findPullRequestByRef(github, context, ref) {
-  try {
-    console.log(`Looking for PR with ref: ${ref}`);
-
-    const { data: pulls } = await github.rest.pulls.list({
-      owner: context.repo.owner,
-      repo: context.repo.repo,
-      head: `${context.repo.owner}:${ref}`,
-      state: "open",
-    });
-
-    if (pulls.length === 0) {
-      console.log("No open PR found for this deployment");
-      return null;
-    }
-
-    const pr = pulls[0];
-    console.log(`Found PR #${pr.number}: ${pr.title}`);
-    return pr;
-  } catch (error) {
-    console.error("Error finding PR:", error.message);
-    return null;
-  }
-}
 
 /**
  * Gets commit information for a given ref
@@ -96,7 +65,6 @@ function isSuccessfulVercelDeployment(deploymentInfo) {
 }
 
 module.exports = {
-  findPullRequestByRef,
   getCommitInfo,
   extractDeploymentFromEvent,
   isSuccessfulVercelDeployment,
