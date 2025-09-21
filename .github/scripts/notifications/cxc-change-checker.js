@@ -224,15 +224,16 @@ async function isCxcRelatedDeployment(github, context, pr) {
       return false;
     }
 
-    // Handle global files - you can customize this behavior
+    // Handle global files - only proceed if there are CXC changes
     if (globalFiles.length > 0 && cxcRelatedFiles.length === 0) {
-      console.log("⚠️ Changes affect global configuration files");
+      console.log(
+        "⚠️ Changes affect global configuration files, but no CXC changes found"
+      );
       console.log(
         `  Global files: ${globalFiles.map((f) => f.filename).join(", ")}`
       );
-      // For global changes, you might want to notify for safety
-      // Change this to false if you don't want global changes to trigger CXC notifications
-      return true;
+      console.log("❌ Skipping CXC notification for global-only changes");
+      return false;
     }
 
     // If there are other files that don't match any category
