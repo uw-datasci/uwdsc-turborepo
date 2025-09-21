@@ -1,0 +1,34 @@
+name: Vercel Preview Notification
+
+on:
+  deployment_status:
+
+jobs:
+  notify-discord:
+    runs-on: ubuntu-latest
+    if: github.event.deployment_status.state == 'success' && github.event.deployment_status.environment_url != ''
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Process Vercel Deployment
+        id: process-deployment
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const { main } = require('./.github/scripts/notifications/vercel-deployment-processor.js');
+            return await main(github, context);
+
+      - name: Send Discord Notification
+        if: fromJSON(steps.process-deployment.outputs.result).shouldNotify == true
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const { main } = require('./.github/scripts/notifications/discord-sender.js');
+            const result = ${{ steps.process-deployment.outputs.result }};
+            await main(core, result.deploymentInfo);
+        env:
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
