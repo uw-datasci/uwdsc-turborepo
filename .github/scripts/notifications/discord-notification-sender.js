@@ -1,25 +1,63 @@
 /**
- * Discord Notification Sender - Combines PR and deployment info to send Discord notification
+ * Discord Notification Sender - Sends Discord notifications for PR deployments
  */
 
 /**
- * Creates deployment info object from separated PR and deployment data
- * @param {Object} prInfo - PR information from CXC checker
- * @param {Object} deploymentInfo - Deployment information from validator
- * @returns {Object} Combined deployment info for Discord
+ * Creates a rich Discord embed for Vercel preview deployment
+ * @param {Object} prInfo - PR information
+ * @param {Object} deploymentInfo - Deployment information
+ * @returns {Object} Discord embed object
  */
-function combineDeploymentInfo(prInfo, deploymentInfo) {
-  return {
-    prNumber: prInfo.number,
-    prTitle: prInfo.title,
-    prUrl: prInfo.url,
-    prAuthor: prInfo.author,
-    prAuthorAvatar: prInfo.authorAvatar,
-    branchName: prInfo.branchName,
-    deploymentUrl: deploymentInfo.url,
-    commitMessage: deploymentInfo.commitMessage,
-    commitSha: deploymentInfo.commitSha,
+function createDiscordEmbed(prInfo, deploymentInfo) {
+  const embed = {
+    title: "🚀 Preview Deployment Ready",
+    description: `**${prInfo.title}**`,
+    color: 0x00d4aa, // Vercel green
+    fields: [
+      {
+        name: "📋 Pull Request",
+        value: `[#${prInfo.number}](${prInfo.url})`,
+        inline: true,
+      },
+      {
+        name: "🌿 Branch",
+        value: `\`${prInfo.branchName}\``,
+        inline: true,
+      },
+      {
+        name: "👤 Author",
+        value: `@${prInfo.author}`,
+        inline: true,
+      },
+    ],
+    author: {
+      name: prInfo.author,
+      icon_url: prInfo.authorAvatar,
+    },
+    timestamp: new Date().toISOString(),
+    footer: {
+      text: "Vercel Preview Deployment",
+      icon_url: "https://vercel.com/favicon.ico",
+    },
   };
+
+  // Add commit info if available
+  if (deploymentInfo.commitMessage && deploymentInfo.commitSha) {
+    embed.fields.push({
+      name: "📝 Latest Commit",
+      value: `\`${deploymentInfo.commitSha}\` ${deploymentInfo.commitMessage}`,
+      inline: false,
+    });
+  }
+
+  // Add deployment link
+  embed.fields.push({
+    name: "🔗 Preview Link",
+    value: `[View Deployment](${deploymentInfo.url})`,
+    inline: false,
+  });
+
+  return embed;
 }
 
 /**
@@ -32,21 +70,44 @@ function combineDeploymentInfo(prInfo, deploymentInfo) {
 async function main(core, prInfo, deploymentInfo) {
   try {
     console.log("🚀 Sending Discord notification...");
+    console.log("PR Info:", JSON.stringify(prInfo, null, 2));
+    console.log("Deployment Info:", JSON.stringify(deploymentInfo, null, 2));
 
-    // Combine the data from both jobs
-    const combinedInfo = combineDeploymentInfo(prInfo, deploymentInfo);
-    console.log("Combined info:", JSON.stringify(combinedInfo, null, 2));
+    // Get Discord webhook URL from environment
+    const webhookUrl = process.env.DISCORD_WEBHOOK_URL;
+    if (!webhookUrl) {
+      core.setFailed("❌ DISCORD_WEBHOOK_URL secret is not set");
+      return;
+    }
 
-    // Import discord sender (dynamic import to avoid circular dependencies)
-    const { main: sendDiscord } = require("./discord-sender.js");
+    // Create Discord embed
+    const embed = createDiscordEmbed(prInfo, deploymentInfo);
+    const payload = {
+      embeds: [embed],
+    };
 
-    // Send the notification
-    await sendDiscord(core, combinedInfo);
+    console.log("Sending Discord notification...");
+
+    // Send to Discord webhook
+    const response = await fetch(webhookUrl, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload),
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(
+        `Discord webhook failed (${response.status}): ${errorText}`
+      );
+    }
 
     console.log("✅ Discord notification sent successfully!");
   } catch (error) {
     console.error("❌ Error sending Discord notification:", error);
-    throw error;
+    core.setFailed(`Failed to send Discord notification: ${error.message}`);
   }
 }
 

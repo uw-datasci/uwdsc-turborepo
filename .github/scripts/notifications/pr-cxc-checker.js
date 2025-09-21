@@ -1,5 +1,5 @@
 /**
- * CXC Change Checker - Determines if PR changes affect the CXC app
+ * CXC Change Checker for PR Events - Determines if PR changes affect the CXC app
  */
 
 // ========================================================================
@@ -36,83 +36,15 @@ const GLOBAL_PATHS = [
 // ========================================================================
 
 /**
- * Finds PR from the deployment event
- * @param {Object} github - GitHub API instance
- * @param {Object} context - GitHub context
- * @returns {Promise<Object|null>} PR object or null if not found
- */
-async function findPullRequestFromDeployment(github, context) {
-  try {
-    const deploymentRef = context.payload.deployment?.ref;
-    if (!deploymentRef) {
-      console.log("❌ No deployment ref found");
-      return null;
-    }
-
-    console.log(`🔍 Looking for PR with deployment ref: ${deploymentRef}`);
-
-    // First, try to find PR by ref as a branch name
-    try {
-      const { data: pulls } = await github.rest.pulls.list({
-        owner: context.repo.owner,
-        repo: context.repo.repo,
-        head: `${context.repo.owner}:${deploymentRef}`,
-        state: "open",
-      });
-
-      if (pulls.length > 0) {
-        const pr = pulls[0];
-        console.log(`✅ Found PR #${pr.number} by branch name: ${pr.title}`);
-        return pr;
-      }
-    } catch (error) {
-      console.log(
-        "⚠️ Could not find PR by branch name, trying commit SHA method..."
-      );
-    }
-
-    // If ref is a commit SHA, get all open PRs and find the one with matching head commit
-    console.log(`🔍 Searching for PR with commit SHA: ${deploymentRef}`);
-
-    const { data: allPulls } = await github.rest.pulls.list({
-      owner: context.repo.owner,
-      repo: context.repo.repo,
-      state: "open",
-    });
-
-    console.log(`Found ${allPulls.length} open PRs to check`);
-
-    for (const pr of allPulls) {
-      // Check if the PR's head SHA matches the deployment ref
-      if (
-        pr.head.sha === deploymentRef ||
-        pr.head.sha.startsWith(deploymentRef.substring(0, 7))
-      ) {
-        console.log(`✅ Found PR #${pr.number} by commit SHA: ${pr.title}`);
-        console.log(`  PR head SHA: ${pr.head.sha}`);
-        console.log(`  Deployment ref: ${deploymentRef}`);
-        return pr;
-      }
-    }
-
-    console.log("❌ No open PR found for this deployment");
-    return null;
-  } catch (error) {
-    console.error("❌ Error finding PR:", error.message);
-    return null;
-  }
-}
-
-/**
  * Checks if the PR changes affect the CXC app
  * @param {Object} github - GitHub API instance
  * @param {Object} context - GitHub context
- * @param {Object} pr - Pull request object
+ * @param {Object} pr - Pull request object (from context.payload.pull_request)
  * @returns {Promise<boolean>} True if changes affect CXC app
  */
-async function isCxcRelatedDeployment(github, context, pr) {
+async function isCxcRelatedPR(github, context, pr) {
   try {
-    console.log("🔍 Checking if deployment is CXC-related...");
+    console.log("🔍 Checking if PR is CXC-related...");
 
     // Get list of files changed in the PR
     const { data: files } = await github.rest.pulls.listFiles({
@@ -260,29 +192,31 @@ async function isCxcRelatedDeployment(github, context, pr) {
 }
 
 /**
- * Main function to check if changes affect CXC app
+ * Main function to check if PR changes affect CXC app
  * @param {Object} github - GitHub API instance
- * @param {Object} context - GitHub context
+ * @param {Object} context - GitHub context (pull_request event)
  * @returns {Promise<Object>} Result with shouldNotify flag and PR info
  */
 async function main(github, context) {
   try {
-    console.log("🚀 Checking CXC changes...");
+    console.log("🚀 Checking CXC changes for PR...");
 
-    // Find associated PR
-    const pr = await findPullRequestFromDeployment(github, context);
+    // Get PR from context (directly available in pull_request events)
+    const pr = context.payload.pull_request;
     if (!pr) {
-      console.log("❌ No associated PR found, skipping...");
+      console.log("❌ No PR found in context");
       return {
         shouldNotify: false,
         reason: "no_pr_found",
       };
     }
 
-    // Check if this deployment is related to CXC app
-    const isCxcDeployment = await isCxcRelatedDeployment(github, context, pr);
-    if (!isCxcDeployment) {
-      console.log("❌ Deployment not related to CXC app, skipping...");
+    console.log(`📋 Found PR #${pr.number}: ${pr.title}`);
+
+    // Check if this PR is related to CXC app
+    const isCxcPR = await isCxcRelatedPR(github, context, pr);
+    if (!isCxcPR) {
+      console.log("❌ PR not related to CXC app, skipping...");
       return {
         shouldNotify: false,
         reason: "not_cxc_related",
