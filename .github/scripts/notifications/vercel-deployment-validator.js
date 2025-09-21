@@ -6,7 +6,9 @@ const {
   extractDeploymentFromEvent,
   isSuccessfulVercelDeployment,
   getCommitInfo,
+  findPullRequestByRef,
 } = require("./vercel-utils.js");
+const { extractExactVercelUrl } = require("./vercel-url-extractor.js");
 
 /**
  * Validates Vercel deployment and extracts deployment information
@@ -34,6 +36,26 @@ async function main(github, context) {
 
     console.log("✅ Successful Vercel deployment detected");
 
+    // Get PR information to extract proper public URL
+    const pr = await findPullRequestByRef(github, context, deploymentInfo.ref);
+
+    // Try to extract the exact public URL using multiple methods
+    const publicUrl = await extractExactVercelUrl(
+      github,
+      context,
+      deploymentInfo,
+      pr
+    );
+
+    if (publicUrl !== deploymentInfo.deploymentUrl) {
+      console.log(`🔗 Using extracted/constructed public URL: ${publicUrl}`);
+      console.log(
+        `   (instead of internal URL: ${deploymentInfo.deploymentUrl})`
+      );
+    } else {
+      console.log("⚠️ Using deployment URL as-is (no better option found)");
+    }
+
     // Get commit information
     const commitInfo = await getCommitInfo(github, context, deploymentInfo.ref);
     console.log(
@@ -43,7 +65,7 @@ async function main(github, context) {
     return {
       shouldNotify: true,
       deploymentInfo: {
-        url: deploymentInfo.deploymentUrl,
+        url: publicUrl, // Use the public URL instead of internal one
         ref: deploymentInfo.ref,
         state: deploymentInfo.state,
         commitSha: commitInfo.sha?.substring(0, 7) || "",
