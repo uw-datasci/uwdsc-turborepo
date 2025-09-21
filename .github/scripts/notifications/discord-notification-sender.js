@@ -63,13 +63,30 @@ function createDiscordEmbed(prInfo, deploymentInfo) {
 /**
  * Main function to send Discord notification
  * @param {Object} core - GitHub Actions core
- * @param {Object} prInfo - PR information from job 1
- * @param {Object} deploymentInfo - Deployment information from job 2
+ * @param {Object} context - GitHub context (contains PR info)
+ * @param {Object} deploymentInfo - Deployment information from URL constructor
  * @returns {Promise<void>}
  */
-async function main(core, prInfo, deploymentInfo) {
+async function main(core, context, deploymentInfo) {
   try {
     console.log("🚀 Sending Discord notification...");
+
+    // Extract PR info directly from context
+    const pr = context.payload.pull_request;
+    if (!pr) {
+      core.setFailed("❌ No PR found in context");
+      return;
+    }
+
+    const prInfo = {
+      number: pr.number,
+      title: pr.title,
+      url: pr.html_url,
+      author: pr.user.login,
+      authorAvatar: pr.user.avatar_url,
+      branchName: pr.head.ref,
+    };
+
     console.log("PR Info:", JSON.stringify(prInfo, null, 2));
     console.log("Deployment Info:", JSON.stringify(deploymentInfo, null, 2));
 

@@ -5,32 +5,6 @@ on:
     types: [opened, ready_for_review]
 
 jobs:
-  check-cxc-changes:
-    runs-on: ubuntu-latest
-    outputs:
-      should-notify: ${{ steps.check-changes.outputs.should-notify }}
-      pr-info: ${{ steps.check-changes.outputs.pr-info }}
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Check CXC Changes
-        id: check-changes
-        uses: actions/github-script@v7
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          script: |
-            const { main } = require('./.github/scripts/notifications/pr-cxc-checker.js');
-            const result = await main(github, context);
-
-            core.setOutput('should-notify', result.shouldNotify);
-            if (result.prInfo) {
-              core.setOutput('pr-info', JSON.stringify(result.prInfo));
-            }
-
-            return result;
-
   construct-deployment-url:
     runs-on: ubuntu-latest
     outputs:
@@ -59,8 +33,8 @@ jobs:
 
   send-discord-notification:
     runs-on: ubuntu-latest
-    needs: [check-cxc-changes, construct-deployment-url]
-    if: needs.check-cxc-changes.outputs.should-notify == 'true' && needs.construct-deployment-url.outputs.should-notify == 'true'
+    needs: [construct-deployment-url]
+    if: needs.construct-deployment-url.outputs.should-notify == 'true'
 
     steps:
       - name: Checkout repository
@@ -73,9 +47,8 @@ jobs:
           script: |
             const { main } = require('./.github/scripts/notifications/discord-notification-sender.js');
 
-            const prInfo = JSON.parse(`${{ needs.check-cxc-changes.outputs.pr-info }}`);
             const deploymentInfo = JSON.parse(`${{ needs.construct-deployment-url.outputs.deployment-info }}`);
 
-            await main(core, prInfo, deploymentInfo);
+            await main(core, context, deploymentInfo);
         env:
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
