@@ -49,6 +49,6 @@ jobs:
 
             const deploymentInfo = JSON.parse(`${{ needs.construct-deployment-url.outputs.deployment-info }}`);
 
-            await main(core, context, deploymentInfo);
+            await main(core, github, context, deploymentInfo);
         env:
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}

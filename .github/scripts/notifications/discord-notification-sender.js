@@ -3,12 +3,98 @@
  */
 
 /**
+ * Analyzes changed files to determine what was affected
+ * @param {Array} files - Array of changed files from GitHub API
+ * @returns {Object} Analysis of affected areas
+ */
+function analyzeAffectedAreas(files) {
+  const affected = {
+    apps: new Set(),
+    packages: new Set(),
+    githubActions: false,
+    scripts: false,
+    docs: false,
+    other: [],
+  };
+
+  files.forEach((file) => {
+    const filename = file.filename;
+
+    // Check apps
+    if (filename.startsWith("apps/web/")) {
+      affected.apps.add("web");
+    } else if (filename.startsWith("apps/cxc/")) {
+      affected.apps.add("cxc");
+    }
+    // Check packages
+    else if (filename.startsWith("packages/server/")) {
+      affected.packages.add("server");
+    } else if (filename.startsWith("packages/ui/")) {
+      affected.packages.add("ui");
+    }
+    // Check other areas
+    else if (filename.startsWith(".github/")) {
+      affected.githubActions = true;
+    } else if (filename.startsWith("scripts/")) {
+      affected.scripts = true;
+    } else if (filename.startsWith("docs/")) {
+      affected.docs = true;
+    } else {
+      // Root level files or other directories
+      affected.other.push(filename);
+    }
+  });
+
+  return affected;
+}
+
+/**
+ * Formats affected areas for Discord display
+ * @param {Object} affected - Affected areas analysis
+ * @returns {string} Formatted string for Discord
+ */
+function formatAffectedAreas(affected) {
+  const parts = [];
+
+  if (affected.apps.size > 0) {
+    parts.push(`📱 Apps: ${Array.from(affected.apps).join(", ")}`);
+  }
+
+  if (affected.packages.size > 0) {
+    parts.push(`📦 Packages: ${Array.from(affected.packages).join(", ")}`);
+  }
+
+  if (affected.githubActions) {
+    parts.push("⚙️ GitHub Actions");
+  }
+
+  if (affected.scripts) {
+    parts.push("🔧 Scripts");
+  }
+
+  if (affected.docs) {
+    parts.push("📚 Documentation");
+  }
+
+  if (affected.other.length > 0) {
+    const otherFiles = affected.other.slice(0, 3); // Show first 3 files
+    const moreCount = affected.other.length - 3;
+    parts.push(
+      `🔗 Other: ${otherFiles.join(", ")}${moreCount > 0 ? ` (+${moreCount} more)` : ""}`
+    );
+  }
+
+  return parts.length > 0 ? parts.join("\n") : "No categorized changes";
+}
+
+/**
  * Creates a rich Discord embed for Vercel preview deployment
  * @param {Object} prInfo - PR information
  * @param {Object} deploymentInfo - Deployment information
+ * @param {Object} affected - Analysis of affected areas
  * @returns {Object} Discord embed object
  */
-function createDiscordEmbed(prInfo, deploymentInfo) {
+function createDiscordEmbed(prInfo, deploymentInfo, affected) {
   const embed = {
     title: "🚀 Preview Deployment Ready",
     description: `**${prInfo.title}**`,
@@ -50,6 +136,13 @@ function createDiscordEmbed(prInfo, deploymentInfo) {
     });
   }
 
+  // Add affected areas
+  embed.fields.push({
+    name: "🎯 What's Affected",
+    value: formatAffectedAreas(affected),
+    inline: false,
+  });
+
   // Add deployment link
   embed.fields.push({
     name: "🔗 Preview Link",
@@ -63,11 +156,12 @@ function createDiscordEmbed(prInfo, deploymentInfo) {
 /**
  * Main function to send Discord notification
  * @param {Object} core - GitHub Actions core
+ * @param {Object} github - GitHub API instance
  * @param {Object} context - GitHub context (contains PR info)
  * @param {Object} deploymentInfo - Deployment information from URL constructor
  * @returns {Promise<void>}
  */
-async function main(core, context, deploymentInfo) {
+async function main(core, github, context, deploymentInfo) {
   try {
     console.log("🚀 Sending Discord notification...");
 
@@ -97,8 +191,22 @@ async function main(core, context, deploymentInfo) {
       return;
     }
 
+    // Get changed files from PR
+    console.log("🔍 Analyzing changed files...");
+    const { data: files } = await github.rest.pulls.listFiles({
+      owner: context.repo.owner,
+      repo: context.repo.repo,
+      pull_number: pr.number,
+    });
+
+    console.log(`📋 Found ${files.length} changed files`);
+
+    // Analyze what was affected
+    const affected = analyzeAffectedAreas(files);
+    console.log("🎯 Affected areas:", affected);
+
     // Create Discord embed
-    const embed = createDiscordEmbed(prInfo, deploymentInfo);
+    const embed = createDiscordEmbed(prInfo, deploymentInfo, affected);
     const payload = {
       embeds: [embed],
     };
