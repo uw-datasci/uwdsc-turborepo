@@ -4,31 +4,79 @@ on:
   deployment_status:
 
 jobs:
-  notify-discord:
+  check-cxc-changes:
     runs-on: ubuntu-latest
     if: github.event.deployment_status.state == 'success' && github.event.deployment_status.environment_url != ''
+    outputs:
+      should-notify: ${{ steps.check-changes.outputs.should-notify }}
+      pr-info: ${{ steps.check-changes.outputs.pr-info }}
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Process Vercel Deployment
-        id: process-deployment
+      - name: Check CXC Changes
+        id: check-changes
         uses: actions/github-script@v7
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            const { main } = require('./.github/scripts/notifications/vercel-deployment-processor.js');
-            return await main(github, context);
+            const { main } = require('./.github/scripts/notifications/cxc-change-checker.js');
+            const result = await main(github, context);
+
+            core.setOutput('should-notify', result.shouldNotify);
+            if (result.prInfo) {
+              core.setOutput('pr-info', JSON.stringify(result.prInfo));
+            }
+
+            return result;
+
+  validate-vercel-deployment:
+    runs-on: ubuntu-latest
+    if: github.event.deployment_status.state == 'success' && github.event.deployment_status.environment_url != ''
+    outputs:
+      should-notify: ${{ steps.validate-deployment.outputs.should-notify }}
+      deployment-info: ${{ steps.validate-deployment.outputs.deployment-info }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Validate Vercel Deployment
+        id: validate-deployment
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const { main } = require('./.github/scripts/notifications/vercel-deployment-validator.js');
+            const result = await main(github, context);
+
+            core.setOutput('should-notify', result.shouldNotify);
+            if (result.deploymentInfo) {
+              core.setOutput('deployment-info', JSON.stringify(result.deploymentInfo));
+            }
+
+            return result;
+
+  send-discord-notification:
+    runs-on: ubuntu-latest
+    needs: [check-cxc-changes, validate-vercel-deployment]
+    if: needs.check-cxc-changes.outputs.should-notify == 'true' && needs.validate-vercel-deployment.outputs.should-notify == 'true'
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
       - name: Send Discord Notification
-        if: fromJSON(steps.process-deployment.outputs.result).shouldNotify == true
         uses: actions/github-script@v7
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            const { main } = require('./.github/scripts/notifications/discord-sender.js');
-            const result = ${{ steps.process-deployment.outputs.result }};
-            await main(core, result.deploymentInfo);
+            const { main } = require('./.github/scripts/notifications/discord-notification-sender.js');
+
+            const prInfo = JSON.parse(`${{ needs.check-cxc-changes.outputs.pr-info }}`);
+            const deploymentInfo = JSON.parse(`${{ needs.validate-vercel-deployment.outputs.deployment-info }}`);
+
+            await main(core, prInfo, deploymentInfo);
         env:
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
