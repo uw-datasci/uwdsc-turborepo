@@ -51,21 +51,52 @@ async function findPullRequestFromDeployment(github, context) {
 
     console.log(`🔍 Looking for PR with deployment ref: ${deploymentRef}`);
 
-    const { data: pulls } = await github.rest.pulls.list({
+    // First, try to find PR by ref as a branch name
+    try {
+      const { data: pulls } = await github.rest.pulls.list({
+        owner: context.repo.owner,
+        repo: context.repo.repo,
+        head: `${context.repo.owner}:${deploymentRef}`,
+        state: "open",
+      });
+
+      if (pulls.length > 0) {
+        const pr = pulls[0];
+        console.log(`✅ Found PR #${pr.number} by branch name: ${pr.title}`);
+        return pr;
+      }
+    } catch (error) {
+      console.log(
+        "⚠️ Could not find PR by branch name, trying commit SHA method..."
+      );
+    }
+
+    // If ref is a commit SHA, get all open PRs and find the one with matching head commit
+    console.log(`🔍 Searching for PR with commit SHA: ${deploymentRef}`);
+
+    const { data: allPulls } = await github.rest.pulls.list({
       owner: context.repo.owner,
       repo: context.repo.repo,
-      head: `${context.repo.owner}:${deploymentRef}`,
       state: "open",
     });
 
-    if (pulls.length === 0) {
-      console.log("❌ No open PR found for this deployment");
-      return null;
+    console.log(`Found ${allPulls.length} open PRs to check`);
+
+    for (const pr of allPulls) {
+      // Check if the PR's head SHA matches the deployment ref
+      if (
+        pr.head.sha === deploymentRef ||
+        pr.head.sha.startsWith(deploymentRef.substring(0, 7))
+      ) {
+        console.log(`✅ Found PR #${pr.number} by commit SHA: ${pr.title}`);
+        console.log(`  PR head SHA: ${pr.head.sha}`);
+        console.log(`  Deployment ref: ${deploymentRef}`);
+        return pr;
+      }
     }
 
-    const pr = pulls[0];
-    console.log(`✅ Found PR #${pr.number}: ${pr.title}`);
-    return pr;
+    console.log("❌ No open PR found for this deployment");
+    return null;
   } catch (error) {
     console.error("❌ Error finding PR:", error.message);
     return null;
