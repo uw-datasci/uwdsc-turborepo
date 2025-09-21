@@ -1,5 +1,5 @@
 /**
- * Vercel Deployment Validator - Validates Vercel deployment status and extracts info
+ * Vercel Deployment Validator - Validates Vercel deployment status and constructs deployment URL
  */
 
 const {
@@ -7,6 +7,41 @@ const {
   isSuccessfulVercelDeployment,
   getCommitInfo,
 } = require("./vercel-utils.js");
+
+// Constants for URL construction
+const PROJECT_NAME = "uwdsc-website-v3-cxc";
+const TEAM_SLUG = "uwdsc";
+
+/**
+ * Sanitizes branch name for URL construction
+ * @param {string} branchName - Raw branch name
+ * @returns {string} Sanitized branch name safe for URLs
+ */
+function sanitizeBranchName(branchName) {
+  if (!branchName) return "";
+
+  // Remove refs/heads/ prefix if present
+  const cleanBranch = branchName.replace(/^refs\/heads\//, "");
+
+  // Replace special characters with hyphens and convert to lowercase
+  return cleanBranch
+    .toLowerCase()
+    .replace(/[^a-z0-9-]/g, "-")
+    .replace(/-+/g, "-") // Replace multiple consecutive hyphens with single hyphen
+    .replace(/^-|-$/g, ""); // Remove leading/trailing hyphens
+}
+
+/**
+ * Constructs Vercel deployment URL using the standard format
+ * @param {string} projectName - Vercel project name
+ * @param {string} branchName - Git branch name
+ * @param {string} teamSlug - Vercel team slug
+ * @returns {string} Constructed deployment URL
+ */
+function constructDeploymentUrl(projectName, branchName, teamSlug) {
+  const sanitizedBranch = sanitizeBranchName(branchName);
+  return `https://${projectName}-git-${sanitizedBranch}-${teamSlug}.vercel.app`;
+}
 
 /**
  * Validates Vercel deployment and extracts deployment information
@@ -34,6 +69,14 @@ async function main(github, context) {
 
     console.log("✅ Successful Vercel deployment detected");
 
+    // Construct the deployment URL using the standard format
+    const constructedUrl = constructDeploymentUrl(
+      PROJECT_NAME,
+      deploymentInfo.ref,
+      TEAM_SLUG
+    );
+    console.log(`🔗 Constructed deployment URL: ${constructedUrl}`);
+
     // Get commit information
     const commitInfo = await getCommitInfo(github, context, deploymentInfo.ref);
     console.log(
@@ -43,7 +86,7 @@ async function main(github, context) {
     return {
       shouldNotify: true,
       deploymentInfo: {
-        url: deploymentInfo.deploymentUrl,
+        url: constructedUrl,
         ref: deploymentInfo.ref,
         state: deploymentInfo.state,
         commitSha: commitInfo.sha?.substring(0, 7) || "",

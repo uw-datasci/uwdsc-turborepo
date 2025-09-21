@@ -68,13 +68,11 @@ async function getCommitInfo(github, context, ref) {
  * @returns {Object} Deployment information
  */
 function extractDeploymentFromEvent(context) {
-  console.log("TEST", context);
   const deployment = context.payload.deployment;
   const deploymentStatus = context.payload.deployment_status;
 
   return {
     ref: deployment.ref,
-    deploymentUrl: deploymentStatus.environment_url,
     state: deploymentStatus.state,
     deployment: deployment,
     status: deploymentStatus,
@@ -88,16 +86,13 @@ function extractDeploymentFromEvent(context) {
  */
 function isSuccessfulVercelDeployment(deploymentInfo) {
   const isSuccess = deploymentInfo.state === "success";
-  const hasUrl =
-    deploymentInfo.deploymentUrl && deploymentInfo.deploymentUrl !== "";
 
   // Check if it's likely a Vercel deployment
   const isVercel =
     deploymentInfo.deployment.creator?.login === "vercel[bot]" ||
-    deploymentInfo.deployment.environment?.includes("Preview") ||
-    deploymentInfo.deploymentUrl?.includes("vercel.app");
+    deploymentInfo.deployment.environment?.includes("Preview");
 
-  return isSuccess && hasUrl && isVercel;
+  return isSuccess && isVercel;
 }
 
 module.exports = {
