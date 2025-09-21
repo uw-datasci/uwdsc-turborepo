@@ -68,6 +68,7 @@ async function getCommitInfo(github, context, ref) {
  * @returns {Object} Deployment information
  */
 function extractDeploymentFromEvent(context) {
+  console.log("TEST", context);
   const deployment = context.payload.deployment;
   const deploymentStatus = context.payload.deployment_status;
 
