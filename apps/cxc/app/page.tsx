@@ -54,7 +54,7 @@ export default function Home() {
           className="text-center mb-16"
         >
           <h1 className="text-5xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-6">
-            CxC Dashboard
+            CxC
           </h1>
           <p className="text-xl text-muted-foreground mb-8">
             Next.js • TypeScript • Tailwind CSS • Shad CN • Framer Motion •
