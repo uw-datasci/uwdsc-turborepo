@@ -10,7 +10,6 @@ const {
 } = require("./project-utils.js");
 
 async function main(github, context) {
-  return; // TODO: Remove this when app is live
   console.log("🚀 Starting issue processing workflow...");
 
   // Check if IDs are configured
