@@ -1,4 +1,4 @@
-import { AuthService } from "@uwdsc/server/cxc/services/authService";
+import { AuthService } from "@uwdsc/server/core/services/authService";
 
 export async function GET() {
   try {

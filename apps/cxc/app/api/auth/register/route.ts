@@ -1,4 +1,4 @@
-import { AuthService } from "@uwdsc/server/cxc/services/authService";
+import { AuthService } from "@uwdsc/server/core/services/authService";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(request: NextRequest): Promise<NextResponse> {

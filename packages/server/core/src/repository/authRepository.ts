@@ -1,4 +1,4 @@
-import { BaseRepository } from "@uwdsc/server/core/patterns/baseRepository";
+import { BaseRepository } from "@uwdsc/server/core/repository/baseRepository";
 import { LoginData, RegisterData } from "../types/auth";
 
 export class AuthRepository extends BaseRepository {
