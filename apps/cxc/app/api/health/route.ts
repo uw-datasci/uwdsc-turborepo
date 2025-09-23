@@ -1,4 +1,4 @@
-import { HealthService } from "@uwdsc/server/services/healthService";
+import { HealthService } from "@uwdsc/server/cxc/services/healthService";
 import { NextRequest, NextResponse } from "next/server";
 
 // Initialize the service
@@ -18,7 +18,7 @@ export async function GET(request: NextRequest) {
     const errorData = {
       status: "unhealthy",
       timestamp: new Date().toISOString(),
-      service: "cxc",
+      service: "uwdsc-cxc",
       error: "Health check failed",
     };
 

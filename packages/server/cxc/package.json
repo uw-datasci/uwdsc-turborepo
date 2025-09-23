@@ -1,5 +1,5 @@
 {
-  "name": "@uwdsc/server",
+  "name": "@uwdsc/server/cxc",
   "version": "0.0.0",
   "type": "module",
   "private": true,
@@ -8,7 +8,8 @@
   },
   "dependencies": {
     "@prisma/client": "^6.16.1",
-    "@supabase/supabase-js": "^2.49.0"
+    "@supabase/supabase-js": "^2.49.0",
+    "@uwdsc/server/core": "workspace:*"
   },
   "devDependencies": {
     "@types/node": "^20.19.9",
@@ -21,7 +22,6 @@
     "./database/*": "./src/database/*.ts",
     "./services/*": "./src/services/*.ts",
     "./repository/*": "./src/repository/*.ts",
-    "./types/*": "./src/types/*.ts",
-    "./middleware/*": "./src/middleware/*.ts"
+    "./types/*": "./src/types/*.ts"
   }
 }

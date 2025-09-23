@@ -1,0 +1,12 @@
+{
+  "extends": "@uwdsc/typescript-config/base.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@uwdsc/server/cxc/*": ["./src/*"],
+      "@uwdsc/server/core/*": ["../core/src/*"]
+    }
+  },
+  "include": ["src"],
+  "exclude": ["node_modules", "dist"]
+}
