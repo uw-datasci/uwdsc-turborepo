@@ -12,7 +12,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@uwdsc/server": "workspace:*",
+    "@uwdsc/server/cxc": "workspace:*",
     "@uwdsc/ui": "workspace:*",
     "dotenv": "^17.2.2",
     "framer-motion": "^12.23.12",

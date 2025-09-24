@@ -1,5 +1,11 @@
 import { AuthRepository } from "../repository/authRepository";
-import { RegisterData, LoginData, AuthResponse, UserResponse, SignOutResponse } from "../types/auth";
+import {
+  RegisterData,
+  LoginData,
+  AuthResponse,
+  UserResponse,
+  SignOutResponse,
+} from "../types/auth";
 
 export class AuthService {
   private authRepository: AuthRepository;
@@ -14,7 +20,7 @@ export class AuthService {
 
       const { data: authData, error } = await this.authRepository.createUser({
         email,
-        password: data.password
+        password: data.password,
       });
 
       if (error) {
@@ -22,7 +28,7 @@ export class AuthService {
           success: false,
           user: null,
           session: null,
-          error: error.message
+          error: error.message,
         };
       }
 
@@ -30,14 +36,14 @@ export class AuthService {
         success: true,
         user: authData.user,
         session: authData.session,
-        error: null
+        error: null,
       };
     } catch {
       return {
         success: false,
         user: null,
         session: null,
-        error: "Registration failed"
+        error: "Registration failed",
       };
     }
   }
@@ -46,17 +52,18 @@ export class AuthService {
     try {
       const email = data.email.toLowerCase().trim();
 
-      const { data: authData, error } = await this.authRepository.authenticateUser({
-        email,
-        password: data.password
-      });
+      const { data: authData, error } =
+        await this.authRepository.authenticateUser({
+          email,
+          password: data.password,
+        });
 
       if (error) {
         return {
           success: false,
           user: null,
           session: null,
-          error: error.message
+          error: error.message,
         };
       }
 
@@ -64,31 +71,31 @@ export class AuthService {
         success: true,
         user: authData.user,
         session: authData.session,
-        error: null
+        error: null,
       };
     } catch {
       return {
         success: false,
         user: null,
         session: null,
-        error: "Login failed"
+        error: "Login failed",
       };
     }
   }
 
   async getCurrentUser(): Promise<UserResponse> {
     try {
-        const user = await this.authRepository.getCurrentUser();
-        return {
-          success: true,
-          user,
-          error: null
-        };
+      const user = await this.authRepository.getCurrentUser();
+      return {
+        success: true,
+        user,
+        error: null,
+      };
     } catch {
       return {
         success: false,
         user: null,
-        error: "Failed to get user"
+        error: "Failed to get user",
       };
     }
   }

@@ -4,7 +4,9 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["./*"],
-      "@uwdsc/ui/*": ["../../packages/ui/src/*"]
+      "@uwdsc/ui/*": ["../../packages/ui/src/*"],
+      "@uwdsc/server/cxc/*": ["../../packages/server/cxc/src/*"],
+      "@uwdsc/server/core/*": ["../../packages/server/core/src/*"]
     },
     "plugins": [
       {

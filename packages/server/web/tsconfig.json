@@ -3,7 +3,8 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@uwdsc/server/*": ["./src/*"]
+      "@uwdsc/server/web/*": ["./src/*"],
+      "@uwdsc/server/core/*": ["../core/src/*"]
     }
   },
   "include": ["src"],

@@ -24,6 +24,6 @@ export interface UserResponse {
 }
 
 export interface SignOutResponse {
-    success: boolean;
-    error: string | null;
+  success: boolean;
+  error: string | null;
 }

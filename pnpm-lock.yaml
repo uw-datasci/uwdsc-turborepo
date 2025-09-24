@@ -26,9 +26,9 @@ importers:
 
   apps/cxc:
     dependencies:
-      '@uwdsc/server':
+      '@uwdsc/server/cxc':
         specifier: workspace:*
-        version: link:../../packages/server
+        version: link:../../packages/server/cxc
       '@uwdsc/ui':
         specifier: workspace:*
         version: link:../../packages/ui
@@ -75,9 +75,9 @@ importers:
 
   apps/web:
     dependencies:
-      '@uwdsc/server':
+      '@uwdsc/server/web':
         specifier: workspace:*
-        version: link:../../packages/server
+        version: link:../../packages/server/web
       '@uwdsc/ui':
         specifier: workspace:*
         version: link:../../packages/ui
@@ -161,13 +161,10 @@ importers:
         specifier: ^8.39.0
         version: 8.39.0(eslint@9.32.0(jiti@2.5.1))(typescript@5.9.2)
 
-  packages/server:
+  packages/server/core:
     dependencies:
-      '@prisma/client':
-        specifier: ^6.16.1
-        version: 6.16.1(prisma@6.16.1(typescript@5.9.2))(typescript@5.9.2)
       '@supabase/supabase-js':
-        specifier: ^2.49.0
+        specifier: ^2.39.7
         version: 2.57.4
     devDependencies:
       '@types/node':
@@ -175,10 +172,63 @@ importers:
         version: 20.19.9
       '@uwdsc/eslint-config':
         specifier: workspace:*
-        version: link:../eslint-config
+        version: link:../../eslint-config
       '@uwdsc/typescript-config':
         specifier: workspace:*
-        version: link:../typescript-config
+        version: link:../../typescript-config
+      typescript:
+        specifier: ^5.9.2
+        version: 5.9.2
+
+  packages/server/cxc:
+    dependencies:
+      '@prisma/client':
+        specifier: ^6.16.1
+        version: 6.16.1(prisma@6.16.1(typescript@5.9.2))(typescript@5.9.2)
+      '@supabase/supabase-js':
+        specifier: ^2.49.0
+        version: 2.57.4
+      '@uwdsc/server/core':
+        specifier: workspace:*
+        version: link:../core
+    devDependencies:
+      '@types/node':
+        specifier: ^20.19.9
+        version: 20.19.9
+      '@uwdsc/eslint-config':
+        specifier: workspace:*
+        version: link:../../eslint-config
+      '@uwdsc/typescript-config':
+        specifier: workspace:*
+        version: link:../../typescript-config
+      prisma:
+        specifier: ^6.16.1
+        version: 6.16.1(typescript@5.9.2)
+      typescript:
+        specifier: ^5.9.2
+        version: 5.9.2
+
+  packages/server/web:
+    dependencies:
+      '@prisma/client':
+        specifier: ^6.16.1
+        version: 6.16.1(prisma@6.16.1(typescript@5.9.2))(typescript@5.9.2)
+      '@supabase/supabase-js':
+        specifier: ^2.49.0
+        version: 2.57.4
+      '@uwdsc/server/core':
+        specifier: workspace:*
+        version: link:../core
+    devDependencies:
+      '@types/node':
+        specifier: ^20.19.9
+        version: 20.19.9
+      '@uwdsc/eslint-config':
+        specifier: workspace:*
+        version: link:../../eslint-config
+      '@uwdsc/typescript-config':
+        specifier: workspace:*
+        version: link:../../typescript-config
       prisma:
         specifier: ^6.16.1
         version: 6.16.1(typescript@5.9.2)

@@ -1,5 +1,5 @@
+import { ApiError } from "@uwdsc/server/core/utils/errors";
 import { HealthRepository } from "../repository/healthRepository";
-import { ApiError } from "../types/common";
 import { HealthCheck } from "../types/health";
 
 export class HealthService {

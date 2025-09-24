@@ -1,4 +1,4 @@
-import { BaseRepository } from "./baseRepository";
+import { BaseRepository } from "@uwdsc/server/core/repository/baseRepository";
 import { HealthCheck } from "../types/health";
 
 export class HealthRepository extends BaseRepository {

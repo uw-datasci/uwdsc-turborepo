@@ -1,4 +1,4 @@
-// Common types for API responses and requests
+// Common error types and utilities
 
 export class ApiError extends Error {
   constructor(
@@ -10,3 +10,4 @@ export class ApiError extends Error {
     this.name = "ApiError";
   }
 }
+
