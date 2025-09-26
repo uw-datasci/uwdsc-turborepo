@@ -1,12 +1,8 @@
-import { BaseRepository } from "@uwdsc/server/core/repository/baseRepository";
+import { BaseCxcRepository } from "./baseCxcRepository";
 import { HealthCheck } from "../types/health";
 
-export class HealthRepository extends BaseRepository {
+export class HealthRepository extends BaseCxcRepository {
   protected tableName = "_";
-
-  constructor() {
-    super();
-  }
 
   /**
    * Get system health information

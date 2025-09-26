@@ -1,12 +1,8 @@
-import { BaseRepository } from "@uwdsc/server/core/repository/baseRepository";
+import { BaseWebRepository } from "./baseWebRepository";
 import { HealthCheck } from "../types/health";
 
-export class HealthRepository extends BaseRepository {
+export class HealthRepository extends BaseWebRepository {
   protected tableName = "_";
-
-  constructor() {
-    super();
-  }
 
   /**
    * Get system health information

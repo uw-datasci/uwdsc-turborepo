@@ -1,9 +1,19 @@
+import { Pool } from "pg";
+import { Kysely } from "kysely";
 import { supabase, SupabaseClient } from "../database/client";
 
-export class BaseRepository {
+/**
+ * Enhanced BaseRepository with connection pooling and raw SQL capabilities
+ * @template Database - Prisma/Kysely generated database type
+ */
+export abstract class BaseRepository<Database = any> {
   protected client: SupabaseClient;
+  protected db: Kysely<Database>;
+  protected pool: Pool;
 
-  constructor() {
-    this.client = supabase;
+  constructor(db: Kysely<Database>, pool: Pool, client?: SupabaseClient) {
+    this.db = db;
+    this.pool = pool;
+    this.client = client ?? supabase;
   }
 }
