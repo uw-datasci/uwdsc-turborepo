@@ -9,7 +9,18 @@
     "dev:cxc": "turbo dev --filter=cxc",
     "lint": "turbo lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
-    "ui:add": "node scripts/ui-add.js"
+    "ui:add": "node scripts/ui-add.js",
+    "db:migrate:web": "pnpm --filter=@uwdsc/server/web db:migrate",
+    "db:migrate:cxc": "pnpm --filter=@uwdsc/server/cxc db:migrate",
+    "db:migrate:all": "pnpm run db:migrate:web && pnpm run db:migrate:cxc",
+    "db:migrate:deploy:web": "pnpm --filter=@uwdsc/server/web db:migrate:deploy",
+    "db:migrate:deploy:cxc": "pnpm --filter=@uwdsc/server/cxc db:migrate:deploy",
+    "db:migrate:deploy:all": "pnpm run db:migrate:deploy:web && pnpm run db:migrate:deploy:cxc",
+    "db:generate:web": "pnpm --filter=@uwdsc/server/web db:generate",
+    "db:generate:cxc": "pnpm --filter=@uwdsc/server/cxc db:generate",
+    "db:generate:all": "pnpm run db:generate:web && pnpm run db:generate:cxc",
+    "db:studio:web": "pnpm --filter=@uwdsc/server/web db:studio",
+    "db:studio:cxc": "pnpm --filter=@uwdsc/server/cxc db:studio"
   },
   "devDependencies": {
     "@uwdsc/eslint-config": "workspace:*",

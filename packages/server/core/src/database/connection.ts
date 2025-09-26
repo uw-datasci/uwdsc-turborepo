@@ -9,14 +9,14 @@ import { Kysely, PostgresDialect } from "kysely";
 export const createConnectionPool = (databaseUrl: string): Pool => {
   return new Pool({
     connectionString: databaseUrl,
-    // Optimized for Supabase free tier limitations
-    max: 20, // Maximum pool size (Supabase free tier allows ~60 connections)
-    min: 2, // Minimum pool size
-    idleTimeoutMillis: 30000, // 30 seconds
-    connectionTimeoutMillis: 10000, // 10 seconds
+    // Optimized for Vercel + Transaction Pooler
+    max: 1, // One connection per serverless function
+    min: 0, // No persistent connections
+    idleTimeoutMillis: 1000, // Close connections quickly
+    connectionTimeoutMillis: 5000, // Fast connection establishment
     allowExitOnIdle: true,
-    // For read-heavy workloads
-    statement_timeout: 30000,
+    // Good timeouts for complex queries through pooler
+    statement_timeout: 30000, // 30s for complex analytics
     query_timeout: 30000,
   });
 };
@@ -26,10 +26,10 @@ export const createConnectionPool = (databaseUrl: string): Pool => {
  * @param pool - PostgreSQL connection pool
  * @returns Configured Kysely instance
  */
-export const createKyselyInstance = <DatabaseType>(
+export const createKyselyInstance = <Database>(
   pool: Pool
-): Kysely<DatabaseType> => {
-  return new Kysely<DatabaseType>({
+): Kysely<Database> => {
+  return new Kysely<Database>({
     dialect: new PostgresDialect({
       pool,
     }),

@@ -16,6 +16,13 @@
     "dev": {
       "cache": false,
       "persistent": true
+    },
+    "db:generate": {
+      "inputs": ["src/prisma/schema.prisma"],
+      "outputs": ["src/generated/**"]
+    },
+    "db:migrate": {
+      "inputs": ["src/prisma/schema.prisma", "src/prisma/migrations/**"]
     }
   }
 }

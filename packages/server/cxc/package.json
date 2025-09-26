@@ -4,7 +4,11 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "lint": "eslint . --max-warnings 0"
+    "lint": "eslint . --max-warnings 0",
+    "db:migrate": "prisma migrate dev --schema=src/prisma/schema.prisma",
+    "db:migrate:deploy": "prisma migrate deploy --schema=src/prisma/schema.prisma",
+    "db:generate": "prisma generate --schema=src/prisma/schema.prisma",
+    "db:studio": "prisma studio --schema=src/prisma/schema.prisma"
   },
   "dependencies": {
     "@prisma/client": "^6.16.1",
