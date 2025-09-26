@@ -1,4 +1,4 @@
-Make sure you add the correct Assignees and Labels that best fit this pull request
+Make sure you add the correct **Assignees** and **Labels** that best fit this pull request
 
 ## Closes Issue
 
