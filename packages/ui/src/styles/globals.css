@@ -123,3 +123,7 @@
     @apply bg-background text-foreground;
   }
 }
+
+.gradient-text {
+  @apply inline bg-clip-text text-transparent;
+}

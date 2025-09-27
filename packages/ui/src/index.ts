@@ -1,4 +1,5 @@
 // Components
+export { Avatar, AvatarImage, AvatarFallback } from "./components/avatar";
 export { Button, buttonVariants } from "./components/button";
 export {
   Card,
