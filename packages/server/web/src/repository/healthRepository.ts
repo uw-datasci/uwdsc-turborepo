@@ -2,27 +2,15 @@ import { BaseWebRepository } from "./baseWebRepository";
 import { HealthCheck } from "../types/health";
 
 export class HealthRepository extends BaseWebRepository {
-  protected tableName = "_";
-
   /**
    * Get system health information
    */
   async getSystemHealth(): Promise<HealthCheck> {
     // Test Supabase connection
-    let supabaseConnected = false;
+    let supabaseConnected = true;
     let supabaseError = null;
-    let projectInfo = null;
     try {
-      const { data, error } = await this.client
-        .from(this.tableName)
-        .select("*");
-
-      // If we get a specific error about the table not existing, connection is working
-      supabaseConnected = !error || error.message.includes("does not exist");
-      if (error && !error.message.includes("does not exist")) {
-        supabaseError = error.message;
-      }
-      projectInfo = data;
+      await this.pool.query(`SELECT 1`);
     } catch {
       supabaseConnected = false;
       supabaseError = "Connection failed";
@@ -31,7 +19,6 @@ export class HealthRepository extends BaseWebRepository {
     const healthData: HealthCheck = {
       id: "system-health",
       service: "uwdsc-website-v3",
-      project: projectInfo,
       status: supabaseConnected ? "healthy" : "degraded",
       timestamp: new Date().toISOString(),
       version: "0.1.0",

@@ -3,12 +3,11 @@ import {
   createConnectionPool,
   createKyselyInstance,
 } from "@uwdsc/server/core/database/connection";
-import { supabase } from "@uwdsc/server/core/database/client";
 // import { DB } from "../generated/database";
 type DB = any; // REMOVE ONE SCHEMA IS ADDED
 
 // Initialize connections once for the CxC app
-const pool = createConnectionPool(process.env.DATABASE_URL!);
+const pool = createConnectionPool(process.env.NEXT_PUBLIC_DATABASE_URL!);
 const db = createKyselyInstance<DB>(pool);
 
 /**
@@ -17,6 +16,6 @@ const db = createKyselyInstance<DB>(pool);
  */
 export abstract class BaseCxcRepository extends BaseRepository<DB> {
   constructor() {
-    super(db, pool, supabase);
+    super(db, pool);
   }
 }
