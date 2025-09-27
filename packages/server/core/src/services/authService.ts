@@ -1,3 +1,7 @@
+import {
+  createConnectionPool,
+  createKyselyInstance,
+} from "../database/connection";
 import { AuthRepository } from "../repository/authRepository";
 import {
   RegisterData,
@@ -8,10 +12,12 @@ import {
 } from "../types/auth";
 
 export class AuthService {
-  private authRepository: AuthRepository;
+  private readonly authRepository: AuthRepository;
 
   constructor() {
-    this.authRepository = new AuthRepository();
+    const pool = createConnectionPool(process.env.DATABASE_URL!);
+    const db = createKyselyInstance(pool);
+    this.authRepository = new AuthRepository(db, pool);
   }
 
   async register(data: RegisterData): Promise<AuthResponse> {

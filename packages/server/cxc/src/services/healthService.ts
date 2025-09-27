@@ -3,7 +3,7 @@ import { HealthRepository } from "../repository/healthRepository";
 import { HealthCheck } from "../types/health";
 
 export class HealthService {
-  private repository: HealthRepository;
+  private readonly repository: HealthRepository;
 
   constructor() {
     this.repository = new HealthRepository();

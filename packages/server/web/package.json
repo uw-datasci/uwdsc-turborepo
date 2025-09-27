@@ -4,18 +4,26 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "lint": "eslint . --max-warnings 0"
+    "lint": "eslint . --max-warnings 0",
+    "db:migrate": "prisma migrate dev --schema=src/prisma/schema.prisma",
+    "db:migrate:deploy": "prisma migrate deploy --schema=src/prisma/schema.prisma",
+    "db:generate": "prisma generate --schema=src/prisma/schema.prisma",
+    "db:studio": "prisma studio --schema=src/prisma/schema.prisma"
   },
   "dependencies": {
     "@prisma/client": "^6.16.1",
     "@supabase/supabase-js": "^2.49.0",
-    "@uwdsc/server/core": "workspace:*"
+    "@uwdsc/server/core": "workspace:*",
+    "kysely": "^0.27.6",
+    "pg": "^8.11.0"
   },
   "devDependencies": {
     "@types/node": "^20.19.9",
+    "@types/pg": "^8.10.0",
     "@uwdsc/eslint-config": "workspace:*",
     "@uwdsc/typescript-config": "workspace:*",
     "prisma": "^6.16.1",
+    "prisma-kysely": "^2.2.1",
     "typescript": "^5.9.2"
   },
   "exports": {
