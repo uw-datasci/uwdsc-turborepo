@@ -8,9 +8,8 @@ export async function middleware(request: NextRequest) {
   try {
     const authMiddleware = new AuthMiddleware();
     const baseUrl = request.nextUrl.origin;
-    const cookies = request.headers.get('cookie') || '';
     
-    const result = await authMiddleware.checkAuth(baseUrl, cookies, pathname);
+    const result = await authMiddleware.checkAuth(baseUrl, pathname);
     
     if (result.shouldRedirect && result.redirectUrl) {
       return NextResponse.redirect(new URL(result.redirectUrl, request.url));

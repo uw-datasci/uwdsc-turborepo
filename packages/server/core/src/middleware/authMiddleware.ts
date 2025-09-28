@@ -6,14 +6,10 @@ export interface AuthMiddlewareResult {
 }
 
 export class AuthMiddleware {
-  async checkAuth(baseUrl: string, cookies: string, pathname: string): Promise<AuthMiddlewareResult> {
+  async checkAuth(baseUrl: string, pathname: string): Promise<AuthMiddlewareResult> {
     try {
       
-      const response = await fetch(`${baseUrl}/api/auth/me`, {
-        headers: {
-          cookie: cookies || '',
-        },
-      });
+      const response = await fetch(`${baseUrl}/api/auth/me`);
       
       const isAuthenticated = response.ok;
       let isEmailVerified = false;
