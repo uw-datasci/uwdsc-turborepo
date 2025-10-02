@@ -19,6 +19,3 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
-
-// Include all model files
-/// <reference path="<enter-model-path-here>" />
