@@ -5,10 +5,6 @@ export type Member = {
   name: string;
   position: string;
   image: StaticImageData;
-  email?: string;
-  website?: string;
-  linkedin?: string;
-  instagram?: string;
 };
 
 export type Subteam = {

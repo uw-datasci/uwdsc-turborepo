@@ -10,6 +10,8 @@ export {
   CardDescription,
   CardContent,
 } from "./components/card";
+export { Input } from "./components/input";
+export { Label } from "./components/label";
 
 // Hooks
 export * from "./hooks";
