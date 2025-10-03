@@ -18,7 +18,7 @@ export const metadata: Metadata = {
   description: "University of Waterloo Data Science Club website",
 };
 
-export default function RootLayout({
+export default function ApplicationLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
