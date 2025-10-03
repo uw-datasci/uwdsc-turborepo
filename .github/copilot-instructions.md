@@ -1,7 +1,3 @@
----
-alwaysApply: true
----
-
 # Design System Architecture
 
 This project follows an **Atomic Design System** pattern using shadcn/ui as the foundation.
