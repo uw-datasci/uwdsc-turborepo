@@ -28,3 +28,6 @@ export * from "./hooks";
 
 // Utils
 export { cn } from "./lib/utils";
+
+// Providers
+export { ThemeProvider } from "./components/theme-provider";

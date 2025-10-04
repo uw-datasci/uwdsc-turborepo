@@ -1,21 +1,9 @@
-import "@uwdsc/ui/globals.css";
-import { Geist, Geist_Mono } from "next/font/google";
 import { Metadata } from "next";
-import { ThemeProvider } from "@/providers/theme-provider";
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
+import { ApplicationBackground } from "@/components/application/ApplicationBackground";
 
 export const metadata: Metadata = {
-  title: "UWaterloo Data Science Club",
-  description: "University of Waterloo Data Science Club website",
+  title: "DSC Application",
+  description: "University of Waterloo Data Science Club Exec Application",
 };
 
 export default function ApplicationLayout({
@@ -23,15 +11,5 @@ export default function ApplicationLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  return (
-    <html lang="en" className="dark" suppressHydrationWarning>
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-950 dark:to-slate-900">
-          <ThemeProvider>{children}</ThemeProvider>
-        </div>
-      </body>
-    </html>
-  );
+  return <ApplicationBackground>{children}</ApplicationBackground>;
 }
