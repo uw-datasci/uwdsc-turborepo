@@ -1,0 +1,60 @@
+enum user_status {
+  member
+  admin
+  exec
+}
+
+enum faculty {
+  math
+  engineering
+  science
+  arts
+  health
+  environment
+  other_non_waterloo // do we need this?
+}
+
+enum payment_method {
+  cash
+  online
+  math_soc
+}
+
+enum application_status {
+  draft
+  submitted
+  under_review
+  accepted
+  rejected
+  waitlisted
+}
+
+enum role {
+  events_exec
+  events_co_vp
+  design_exec
+  education_exec
+  internal_exec
+  outreach_exec
+  outreach_co_vp
+  development_exec
+  development_co_vp
+  social_media_exec
+  social_media_vp
+  project_lead
+  workshop_lead
+  cxc_co_vp
+  cxc_exec
+  general
+  supplementary
+}
+
+enum question_type {
+  text
+  textarea
+  multiple_choice
+  file_upload
+  checkbox
+  date
+  number
+}

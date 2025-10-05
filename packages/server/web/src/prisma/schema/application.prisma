@@ -1,0 +1,37 @@
+model application {
+  id                 BigInt             @id @default(autoincrement())
+  profile_id         String             @db.Uuid
+  term_id            BigInt
+  roles_applying_for role[]             @default([]) // prisma cannot enforce max 3 roles
+  resume_path         String?           @db.VarChar(500)
+  status             application_status @default(draft)
+  comments           String?            @db.Text
+  created_at         DateTime           @default(now()) @db.Timestamptz(6)
+  updated_at         DateTime           @default(now()) @updatedAt @db.Timestamptz(6)
+  submitted_at       DateTime?          @db.Timestamptz(6)
+
+  // Relations
+  profile profile              @relation(fields: [profile_id], references: [id], onDelete: Cascade)
+  term    term                 @relation(fields: [term_id], references: [id], onDelete: Cascade)
+  answers application_answer[]
+
+  @@unique([profile_id, term_id])
+}
+
+model application_answer {
+  id             BigInt   @id @default(autoincrement())
+  application_id BigInt
+  question_id    BigInt
+  answer_text    String?  @db.Text
+  answer_option  String?  @db.Text
+  answer_options String[]
+  answer_file    String?  @db.VarChar(500)
+  created_at     DateTime @default(now()) @db.Timestamptz(6)
+  updated_at     DateTime @default(now()) @updatedAt @db.Timestamptz(6)
+
+  // Relations
+  application application @relation(fields: [application_id], references: [id], onDelete: Cascade)
+  question    question    @relation(fields: [question_id], references: [id], onDelete: Cascade)
+
+  @@unique([application_id, question_id])
+}
