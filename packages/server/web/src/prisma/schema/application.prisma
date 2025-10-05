@@ -3,7 +3,7 @@ model application {
   profile_id         String             @db.Uuid
   term_id            BigInt
   roles_applying_for role[]             @default([]) // prisma cannot enforce max 3 roles
-  resume_path         String?           @db.VarChar(500)
+  resume_path        String?            @db.VarChar(500)
   status             application_status @default(draft)
   comments           String?            @db.Text
   created_at         DateTime           @default(now()) @db.Timestamptz(6)
