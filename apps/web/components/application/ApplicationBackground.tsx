@@ -2,24 +2,27 @@
 
 import { ReactNode } from "react";
 import Image from "next/image";
+import { useApplicationProgress } from "@/contexts/AppProgressContext";
 
 export function ApplicationBackground({
   children,
 }: Readonly<{ children: ReactNode }>) {
+  const { progressValue } = useApplicationProgress();
+
   return (
     <>
-      {/* Progress bar - will be used when multi-step form is implemented */}
+      {/* Multi-step application progress bar */}
       <progress
-        value={-1}
-        max={4}
+        value={progressValue}
+        max={5}
         className="p-0 [&::-webkit-progress-value]:duration-700[&::-webkit-progress-value]:ease-in-out
-        relative z-20 m-0 block h-2 w-full bg-grey4 transition-all duration-700 ease-in-out
-        [&::-moz-progress-bar]:bg-lightBlue [&::-moz-progress-bar]:transition-all [&::-moz-progress-bar]:duration-700
-        [&::-moz-progress-bar]:ease-in-out [&::-webkit-progress-bar]:bg-grey4  [&::-webkit-progress-value]:bg-lightBlue
+        relative z-20 m-0 block h-2 w-full transition-all duration-700 ease-in-out
+        [&::-moz-progress-bar]:bg-blue-300 [&::-moz-progress-bar]:transition-all [&::-moz-progress-bar]:duration-700
+        [&::-moz-progress-bar]:ease-in-out  [&::-webkit-progress-value]:bg-blue-300
         [&::-webkit-progress-value]:transition-all"
       />
 
-      <div className="relative min-h-screen overflow-hidden bg-darkBlue2 px-4 py-20 shadow-md backdrop-blur-md">
+      <div className="relative min-h-screen overflow-hidden px-4 py-20 shadow-md backdrop-blur-md">
         {/* Background Elements */}
         <div className="pointer-events-none absolute inset-0 z-0">
           {/* Left Whale */}
@@ -29,6 +32,8 @@ export function ApplicationBackground({
               alt="whale with light bulb"
               width={450}
               height={450}
+              style={{ width: "auto" }}
+              priority
             />
           </div>
 
@@ -39,6 +44,8 @@ export function ApplicationBackground({
               alt="whale floating on cloud"
               width={500}
               height={500}
+              style={{ width: "auto" }}
+              priority
             />
           </div>
         </div>

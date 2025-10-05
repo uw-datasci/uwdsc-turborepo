@@ -11,29 +11,52 @@ import {
   Input,
   Button,
 } from "@uwdsc/ui";
-import { type ApplicationFormValues } from "@/lib/schemas/application";
-import { useApplicationForm } from "@/hooks/useApplicationForm";
+import { UseFormReturn } from "react-hook-form";
+import { AppFormValues } from "@/lib/schemas/application";
 
-interface ApplicationFormProps {
-  readonly onSubmit: (data: ApplicationFormValues) => void | Promise<void>;
-  readonly showDebugInfo?: boolean;
-  readonly defaultValues?: Partial<ApplicationFormValues>;
+interface PersonalProps {
+  readonly form: UseFormReturn<AppFormValues>;
+  readonly onNext: () => void;
+  readonly onBack: () => void;
 }
 
-export function ApplicationForm({
-  onSubmit,
-  showDebugInfo = false,
-  defaultValues,
-}: ApplicationFormProps) {
-  const { form, handleSubmit, isSubmitting } = useApplicationForm({
-    onSubmit,
-    defaultValues,
-  });
+export function Personal({ form, onNext, onBack }: PersonalProps) {
+  const handleNext = async () => {
+    // Validate only personal details fields
+    const isValid = await form.trigger([
+      "full_name",
+      "personal_email",
+      "waterloo_email",
+      "program",
+      "academic_term",
+    ]);
+
+    if (isValid) {
+      const values = form.getValues();
+      console.log("📝 API Call: Updating application with personal details...");
+      console.log({
+        full_name: values.full_name,
+        personal_email: values.personal_email,
+        waterloo_email: values.waterloo_email,
+        program: values.program,
+        academic_term: values.academic_term,
+      });
+      console.log("✅ Personal details saved successfully");
+      onNext();
+    }
+  };
 
   return (
-    <>
+    <div className="space-y-6">
+      <div>
+        <h2 className="text-2xl font-semibold mb-2">Personal Details</h2>
+        <p className="text-muted-foreground">
+          Please provide your basic information
+        </p>
+      </div>
+
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
+        <div className="space-y-6">
           {/* Full Name */}
           <FormField
             control={form.control}
@@ -128,61 +151,17 @@ export function ApplicationForm({
               </FormItem>
             )}
           />
-
-          {/* Resume URL */}
-          <FormField
-            control={form.control}
-            name="resumeUrl"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Resume URL *</FormLabel>
-                <FormControl>
-                  <Input
-                    type="url"
-                    placeholder="https://drive.google.com/..."
-                    {...field}
-                  />
-                </FormControl>
-                <FormDescription>
-                  Link to your resume (Google Drive, Dropbox, etc.)
-                </FormDescription>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <div className="flex justify-end gap-4">
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => form.reset()}
-            >
-              Clear Form
-            </Button>
-            <Button type="submit" disabled={isSubmitting}>
-              {isSubmitting ? "Submitting..." : "Submit Application"}
-            </Button>
-          </div>
-        </form>
+        </div>
       </Form>
 
-      {showDebugInfo && (
-        <div className="mt-8 rounded-lg p-4">
-          <h3 className="mb-2 font-semibold">Form State (Debug):</h3>
-          <pre className="overflow-auto text-xs">
-            {JSON.stringify(
-              {
-                values: form.watch(),
-                errors: form.formState.errors,
-                isValid: form.formState.isValid,
-                isDirty: form.formState.isDirty,
-              },
-              null,
-              2
-            )}
-          </pre>
-        </div>
-      )}
-    </>
+      <div className="flex justify-between pt-4">
+        <Button type="button" variant="outline" onClick={onBack}>
+          Back
+        </Button>
+        <Button type="button" onClick={handleNext}>
+          Next
+        </Button>
+      </div>
+    </div>
   );
 }

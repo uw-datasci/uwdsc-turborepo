@@ -3,17 +3,17 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import {
   applicationSchema,
   applicationDefaultValues,
-  type ApplicationFormValues,
+  type AppFormValues,
 } from "@/lib/schemas/application";
 
 interface UseApplicationFormOptions {
-  onSubmit: (data: ApplicationFormValues) => void | Promise<void>;
-  defaultValues?: Partial<ApplicationFormValues>;
+  onSubmit: (data: AppFormValues) => void | Promise<void>;
+  defaultValues?: Partial<AppFormValues>;
 }
 
 interface UseApplicationFormReturn {
-  form: UseFormReturn<ApplicationFormValues>;
-  handleSubmit: (data: ApplicationFormValues) => void | Promise<void>;
+  form: UseFormReturn<AppFormValues>;
+  handleSubmit: (data: AppFormValues) => void | Promise<void>;
   isSubmitting: boolean;
   isValid: boolean;
   isDirty: boolean;
@@ -38,7 +38,7 @@ export function useApplicationForm({
   onSubmit,
   defaultValues,
 }: UseApplicationFormOptions): UseApplicationFormReturn {
-  const form = useForm<ApplicationFormValues>({
+  const form = useForm<AppFormValues>({
     resolver: zodResolver(applicationSchema),
     defaultValues: {
       ...applicationDefaultValues,
@@ -47,7 +47,7 @@ export function useApplicationForm({
     mode: "onBlur",
   });
 
-  const handleSubmit = async (data: ApplicationFormValues) => {
+  const handleSubmit = async (data: AppFormValues) => {
     await onSubmit(data);
   };
 

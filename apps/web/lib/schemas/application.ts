@@ -21,12 +21,12 @@ export const applicationSchema = z.object({
 /**
  * TypeScript type inferred from the schema
  */
-export type ApplicationFormValues = z.infer<typeof applicationSchema>;
+export type AppFormValues = z.infer<typeof applicationSchema>;
 
 /**
  * Default values for the form
  */
-export const applicationDefaultValues: ApplicationFormValues = {
+export const applicationDefaultValues: AppFormValues = {
   full_name: "",
   personal_email: "",
   waterloo_email: "",
