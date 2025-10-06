@@ -7,13 +7,6 @@ import {
   type AppFormValues,
 } from "@/lib/schemas/application";
 import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@uwdsc/ui";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
@@ -27,19 +20,21 @@ import {
 } from "@/components/application/sections";
 import Seo from "@/components/Seo";
 import { Term } from "@/types/application";
-
-const STEPS = {
-  INTRO: 0,
-  PERSONAL: 1,
-  BASIC: 2,
-  ROLE_SPECIFIC: 3,
-  RESUME: 4,
-  SUBMITTED: 5,
-} as const;
+import { DueDateTag } from "@/components/application/DueDateTag";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+  Button,
+} from "@uwdsc/ui/index";
+import { MoveLeft, MoveRight } from "lucide-react";
+import { AvailablePositions } from "@/components/application/AvailablePositions";
 
 export default function ApplyPage() {
   const [currentTerm, setCurrentTerm] = useState<Term | null>(null);
-  const [currentStep, setCurrentStep] = useState<number>(STEPS.INTRO);
+  const [currentStep, setCurrentStep] = useState<number>(0);
   const [applicationId, setApplicationId] = useState<string>("");
   const { setProgressValue } = useApplicationProgress();
 
@@ -61,31 +56,26 @@ export default function ApplyPage() {
 
   // Update progress bar based on current step
   useEffect(() => {
-    const progressMap: Record<number, number> = {
-      [STEPS.INTRO]: -1, // No progress shown on intro
-      [STEPS.PERSONAL]: 1,
-      [STEPS.BASIC]: 2,
-      [STEPS.ROLE_SPECIFIC]: 3,
-      [STEPS.RESUME]: 4,
-      [STEPS.SUBMITTED]: 5,
-    };
-    setProgressValue(progressMap[currentStep] ?? -1);
+    // Step 0 (Intro) shows no progress, other steps show their step number
+    setProgressValue(currentStep === 0 ? -1 : currentStep);
   }, [currentStep, setProgressValue]);
 
   const handleStartApplication = () => {
-    setCurrentStep(STEPS.PERSONAL);
+    // TODO: API call to create application
+    setCurrentStep(currentStep + 1);
   };
 
-  const handleComplete = () => {
-    const data = form.getValues();
-    console.log("🎉 Application completed! Final data:", data);
+  const handleNext = async () => {
+    try {
+      // TODO: Update application
+      goToStep(currentStep + 1);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
-    // Simulate generating an application ID
-    const mockApplicationId = `APP-${Date.now()}-${Math.random().toString(36).substring(2, 9).toUpperCase()}`;
-    setApplicationId(mockApplicationId);
-
-    // Move to submitted section
-    setCurrentStep(STEPS.SUBMITTED);
+  const handlePrevious = () => {
+    goToStep(currentStep - 1);
   };
 
   const goToStep = (step: number) => {
@@ -94,41 +84,17 @@ export default function ApplyPage() {
 
   const renderStep = () => {
     switch (currentStep) {
-      case STEPS.INTRO:
+      case 0:
         return <Intro onStartApplication={handleStartApplication} />;
-      case STEPS.PERSONAL:
-        return (
-          <Personal
-            form={form}
-            onNext={() => goToStep(STEPS.BASIC)}
-            onBack={() => goToStep(STEPS.INTRO)}
-          />
-        );
-      case STEPS.BASIC:
-        return (
-          <General
-            form={form}
-            onNext={() => goToStep(STEPS.ROLE_SPECIFIC)}
-            onBack={() => goToStep(STEPS.PERSONAL)}
-          />
-        );
-      case STEPS.ROLE_SPECIFIC:
-        return (
-          <Positions
-            form={form}
-            onNext={() => goToStep(STEPS.RESUME)}
-            onBack={() => goToStep(STEPS.BASIC)}
-          />
-        );
-      case STEPS.RESUME:
-        return (
-          <Resume
-            form={form}
-            onSubmit={handleComplete}
-            onBack={() => goToStep(STEPS.ROLE_SPECIFIC)}
-          />
-        );
-      case STEPS.SUBMITTED:
+      case 1:
+        return <Personal form={form} />;
+      case 2:
+        return <General form={form} />;
+      case 3:
+        return <Positions form={form} />;
+      case 4:
+        return <Resume form={form} />;
+      case 5:
         return <Submitted applicationId={applicationId} />;
     }
   };
@@ -139,7 +105,10 @@ export default function ApplyPage() {
     <>
       <Seo title="DSC Application" />
       <div className="container mx-auto px-4 py-12">
-        <Card className="mx-auto max-w-2xl">
+        <DueDateTag currentTerm={currentTerm} />
+        <AvailablePositions />
+
+        <Card className="mx-auto max-w-4xl">
           <CardHeader>
             <CardTitle className="text-3xl font-bold">
               DSC Application - {currentTerm.termName}
@@ -150,7 +119,23 @@ export default function ApplyPage() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="space-y-6">{renderStep()}</div>
+            <div className="space-y-6">
+              {renderStep()}
+
+              {currentStep !== 0 && currentStep !== 5 && (
+                <div className="flex justify-between pt-4">
+                  <Button size="lg" variant="outline" onClick={handlePrevious}>
+                    <MoveLeft className="size-4" />
+                    Previous
+                  </Button>
+
+                  <Button size="lg" onClick={handleNext}>
+                    Next
+                    <MoveRight className="size-4" />
+                  </Button>
+                </div>
+              )}
+            </div>
           </CardContent>
         </Card>
       </div>

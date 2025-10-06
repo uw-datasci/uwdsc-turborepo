@@ -1,27 +1,13 @@
 "use client";
 
-import { Button } from "@uwdsc/ui";
 import { UseFormReturn } from "react-hook-form";
 import { AppFormValues } from "@/lib/schemas/application";
 
 interface GeneralProps {
   readonly form: UseFormReturn<AppFormValues>;
-  readonly onNext: () => void;
-  readonly onBack: () => void;
 }
 
-export function General({ form, onNext, onBack }: GeneralProps) {
-  const handleNext = () => {
-    console.log("📝 API Call: Updating application with basic questions...");
-    console.log({
-      section: "basic_questions",
-      // Add your basic questions data here
-      note: "Basic questions would be saved here",
-    });
-    console.log("✅ Basic questions saved successfully");
-    onNext();
-  };
-
+export function General({ form }: GeneralProps) {
   return (
     <div className="space-y-6">
       <div>
@@ -43,15 +29,6 @@ export function General({ form, onNext, onBack }: GeneralProps) {
             interests?
           </p>
         </div>
-      </div>
-
-      <div className="flex justify-between pt-4">
-        <Button type="button" variant="outline" onClick={onBack}>
-          Back
-        </Button>
-        <Button type="button" onClick={handleNext}>
-          Next
-        </Button>
       </div>
     </div>
   );

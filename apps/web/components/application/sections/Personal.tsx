@@ -9,43 +9,15 @@ import {
   FormLabel,
   FormMessage,
   Input,
-  Button,
 } from "@uwdsc/ui";
 import { UseFormReturn } from "react-hook-form";
 import { AppFormValues } from "@/lib/schemas/application";
 
 interface PersonalProps {
   readonly form: UseFormReturn<AppFormValues>;
-  readonly onNext: () => void;
-  readonly onBack: () => void;
 }
 
-export function Personal({ form, onNext, onBack }: PersonalProps) {
-  const handleNext = async () => {
-    // Validate only personal details fields
-    const isValid = await form.trigger([
-      "full_name",
-      "personal_email",
-      "waterloo_email",
-      "program",
-      "academic_term",
-    ]);
-
-    if (isValid) {
-      const values = form.getValues();
-      console.log("📝 API Call: Updating application with personal details...");
-      console.log({
-        full_name: values.full_name,
-        personal_email: values.personal_email,
-        waterloo_email: values.waterloo_email,
-        program: values.program,
-        academic_term: values.academic_term,
-      });
-      console.log("✅ Personal details saved successfully");
-      onNext();
-    }
-  };
-
+export function Personal({ form }: PersonalProps) {
   return (
     <div className="space-y-6">
       <div>
@@ -153,15 +125,6 @@ export function Personal({ form, onNext, onBack }: PersonalProps) {
           />
         </div>
       </Form>
-
-      <div className="flex justify-between pt-4">
-        <Button type="button" variant="outline" onClick={onBack}>
-          Back
-        </Button>
-        <Button type="button" onClick={handleNext}>
-          Next
-        </Button>
-      </div>
     </div>
   );
 }

@@ -9,35 +9,15 @@ import {
   FormLabel,
   FormMessage,
   Input,
-  Button,
 } from "@uwdsc/ui";
 import { UseFormReturn } from "react-hook-form";
 import { AppFormValues } from "@/lib/schemas/application";
 
 interface ResumeProps {
   readonly form: UseFormReturn<AppFormValues>;
-  readonly onSubmit: () => void;
-  readonly onBack: () => void;
 }
 
-export function Resume({ form, onSubmit, onBack }: ResumeProps) {
-  const handleSubmit = async () => {
-    // Validate resume URL field
-    const isValid = await form.trigger(["resumeUrl"]);
-
-    if (isValid) {
-      const values = form.getValues();
-      console.log("📝 API Call: Submitting final application...");
-      console.log({
-        resumeUrl: values.resumeUrl,
-        message: "Complete application data",
-        allData: values,
-      });
-      console.log("✅ Application submitted successfully!");
-      onSubmit();
-    }
-  };
-
+export function Resume({ form }: ResumeProps) {
   return (
     <div className="space-y-6">
       <div>
@@ -86,15 +66,6 @@ export function Resume({ form, onSubmit, onBack }: ResumeProps) {
           </div>
         </div>
       </Form>
-
-      <div className="flex justify-between pt-4">
-        <Button type="button" variant="outline" onClick={onBack}>
-          Back
-        </Button>
-        <Button type="button" onClick={handleSubmit}>
-          Submit Application
-        </Button>
-      </div>
     </div>
   );
 }

@@ -18,24 +18,29 @@ export function Intro({ onStartApplication }: IntroProps) {
   return (
     <div className="space-y-6">
       <div className="space-y-4">
-        <h2 className="text-2xl font-semibold">Welcome to DSC Applications</h2>
+        <h2 className="text-2xl font-semibold">
+          Welcome to the UWDSC Exec Applications!
+        </h2>
         <CardDescription className="text-base leading-relaxed">
-          Thank you for your interest in joining the UWaterloo Data Science Club
-          executive team! This application consists of several sections:
+          We&apos;re excited that you&apos;re interested in joining our
+          community! This application will take you through several sections:
         </CardDescription>
         <ul className="ml-6 space-y-2 list-disc text-muted-foreground">
-          <li>Personal Details - Your basic information</li>
-          <li>Basic Questions - Tell us about your background</li>
-          <li>Role Specific Questions - Questions about your desired role</li>
+          <li>
+            Personal Details - Your personal information and academic background
+          </li>
+          <li>
+            General - Tell us about yourself and why you want to join UWDSC
+          </li>
+          <li>Positions - Questions about your desired roles</li>
           <li>Resume Upload - Share your resume with us</li>
         </ul>
         <CardDescription className="text-base leading-relaxed">
-          You can save your progress at each step. The application takes
-          approximately 15-20 minutes to complete.
+          You can save your progress at each step.
         </CardDescription>
       </div>
 
-      <div className="flex justify-end pt-4">
+      <div className="flex justify-center pt-4">
         <Button onClick={handleStart} size="lg">
           Start Application
         </Button>

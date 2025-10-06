@@ -15,11 +15,7 @@ export function ApplicationBackground({
       <progress
         value={progressValue}
         max={5}
-        className="p-0 [&::-webkit-progress-value]:duration-700[&::-webkit-progress-value]:ease-in-out
-        relative z-20 m-0 block h-2 w-full transition-all duration-700 ease-in-out
-        [&::-moz-progress-bar]:bg-blue-300 [&::-moz-progress-bar]:transition-all [&::-moz-progress-bar]:duration-700
-        [&::-moz-progress-bar]:ease-in-out  [&::-webkit-progress-value]:bg-blue-300
-        [&::-webkit-progress-value]:transition-all"
+        className="fixed top-0 left-0 p-0 [&::-webkit-progress-value]:duration-700[&::-webkit-progress-value]:ease-in-out z-50 m-0 block h-2 w-full transition-all duration-700 ease-in-out [&::-moz-progress-bar]:bg-blue-300 [&::-moz-progress-bar]:transition-all [&::-moz-progress-bar]:duration-700 [&::-moz-progress-bar]:ease-in-out  [&::-webkit-progress-value]:bg-blue-300 [&::-webkit-progress-value]:transition-all"
       />
 
       <div className="relative min-h-screen overflow-hidden px-4 py-20 shadow-md backdrop-blur-md">
