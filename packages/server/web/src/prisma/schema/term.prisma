@@ -1,4 +1,4 @@
-model term {
+model Term {
   id                BigInt   @id @default(autoincrement())
   term_name         String   @unique @db.VarChar(255)
   app_release_date  DateTime @db.Timestamptz(6)
@@ -8,6 +8,8 @@ model term {
   updated_at        DateTime @default(now()) @updatedAt @db.Timestamptz(6)
 
   // Relations
-  applications application[]
-  questions    question[]
+  applications Application[]
+  questions    Question[]
+
+  @@map("term")
 }

@@ -1,23 +1,25 @@
-model profile {
-  id                 String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  auth_id            String         @unique @db.Uuid
-  first_name         String         @db.VarChar(255)
-  last_name          String         @db.VarChar(255)
-  user_status        user_status    @default(member)
-  has_paid           Boolean        @default(false)
-  wat_iam            String?        @db.VarChar(255)
-  faculty            faculty
-  term               String         @db.VarChar(100)
-  heard_from_where   String         @default("") @db.Text
-  payment_method     payment_method
-  payment_location   String?        @db.VarChar(255)
-  verifier           String?        @db.VarChar(255)
-  member_ideas       String?        @db.Text
-  is_math_soc_member Boolean        @default(false)
-  created_at         DateTime       @default(now()) @db.Timestamptz(6)
-  updated_at         DateTime       @default(now()) @updatedAt @db.Timestamptz(6)
+model Profile {
+  id                 String        @id @default(uuid()) @db.Uuid
+  user_id            String        @unique @db.Uuid
+  first_name         String        @db.VarChar(255)
+  last_name          String        @db.VarChar(255)
+  user_status        UserStatus    @default(member)
+  has_paid           Boolean       @default(false)
+  wat_iam            String?       @db.VarChar(255)
+  faculty            Faculty
+  term               String        @db.VarChar(100)
+  heard_from_where   String        @default("") @db.Text
+  payment_method     PaymentMethod
+  payment_location   String?       @db.VarChar(255)
+  verifier           String?       @db.VarChar(255)
+  member_ideas       String?       @db.Text
+  is_math_soc_member Boolean       @default(false)
+  created_at         DateTime      @default(now()) @db.Timestamptz(6)
+  updated_at         DateTime      @default(now()) @updatedAt @db.Timestamptz(6)
 
   // Relations
-  applications      application[]
-  event_attendances event_attendance[]
+  applications      Application[]
+  event_attendances EventAttendance[]
+
+  @@map("profile")
 }
