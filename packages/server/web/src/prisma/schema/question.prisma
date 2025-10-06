@@ -1,0 +1,20 @@
+model Question {
+  id          BigInt       @id @default(autoincrement())
+  term_id     BigInt
+  question_id String       @db.VarChar(255)
+  role        Role
+  type        QuestionType
+  question    String       @db.Text
+  is_required Boolean      @default(false)
+  order_num   Int
+  max_length  Int?
+  placeholder String?      @db.VarChar(255)
+  help_text   String?      @db.Text
+
+  // Relations
+  term    Term                @relation(fields: [term_id], references: [id], onDelete: Cascade)
+  answers ApplicationAnswer[]
+
+  @@unique([term_id, question_id])
+  @@map("question")
+}
