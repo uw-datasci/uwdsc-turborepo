@@ -20,13 +20,6 @@ interface ResumeProps {
 export function Resume({ form }: ResumeProps) {
   return (
     <div className="space-y-6">
-      <div>
-        <h2 className="text-2xl font-semibold mb-2">Resume Upload</h2>
-        <p className="text-muted-foreground">
-          Share your resume with us to complete your application
-        </p>
-      </div>
-
       <Form {...form}>
         <div className="space-y-6">
           {/* Resume URL */}

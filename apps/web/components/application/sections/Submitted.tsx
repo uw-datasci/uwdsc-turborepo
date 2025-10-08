@@ -3,12 +3,7 @@
 import { Button } from "@uwdsc/ui";
 import { CheckCircle2 } from "lucide-react";
 
-interface SubmittedProps {
-  readonly applicationId?: string;
-  readonly onView?: () => void;
-}
-
-export function Submitted({ applicationId, onView }: SubmittedProps) {
+export function Submitted() {
   return (
     <div className="space-y-8 py-8 text-center">
       <div className="flex justify-center">
@@ -22,13 +17,6 @@ export function Submitted({ applicationId, onView }: SubmittedProps) {
           received your application and will review it shortly.
         </p>
       </div>
-
-      {applicationId && (
-        <div className="rounded-lg bg-muted p-4 max-w-md mx-auto">
-          <p className="text-sm text-muted-foreground mb-1">Application ID</p>
-          <p className="font-mono font-semibold">{applicationId}</p>
-        </div>
-      )}
 
       <div className="space-y-4 max-w-md mx-auto">
         <div className="rounded-lg border p-4 text-left">
@@ -60,7 +48,6 @@ export function Submitted({ applicationId, onView }: SubmittedProps) {
         <Button variant="outline" onClick={() => (window.location.href = "/")}>
           Return to Home
         </Button>
-        {onView && <Button onClick={onView}>View My Applications</Button>}
       </div>
     </div>
   );

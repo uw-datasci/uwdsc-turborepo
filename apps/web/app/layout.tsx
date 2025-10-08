@@ -1,4 +1,5 @@
 import "@uwdsc/ui/globals.css";
+import "../styles/custom.css";
 import { Geist, Geist_Mono } from "next/font/google";
 import { Metadata } from "next";
 import { ThemeProvider } from "@uwdsc/ui";

@@ -32,10 +32,22 @@ import {
 import { MoveLeft, MoveRight } from "lucide-react";
 import { AvailablePositions } from "@/components/application/AvailablePositions";
 
+type StepName = {
+  title: string;
+  desc: string;
+};
+
+const STEP_NAMES: StepName[] = [
+  { title: "DSC Application", desc: "Join the UWaterloo Data Science Club" },
+  { title: "Personal Details", desc: "Please provide your basic information" },
+  { title: "General", desc: "Tell us more about your background & interests" },
+  { title: "Positions", desc: "Questions specific to your desired roles" },
+  { title: "Resume", desc: "Share your resume with us" },
+];
+
 export default function ApplyPage() {
   const [currentTerm, setCurrentTerm] = useState<Term | null>(null);
   const [currentStep, setCurrentStep] = useState<number>(0);
-  const [applicationId, setApplicationId] = useState<string>("");
   const { setProgressValue } = useApplicationProgress();
 
   useEffect(() => {
@@ -95,7 +107,7 @@ export default function ApplyPage() {
       case 4:
         return <Resume form={form} />;
       case 5:
-        return <Submitted applicationId={applicationId} />;
+        return <Submitted />;
     }
   };
 
@@ -106,18 +118,45 @@ export default function ApplyPage() {
       <Seo title="DSC Application" />
       <div className="container mx-auto px-4 py-12">
         <DueDateTag currentTerm={currentTerm} />
+
+        <div className="mx-auto max-w-4xl text-center mb-6">
+          <h1 className="mb-2 text-3xl font-bold text-white">
+            DSC Exec Application Form
+          </h1>
+          <p className="text-3xl font-semibold text-blue-400">
+            {currentTerm.termName}
+          </p>
+        </div>
+
         <AvailablePositions />
 
-        <Card className="mx-auto max-w-4xl">
-          <CardHeader>
-            <CardTitle className="text-3xl font-bold">
-              DSC Application - {currentTerm.termName}
-            </CardTitle>
+        <Card
+          className={`mx-auto max-w-4xl shadow-md backdrop-blur-md ${currentStep === 0 ? "bg-gradient-blue" : "bg-slate-900"}`}
+        >
+          <CardHeader
+            className={`${currentStep === 0 ? "" : "bg-gradient-blue"} rounded-t-xl -mt-6 py-4`}
+          >
+            {STEP_NAMES[currentStep] && (
+              <div className="flex justify-between items-center">
+                <div>
+                  <CardTitle className="text-3xl font-bold">
+                    {STEP_NAMES[currentStep].title}
+                  </CardTitle>
+                  <CardDescription className="text-gray-300">
+                    {STEP_NAMES[currentStep].desc}
+                  </CardDescription>
+                </div>
 
-            <CardDescription>
-              Join the UWaterloo Data Science Club executive team
-            </CardDescription>
+                {currentStep !== 0 && currentStep !== 5 && (
+                  <p className="text-sm text-gray-300 mt-1">
+                    Mandatory fields are marked with an asterisk (
+                    <span className="text-red-500">*</span>)
+                  </p>
+                )}
+              </div>
+            )}
           </CardHeader>
+
           <CardContent>
             <div className="space-y-6">
               {renderStep()}

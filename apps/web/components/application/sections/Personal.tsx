@@ -20,13 +20,6 @@ interface PersonalProps {
 export function Personal({ form }: PersonalProps) {
   return (
     <div className="space-y-6">
-      <div>
-        <h2 className="text-2xl font-semibold mb-2">Personal Details</h2>
-        <p className="text-muted-foreground">
-          Please provide your basic information
-        </p>
-      </div>
-
       <Form {...form}>
         <div className="space-y-6">
           {/* Full Name */}

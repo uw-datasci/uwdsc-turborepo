@@ -10,13 +10,6 @@ interface GeneralProps {
 export function General({ form }: GeneralProps) {
   return (
     <div className="space-y-6">
-      <div>
-        <h2 className="text-2xl font-semibold mb-2">Basic Questions</h2>
-        <p className="text-muted-foreground">
-          Tell us more about your background and interests
-        </p>
-      </div>
-
       <div className="space-y-6">
         {/* Placeholder for basic questions */}
         <div className="rounded-lg border border-dashed p-8 text-center">

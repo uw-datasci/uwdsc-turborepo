@@ -1,0 +1,13 @@
+.gradient-text {
+  @apply inline bg-clip-text text-transparent;
+}
+
+.bg-gradient-blue {
+  background: linear-gradient(
+    127.32deg,
+    rgba(129, 145, 216, 0.75) 18.28%,
+    rgba(56, 73, 149, 0.75) 72.12%,
+    rgba(62, 79, 153, 0.75) 74.88%,
+    rgba(166, 195, 234, 0.75) 125.61%
+  );
+}
