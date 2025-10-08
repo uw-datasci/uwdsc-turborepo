@@ -12,7 +12,7 @@ import {
   SelectItem,
   RadioGroup,
   RadioGroupItem,
-} from "@uwdsc/ui/index";
+} from "@uwdsc/ui";
 import { ComponentProps } from "react";
 import { ControllerRenderProps } from "react-hook-form";
 

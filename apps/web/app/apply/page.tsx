@@ -11,6 +11,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
+import { DueDateTag, AvailablePositions } from "@/components/application";
 import {
   General,
   Intro,
@@ -21,16 +22,8 @@ import {
 } from "@/components/application/steps";
 import Seo from "@/components/Seo";
 import { Term } from "@/types/application";
-import { DueDateTag } from "@/components/application/DueDateTag";
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardContent,
-  Button,
-} from "@uwdsc/ui/index";
+import { Button, Card, CardContent, CardHeader, CardTitle } from "@uwdsc/ui";
 import { MoveLeft, MoveRight, User } from "lucide-react";
-import { AvailablePositions } from "@/components/application/AvailablePositions";
 
 const STEP_NAMES = [
   "DSC Application",
