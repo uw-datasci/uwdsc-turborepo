@@ -18,7 +18,7 @@ import {
   Positions,
   Resume,
   Submitted,
-} from "@/components/application/sections";
+} from "@/components/application/steps";
 import Seo from "@/components/Seo";
 import { Term } from "@/types/application";
 import { DueDateTag } from "@/components/application/DueDateTag";
