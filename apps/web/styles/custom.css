@@ -11,3 +11,7 @@
     rgba(166, 195, 234, 0.75) 125.61%
   );
 }
+
+.bg-gradient-profile {
+  background: linear-gradient(179.52deg, #2b345b 0.42%, #0d544c 169.01%);
+}

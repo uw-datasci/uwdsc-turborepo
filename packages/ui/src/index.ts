@@ -22,6 +22,19 @@ export {
 } from "./components/form";
 export { Input } from "./components/input";
 export { Label } from "./components/label";
+export { RadioGroup, RadioGroupItem } from "./components/radio-group";
+export {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectScrollDownButton,
+  SelectScrollUpButton,
+  SelectSeparator,
+  SelectTrigger,
+  SelectValue,
+} from "./components/select";
 
 // Hooks
 export * from "./hooks";

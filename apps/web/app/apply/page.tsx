@@ -6,6 +6,7 @@ import {
   applicationSchema,
   type AppFormValues,
 } from "@/lib/schemas/application";
+import { isStepValid } from "@/lib/utils/application";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -25,24 +26,18 @@ import {
   Card,
   CardHeader,
   CardTitle,
-  CardDescription,
   CardContent,
   Button,
 } from "@uwdsc/ui/index";
-import { MoveLeft, MoveRight } from "lucide-react";
+import { MoveLeft, MoveRight, User } from "lucide-react";
 import { AvailablePositions } from "@/components/application/AvailablePositions";
 
-type StepName = {
-  title: string;
-  desc: string;
-};
-
-const STEP_NAMES: StepName[] = [
-  { title: "DSC Application", desc: "Join the UWaterloo Data Science Club" },
-  { title: "Personal Details", desc: "Please provide your basic information" },
-  { title: "General", desc: "Tell us more about your background & interests" },
-  { title: "Positions", desc: "Questions specific to your desired roles" },
-  { title: "Resume", desc: "Share your resume with us" },
+const STEP_NAMES = [
+  "DSC Application",
+  "Personal Details",
+  "General",
+  "Positions",
+  "Resume",
 ];
 
 export default function ApplyPage() {
@@ -63,7 +58,7 @@ export default function ApplyPage() {
   const form = useForm<AppFormValues>({
     resolver: zodResolver(applicationSchema),
     defaultValues: applicationDefaultValues,
-    mode: "onBlur",
+    mode: "onChange",
   });
 
   // Update progress bar based on current step
@@ -106,12 +101,14 @@ export default function ApplyPage() {
         return <Positions form={form} />;
       case 4:
         return <Resume form={form} />;
-      case 5:
-        return <Submitted />;
     }
   };
 
   if (!currentTerm) return null;
+
+  if (currentStep === 5) {
+    return <Submitted />;
+  }
 
   return (
     <>
@@ -139,12 +136,12 @@ export default function ApplyPage() {
             {STEP_NAMES[currentStep] && (
               <div className="flex justify-between items-center">
                 <div>
-                  <CardTitle className="text-3xl font-bold">
-                    {STEP_NAMES[currentStep].title}
+                  <CardTitle className="flex items-center gap-2 text-2xl">
+                    <div className="bg-gradient-profile mr-2 flex h-10 w-10 items-center justify-center rounded-full">
+                      <User className="h-5 w-5" fill="currentColor" />
+                    </div>
+                    {STEP_NAMES[currentStep]}
                   </CardTitle>
-                  <CardDescription className="text-gray-300">
-                    {STEP_NAMES[currentStep].desc}
-                  </CardDescription>
                 </div>
 
                 {currentStep !== 0 && currentStep !== 5 && (
@@ -163,12 +160,21 @@ export default function ApplyPage() {
 
               {currentStep !== 0 && currentStep !== 5 && (
                 <div className="flex justify-between pt-4">
-                  <Button size="lg" variant="outline" onClick={handlePrevious}>
+                  <Button
+                    size="lg"
+                    variant="outline"
+                    onClick={handlePrevious}
+                    disabled={currentStep === 1}
+                  >
                     <MoveLeft className="size-4" />
                     Previous
                   </Button>
 
-                  <Button size="lg" onClick={handleNext}>
+                  <Button
+                    size="lg"
+                    onClick={handleNext}
+                    disabled={!isStepValid(form, currentStep)}
+                  >
                     Next
                     <MoveRight className="size-4" />
                   </Button>
