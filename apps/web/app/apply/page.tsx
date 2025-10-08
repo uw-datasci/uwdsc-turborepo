@@ -11,7 +11,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
-import { DueDateTag, AvailablePositions } from "@/components/application";
 import {
   General,
   Intro,
@@ -24,6 +23,8 @@ import Seo from "@/components/Seo";
 import { Term } from "@/types/application";
 import { Button, Card, CardContent, CardHeader, CardTitle } from "@uwdsc/ui";
 import { MoveLeft, MoveRight, User } from "lucide-react";
+import { AvailablePositions } from "@/components/application/AvailablePositions";
+import { DueDateTag } from "@/components/application/DueDateTag";
 
 const STEP_NAMES = [
   "DSC Application",
@@ -99,9 +100,7 @@ export default function ApplyPage() {
 
   if (!currentTerm) return null;
 
-  if (currentStep === 5) {
-    return <Submitted />;
-  }
+  if (currentStep === 5) return <Submitted />;
 
   return (
     <>
