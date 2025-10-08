@@ -133,7 +133,7 @@ export function Personal({ form }: PersonalProps) {
           {/* Left Column: Basic Information */}
           <Card className="border-white/20 bg-slate-800">
             <CardHeader>
-              <CardTitle className="flex items-center">
+              <CardTitle className="flex items-center text-xl">
                 <User className="mr-2 h-5 w-5 text-blue-300" />
                 Basic Information
               </CardTitle>
@@ -173,7 +173,7 @@ export function Personal({ form }: PersonalProps) {
           {/* Right Column: Academic Information */}
           <Card className="border-white/20 bg-slate-800">
             <CardHeader>
-              <CardTitle className="flex items-center">
+              <CardTitle className="flex items-center text-xl">
                 <GraduationCap className="mr-2 h-5 w-5 text-blue-300" />
                 Academic Information
               </CardTitle>
@@ -213,17 +213,14 @@ export function Personal({ form }: PersonalProps) {
           {/* Bottom: Club Experience Information */}
           <Card className="md:col-span-2 border-white/20 bg-slate-800">
             <CardHeader>
-              <CardTitle>Past Executive Experience</CardTitle>
-              <CardDescription>
-                Have you been a DSC exec in the past?
-              </CardDescription>
+              <CardTitle className="text-xl">Club Experience</CardTitle>
             </CardHeader>
             <CardContent className="space-y-6">
               <FormField
                 control={form.control}
                 name="club_experience"
                 render={renderRadioField(
-                  "Have you been a DSC exec in the past?"
+                  "Have you been a member of UW Data Science Club before?"
                 )}
               />
             </CardContent>
