@@ -1,0 +1,232 @@
+model Application {
+  id                 BigInt            @id @default(autoincrement())
+  profile_id         String            @db.Uuid
+  term_id            BigInt
+  roles_applying_for Role[]            @default([]) // max 3, prisma cannot enforce
+  resume_path        String?           @db.VarChar(500)
+  status             ApplicationStatus @default(draft)
+  comments           String?           @db.Text
+  created_at         DateTime          @default(now()) @db.Timestamptz(6)
+  updated_at         DateTime          @default(now()) @updatedAt @db.Timestamptz(6)
+  submitted_at       DateTime?         @db.Timestamptz(6)
+
+  // Relations
+  profile Profile             @relation(fields: [profile_id], references: [id], onDelete: Cascade)
+  term    Term                @relation(fields: [term_id], references: [id], onDelete: Cascade)
+  answers ApplicationAnswer[]
+
+  @@unique([profile_id, term_id])
+  @@map("application")
+}
+
+model ApplicationAnswer {
+  id             BigInt   @id @default(autoincrement())
+  application_id BigInt
+  question_id    BigInt
+  answer_text    String?  @db.Text
+  answer_option  String?  @db.Text
+  answer_options String[]
+  answer_file    String?  @db.VarChar(500)
+  created_at     DateTime @default(now()) @db.Timestamptz(6)
+  updated_at     DateTime @default(now()) @updatedAt @db.Timestamptz(6)
+
+  // Relations
+  application Application @relation(fields: [application_id], references: [id], onDelete: Cascade)
+  question    Question    @relation(fields: [question_id], references: [id], onDelete: Cascade)
+
+  @@unique([application_id, question_id])
+  @@map("application_answer")
+}
+
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+generator kysely {
+  provider = "prisma-kysely"
+  output   = "../generated"
+  fileName = "types.ts"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserStatus {
+  member
+  admin
+  exec
+
+  @@map("user_status")
+}
+
+enum Faculty {
+  math
+  engineering
+  science
+  arts
+  health
+  environment
+  other_non_waterloo
+
+  @@map("faculty")
+}
+
+enum PaymentMethod {
+  cash
+  online
+  math_soc
+
+  @@map("payment_method")
+}
+
+enum ApplicationStatus {
+  draft
+  submitted
+  under_review
+  accepted
+  rejected
+  waitlisted
+
+  @@map("application_status")
+}
+
+enum Role {
+  events_exec
+  events_co_vp
+  design_exec
+  education_exec
+  internal_exec
+  outreach_exec
+  outreach_co_vp
+  development_exec
+  development_co_vp
+  social_media_exec
+  social_media_vp
+  project_lead
+  workshop_lead
+  cxc_co_vp
+  cxc_exec
+  general
+  supplementary
+
+  @@map("role")
+}
+
+enum QuestionType {
+  text
+  textarea
+  multiple_choice
+  file_upload
+  checkbox
+  date
+  number
+
+  @@map("question_type")
+}
+
+model Event {
+  id                    BigInt   @id @default(autoincrement())
+  name                  String   @db.VarChar(255)
+  registration_required Boolean
+  description           String?  @db.Text
+  location              String?  @db.VarChar(255)
+  start_time            DateTime @db.Timestamptz(6)
+  buffered_start_time   DateTime @db.Timestamptz(6)
+  end_time              DateTime @db.Timestamptz(6)
+  buffered_end_time     DateTime @db.Timestamptz(6)
+  payment_required      Boolean  @default(true)
+  image_id              BigInt?
+  created_at            DateTime @default(now()) @db.Timestamptz(6)
+  updated_at            DateTime @default(now()) @updatedAt @db.Timestamptz(6)
+
+  // Relations
+  attendances EventAttendance[]
+
+  @@map("event")
+}
+
+model EventAttendance {
+  id         BigInt   @id @default(autoincrement())
+  event_id   BigInt
+  profile_id String   @db.Uuid
+  checked_in Boolean  @default(false)
+  created_at DateTime @default(now()) @db.Timestamptz(6)
+
+  // Relations
+  event   Event   @relation(fields: [event_id], references: [id], onDelete: Cascade)
+  profile Profile @relation(fields: [profile_id], references: [id], onDelete: Cascade)
+
+  @@unique([event_id, profile_id])
+  @@map("event_attendance")
+}
+
+model Question {
+  id          BigInt       @id @default(autoincrement())
+  term_id     BigInt
+  question_id String       @db.VarChar(255)
+  role        Role
+  type        QuestionType
+  question    String       @db.Text
+  is_required Boolean      @default(false)
+  order_num   Int
+  max_length  Int?
+  placeholder String?      @db.VarChar(255)
+  help_text   String?      @db.Text
+
+  // Relations
+  term    Term                @relation(fields: [term_id], references: [id], onDelete: Cascade)
+  answers ApplicationAnswer[]
+
+  @@unique([term_id, question_id])
+  @@map("question")
+}
+
+model Term {
+  id                BigInt   @id @default(autoincrement())
+  term_name         String   @unique @db.VarChar(255)
+  app_release_date  DateTime @db.Timestamptz(6)
+  app_soft_deadline DateTime @db.Timestamptz(6)
+  app_hard_deadline DateTime @db.Timestamptz(6)
+  created_at        DateTime @default(now()) @db.Timestamptz(6)
+  updated_at        DateTime @default(now()) @updatedAt @db.Timestamptz(6)
+
+  // Relations
+  applications Application[]
+  questions    Question[]
+
+  @@map("term")
+}
+
+model Profile {
+  id                 String        @id @default(uuid()) @db.Uuid
+  first_name         String        @db.VarChar(255)
+  last_name          String        @db.VarChar(255)
+  user_status        UserStatus    @default(member)
+  has_paid           Boolean       @default(false)
+  wat_iam            String?       @db.VarChar(255)
+  faculty            Faculty
+  term               String        @db.VarChar(100)
+  heard_from_where   String        @default("") @db.Text
+  payment_method     PaymentMethod
+  payment_location   String?       @db.VarChar(255)
+  verifier           String?       @db.VarChar(255)
+  member_ideas       String?       @db.Text
+  is_math_soc_member Boolean       @default(false)
+  created_at         DateTime      @default(now()) @db.Timestamptz(6)
+  updated_at         DateTime      @default(now()) @updatedAt @db.Timestamptz(6)
+
+  // Relations
+  applications      Application[]
+  event_attendances EventAttendance[]
+
+  @@map("profile")
+}
