@@ -1,0 +1,72 @@
+enum UserStatus {
+  member
+  admin
+  exec
+
+  @@map("user_status")
+}
+
+enum Faculty {
+  math
+  engineering
+  science
+  arts
+  health
+  environment
+  other_non_waterloo
+
+  @@map("faculty")
+}
+
+enum PaymentMethod {
+  cash
+  online
+  math_soc
+
+  @@map("payment_method")
+}
+
+enum ApplicationStatus {
+  draft
+  submitted
+  under_review
+  accepted
+  rejected
+  waitlisted
+
+  @@map("application_status")
+}
+
+enum Role {
+  events_exec
+  events_co_vp
+  design_exec
+  education_exec
+  internal_exec
+  outreach_exec
+  outreach_co_vp
+  development_exec
+  development_co_vp
+  social_media_exec
+  social_media_vp
+  project_lead
+  workshop_lead
+  cxc_co_vp
+  cxc_exec
+  general
+  supplementary
+
+  @@map("role")
+}
+
+enum QuestionType {
+  text
+  textarea
+  multiple_choice
+  file_upload
+  checkbox
+  date
+  number
+
+  @@map("question_type")
+}
