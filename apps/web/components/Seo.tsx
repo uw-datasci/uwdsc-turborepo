@@ -9,7 +9,11 @@ type SEOProps = {
   keywords?: string;
 };
 
-export default function SEO({ title, description, keywords }: SEOProps) {
+export default function Seo({
+  title,
+  description,
+  keywords,
+}: Readonly<SEOProps>) {
   const path = usePathname();
 
   return (

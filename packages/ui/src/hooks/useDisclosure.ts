@@ -1,3 +1,5 @@
+"use client";
+
 // packages/ui/src/hooks/useDisclosure.ts
 import { useState, useCallback } from "react";
 

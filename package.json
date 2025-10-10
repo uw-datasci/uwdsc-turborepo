@@ -26,10 +26,10 @@
     "@uwdsc/eslint-config": "workspace:*",
     "@uwdsc/typescript-config": "workspace:*",
     "prettier": "^3.6.2",
-    "turbo": "^2.5.6",
+    "turbo": "^2.5.8",
     "typescript": "5.7.3"
   },
-  "packageManager": "pnpm@10.18.0",
+  "packageManager": "pnpm@10.18.2",
   "engines": {
     "node": ">=20"
   }

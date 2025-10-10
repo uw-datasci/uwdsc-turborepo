@@ -10,7 +10,10 @@ interface TeamCardProps {
 
 export default function TeamCard({ member }: TeamCardProps) {
   return (
-    <Card className="group relative w-full max-w-xs overflow-hidden border-0 bg-gradient-to-br from-gray-900 to-black p-0 transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-purple-500/20">
+    <Card
+      className="group relative w-full max-w-xs overflow-hidden border-0 bg-gradient-to-br from-gray-900
+      to-black p-0 transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-purple-500/20"
+    >
       {/* Member Image */}
       <div className="relative h-80 w-full overflow-hidden">
         <Image
