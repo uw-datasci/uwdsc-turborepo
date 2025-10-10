@@ -1,6 +1,7 @@
 import { AppFormValues } from "@/lib/schemas/application";
 import {
   Input,
+  Textarea,
   FormItem,
   FormLabel,
   FormControl,
@@ -43,14 +44,15 @@ export const renderTextField = (
 export const renderSelectField = (
   label: string,
   placeholder: string,
-  options: string[]
+  options: string[],
+  required: boolean = true
 ) => {
   return ({ field }: { field: ControllerRenderProps<AppFormValues, any> }) => (
     <FormItem>
       <FormLabel className="mb-1">
-        {label} <span className="text-red-500">*</span>
+        {label} {required && <span className="text-red-500">*</span>}
       </FormLabel>
-      <Select onValueChange={field.onChange} defaultValue={field.value}>
+      <Select onValueChange={field.onChange} value={field.value}>
         <FormControl>
           <SelectTrigger className="w-full">
             <SelectValue placeholder={placeholder} />
@@ -69,6 +71,28 @@ export const renderSelectField = (
           ))}
         </SelectContent>
       </Select>
+      <FormMessage />
+    </FormItem>
+  );
+};
+
+/**
+ * Helper function to render textarea fields
+ */
+export const renderTextAreaField = (
+  label: string,
+  placeholder: string,
+  textareaProps?: Partial<ComponentProps<typeof Textarea>>,
+  required: boolean = true
+) => {
+  return ({ field }: { field: ControllerRenderProps<AppFormValues, any> }) => (
+    <FormItem>
+      <FormLabel className="mb-1 leading-relaxed">
+        {label} {required && <span className="text-red-500">*</span>}
+      </FormLabel>
+      <FormControl>
+        <Textarea placeholder={placeholder} {...textareaProps} {...field} />
+      </FormControl>
       <FormMessage />
     </FormItem>
   );

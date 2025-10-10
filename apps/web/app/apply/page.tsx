@@ -23,7 +23,7 @@ import Seo from "@/components/Seo";
 import { Term } from "@/types/application";
 import { Button, Card, CardContent, CardHeader, CardTitle } from "@uwdsc/ui";
 import { MoveLeft, MoveRight, User } from "lucide-react";
-import { AvailablePositions } from "@/components/application/AvailablePositions";
+import { AvailablePositions } from "@/components/application/banners/AvailablePositions";
 import { DueDateTag } from "@/components/application/DueDateTag";
 
 const STEP_NAMES = [
@@ -52,7 +52,7 @@ export default function ApplyPage() {
   const form = useForm<AppFormValues>({
     resolver: zodResolver(applicationSchema),
     defaultValues: applicationDefaultValues,
-    mode: "onChange",
+    mode: "onTouched",
   });
 
   // Update progress bar based on current step

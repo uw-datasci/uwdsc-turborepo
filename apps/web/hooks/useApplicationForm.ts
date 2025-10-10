@@ -44,7 +44,7 @@ export function useApplicationForm({
       ...applicationDefaultValues,
       ...defaultValues,
     },
-    mode: "onBlur",
+    mode: "onTouched",
   });
 
   const handleSubmit = async (data: AppFormValues) => {
