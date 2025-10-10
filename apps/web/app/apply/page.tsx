@@ -22,7 +22,7 @@ import {
 import Seo from "@/components/Seo";
 import { Term } from "@/types/application";
 import { Button, Card, CardContent, CardHeader, CardTitle } from "@uwdsc/ui";
-import { MoveLeft, MoveRight, User } from "lucide-react";
+import { Loader2, MoveLeft, MoveRight, User } from "lucide-react";
 import { AvailablePositions } from "@/components/application/banners/AvailablePositions";
 import { DueDateTag } from "@/components/application/DueDateTag";
 
@@ -37,6 +37,7 @@ const STEP_NAMES = [
 export default function ApplyPage() {
   const [currentTerm, setCurrentTerm] = useState<Term | null>(null);
   const [currentStep, setCurrentStep] = useState<number>(0);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const { setProgressValue } = useApplicationProgress();
 
   useEffect(() => {
@@ -67,11 +68,17 @@ export default function ApplyPage() {
   };
 
   const handleNext = async () => {
+    setIsLoading(true);
     try {
-      // TODO: Update application
+      // TODO: Replace with actual API call
+      // Example: await updateApplication(form.getValues());
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+
       goToStep(currentStep + 1);
     } catch (error) {
       console.error(error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -81,6 +88,41 @@ export default function ApplyPage() {
 
   const goToStep = (step: number) => {
     setCurrentStep(step);
+  };
+
+  const renderButton = () => {
+    const isLastStep = currentStep === 4;
+    const isButtonDisabled = !isStepValid(form, currentStep) || isLoading;
+
+    let buttonClassName = "hover:scale-105 ";
+    if (isLastStep) {
+      buttonClassName += "bg-gradient-orange text-white hover:opacity-90 ";
+      buttonClassName += isButtonDisabled ? "disabled" : "animate-glow-pulse";
+    } else {
+      buttonClassName +=
+        "bg-secondary-foreground text-slate-800 hover:bg-secondary-foreground/80";
+    }
+
+    return (
+      <Button
+        size="lg"
+        onClick={handleNext}
+        disabled={isButtonDisabled}
+        className={buttonClassName}
+      >
+        {isLoading ? (
+          <>
+            <Loader2 className="size-4 animate-spin" />
+            {isLastStep ? "Submitting..." : "Saving..."}
+          </>
+        ) : (
+          <>
+            {isLastStep ? "Submit" : "Next"}
+            <MoveRight className="size-4" />
+          </>
+        )}
+      </Button>
+    );
   };
 
   const renderStep = () => {
@@ -138,8 +180,8 @@ export default function ApplyPage() {
 
                 {currentStep !== 0 && currentStep !== 5 && (
                   <p className="text-sm text-gray-300 mt-1">
-                    Mandatory fields are marked with an asterisk (
-                    <span className="text-red-500">*</span>)
+                    Mandatory fields are marked with an asterisk{" "}
+                    <span className="text-red-500">*</span>
                   </p>
                 )}
               </div>
@@ -157,19 +199,13 @@ export default function ApplyPage() {
                     variant="outline"
                     onClick={handlePrevious}
                     disabled={currentStep === 1}
+                    className="hover:scale-105"
                   >
                     <MoveLeft className="size-4" />
                     Previous
                   </Button>
 
-                  <Button
-                    size="lg"
-                    onClick={handleNext}
-                    disabled={!isStepValid(form, currentStep)}
-                  >
-                    Next
-                    <MoveRight className="size-4" />
-                  </Button>
+                  {renderButton()}
                 </div>
               )}
             </div>
