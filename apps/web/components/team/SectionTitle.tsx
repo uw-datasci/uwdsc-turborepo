@@ -3,7 +3,10 @@ type SectionTitleProps = {
   children: string;
 };
 
-export default function SectionTitle({ mb, children }: SectionTitleProps) {
+export default function SectionTitle({
+  mb,
+  children,
+}: Readonly<SectionTitleProps>) {
   return (
     <h2
       className={`text-center font-display font-medium tracking-[10px] md:text-lg xl:text-xl ${mb}`}
