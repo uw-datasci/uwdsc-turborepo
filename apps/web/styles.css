@@ -1,6 +1,9 @@
 .gradient-text {
   @apply inline bg-clip-text text-transparent;
 }
+.bg-gradient-purple {
+  @apply bg-gradient-to-tr from-[#E801BE] to-[#3A00FF]
+}
 
 .bg-gradient-blue {
   background: linear-gradient(
