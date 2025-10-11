@@ -1,9 +1,6 @@
 .gradient-text {
   @apply inline bg-clip-text text-transparent;
 }
-.bg-gradient-purple {
-  @apply bg-gradient-to-tr from-[#E801BE] to-[#3A00FF]
-}
 
 .bg-gradient-blue {
   background: linear-gradient(
@@ -24,6 +21,20 @@
 }
 .bg-gradient-orange.disabled {
   background: linear-gradient(180deg, #723e03 0%, #b07207 100%);
+}
+
+.bg-gradient-purple {
+  @apply bg-gradient-to-tr from-[#E801BE] to-[#3A00FF]
+}
+
+.cursor-blink {
+  animation: blink 1s step-end infinite;
+}
+
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
 }
 
 @keyframes glow-pulse {

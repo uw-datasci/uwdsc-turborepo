@@ -95,7 +95,7 @@ export function Positions({ form }: PositionsProps) {
             Position Preferences
           </h2>
         </div>
-        <p className="mb-2 block text-md text-white">
+        <p className="mb-2 block text-base text-white">
           Please select <b>at least 1 and up to 3</b> positions you are
           interested in, and answer the corresponding questions.
         </p>

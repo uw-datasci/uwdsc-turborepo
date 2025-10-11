@@ -1,10 +1,11 @@
-// StepAcademicInfo.tsx
 "use client";
+
 import { FormField } from "@uwdsc/ui";
 import { RegistrationFormValues } from "@/lib/schemas/register";
 import { UseFormReturn } from "react-hook-form";
 import {
   renderRegistrationSelectField,
+  renderRegistrationTextAreaField,
   renderRegistrationTextField,
 } from "../RegistrationFormHelper";
 
@@ -34,41 +35,32 @@ const termOptions = [
   "5B",
 ];
 
-export function StepAcademicInfo({ form }: StepProps) {
+export function AdditionalInfo({ form }: StepProps) {
   return (
     <div className="flex flex-col gap-4">
       <FormField
         control={form.control}
         name="faculty"
-        render={renderRegistrationSelectField(
-          "Faculty",
-          "Select your faculty",
-          facultyOptions
-        )}
+        render={renderRegistrationSelectField("Faculty", facultyOptions)}
       />
       <FormField
         control={form.control}
         name="term"
         render={renderRegistrationSelectField(
-          "Last Completed Term",
-          "Select your last completed term",
+          "Current/Last completed term",
           termOptions
         )}
       />
       <FormField
         control={form.control}
         name="heard_from"
-        render={renderRegistrationTextField(
-          "Where did you hear about us?",
-          "e.g., Instagram, Friend, Website"
-        )}
+        render={renderRegistrationTextField("Where did you hear about us?")}
       />
       <FormField
         control={form.control}
         name="message"
-        render={renderRegistrationTextField(
-          "Optional Message",
-          "Anything else you want us to know"
+        render={renderRegistrationTextAreaField(
+          "[Optional] Share your ideas for new events or improvements!"
         )}
       />
     </div>

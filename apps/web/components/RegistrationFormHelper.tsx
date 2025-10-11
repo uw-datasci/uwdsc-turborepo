@@ -10,15 +10,14 @@ import {
   SelectValue,
   SelectContent,
   SelectItem,
+  Textarea,
 } from "@uwdsc/ui";
 import { ComponentProps } from "react";
 import { ControllerRenderProps } from "react-hook-form";
 
 export const renderRegistrationTextField = (
-  label: string,
   placeholder: string,
-  inputProps?: Partial<ComponentProps<typeof Input>>,
-  required: boolean = false
+  inputProps?: Partial<ComponentProps<typeof Input>>
 ) => {
   return ({
     field,
@@ -26,16 +25,12 @@ export const renderRegistrationTextField = (
     field: ControllerRenderProps<RegistrationFormValues, any>;
   }) => (
     <FormItem>
-      <FormLabel className="mb-1">
-        {label}
-        {required && <span className="text-red-400">*</span>}
-      </FormLabel>
       <FormControl>
-        <input
+        <Input
           {...field}
           {...inputProps}
           placeholder={placeholder}
-          className="transition-300 w-full rounded-md border border-gray-100/75  bg-black px-4.5 py-3.5 text-white outline-none placeholder:text-gray-100/80 focus:border-white xl:rounded-lg xl:px-6 xl:py-4.5 undefined"
+          className="!h-auto !text-base border-gray-100/80 !bg-black px-4.5 py-3.5 placeholder:text-gray-100/80 rounded-lg xl:px-6 xl:py-4.5"
         />
       </FormControl>
       <FormMessage />
@@ -44,10 +39,8 @@ export const renderRegistrationTextField = (
 };
 
 export const renderRegistrationSelectField = (
-  label: string,
   placeholder: string,
-  options: string[],
-  required: boolean = true
+  options: string[]
 ) => {
   return ({
     field,
@@ -55,12 +48,9 @@ export const renderRegistrationSelectField = (
     field: ControllerRenderProps<RegistrationFormValues, any>;
   }) => (
     <FormItem>
-      <FormLabel className="mb-1">
-        {label} {required && <span className="text-red-400">*</span>}
-      </FormLabel>
       <Select onValueChange={field.onChange} value={field.value}>
         <FormControl>
-          <SelectTrigger className="w-full !bg-black !h-auto !px-4.5 !py-3.5 rounded-md xl:!rounded-lg xl:px-6 xl:py-4.5 border border-gray-100/75 text-md">
+          <SelectTrigger className="w-full !bg-black !h-auto !px-4.5 !py-3.5 !rounded-lg xl:px-6 xl:py-4.5 border border-gray-100/75 text-base">
             <SelectValue placeholder={placeholder} />
           </SelectTrigger>
         </FormControl>
@@ -70,13 +60,36 @@ export const renderRegistrationSelectField = (
             <SelectItem
               key={option}
               value={option}
-              className="text-slate-200 focus:!bg-slate-600/50 focus:text-white hover:!bg-slate-600/50 hover:text-white rounded-sm px-3 py-3.5 hover:bg-grey4 xl:px-4 xl:py-4 text-md"
+              className="text-slate-200 focus:text-white hover:!bg-slate-600/50 hover:text-white rounded-sm px-3 py-3.5 hover:bg-grey4 xl:px-4 xl:py-4 text-base"
             >
               {option}
             </SelectItem>
           ))}
         </SelectContent>
       </Select>
+      <FormMessage />
+    </FormItem>
+  );
+};
+
+export const renderRegistrationTextAreaField = (
+  placeholder: string,
+  textareaProps?: Partial<ComponentProps<typeof Textarea>>
+) => {
+  return ({
+    field,
+  }: {
+    field: ControllerRenderProps<RegistrationFormValues, any>;
+  }) => (
+    <FormItem>
+      <FormControl>
+        <Textarea
+          placeholder={placeholder}
+          {...textareaProps}
+          {...field}
+          className="min-h-[6rem] max-h-[10rem] border-gray-100/80 bg-black px-4.5 py-3.5 placeholder:text-gray-100/80 rounded-lg xl:px-6 xl:py-4.5 !text-base"
+        />
+      </FormControl>
       <FormMessage />
     </FormItem>
   );
