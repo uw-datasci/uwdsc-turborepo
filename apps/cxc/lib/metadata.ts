@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 
-const siteUrl = "https://www.uwdatascience.ca/"; // Update with your actual domain
+const siteUrl = "https://cxc.uwdatascience.ca/"; // Update with actual CXC domain
 
 export const baseMetadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -46,8 +46,8 @@ export const baseMetadata: Metadata = {
  * Use for API-driven or parameter-based pages, not static routes.
  * @example
  * export async function generateMetadata({ params }) {
- *   const post = await fetchPost(params.id);
- *   return createMetadata({ title: post.title, description: post.excerpt });
+ *   const event = await fetchEvent(params.id);
+ *   return createMetadata({ title: event.name, description: event.description });
  * }
  */
 export function createMetadata({
@@ -63,12 +63,14 @@ export function createMetadata({
   image?: string;
   pathname?: string;
 }): Metadata {
-  const fullTitle = `${title} | UWaterloo Data Science Club`;
+  const fullTitle = `${title} | CXC - UWaterloo Data Science Competition`;
 
   return {
     ...baseMetadata,
     title: fullTitle,
-    description: description || "University of Waterloo Data Science Club",
+    description:
+      description ||
+      "CXC - UWaterloo's premier data science competition and hackathon",
     keywords: keywords,
     alternates: {
       canonical: pathname ? `${siteUrl}${pathname}` : undefined,
@@ -76,7 +78,9 @@ export function createMetadata({
     openGraph: {
       type: "website",
       title: fullTitle,
-      description: description || "University of Waterloo Data Science Club",
+      description:
+        description ||
+        "CXC - UWaterloo's premier data science competition and hackathon",
       images: [
         {
           url: image,
@@ -85,9 +89,11 @@ export function createMetadata({
       ],
     },
     twitter: {
-      card: "summary",
+      card: "summary_large_image",
       title: fullTitle,
-      description: description || "University of Waterloo Data Science Club",
+      description:
+        description ||
+        "CXC - UWaterloo's premier data science competition and hackathon",
       images: [image],
     },
   };
