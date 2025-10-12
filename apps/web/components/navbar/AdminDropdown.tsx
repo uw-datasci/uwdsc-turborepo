@@ -16,18 +16,13 @@ interface AdminLink {
 const adminLinks: AdminLink[] = [
   {
     href: "/admin/events",
-    title: "Events",
-    description: "Create and manage club events",
+    title: "Manage Events 📅",
+    description: "Create and update upcoming club events",
   },
   {
     href: "/admin/applications",
-    title: "Exec Apps",
-    description: "Review executive applications",
-  },
-  {
-    href: "/admin/settings",
-    title: "Settings",
-    description: "Configure application settings",
+    title: "Manage Exec Apps 📝",
+    description: "Review applications for the next term's exec team",
   },
 ];
 
@@ -51,7 +46,7 @@ export function AdminDropdown() {
               <NavigationMenuLink asChild>
                 <Link
                   href="/admin/memberships"
-                  className="flex h-full w-full select-none flex-col justify-end rounded-md bg-muted/30 hover:bg-muted/50 p-6 no-underline outline-none transition-colors focus:ring-2 focus:ring-ring"
+                  className="flex h-full w-full select-none flex-col justify-center rounded-md bg-muted/30 hover:bg-muted/50 p-6 no-underline outline-none transition-colors focus:ring-2 focus:ring-ring"
                 >
                   <div className="mb-2 text-lg font-medium">Memberships</div>
                   <p className="text-sm leading-tight text-muted-foreground">
