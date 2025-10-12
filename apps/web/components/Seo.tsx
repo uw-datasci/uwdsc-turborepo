@@ -3,7 +3,7 @@
 import Head from "next/head";
 import { usePathname } from "next/navigation";
 
-type SEOProps = {
+type SeoProps = {
   title: string;
   description?: string;
   keywords?: string;
@@ -13,7 +13,7 @@ export default function Seo({
   title,
   description,
   keywords,
-}: Readonly<SEOProps>) {
+}: Readonly<SeoProps>) {
   const path = usePathname();
 
   return (
