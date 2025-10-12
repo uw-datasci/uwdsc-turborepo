@@ -19,7 +19,6 @@ import {
   Resume,
   Submitted,
 } from "@/components/application/steps";
-import Seo from "@/components/Seo";
 import { Term } from "@/types/application";
 import { Button, Card, CardContent, CardHeader, CardTitle } from "@uwdsc/ui";
 import { Loader2, MoveLeft, MoveRight, User } from "lucide-react";
@@ -145,73 +144,70 @@ export default function ApplyPage() {
   if (currentStep === 5) return <Submitted />;
 
   return (
-    <>
-      <Seo title="DSC Application" />
-      <div className="container mx-auto px-4 py-12">
-        <DueDateTag currentTerm={currentTerm} />
+    <div className="container mx-auto px-4 py-12">
+      <DueDateTag currentTerm={currentTerm} />
 
-        <div className="mx-auto max-w-4xl text-center mb-6">
-          <h1 className="mb-2 text-3xl font-bold text-white">
-            DSC Exec Application Form
-          </h1>
-          <p className="text-3xl font-semibold text-blue-400">
-            {currentTerm.termName}
-          </p>
-        </div>
+      <div className="mx-auto max-w-4xl text-center mb-6">
+        <h1 className="mb-2 text-3xl font-bold text-white">
+          DSC Exec Application Form
+        </h1>
+        <p className="text-3xl font-semibold text-blue-400">
+          {currentTerm.termName}
+        </p>
+      </div>
 
-        <AvailablePositions />
+      <AvailablePositions />
 
-        <Card
-          className={`mx-auto max-w-4xl shadow-md backdrop-blur-md ${currentStep === 0 ? "bg-gradient-blue" : "bg-slate-900"}`}
+      <Card
+        className={`mx-auto max-w-4xl shadow-md backdrop-blur-md ${currentStep === 0 ? "bg-gradient-blue" : "bg-slate-900"}`}
+      >
+        <CardHeader
+          className={`${currentStep === 0 ? "" : "bg-gradient-blue"} rounded-t-xl -mt-6 py-4`}
         >
-          <CardHeader
-            className={`${currentStep === 0 ? "" : "bg-gradient-blue"} rounded-t-xl -mt-6 py-4`}
-          >
-            {STEP_NAMES[currentStep] && (
-              <div className="flex justify-between items-center">
-                <div>
-                  <CardTitle className="flex items-center gap-2 text-2xl">
-                    <div className="bg-gradient-profile mr-2 flex h-10 w-10 items-center justify-center rounded-full">
-                      <User className="h-5 w-5" fill="currentColor" />
-                    </div>
-                    {STEP_NAMES[currentStep]}
-                  </CardTitle>
-                </div>
-
-                {currentStep !== 0 && currentStep !== 5 && (
-                  <p className="text-sm text-gray-300 mt-1">
-                    Mandatory fields are marked with an asterisk{" "}
-                    <span className="text-red-500">*</span>
-                  </p>
-                )}
+          {STEP_NAMES[currentStep] && (
+            <div className="flex justify-between items-center">
+              <div>
+                <CardTitle className="flex items-center gap-2 text-2xl">
+                  <div className="bg-gradient-profile mr-2 flex h-10 w-10 items-center justify-center rounded-full">
+                    <User className="h-5 w-5" fill="currentColor" />
+                  </div>
+                  {STEP_NAMES[currentStep]}
+                </CardTitle>
               </div>
-            )}
-          </CardHeader>
-
-          <CardContent>
-            <div className="space-y-6">
-              {renderStep()}
 
               {currentStep !== 0 && currentStep !== 5 && (
-                <div className="flex justify-between pt-4">
-                  <Button
-                    size="lg"
-                    variant="outline"
-                    onClick={handlePrevious}
-                    disabled={currentStep === 1}
-                    className="hover:scale-105"
-                  >
-                    <MoveLeft className="size-4" />
-                    Previous
-                  </Button>
-
-                  {renderButton()}
-                </div>
+                <p className="text-sm text-gray-300 mt-1">
+                  Mandatory fields are marked with an asterisk{" "}
+                  <span className="text-red-500">*</span>
+                </p>
               )}
             </div>
-          </CardContent>
-        </Card>
-      </div>
-    </>
+          )}
+        </CardHeader>
+
+        <CardContent>
+          <div className="space-y-6">
+            {renderStep()}
+
+            {currentStep !== 0 && currentStep !== 5 && (
+              <div className="flex justify-between pt-4">
+                <Button
+                  size="lg"
+                  variant="outline"
+                  onClick={handlePrevious}
+                  disabled={currentStep === 1}
+                  className="hover:scale-105"
+                >
+                  <MoveLeft className="size-4" />
+                  Previous
+                </Button>
+
+                {renderButton()}
+              </div>
+            )}
+          </div>
+        </CardContent>
+      </Card>
+    </div>
   );
 }
