@@ -97,9 +97,7 @@ const GlassSurface: React.FC<GlassSurfaceProps> = ({
   const isDarkMode = useDarkMode();
   const [isMounted, setIsMounted] = useState(false);
 
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
+  useEffect(() => setIsMounted(true), []);
 
   const generateDisplacementMap = () => {
     const rect = containerRef.current?.getBoundingClientRect();
