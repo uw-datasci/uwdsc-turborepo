@@ -4,7 +4,6 @@ import { NavigationMenu, NavigationMenuList, GlassSurface } from "@uwdsc/ui";
 import { NavLinks } from "./navbar/NavLinks";
 import { AdminDropdown } from "./navbar/AdminDropdown";
 import { UserAvatar } from "./navbar/UserAvatar";
-import { ThemeToggle } from "./theme-toggle";
 
 export function Navbar() {
   return (
