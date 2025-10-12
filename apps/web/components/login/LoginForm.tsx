@@ -45,8 +45,8 @@ export function LoginForm() {
           router.push("/verify-email");
         } else if (responseData.session && responseData.user) {
           if (responseData.user.email_confirmed_at) {
-            // Email verified, redirect to dashboard
-            router.push("/me");
+            // Email verified, redirect to landing
+            router.push("/");
           } else {
             // Email not verified, redirect to verify email page
             router.push("/verify-email");

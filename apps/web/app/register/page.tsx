@@ -120,7 +120,7 @@ export default function RegisterPage() {
         if (res.ok) {
           // Check if user has a session (email confirmed) or not
           if (data.session && data.user?.email_confirmed_at) {
-            router.push("/me"); // TODO: Change to landing / (for testing /me)
+            router.push("/");
           } else {
             // No session means email confirmation required
             router.push(
