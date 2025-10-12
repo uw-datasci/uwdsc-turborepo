@@ -1,13 +1,13 @@
-import SEO from "@/components/SEO";
-import SectionTitle from "@/components/SectionTitle";
-import TeamCard from "@/components/TeamCard";
+import Seo from "@/components/Seo";
+import SectionTitle from "@/components/team/SectionTitle";
+import TeamCard from "@/components/team/TeamCard";
 
 import { TEAM } from "@/constants/team";
 
 export default function Team() {
   return (
     <>
-      <SEO title="Team" />
+      <Seo title="Team" />
       <section className="mx-container mb-section mt-14 lg:mt-20">
         <h1 className="mb-14 text-center text-3xl font-bold text-white 3xs:text-6xl sm:text-8xl lg:text-10xl 2xl:text-12xl">
           Team
