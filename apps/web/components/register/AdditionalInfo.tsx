@@ -14,12 +14,12 @@ interface StepProps {
 }
 
 const facultyOptions = [
-  "Arts",
+  "Math",
   "Engineering",
-  "Environment",
-  "Health",
-  "Mathematics",
   "Science",
+  "Arts",
+  "Health",
+  "Environment",
   "Other/Non-Waterloo",
 ];
 const termOptions = [
@@ -53,12 +53,12 @@ export function AdditionalInfo({ form }: StepProps) {
       />
       <FormField
         control={form.control}
-        name="heard_from"
+        name="heard_from_where"
         render={renderRegistrationTextField("Where did you hear about us?")}
       />
       <FormField
         control={form.control}
-        name="message"
+        name="member_ideas"
         render={renderRegistrationTextAreaField(
           "[Optional] Share your ideas for new events or improvements!"
         )}

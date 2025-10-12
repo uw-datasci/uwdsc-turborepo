@@ -24,7 +24,7 @@ export function AccountInfo({ form }: StepProps) {
       />
       <FormField
         control={form.control}
-        name="wati_i_am"
+        name="wat_iam"
         render={renderRegistrationTextField("WatIAM (ex. slchow)", {})}
       />
       <FormField

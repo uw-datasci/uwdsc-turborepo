@@ -2,7 +2,6 @@ import { RegistrationFormValues } from "@/lib/schemas/register";
 import {
   Input,
   FormItem,
-  FormLabel,
   FormControl,
   FormMessage,
   Select,
@@ -15,6 +14,9 @@ import {
 import { ComponentProps } from "react";
 import { ControllerRenderProps } from "react-hook-form";
 
+/**
+ * Helper function to render registration form fields
+ */
 export const renderRegistrationTextField = (
   placeholder: string,
   inputProps?: Partial<ComponentProps<typeof Input>>
@@ -38,6 +40,9 @@ export const renderRegistrationTextField = (
   );
 };
 
+/**
+ * Helper function to render registration select fields
+ */
 export const renderRegistrationSelectField = (
   placeholder: string,
   options: string[]
@@ -72,6 +77,9 @@ export const renderRegistrationSelectField = (
   );
 };
 
+/**
+ * Helper function to render registration textarea fields
+ */
 export const renderRegistrationTextAreaField = (
   placeholder: string,
   textareaProps?: Partial<ComponentProps<typeof Textarea>>

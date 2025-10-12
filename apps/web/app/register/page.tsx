@@ -15,16 +15,29 @@ import { Form, Button } from "@uwdsc/ui";
 import { AnimatePresence, motion } from "framer-motion";
 import Typing from "@/components/register/Typing";
 import { useRouter } from "next/navigation";
+import { Loader2 } from "lucide-react";
 
 // Define required fields for each step
 const stepFields: Record<number, Array<keyof RegistrationFormValues>> = {
-  0: ["first_name", "last_name", "email", "password"],
-  1: ["faculty", "term", "heard_from", "message"],
+  0: ["first_name", "last_name", "wat_iam", "email", "password"],
+  1: ["faculty", "term", "heard_from_where", "member_ideas"],
+};
+
+// Map the displayed faculty options to enum values
+const facultyMap: Record<string, string> = {
+  Math: "math",
+  Engineering: "engineering",
+  Science: "science",
+  Arts: "arts",
+  Health: "health",
+  Environment: "environment",
+  "Other/Non-Waterloo": "other_non_waterloo",
 };
 
 export default function RegisterPage() {
   const [step, setStep] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
+  const [authError, setAuthError] = useState("");
   const router = useRouter();
 
   const form = useForm<RegistrationFormValues>({
@@ -38,17 +51,9 @@ export default function RegisterPage() {
   const isCurrentStepValid = () => {
     const fields = stepFields[step];
     const formState = form.formState;
-
     // Check if all fields in current step are valid (no errors)
     const hasNoErrors = fields?.every((field) => !formState.errors[field]);
-
-    // Check if all fields have been touched/filled
-    const allTouched = fields?.every((field) => {
-      const value = form.getValues(field);
-      return value !== undefined && value !== null && value !== "";
-    });
-
-    return hasNoErrors && allTouched;
+    return hasNoErrors;
   };
 
   const steps = [
@@ -64,19 +69,71 @@ export default function RegisterPage() {
     setStep((prev) => Math.max(prev - 1, 0));
   };
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setAuthError("");
     setIsLoading(true);
     try {
       // Validate the entire form only on submit
       const isValid = await form.trigger();
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      // await new Promise((resolve) => setTimeout(resolve, 1000));
       if (isValid) {
-        const data = form.getValues();
-        console.log("Submitted data:", data);
-        // TODO: send to backend here
+        const formData = form.getValues();
+        console.log("Submitted data:", formData);
+
+        // Restructure data to match API expectations
+        const metadataFields = [
+          ...(stepFields[0] ?? []),
+          ...(stepFields[1] ?? []),
+        ].filter((field) => field !== "email" && field !== "password");
+
+        const metadata = metadataFields.reduce(
+          (acc, field) => {
+            let val = formData[field] ?? "";
+            if (field === "faculty") {
+              acc[field] = facultyMap[val] ?? "other_non_waterloo";
+            } else {
+              acc[field] = val;
+            }
+            return acc;
+          },
+          {} as Record<string, any>
+        );
+
+        const requestBody = {
+          email: formData.email,
+          password: formData.password,
+          metadata,
+        };
+
+        console.log("Formatted body data:", requestBody);
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+        const res = await fetch("/api/auth/register", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(requestBody),
+        });
+
+        const data = await res.json();
+        if (res.ok) {
+          // Check if user has a session (email confirmed) or not
+          if (data.session && data.user?.email_confirmed_at) {
+            router.push("/me"); // TODO: Change to landing / (for testing /me)
+          } else {
+            // No session means email confirmation required
+            router.push(
+              `/verify-email?email=${encodeURIComponent(formData.email)}`
+            );
+          }
+        } else {
+          setAuthError(data.error || data.message || "Registration failed");
+        }
       }
     } catch (error) {
       console.error(error);
+      setAuthError("An unexpected error occurred. Please try again");
     } finally {
       setIsLoading(false);
     }
@@ -146,6 +203,12 @@ export default function RegisterPage() {
                 {/* Right Input Side */}
                 <div className="w-full h-full flex-1">
                   {steps[step]}
+                  {/* Show Authentication error */}
+                  {authError && step > 0 && (
+                    <div className="text-red-400 text-base mt-3">
+                      {authError}
+                    </div>
+                  )}
                   <div className="flex flex-col gap-1 items-start justify-between mt-6">
                     {step < steps.length - 1 ? (
                       <Button
@@ -163,9 +226,19 @@ export default function RegisterPage() {
                         size="lg"
                         disabled={isLoading}
                         type="button"
-                        className="w-full rounded-md xl:rounded-lg bg-gradient-purple text-base font-bold"
+                        className="w-full rounded-md xl:rounded-lg bg-gradient-purple text-base font-bold flex items-center justify-center gap-2"
                       >
-                        {isLoading ? "Submitting..." : "Submit"}
+                        {isLoading ? (
+                          <>
+                            <Loader2
+                              className="w-5 h-5 animate-spin"
+                              strokeWidth={3}
+                            />
+                            Submitting
+                          </>
+                        ) : (
+                          "Submit"
+                        )}
                       </Button>
                     )}
                     {step > 0 ? (

@@ -11,6 +11,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { renderLoginTextField } from "../LoginFormHelper";
+import { Loader2 } from "lucide-react";
 
 export function LoginForm() {
   const [authError, setAuthError] = useState<string>("");
@@ -99,7 +100,14 @@ export function LoginForm() {
             type="submit"
             className="w-full rounded-md xl:rounded-lg bg-gradient-purple text-lg font-bold !h-auto py-2.5"
           >
-            {isLoading ? "Signing in..." : "Sign in"}
+            {isLoading ? (
+              <>
+                <Loader2 className="w-5 h-5 animate-spin" strokeWidth={3} />
+                Signing in
+              </>
+            ) : (
+              "Sign in"
+            )}
           </Button>
           <div className="flex flex-col md:flex-row justify-between items-start mt-1">
             <Button

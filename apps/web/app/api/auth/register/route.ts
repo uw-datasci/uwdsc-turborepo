@@ -8,9 +8,10 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     const { email, password, metadata } = body;
 
     const authService = new AuthService();
-    const result = await authService.register({ email, password });
+    const result = await authService.register({ email, password, metadata });
 
     if (!result.success) {
+      console.log(result);
       return NextResponse.json({ error: result.error }, { status: 400 });
     }
 

@@ -3,6 +3,9 @@ import { Input, FormItem, FormControl, FormMessage } from "@uwdsc/ui";
 import { ComponentProps } from "react";
 import { ControllerRenderProps } from "react-hook-form";
 
+/**
+ * Helper function to render login form fields
+ */
 export const renderLoginTextField = (
   placeholder: string,
   inputProps?: Partial<ComponentProps<typeof Input>>

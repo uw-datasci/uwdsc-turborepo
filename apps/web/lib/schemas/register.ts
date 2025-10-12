@@ -1,8 +1,5 @@
 import { z } from "zod";
 
-// const facultyEnum = z.enum(["Arts", "Engineering", "Environment", "Health", "Mathematics", "Science", "Other/Non-Waterloo"]);
-// const termEnum = z.enum(["1A", "1B", "2A", "2B", "3A", "3B", "4A", "4B", "5A", "5B"]);
-
 /**
  * Registration form validation schema
  */
@@ -10,18 +7,18 @@ import { z } from "zod";
 export const registrationSchema = z.object({
   first_name: z.string().trim().nonempty("First name is required"),
   last_name: z.string().trim().nonempty("Last name is required"),
-  wat_i_am: z.string().optional(),
+  wat_iam: z.string().optional(),
   email: z.string().email("Please enter a valid email address"),
   password: z
     .string()
     .min(8, "Your password needs to be at least 8 characters long"),
   faculty: z.string().nonempty("Faculty is required"),
   term: z.string().nonempty("Term is required"),
-  heard_from: z
+  heard_from_where: z
     .string()
     .trim()
     .nonempty("Please enter where you heard about us"),
-  message: z.string().optional(),
+  member_ideas: z.string().optional(),
 });
 
 export type RegistrationFormValues = z.infer<typeof registrationSchema>;
@@ -29,11 +26,11 @@ export type RegistrationFormValues = z.infer<typeof registrationSchema>;
 export const registrationDefaultValues: Partial<RegistrationFormValues> = {
   first_name: "",
   last_name: "",
-  wat_i_am: "",
+  wat_iam: "",
   email: "",
   password: "",
   faculty: "",
   term: "",
-  heard_from: "",
-  message: "",
+  heard_from_where: "",
+  member_ideas: "",
 };
