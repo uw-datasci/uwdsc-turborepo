@@ -65,6 +65,8 @@ export {
   DropdownMenuSubContent,
 } from "./components/dropdown-menu";
 
+export { GlassSurface } from "./components/GlassSurface";
+
 // Hooks
 export * from "./hooks";
 
