@@ -9,7 +9,7 @@ interface StepProps {
   form: UseFormReturn<RegistrationFormValues>;
 }
 
-export function AccountInfo({ form }: StepProps) {
+export function AccountInfo({ form }: Readonly<StepProps>) {
   return (
     <div className="flex flex-col gap-4">
       <FormField
