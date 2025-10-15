@@ -1,7 +1,8 @@
 import "@uwdsc/ui/globals.css";
 import { Geist, Geist_Mono } from "next/font/google";
 import { ThemeProvider } from "@uwdsc/ui";
-import { Metadata } from "next";
+import type { Metadata } from "next";
+import { baseMetadata } from "@/lib/metadata";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -14,8 +15,29 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "UWDSC - CXC",
-  description: "UWDSC - CXC website",
+  ...baseMetadata,
+  title: {
+    default: "CXC - UWaterloo Data Science Competition",
+    template: "%s | CXC - UWaterloo DSC",
+  },
+  description:
+    "UWaterloo's premier data science competition bridging students and industry. Tackle real-world challenges, compete for prizes, and showcase innovative data science solutions.",
+  keywords:
+    "data science, competition, hackathon, uwaterloo, machine learning, analytics, cxc, conrad centre",
+  openGraph: {
+    type: "website",
+    title: "CXC - UWaterloo Data Science Competition",
+    description:
+      "UWaterloo's premier data science competition bridging students and industry",
+    images: ["/meta/og-image.png"],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "CXC - UWaterloo Data Science Competition",
+    description:
+      "UWaterloo's premier data science competition bridging students and industry",
+    images: ["/meta/og-image.png"],
+  },
 };
 
 export default function RootLayout({
