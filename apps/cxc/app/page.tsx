@@ -7,10 +7,12 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
+  Button,
 } from "@uwdsc/ui";
 import { MotionCard } from "@/components/MotionCard";
 import { useEffect, useState } from "react";
 import { ThemeToggle } from "@/components/theme-toggle";
+import Link from "next/link";
 
 export default function Home() {
   const [supabaseConnected, setSupabaseConnected] = useState<boolean | null>(
@@ -60,6 +62,14 @@ export default function Home() {
             Next.js • TypeScript • Tailwind CSS • Shad CN • Framer Motion •
             Supabase
           </p>
+          <div className="flex gap-4 justify-center">
+            <Link href="/register">
+              <Button>Register</Button>
+            </Link>
+            <Link href="/login">
+              <Button variant="outline">Login</Button>
+            </Link>
+          </div>
         </motion.div>
 
         <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3 max-w-6xl mx-auto">
