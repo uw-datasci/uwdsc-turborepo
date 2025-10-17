@@ -12,7 +12,7 @@ function WormholeWithRings({ partType }: { partType: 'top' | 'middle' | 'bottom'
     if (partType === 'top') {
       return {
         height: 30,
-        frontRadius: 6,
+        frontRadius: 10,
         backRadius: 30,
         curve: 2.0,
         perspective: 'down',
@@ -22,15 +22,15 @@ function WormholeWithRings({ partType }: { partType: 'top' | 'middle' | 'bottom'
     } else if (partType === 'middle') {
       return {
         height: 25,
-        frontRadius: 3.2,
-        backRadius: 2.8,
+        frontRadius: 8,
+        backRadius: 7.2,
         curve: 0.2,
         perspective: 'middle'
       };
     } else {
       return {
-        height: 30,
-        frontRadius: 4,
+        height: 20,
+        frontRadius: 8,
         backRadius: 40,
         curve: 3.0,
         perspective: 'down',
@@ -63,7 +63,7 @@ function WormholeWithRings({ partType }: { partType: 'top' | 'middle' | 'bottom'
   // Create wormhole grid lines
   const gridLines = useMemo(() => {
     const lines: THREE.Line[] = [];
-    const numLines = 17;
+    const numLines = 9;
     const segments = 30;
     
     // Vertical lines
@@ -111,12 +111,12 @@ function WormholeWithRings({ partType }: { partType: 'top' | 'middle' | 'bottom'
   // Create moving rings that follow wormhole shape
   const rings = useMemo(() => {
     const ringArray: THREE.Line[] = [];
-    const numRings = 15;
+    const numRings = 5;
     
     for (let i = 0; i < numRings; i++) {
       // Create ring as a perfect circle - let the group rotation handle the perspective
       const points = [];
-      const segments = 32;
+      const segments = 64;
       for (let j = 0; j <= segments; j++) {
         const angle = (j / segments) * Math.PI * 2;
         const x = Math.cos(angle);
@@ -205,12 +205,12 @@ export function WormholeTop() {
     <div className="absolute inset-0 -z-10">
       <Canvas
         camera={{ 
-          position: [0, 0, 30], 
+          position: [0, -0.8, 35],
           fov: 75
         }}
         style={{ background: 'black' }}
         onCreated={({ camera }) => {
-          camera.lookAt(0, 0, 0);
+          camera.lookAt(0, 0, -20);
         }}
       >
         <WormholeWithRings partType="top" />
@@ -237,12 +237,12 @@ export function WormholeBottom() {
     <div className="absolute inset-0 -z-10">
       <Canvas
         camera={{ 
-          position: [0, 0, -30], 
+          position: [0, -2, -30], 
           fov: 75
         }}
         style={{ background: 'black' }}
         onCreated={({ camera }) => {
-          camera.lookAt(0, 0, 0);
+          camera.lookAt(0, 0, -20);
         }}
       >
         <WormholeWithRings partType="bottom" />
