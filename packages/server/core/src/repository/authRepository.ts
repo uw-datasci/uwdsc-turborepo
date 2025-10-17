@@ -6,14 +6,18 @@ export class AuthRepository extends BaseRepository {
     const payload: Parameters<typeof this.client.auth.signUp>[0] = {
       email: data.email,
       password: data.password,
+      options: {
+        emailRedirectTo: 'http://localhost:3000/me',
+      },
     };
 
     if (data.metadata) {
       payload.options = { data: data.metadata };
     }
     return await this.client.auth.signUp(payload);
+    });
   }
-
+  
   async authenticateUser(data: LoginData) {
     return await this.client.auth.signInWithPassword({
       email: data.email,
