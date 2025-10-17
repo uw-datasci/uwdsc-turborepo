@@ -4,8 +4,15 @@ import { NavigationMenu, NavigationMenuList, GlassSurface } from "@uwdsc/ui";
 import { NavLinks } from "./navbar/NavLinks";
 import { AdminDropdown } from "./navbar/AdminDropdown";
 import { UserAvatar } from "./navbar/UserAvatar";
+import { usePathname } from "next/navigation";
 
 export function Navbar() {
+  const pathname = usePathname();
+
+  const hideNavbar = pathname === "/login" || pathname === "/register";
+
+  if (hideNavbar) return null;
+
   return (
     <div className="fixed top-4 left-1/2 -translate-x-1/2 z-50 w-full max-w-fit px-2 sm:px-4">
       <GlassSurface

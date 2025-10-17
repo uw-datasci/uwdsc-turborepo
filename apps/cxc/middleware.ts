@@ -1,6 +1,6 @@
-import { NextResponse } from 'next/server';
-import type { NextRequest } from 'next/server';
-import { AuthMiddleware } from '@uwdsc/server/core/middleware/authMiddleware';
+import { NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
+import { AuthMiddleware } from "@uwdsc/server/core/middleware/authMiddleware";
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
@@ -8,16 +8,16 @@ export async function middleware(request: NextRequest) {
   try {
     const authMiddleware = new AuthMiddleware();
     const baseUrl = request.nextUrl.origin;
-    
+
     const result = await authMiddleware.checkAuth(baseUrl, pathname);
-    
+
     if (result.shouldRedirect && result.redirectUrl) {
       return NextResponse.redirect(new URL(result.redirectUrl, request.url));
     }
 
     return NextResponse.next();
   } catch (error) {
-    console.error('Middleware error:', error);
+    console.error("Middleware error:", error);
     return NextResponse.next();
   }
 }
@@ -31,6 +31,6 @@ export const config = {
      * - _next/image (image optimization files)
      * - favicon.ico (favicon file)
      */
-    '/((?!api|_next/static|_next/image|favicon.ico).*)',
+    "/((?!api|_next/static|_next/image|favicon.ico).*)",
   ],
 };

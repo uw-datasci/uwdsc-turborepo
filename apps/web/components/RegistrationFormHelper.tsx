@@ -1,4 +1,3 @@
-import { RegistrationFormValues } from "@/lib/schemas/register";
 import {
   Input,
   FormItem,
@@ -16,16 +15,13 @@ import { ControllerRenderProps } from "react-hook-form";
 
 /**
  * Helper function to render registration form fields
+ * Generic to work with any form values
  */
-export const renderRegistrationTextField = (
+export const renderRegistrationTextField = <T extends Record<string, any>>(
   placeholder: string,
   inputProps?: Partial<ComponentProps<typeof Input>>
 ) => {
-  return ({
-    field,
-  }: {
-    field: ControllerRenderProps<RegistrationFormValues, any>;
-  }) => (
+  return ({ field }: { field: ControllerRenderProps<T, any> }) => (
     <FormItem>
       <FormControl>
         <Input
@@ -42,16 +38,13 @@ export const renderRegistrationTextField = (
 
 /**
  * Helper function to render registration select fields
+ * Generic to work with any form values
  */
-export const renderRegistrationSelectField = (
+export const renderRegistrationSelectField = <T extends Record<string, any>>(
   placeholder: string,
   options: string[]
 ) => {
-  return ({
-    field,
-  }: {
-    field: ControllerRenderProps<RegistrationFormValues, any>;
-  }) => (
+  return ({ field }: { field: ControllerRenderProps<T, any> }) => (
     <FormItem>
       <Select onValueChange={field.onChange} value={field.value}>
         <FormControl>
@@ -79,16 +72,13 @@ export const renderRegistrationSelectField = (
 
 /**
  * Helper function to render registration textarea fields
+ * Generic to work with any form values
  */
-export const renderRegistrationTextAreaField = (
+export const renderRegistrationTextAreaField = <T extends Record<string, any>>(
   placeholder: string,
   textareaProps?: Partial<ComponentProps<typeof Textarea>>
 ) => {
-  return ({
-    field,
-  }: {
-    field: ControllerRenderProps<RegistrationFormValues, any>;
-  }) => (
+  return ({ field }: { field: ControllerRenderProps<T, any> }) => (
     <FormItem>
       <FormControl>
         <Textarea

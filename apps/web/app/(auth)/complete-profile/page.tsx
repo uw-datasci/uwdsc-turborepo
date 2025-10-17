@@ -57,6 +57,7 @@ export default function CompleteProfilePage() {
   const [isLoading, setIsLoading] = useState(false);
   const [authError, setAuthError] = useState("");
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isCheckingAuth, setIsCheckingAuth] = useState(true);
   const router = useRouter();
 
   const form = useForm<CompleteProfileFormValues>({
@@ -65,29 +66,61 @@ export default function CompleteProfilePage() {
     mode: "onTouched",
   });
 
-  // Check if user is authenticated
   useEffect(() => {
+    // Check if user is authenticated
     const checkAuth = async () => {
       try {
-        const res = await fetch("/api/auth/me");
-        if (res.ok) {
-          const data = await res.json();
-          if (data.user) {
-            setIsAuthenticated(true);
-          } else {
-            router.push("/login");
+        const response = await fetch("/api/auth/me");
+        if (response.ok) {
+          const data = await response.json();
+          setIsAuthenticated(true);
+
+          // Pre-fill form if any data is available from profile
+          if (data.profile) {
+            const profile = data.profile;
+            if (profile.first_name)
+              form.setValue("first_name", profile.first_name);
+            if (profile.last_name)
+              form.setValue("last_name", profile.last_name);
+            if (profile.wat_iam) form.setValue("wat_iam", profile.wat_iam);
+
+            // Map faculty enum value back to display value
+            const facultyReverseMap: Record<string, string> = {
+              math: "Math",
+              engineering: "Engineering",
+              science: "Science",
+              arts: "Arts",
+              health: "Health",
+              environment: "Environment",
+              other_non_waterloo: "Other/Non-Waterloo",
+            };
+            if (profile.faculty) {
+              const mappedFaculty = facultyReverseMap[profile.faculty];
+              if (mappedFaculty) {
+                form.setValue("faculty", mappedFaculty);
+              }
+            }
+
+            if (profile.term) form.setValue("term", profile.term);
+            if (profile.heard_from_where)
+              form.setValue("heard_from_where", profile.heard_from_where);
+            if (profile.member_ideas)
+              form.setValue("member_ideas", profile.member_ideas);
           }
         } else {
+          // Not authenticated, redirect to login
           router.push("/login");
         }
       } catch (error) {
         console.error("Auth check failed:", error);
         router.push("/login");
+      } finally {
+        setIsCheckingAuth(false);
       }
     };
 
     checkAuth();
-  }, [router]);
+  }, [router, form]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -102,7 +135,7 @@ export default function CompleteProfilePage() {
         const profileData = {
           first_name: formData.first_name,
           last_name: formData.last_name,
-          wat_iam: formData.wat_iam || "",
+          wat_iam: formData.wat_iam,
           faculty: facultyMap[formData.faculty] ?? "other_non_waterloo",
           term: formData.term,
           heard_from_where: formData.heard_from_where,
@@ -135,7 +168,7 @@ export default function CompleteProfilePage() {
     }
   };
 
-  if (!isAuthenticated) {
+  if (isCheckingAuth || !isAuthenticated) {
     return (
       <div className="bg-black w-full min-h-screen flex items-center justify-center">
         <div className="text-white">Loading...</div>
@@ -207,7 +240,7 @@ export default function CompleteProfilePage() {
                   control={form.control}
                   name="wat_iam"
                   render={renderRegistrationTextField(
-                    "[Optional] WatIAM (ex. slchow)",
+                    "WatIAM (ex. slchow)",
                     {}
                   )}
                 />

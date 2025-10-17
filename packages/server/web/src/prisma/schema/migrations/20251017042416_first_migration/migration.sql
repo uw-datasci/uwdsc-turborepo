@@ -78,6 +78,28 @@ CREATE TABLE "public"."event_attendance" (
 );
 
 -- CreateTable
+CREATE TABLE "public"."profiles" (
+    "id" UUID NOT NULL,
+    "first_name" VARCHAR(255),
+    "last_name" VARCHAR(255),
+    "user_status" "public"."user_status_enum" NOT NULL DEFAULT 'member',
+    "has_paid" BOOLEAN NOT NULL DEFAULT false,
+    "wat_iam" VARCHAR(255),
+    "faculty" "public"."faculty_enum",
+    "term" VARCHAR(100),
+    "heard_from_where" TEXT,
+    "payment_method" "public"."payment_method_enum",
+    "payment_location" VARCHAR(255),
+    "verifier" VARCHAR(255),
+    "member_ideas" TEXT,
+    "is_math_soc_member" BOOLEAN NOT NULL DEFAULT false,
+    "created_at" TIMESTAMPTZ(6) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMPTZ(6) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "profiles_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
 CREATE TABLE "public"."questions" (
     "id" BIGSERIAL NOT NULL,
     "term_id" BIGINT NOT NULL,
@@ -105,28 +127,6 @@ CREATE TABLE "public"."terms" (
     "updated_at" TIMESTAMPTZ(6) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "terms_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
-CREATE TABLE "public"."profiles" (
-    "id" UUID NOT NULL,
-    "first_name" VARCHAR(255) NOT NULL,
-    "last_name" VARCHAR(255) NOT NULL,
-    "user_status" "public"."user_status_enum" NOT NULL DEFAULT 'member',
-    "has_paid" BOOLEAN NOT NULL DEFAULT false,
-    "wat_iam" VARCHAR(255),
-    "faculty" "public"."faculty_enum" NOT NULL,
-    "term" VARCHAR(100) NOT NULL,
-    "heard_from_where" TEXT NOT NULL DEFAULT '',
-    "payment_method" "public"."payment_method_enum",
-    "payment_location" VARCHAR(255),
-    "verifier" VARCHAR(255),
-    "member_ideas" TEXT,
-    "is_math_soc_member" BOOLEAN NOT NULL DEFAULT false,
-    "created_at" TIMESTAMPTZ(6) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updated_at" TIMESTAMPTZ(6) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-
-    CONSTRAINT "profiles_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateIndex

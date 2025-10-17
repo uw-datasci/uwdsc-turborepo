@@ -12,10 +12,13 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { renderLoginTextField } from "../LoginFormHelper";
 import { Loader2 } from "lucide-react";
+import { VerifyEmailModal } from "./VerifyEmailModal";
 
 export function LoginForm() {
   const [authError, setAuthError] = useState<string>("");
   const [isLoading, setIsLoading] = useState(false);
+  const [showVerifyModal, setShowVerifyModal] = useState(false);
+  const [userEmail, setUserEmail] = useState<string>("");
   const router = useRouter();
 
   const form = useForm<LoginFormValues>({
@@ -42,14 +45,16 @@ export function LoginForm() {
       if (response.ok) {
         // Check if this is a successful login with unverified email
         if (responseData.error === "email_not_verified") {
-          router.push("/verify-email");
+          setUserEmail(data.email);
+          setShowVerifyModal(true);
         } else if (responseData.session && responseData.user) {
           if (responseData.user.email_confirmed_at) {
             // Email verified, redirect to landing
             router.push("/");
           } else {
-            // Email not verified, redirect to verify email page
-            router.push("/verify-email");
+            // Email not verified, show modal
+            setUserEmail(data.email);
+            setShowVerifyModal(true);
           }
         } else {
           // Fallback: refresh and let middleware handle
@@ -70,69 +75,80 @@ export function LoginForm() {
   };
 
   return (
-    <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(onSubmit)}
-        className="flex flex-col gap-4"
-      >
-        <FormField
-          control={form.control}
-          name="email"
-          render={renderLoginTextField("Email (ex. slchow@uwaterloo.ca)", {
-            type: "email",
-          })}
-        />
+    <>
+      <Form {...form}>
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          className="flex flex-col gap-4"
+        >
+          <FormField
+            control={form.control}
+            name="email"
+            render={renderLoginTextField("Email (ex. slchow@uwaterloo.ca)", {
+              type: "email",
+            })}
+          />
 
-        <FormField
-          control={form.control}
-          name="password"
-          render={renderLoginTextField("Password", {
-            type: "password",
-          })}
-        />
+          <FormField
+            control={form.control}
+            name="password"
+            render={renderLoginTextField("Password", {
+              type: "password",
+              autoComplete: "off",
+            })}
+          />
 
-        {/* Show Authentication error */}
-        {authError && <div className="text-red-400 text-base">{authError}</div>}
-        <div>
-          <Button
-            size="lg"
-            disabled={isLoading}
-            type="submit"
-            className="w-full rounded-md xl:rounded-lg bg-gradient-purple text-lg font-bold !h-auto py-2.5"
-          >
-            {isLoading ? (
-              <>
-                <Loader2 className="w-5 h-5 animate-spin" strokeWidth={3} />
-                Signing in
-              </>
-            ) : (
-              "Sign in"
-            )}
-          </Button>
-          <div className="flex flex-col md:flex-row justify-between items-start mt-1">
+          {/* Show Authentication error */}
+          {authError && (
+            <div className="text-red-400 text-base">{authError}</div>
+          )}
+          <div>
             <Button
-              variant="link"
-              size="sm"
-              onClick={() => {}} // TODO: implement logic for forgot password
-              className="text-gray-400/60 hover:text-gray-200 transition-colors text-sm font-medium p-0"
-              type="button"
+              size="lg"
+              disabled={isLoading}
+              type="submit"
+              className="w-full rounded-md xl:rounded-lg bg-gradient-purple text-lg font-bold !h-auto py-2.5"
             >
-              Forgot password?
+              {isLoading ? (
+                <>
+                  <Loader2 className="w-5 h-5 animate-spin" strokeWidth={3} />
+                  Signing in
+                </>
+              ) : (
+                "Sign in"
+              )}
             </Button>
-            <Button
-              variant="link"
-              size="sm"
-              onClick={() => {
-                router.push("/register");
-              }}
-              className="text-gray-400/60 hover:text-gray-200 transition-colors text-sm font-medium p-0"
-              type="button"
-            >
-              Not a member yet? Join here.
-            </Button>
+            <div className="flex flex-col md:flex-row justify-between items-start mt-1">
+              <Button
+                variant="link"
+                size="sm"
+                onClick={() => {}} // TODO: implement logic for forgot password
+                className="text-gray-400/60 hover:text-gray-200 transition-colors text-sm font-medium p-0"
+                type="button"
+              >
+                Forgot password?
+              </Button>
+              <Button
+                variant="link"
+                size="sm"
+                onClick={() => {
+                  router.push("/register");
+                }}
+                className="text-gray-400/60 hover:text-gray-200 transition-colors text-sm font-medium p-0"
+                type="button"
+              >
+                Not a member yet? Join here.
+              </Button>
+            </div>
           </div>
-        </div>
-      </form>
-    </Form>
+        </form>
+      </Form>
+
+      <VerifyEmailModal
+        open={showVerifyModal}
+        onOpenChange={setShowVerifyModal}
+        email={userEmail}
+      />
+    </>
   );
 }

@@ -42,6 +42,13 @@ export function AccountInfo({ form }: Readonly<StepProps>) {
           { type: "password" }
         )}
       />
+      <FormField
+        control={form.control}
+        name="confirmPassword"
+        render={renderRegistrationTextField("Confirm your password", {
+          type: "password",
+        })}
+      />
     </div>
   );
 }
