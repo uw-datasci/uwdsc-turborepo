@@ -6,9 +6,12 @@ export class AuthRepository extends BaseRepository {
     return await this.client.auth.signUp({
       email: data.email,
       password: data.password,
+      options: {
+        emailRedirectTo: 'http://localhost:3000/me',
+      },
     });
   }
-
+  
   async authenticateUser(data: LoginData) {
     return await this.client.auth.signInWithPassword({
       email: data.email,
