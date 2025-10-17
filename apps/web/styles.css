@@ -23,6 +23,20 @@
   background: linear-gradient(180deg, #723e03 0%, #b07207 100%);
 }
 
+.bg-gradient-purple {
+  @apply bg-gradient-to-tr from-[#E801BE] to-[#3A00FF]
+}
+
+.cursor-blink {
+  animation: blink 1s step-end infinite;
+}
+
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
+}
+
 @keyframes glow-pulse {
   0%,
   100% {

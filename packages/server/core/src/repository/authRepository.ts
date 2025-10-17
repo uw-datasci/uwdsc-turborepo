@@ -1,14 +1,20 @@
 import { BaseRepository } from "@uwdsc/server/core/repository/baseRepository";
-import { LoginData, RegisterData } from "../types/auth";
+import { LoginData, RegisterData, ResendVerificationData } from "../types/auth";
 
 export class AuthRepository extends BaseRepository {
   async createUser(data: RegisterData) {
-    return await this.client.auth.signUp({
+    const payload: Parameters<typeof this.client.auth.signUp>[0] = {
       email: data.email,
       password: data.password,
       options: {
         emailRedirectTo: 'http://localhost:3000/me',
       },
+    };
+
+    if (data.metadata) {
+      payload.options = { data: data.metadata };
+    }
+    return await this.client.auth.signUp(payload);
     });
   }
   
@@ -17,6 +23,17 @@ export class AuthRepository extends BaseRepository {
       email: data.email,
       password: data.password,
     });
+  }
+
+  async resendVerificationEmail(data: ResendVerificationData) {
+    const { data: resendData, error } = await this.client.auth.resend({
+      type: "signup",
+      email: data.email,
+    });
+    if (error) {
+      throw new Error(`Failed to resend verification email: ${error.message}`);
+    }
+    return resendData;
   }
 
   async getCurrentUser() {

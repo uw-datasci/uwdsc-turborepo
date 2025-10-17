@@ -3,6 +3,11 @@ import type { User, Session } from "@supabase/supabase-js";
 export interface RegisterData {
   email: string;
   password: string;
+  metadata?: Record<string, any>;
+}
+
+export interface ResendVerificationData {
+  email: string;
 }
 
 export interface LoginData {
@@ -15,6 +20,12 @@ export interface AuthResponse {
   user: User | null;
   session: Session | null;
   error: string | null;
+}
+
+export interface ResendVerificationResponse {
+  success: boolean;
+  message?: string;
+  error?: string;
 }
 
 export interface UserResponse {

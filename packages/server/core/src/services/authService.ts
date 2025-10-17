@@ -9,6 +9,8 @@ import {
   AuthResponse,
   UserResponse,
   SignOutResponse,
+  ResendVerificationData,
+  ResendVerificationResponse,
 } from "../types/auth";
 
 export class AuthService {
@@ -27,6 +29,7 @@ export class AuthService {
       const { data: authData, error } = await this.authRepository.createUser({
         email,
         password: data.password,
+        metadata: data.metadata,
       });
 
       if (error) {
@@ -54,6 +57,20 @@ export class AuthService {
     }
   }
 
+  async resendVerificationEmail(
+    data: ResendVerificationData
+  ): Promise<ResendVerificationResponse> {
+    try {
+      await this.authRepository.resendVerificationEmail(data);
+      return { success: true, message: "Verification email sent" };
+    } catch (error: any) {
+      return {
+        success: false,
+        error: error.message || "Failed to send verification email",
+      };
+    }
+  }
+
   async login(data: LoginData): Promise<AuthResponse> {
     try {
       const email = data.email.toLowerCase().trim();
@@ -65,7 +82,6 @@ export class AuthService {
         });
 
       if (error) {
-        
         // Special case: if email is not confirmed, we want to allow the login
         // but indicate that email verification is needed
         if (error.message === "Email not confirmed") {
@@ -76,7 +92,7 @@ export class AuthService {
             error: "email_not_verified", // Custom error code for client handling
           };
         }
-        
+
         return {
           success: false,
           user: null,
