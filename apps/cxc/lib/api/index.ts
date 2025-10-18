@@ -16,5 +16,8 @@ export {
 // Export all user functions
 export { getUserProfile, updateUserProfile } from "./user";
 
+// Export all file upload functions
+export { uploadResume } from "./resume";
+
 // Export all types
 export type * from "@/types/api";

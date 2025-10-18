@@ -1,14 +1,15 @@
 import { cookies } from "next/headers";
 import { createSupabaseServerClient } from "@uwdsc/server/core/database/client";
 import { AuthService } from "@uwdsc/server/core/services/authService";
+import { ResumeService } from "@uwdsc/server/core/services/resumeService";
 
 /**
- * Create AuthService with Next.js cookies
+ * Create a Supabase client with Next.js server-side cookies
  */
-export async function createAuthService() {
+async function createSupabaseClient() {
   const cookieStore = await cookies();
 
-  const supabase = createSupabaseServerClient({
+  return createSupabaseServerClient({
     getAll() {
       return cookieStore.getAll();
     },
@@ -16,6 +17,20 @@ export async function createAuthService() {
       cookieStore.set(name, value, options);
     },
   });
+}
 
+/**
+ * Create AuthService with server-side Supabase client
+ */
+export async function createAuthService() {
+  const supabase = await createSupabaseClient();
   return new AuthService(supabase);
+}
+
+/**
+ * Create ResumeService with server-side Supabase client
+ */
+export async function createResumeService() {
+  const supabase = await createSupabaseClient();
+  return new ResumeService(supabase);
 }
