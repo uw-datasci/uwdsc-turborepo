@@ -7,7 +7,7 @@ import {
   renderRegistrationSelectField,
   renderRegistrationTextAreaField,
   renderRegistrationTextField,
-} from "../RegistrationFormHelper";
+} from "../FormHelpers";
 
 interface StepProps {
   form: UseFormReturn<RegistrationFormValues>;

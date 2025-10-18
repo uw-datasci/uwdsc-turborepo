@@ -11,16 +11,48 @@ import {
   NavigationMenuLink,
   GlassSurface,
 } from "@uwdsc/ui";
-import { User, Settings, LogOut } from "lucide-react";
+import { User, Settings, LogOut, LogIn } from "lucide-react";
 import Link from "next/link";
 import { useAuth } from "@/contexts/AuthContext";
+import { signOut } from "@/lib/api";
+import { useRouter } from "next/navigation";
 
 export function UserAvatar() {
-  const { profile, isLoading, isAuthenticated } = useAuth();
+  const { profile, isLoading, isAuthenticated, mutate } = useAuth();
+  const router = useRouter();
 
-  // Don't show avatar if not authenticated or still loading
-  if (!isAuthenticated || isLoading) {
+  const handleSignOut = async () => {
+    try {
+      await signOut();
+      // Revalidate the auth state
+      await mutate();
+      // Redirect to home page
+      router.push("/");
+    } catch (error) {
+      console.error("Failed to sign out:", error);
+    }
+  };
+
+  // Show loading state
+  if (isLoading) {
     return null;
+  }
+
+  // Show login button if not authenticated
+  if (!isAuthenticated) {
+    return (
+      <NavigationMenuItem className="relative pl-8 before:absolute before:left-0 before:h-10 before:w-px before:bg-border">
+        <Link href="/login">
+          <Button
+            variant="ghost"
+            className="h-10 flex flex-row items-center gap-2 px-4"
+          >
+            <LogIn className="h-4 w-4" />
+            <span className="text-sm font-medium">Log In</span>
+          </Button>
+        </Link>
+      </NavigationMenuItem>
+    );
   }
 
   const initials =
@@ -64,12 +96,12 @@ export function UserAvatar() {
             <li>
               <NavigationMenuLink asChild>
                 <Link
-                  href="/profile"
+                  href="/passport"
                   className="flex flex-row items-center gap-3 rounded-md p-3 no-underline outline-none transition-colors hover:bg-muted/30 focus:bg-muted/30"
                 >
                   <User className="h-4 w-4 shrink-0" />
                   <span className="text-sm font-medium leading-normal">
-                    Profile
+                    My Passport
                   </span>
                 </Link>
               </NavigationMenuLink>
@@ -89,17 +121,16 @@ export function UserAvatar() {
               </NavigationMenuLink>
             </li>
             <li className="border-t border-border/50 pt-1">
-              <NavigationMenuLink asChild>
-                <Button
-                  variant="ghost"
-                  className="w-full h-auto flex flex-row items-center justify-start gap-3 p-3 hover:bg-destructive/10 hover:text-destructive focus:bg-destructive/10 focus:text-destructive"
-                >
-                  <LogOut className="h-4 w-4 shrink-0" />
-                  <span className="text-sm font-medium leading-normal">
-                    Log out
-                  </span>
-                </Button>
-              </NavigationMenuLink>
+              <Button
+                variant="ghost"
+                onClick={handleSignOut}
+                className="w-full h-auto flex flex-row items-center justify-start gap-3 p-3 hover:bg-destructive/10 hover:text-destructive focus:bg-destructive/10 focus:text-destructive"
+              >
+                <LogOut className="h-4 w-4 shrink-0" />
+                <span className="text-sm font-medium leading-normal">
+                  Log out
+                </span>
+              </Button>
             </li>
           </ul>
         </GlassSurface>

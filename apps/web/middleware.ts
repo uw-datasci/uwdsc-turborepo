@@ -4,9 +4,20 @@ import { createSupabaseMiddlewareClient } from "@uwdsc/server/core/database/auth
 
 // Protected routes that require authentication
 const protectedRoutes = ["/me", "/admin"];
+const authRoutes = new Set(["/login", "/register"]);
 
-// Routes that should redirect if profile is complete
-const authRoutes = ["/login", "/register", "/verify-email"];
+// Helper function to check if profile is complete
+function isProfileComplete(profile: any, error: any): boolean {
+  return !!(
+    profile &&
+    !error &&
+    profile.first_name &&
+    profile.last_name &&
+    profile.faculty &&
+    profile.term &&
+    profile.heard_from_where
+  );
+}
 
 export async function middleware(request: NextRequest) {
   let response = NextResponse.next({
@@ -29,7 +40,6 @@ export async function middleware(request: NextRequest) {
   const isProtectedRoute = protectedRoutes.some((route) =>
     pathname.startsWith(route)
   );
-  const isAuthRoute = authRoutes.includes(pathname);
   const isCompleteProfileRoute = pathname === "/complete-profile";
 
   // Redirect to login if accessing protected route without auth
@@ -39,6 +49,11 @@ export async function middleware(request: NextRequest) {
 
   // If user is authenticated
   if (user) {
+    // Redirect authenticated users away from login/register pages
+    if (authRoutes.has(pathname)) {
+      return NextResponse.redirect(new URL("/", request.url));
+    }
+
     // Check if profile is complete using Supabase client (edge-compatible)
     const { data: profile, error } = await supabase
       .from("profiles")
@@ -46,24 +61,20 @@ export async function middleware(request: NextRequest) {
       .eq("id", user.id)
       .maybeSingle(); // Use maybeSingle() instead of single() - returns null if no rows
 
-    // Profile is complete if all required fields are filled
-    const isProfileComplete = !!(
-      profile &&
-      !error &&
-      profile.first_name &&
-      profile.last_name &&
-      profile.faculty &&
-      profile.term &&
-      profile.heard_from_where
-    );
+    const profileComplete = isProfileComplete(profile, error);
+
+    // Redirect to home if profile is already complete and trying to access complete-profile
+    if (profileComplete && isCompleteProfileRoute) {
+      return NextResponse.redirect(new URL("/", request.url));
+    }
 
     // Redirect to complete-profile if profile is incomplete and not already there
-    if (!isProfileComplete && !isCompleteProfileRoute) {
+    if (!profileComplete && !isCompleteProfileRoute) {
       return NextResponse.redirect(new URL("/complete-profile", request.url));
     }
 
-    // Redirect away from auth routes if already authenticated with complete profile
-    if (isAuthRoute && isProfileComplete) {
+    // Redirect away from verify-email if already authenticated with complete profile
+    if (pathname === "/verify-email" && profileComplete) {
       return NextResponse.redirect(new URL("/", request.url));
     }
   } else if (isCompleteProfileRoute) {

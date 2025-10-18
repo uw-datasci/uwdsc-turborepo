@@ -14,7 +14,7 @@ import {
   renderRegistrationTextField,
   renderRegistrationSelectField,
   renderRegistrationTextAreaField,
-} from "@/components/RegistrationFormHelper";
+} from "@/components/FormHelpers";
 import Typing from "@/components/register/Typing";
 import { useRouter } from "next/navigation";
 import { Loader2 } from "lucide-react";

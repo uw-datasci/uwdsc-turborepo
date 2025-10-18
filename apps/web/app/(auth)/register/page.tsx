@@ -8,7 +8,7 @@ import { Form, Button, FormField } from "@uwdsc/ui";
 import Typing from "@/components/register/Typing";
 import { useRouter } from "next/navigation";
 import { Loader2, Mail, ArrowRight } from "lucide-react";
-import { renderRegistrationTextField } from "@/components/RegistrationFormHelper";
+import { renderRegistrationTextField } from "@/components/FormHelpers";
 import { motion, AnimatePresence } from "framer-motion";
 import { register, resendVerificationEmail } from "@/lib/api";
 

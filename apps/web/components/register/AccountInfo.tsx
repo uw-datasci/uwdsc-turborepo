@@ -3,7 +3,7 @@
 import { FormField } from "@uwdsc/ui";
 import { RegistrationFormValues } from "@/lib/schemas/register";
 import { UseFormReturn } from "react-hook-form";
-import { renderRegistrationTextField } from "../RegistrationFormHelper";
+import { renderRegistrationTextField } from "../FormHelpers";
 
 interface StepProps {
   form: UseFormReturn<RegistrationFormValues>;
