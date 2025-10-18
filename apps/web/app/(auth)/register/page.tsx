@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Form, Button, FormField } from "@uwdsc/ui";
-import Typing from "@/components/auth/register/Typing";
+import Typing from "@/components/auth/login/Typing";
 import { useRouter } from "next/navigation";
 import { Loader2, Mail, ArrowRight } from "lucide-react";
 import { renderTextField } from "@/components/FormHelpers";
