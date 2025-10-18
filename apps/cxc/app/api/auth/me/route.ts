@@ -1,4 +1,4 @@
-import { ProfileService } from "@uwdsc/server/web/services/profileService";
+import { ProfileService } from "@uwdsc/server/cxc/services/profileService";
 import { createAuthService } from "@/lib/services";
 import { NextRequest, NextResponse } from "next/server";
 

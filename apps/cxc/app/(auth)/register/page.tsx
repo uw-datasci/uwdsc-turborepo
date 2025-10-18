@@ -5,7 +5,6 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Form, Button, FormField } from "@uwdsc/ui";
-import Typing from "@/components/auth/register/Typing";
 import { useRouter } from "next/navigation";
 import { Loader2, Mail, ArrowRight } from "lucide-react";
 import { renderTextField } from "@/components/FormHelpers";
@@ -119,14 +118,7 @@ export default function RegisterPage() {
 
   return (
     <div className="bg-black w-full min-h-screen flex flex-col items-center justify-center px-12 py-8 overflow-hidden">
-      <div className="w-full mb-8">
-        <Typing
-          text="UW Data Science Club"
-          speed={75}
-          caretSize="text-[42px] font-semibold"
-          className="text-3xl font-bold text-white"
-        />
-      </div>
+      
       <div className="flex-1 flex items-center justify-center w-full relative">
         <AnimatePresence mode="wait">
           {isRegistered ? (
@@ -147,7 +139,7 @@ export default function RegisterPage() {
               </div>
 
               {/* Title */}
-              <h1 className="gradient-text bg-gradient-to-b from-white to-[#ffffff20] text-7xl md:text-8xl font-medium pb-2">
+              <h1 className="text-7xl md:text-8xl font-medium pb-2">
                 Verify Email
               </h1>
 
@@ -165,7 +157,7 @@ export default function RegisterPage() {
                   <Button
                     onClick={() => router.push("/login")}
                     size="lg"
-                    className="group bg-gradient-purple hover:opacity-90 transition-all text-lg font-bold rounded-lg px-8 py-6 flex items-center gap-2"
+                    className="group hover:opacity-90 transition-all text-lg font-bold rounded-lg px-8 py-6 flex items-center gap-2"
                   >
                     Go to Login
                     <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />

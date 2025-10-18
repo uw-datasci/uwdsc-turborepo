@@ -1,19 +1,10 @@
 import { LoginForm } from "@/components/auth/login/LoginForm";
-import Typing from "@/components/auth/register/Typing";
 import Image from "next/image";
 
 export default function LoginPage() {
   return (
     <div className="bg-black w-full min-h-screen flex flex-col items-center justify-center px-12 py-8">
-      <div className="w-full mb-8">
-        <Typing
-          text="UW Data Science Club"
-          speed={75}
-          caretSize="text-[42px] font-semibold"
-          className="text-3xl font-bold text-white"
-        />
-      </div>
-      <div className="flex-1 flex flex-col itms-center justify-center w-full">
+      <div className="flex-1 flex flex-col items-center justify-center w-full">
         <div className="flex flex-col md:flex-row gap-8 lg:gap-12 w-full h-full max-w-6xl mx-auto">
           <div className="flex flex-col flex-1 gap-8 justify-center">
             <div className="hidden md:block relative w-40 h-40">

@@ -8,7 +8,13 @@ const authRoutes = new Set(["/login", "/register"]);
 
 // Helper function to check if profile is complete
 function isProfileComplete(profile: any, error: any): boolean {
-  return !!(profile && !error && profile.first_name && profile.last_name);
+  return !!(
+    profile &&
+    !error &&
+    profile.first_name &&
+    profile.last_name &&
+    profile.dob
+  );
 }
 
 export async function middleware(request: NextRequest) {
@@ -49,7 +55,7 @@ export async function middleware(request: NextRequest) {
     // Check if profile is complete using Supabase client (edge-compatible)
     const { data: profile, error } = await supabase
       .from("profiles")
-      .select("first_name, last_name, faculty, term, heard_from_where")
+      .select("first_name, last_name, dob")
       .eq("id", user.id)
       .maybeSingle(); // Use maybeSingle() instead of single() - returns null if no rows
 

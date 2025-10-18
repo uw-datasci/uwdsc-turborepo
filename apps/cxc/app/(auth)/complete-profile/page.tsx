@@ -19,7 +19,6 @@ import {
   FormMessage,
 } from "@uwdsc/ui";
 import { renderTextField } from "@/components/FormHelpers";
-import Typing from "@/components/auth/register/Typing";
 import { useRouter } from "next/navigation";
 import { Loader2 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
@@ -43,13 +42,9 @@ export default function CompleteProfilePage() {
     if (profile.first_name) form.setValue("first_name", profile.first_name);
     if (profile.last_name) form.setValue("last_name", profile.last_name);
     if (profile.dob) {
-      // Convert datetime to date string (YYYY-MM-DD)
-      const date = new Date(profile.dob);
-      const isoString = date.toISOString();
-      const dateStr = isoString.split("T")[0];
-      if (dateStr) {
-        form.setValue("dob", dateStr);
-      }
+      // Convert datetime to date string (YYYY-MM-DD) without timezone conversion
+      const dateStr = profile.dob.split("T")[0];
+      if (dateStr) form.setValue("dob", dateStr);
     }
   };
 
@@ -114,27 +109,11 @@ export default function CompleteProfilePage() {
 
   return (
     <div className="bg-black w-full min-h-screen flex flex-col items-center justify-center px-12 py-8">
-      <div className="w-full mb-8">
-        <Typing
-          text="UW Data Science Club"
-          speed={75}
-          caretSize="text-[42px] font-semibold"
-          className="text-3xl font-bold text-white"
-        />
-      </div>
       <div className="flex-1 flex items-center justify-center w-full">
         <Form {...form}>
-          <div className="flex flex-col md:flex-row gap-8 lg:gap-12 w-full h-full max-w-6xl mx-auto">
+          <div className="flex flex-col md:flex-row gap-8 lg:gap-12 w-full h-full max-w-6xl mx-auto items-center">
             {/* Left Information Side */}
             <div className="flex flex-col flex-1 gap-8 justify-center">
-              <div className="hidden md:block relative w-40 h-40">
-                <Image
-                  src="/logos/dsc.svg"
-                  alt="uwdsc logo"
-                  fill
-                  className="object-contain"
-                />
-              </div>
               <div className="text-center md:text-start">
                 <h2 className="text-7xl font-bold my-10">Almost There!</h2>
                 <div className="flex flex-col gap-8 leading-loose text-xl">
@@ -195,7 +174,7 @@ export default function CompleteProfilePage() {
                   size="lg"
                   disabled={isLoading}
                   type="button"
-                  className="w-full rounded-md xl:rounded-lg bg-gradient-purple text-lg font-bold !h-auto py-2.5"
+                  className="w-full rounded-md xl:rounded-lg text-lg font-bold !h-auto py-2.5"
                 >
                   {isLoading ? (
                     <>

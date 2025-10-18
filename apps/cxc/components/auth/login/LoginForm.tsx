@@ -100,7 +100,7 @@ export function LoginForm() {
               size="lg"
               disabled={isLoading}
               type="submit"
-              className="w-full rounded-md xl:rounded-lg bg-gradient-purple text-lg font-bold !h-auto py-2.5"
+              className="w-full rounded-md xl:rounded-lg text-lg font-bold !h-auto py-2.5"
             >
               {isLoading ? (
                 <>

@@ -13,7 +13,7 @@ export default function LoginPage() {
           className="text-3xl font-bold text-white"
         />
       </div>
-      <div className="flex-1 flex flex-col itms-center justify-center w-full">
+      <div className="flex-1 flex flex-col items-center justify-center w-full">
         <div className="flex flex-col md:flex-row gap-8 lg:gap-12 w-full h-full max-w-6xl mx-auto">
           <div className="flex flex-col flex-1 gap-8 justify-center">
             <div className="hidden md:block relative w-40 h-40">
