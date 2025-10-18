@@ -23,7 +23,7 @@ import { createApiError } from "./errors";
  * @returns Promise with user profile data (null if not authenticated)
  */
 export async function getUserProfile(): Promise<UserProfile | null> {
-  const response = await fetch("/api/user/profile");
+  const response = await fetch("/api/profile");
 
   // For 401/404 on profile endpoint, return null profile instead of throwing
   if (response.status === 401 || response.status === 404) {
@@ -49,7 +49,7 @@ export async function getUserProfile(): Promise<UserProfile | null> {
 export async function updateUserProfile(
   profileData: UpdateProfileRequest
 ): Promise<UpdateProfileResponse> {
-  const response = await fetch("/api/user/profile", {
+  const response = await fetch("/api/profile", {
     method: "PATCH",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(profileData),

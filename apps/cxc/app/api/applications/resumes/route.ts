@@ -1,30 +1,11 @@
 import { NextRequest } from "next/server";
-import { createAuthService } from "@/lib/services";
-import { createSupabaseBrowserClient } from "@uwdsc/server/core/database/client";
-
-const MAX_BYTES = 10 * 1024 * 1024; // 10 MB
-const ALLOWED_MIME = new Set([
-  "application/pdf",
-  "application/vnd.openxmlformats-officedocument.wordprocessingml.document", // .docx
-  "application/msword",
-]);
-
-function extFromMime(mime: string) {
-  if (mime === "application/pdf") return "pdf";
-  if (
-    mime ===
-    "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-  )
-    return "docx";
-  if (mime === "application/msword") return "doc"; // optional
-  return null;
-}
+import { createAuthService, createResumeService } from "@/lib/services";
 
 export async function POST(req: NextRequest) {
   try {
+    // Parse form data
     const form = await req.formData();
     const file = form.get("file") as File | null;
-    const supabase = createSupabaseBrowserClient();
 
     if (!file) {
       return Response.json(
@@ -33,23 +14,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Validate size
-    if (file.size > MAX_BYTES) {
-      return Response.json(
-        { error: `File too large. Max ${MAX_BYTES / (1024 * 1024)} MB.` },
-        { status: 413 }
-      );
-    }
-
-    // Validate mime type
-    const mime = file.type || "";
-    if (!ALLOWED_MIME.has(mime)) {
-      return Response.json(
-        { error: "Invalid file type. Allowed: PDF or DOCX." },
-        { status: 415 }
-      );
-    }
-
+    // Authenticate user
     const authService = await createAuthService();
     const { user, error: userErr } = await authService.getCurrentUser();
 
@@ -57,33 +22,27 @@ export async function POST(req: NextRequest) {
       return Response.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const ext = extFromMime(mime);
-    if (!ext) {
-      return Response.json(
-        { error: "Unsupported content type" },
-        { status: 415 }
-      );
-    }
-    const objectKey = `${user.id}/${file.name}`;
+    // Upload resume using service
+    const resumeService = await createResumeService();
+    const result = await resumeService.uploadResume({
+      file,
+      userId: user.id,
+    });
 
-    const { error: uploadErr } = await supabase.storage
-      .from("resumes")
-      .upload(objectKey, file, {
-        cacheControl: "3600",
-        upsert: true,
-        contentType: mime,
-      });
+    if (!result.success) {
+      // Determine appropriate status code based on error type
+      let statusCode = 500;
+      if (result.error?.includes("too large")) statusCode = 413;
+      else if (result.error?.includes("Invalid file type")) statusCode = 415;
+      else if (result.error?.includes("Unsupported content type"))
+        statusCode = 415;
 
-    if (uploadErr) {
-      return Response.json(
-        { error: `Upload failed: ${uploadErr.message}` },
-        { status: 500 }
-      );
+      return Response.json({ error: result.error }, { status: statusCode });
     }
 
     return Response.json({
-      message: "Upload successful",
-      key: objectKey,
+      message: result.message,
+      key: result.key,
     });
   } catch (err: any) {
     console.error("Resume upload error:", err);

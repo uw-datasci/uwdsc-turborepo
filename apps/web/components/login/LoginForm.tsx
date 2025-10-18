@@ -1,4 +1,3 @@
-// components/auth/LoginForm.tsx
 "use client";
 import { FormField, Button, Form } from "@uwdsc/ui";
 import {
@@ -14,6 +13,7 @@ import { renderTextField } from "../FormHelpers";
 import { Loader2 } from "lucide-react";
 import { VerifyEmailModal } from "./VerifyEmailModal";
 import { login } from "@/lib/api/auth";
+import { useAuth } from "@/contexts/AuthContext";
 
 export function LoginForm() {
   const [authError, setAuthError] = useState<string>("");
@@ -21,6 +21,7 @@ export function LoginForm() {
   const [showVerifyModal, setShowVerifyModal] = useState(false);
   const [userEmail, setUserEmail] = useState<string>("");
   const router = useRouter();
+  const { mutate } = useAuth();
 
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
@@ -42,6 +43,9 @@ export function LoginForm() {
         setUserEmail(data.email);
         setShowVerifyModal(true);
       } else if (responseData.session && responseData.user) {
+        // Update the auth context with the new user data
+        await mutate();
+
         if (responseData.user.email_confirmed_at) {
           // Email verified, redirect to landing
           router.push("/");

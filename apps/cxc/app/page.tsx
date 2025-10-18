@@ -4,9 +4,52 @@ import { useAuth } from "@/contexts/AuthContext";
 import { signOut } from "@/lib/api";
 import { Button } from "@uwdsc/ui/index";
 import Link from "next/link";
+import { useState } from "react";
 
 export default function Home() {
   const { profile, isLoading, isAuthenticated } = useAuth();
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [uploading, setUploading] = useState(false);
+  const [uploadResult, setUploadResult] = useState<string | null>(null);
+
+  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setSelectedFile(file);
+      setUploadResult(null);
+    }
+  };
+
+  const handleUpload = async () => {
+    if (!selectedFile) return;
+
+    setUploading(true);
+    setUploadResult(null);
+
+    try {
+      const formData = new FormData();
+      formData.append("file", selectedFile);
+
+      const response = await fetch("/api/applications/resumes", {
+        method: "POST",
+        body: formData,
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setUploadResult(`✅ Success: ${data.message} (Key: ${data.key})`);
+      } else {
+        setUploadResult(`❌ Error: ${data.error}`);
+      }
+    } catch (error) {
+      setUploadResult(
+        `❌ Error: ${error instanceof Error ? error.message : "Upload failed"}`
+      );
+    } finally {
+      setUploading(false);
+    }
+  };
 
   if (isLoading) {
     return (
@@ -47,6 +90,45 @@ export default function Home() {
             ? "You're logged in!"
             : "Please log in to get started."}
         </p>
+
+        {isAuthenticated && (
+          <div className="mt-8 max-w-md mx-auto p-6 border rounded-lg">
+            <h2 className="text-xl font-semibold mb-4">Test Resume Upload</h2>
+            <div className="space-y-4">
+              <input
+                type="file"
+                accept=".pdf,.doc,.docx"
+                onChange={handleFileSelect}
+                disabled={uploading}
+                className="block w-full text-sm text-slate-500
+                  file:mr-4 file:py-2 file:px-4
+                  file:rounded-md file:border-0
+                  file:text-sm file:font-semibold
+                  file:bg-primary file:text-primary-foreground
+                  hover:file:bg-primary/90
+                  disabled:opacity-50"
+              />
+              {selectedFile && (
+                <div className="text-sm text-muted-foreground">
+                  Selected: {selectedFile.name} (
+                  {(selectedFile.size / 1024).toFixed(2)} KB)
+                </div>
+              )}
+              <Button
+                onClick={handleUpload}
+                disabled={!selectedFile || uploading}
+                className="w-full"
+              >
+                {uploading ? "Uploading..." : "Upload Resume"}
+              </Button>
+              {uploadResult && (
+                <p className="text-sm whitespace-pre-wrap break-all">
+                  {uploadResult}
+                </p>
+              )}
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

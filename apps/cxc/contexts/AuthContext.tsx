@@ -21,7 +21,7 @@ const fetcher = async () => {
 
 export function AuthProvider({ children }: { readonly children: ReactNode }) {
   const { data, error, isLoading, mutate } = useSWR<UserProfile | null>(
-    "/api/user/profile",
+    "/api/profile",
     fetcher,
     {
       // Revalidate on window focus
