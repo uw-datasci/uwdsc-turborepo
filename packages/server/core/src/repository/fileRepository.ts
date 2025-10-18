@@ -1,30 +1,26 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 
-export interface ResumeUploadOptions {
+export interface FileUploadOptions {
   file: File;
   userId: string;
   objectKey: string;
   contentType: string;
 }
 
-export interface ResumeUploadResult {
-  key: string;
-  error?: string;
-}
+export class FileRepository {
+  protected readonly client: SupabaseClient;
+  protected readonly bucketName: string;
 
-export class ResumeRepository {
-  private readonly client: SupabaseClient;
-  private readonly bucketName = "resumes";
-
-  constructor(client: SupabaseClient) {
+  constructor(client: SupabaseClient, bucketName: string) {
     this.client = client;
+    this.bucketName = bucketName;
   }
 
   /**
-   * Upload a resume file to Supabase storage
+   * Upload a file to Supabase storage
    */
-  async uploadResume(
-    options: ResumeUploadOptions
+  async uploadFile(
+    options: FileUploadOptions
   ): Promise<{ data: { path: string } | null; error: Error | null }> {
     const { file, objectKey, contentType } = options;
 
@@ -44,9 +40,9 @@ export class ResumeRepository {
   }
 
   /**
-   * Get public URL for a resume
+   * Get public URL for a file
    */
-  async getResumeUrl(objectKey: string) {
+  async getFileUrl(objectKey: string) {
     const { data } = this.client.storage
       .from(this.bucketName)
       .getPublicUrl(objectKey);
@@ -55,9 +51,9 @@ export class ResumeRepository {
   }
 
   /**
-   * Delete a resume file
+   * Delete a file
    */
-  async deleteResume(objectKey: string): Promise<{ error: Error | null }> {
+  async deleteFile(objectKey: string): Promise<{ error: Error | null }> {
     const { error } = await this.client.storage
       .from(this.bucketName)
       .remove([objectKey]);
@@ -66,9 +62,9 @@ export class ResumeRepository {
   }
 
   /**
-   * List all resumes for a user
+   * List all files for a user
    */
-  async listUserResumes(userId: string): Promise<{
+  async listUserFiles(userId: string): Promise<{
     data: any[] | null;
     error: Error | null;
   }> {
