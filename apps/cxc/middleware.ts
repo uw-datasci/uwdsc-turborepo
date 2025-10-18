@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { createSupabaseMiddlewareClient } from "@uwdsc/server/core/database/auth-client";
+import { createSupabaseMiddlewareClient } from "@uwdsc/server/core/database/client";
 
 // Protected routes that require authentication
 const protectedRoutes = ["/me", "/admin"];

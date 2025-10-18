@@ -1,5 +1,5 @@
 import { cookies } from "next/headers";
-import { createSupabaseServerClient } from "@uwdsc/server/core/database/auth-client";
+import { createSupabaseServerClient } from "@uwdsc/server/core/database/client";
 import { AuthService } from "@uwdsc/server/core/services/authService";
 
 /**
