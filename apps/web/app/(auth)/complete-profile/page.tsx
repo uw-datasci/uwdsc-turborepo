@@ -39,7 +39,6 @@ const facultyOptions = [
   "Arts",
   "Health",
   "Environment",
-  "Other/Non-Waterloo",
 ];
 
 const termOptions = [
@@ -190,9 +189,6 @@ export default function CompleteProfilePage() {
                   </p>
                   <p>
                     And after all that hard work ... <br /> Welcome to the club!
-                  </p>
-                  <p className="text-sm text-gray-400">
-                    *If 2+ faculties that include Math, choose Math
                   </p>
                 </div>
               </div>
