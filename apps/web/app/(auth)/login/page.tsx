@@ -1,5 +1,5 @@
-import { LoginForm } from "@/components/auth/login/LoginForm";
-import Typing from "@/components/auth/login/Typing";
+import { LoginForm } from "@/components/login/LoginForm";
+import { Typing } from "@/components/login/Typing";
 import Image from "next/image";
 
 export default function LoginPage() {

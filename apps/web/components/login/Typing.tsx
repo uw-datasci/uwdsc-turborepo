@@ -9,7 +9,7 @@ interface TypingProps {
   className?: string;
 }
 
-export default function Typing({
+export function Typing({
   text,
   speed = 75,
   caretSize,

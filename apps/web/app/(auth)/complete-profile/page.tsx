@@ -15,7 +15,7 @@ import {
   renderSelectField,
   renderTextAreaField,
 } from "@/components/FormHelpers";
-import Typing from "@/components/auth/login/Typing";
+import { Typing } from "@/components/login/Typing";
 import { useRouter } from "next/navigation";
 import { Loader2 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
