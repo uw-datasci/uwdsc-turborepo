@@ -10,7 +10,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { renderLoginTextField } from "../FormHelpers";
+import { renderTextField } from "../../FormHelpers";
 import { Loader2 } from "lucide-react";
 import { VerifyEmailModal } from "./VerifyEmailModal";
 import { login } from "@/lib/api/auth";
@@ -76,17 +76,18 @@ export function LoginForm() {
           <FormField
             control={form.control}
             name="email"
-            render={renderLoginTextField("Email (ex. slchow@uwaterloo.ca)", {
-              type: "email",
+            render={renderTextField("Email (ex. slchow@uwaterloo.ca)", {
+              variant: "auth",
+              inputProps: { type: "email" },
             })}
           />
 
           <FormField
             control={form.control}
             name="password"
-            render={renderLoginTextField("Password", {
-              type: "password",
-              autoComplete: "off",
+            render={renderTextField("Password", {
+              variant: "auth",
+              inputProps: { type: "password", autoComplete: "off" },
             })}
           />
 

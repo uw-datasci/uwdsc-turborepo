@@ -4,10 +4,10 @@ import { FormField } from "@uwdsc/ui";
 import { RegistrationFormValues } from "@/lib/schemas/register";
 import { UseFormReturn } from "react-hook-form";
 import {
-  renderRegistrationSelectField,
-  renderRegistrationTextAreaField,
-  renderRegistrationTextField,
-} from "../FormHelpers";
+  renderTextField,
+  renderSelectField,
+  renderTextAreaField,
+} from "../../FormHelpers";
 
 interface StepProps {
   form: UseFormReturn<RegistrationFormValues>;
@@ -41,26 +41,30 @@ export function AdditionalInfo({ form }: StepProps) {
       <FormField
         control={form.control}
         name="faculty"
-        render={renderRegistrationSelectField("Faculty", facultyOptions)}
+        render={renderSelectField("Faculty", facultyOptions, {
+          variant: "auth",
+        })}
       />
       <FormField
         control={form.control}
         name="term"
-        render={renderRegistrationSelectField(
-          "Current/Last completed term",
-          termOptions
-        )}
+        render={renderSelectField("Current/Last completed term", termOptions, {
+          variant: "auth",
+        })}
       />
       <FormField
         control={form.control}
         name="heard_from_where"
-        render={renderRegistrationTextField("Where did you hear about us?")}
+        render={renderTextField("Where did you hear about us?", {
+          variant: "auth",
+        })}
       />
       <FormField
         control={form.control}
         name="member_ideas"
-        render={renderRegistrationTextAreaField(
-          "[Optional] Share your ideas for new events or improvements!"
+        render={renderTextAreaField(
+          "[Optional] Share your ideas for new events or improvements!",
+          { variant: "auth" }
         )}
       />
     </div>

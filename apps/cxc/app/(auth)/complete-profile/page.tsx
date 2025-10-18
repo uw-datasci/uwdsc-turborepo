@@ -9,61 +9,21 @@ import {
   completeProfileDefaultValues,
   CompleteProfileFormValues,
 } from "@/lib/schemas/complete-profile";
-import { Form, Button, FormField } from "@uwdsc/ui";
 import {
-  renderTextField,
-  renderSelectField,
-  renderTextAreaField,
-} from "@/components/FormHelpers";
+  Form,
+  Button,
+  FormField,
+  Input,
+  FormItem,
+  FormControl,
+  FormMessage,
+} from "@uwdsc/ui";
+import { renderTextField } from "@/components/FormHelpers";
 import Typing from "@/components/auth/register/Typing";
 import { useRouter } from "next/navigation";
 import { Loader2 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { getAuthMe, updateUserProfile } from "@/lib/api";
-
-// Map the displayed faculty options to enum values
-const facultyMap: Record<string, string> = {
-  Math: "math",
-  Engineering: "engineering",
-  Science: "science",
-  Arts: "arts",
-  Health: "health",
-  Environment: "environment",
-  "Other/Non-Waterloo": "other_non_waterloo",
-};
-
-const facultyOptions = [
-  "Math",
-  "Engineering",
-  "Science",
-  "Arts",
-  "Health",
-  "Environment",
-  "Other/Non-Waterloo",
-];
-
-const termOptions = [
-  "1A",
-  "1B",
-  "2A",
-  "2B",
-  "3A",
-  "3B",
-  "4A",
-  "4B",
-  "5A",
-  "5B",
-];
-
-const facultyReverseMap: Record<string, string> = {
-  math: "Math",
-  engineering: "Engineering",
-  science: "Science",
-  arts: "Arts",
-  health: "Health",
-  environment: "Environment",
-  other_non_waterloo: "Other/Non-Waterloo",
-};
 
 export default function CompleteProfilePage() {
   const [isLoading, setIsLoading] = useState(false);
@@ -82,16 +42,15 @@ export default function CompleteProfilePage() {
   const prefillForm = (profile: any) => {
     if (profile.first_name) form.setValue("first_name", profile.first_name);
     if (profile.last_name) form.setValue("last_name", profile.last_name);
-    if (profile.wat_iam) form.setValue("wat_iam", profile.wat_iam);
-    if (profile.faculty) {
-      const mappedFaculty = facultyReverseMap[profile.faculty];
-      if (mappedFaculty) form.setValue("faculty", mappedFaculty);
+    if (profile.dob) {
+      // Convert datetime to date string (YYYY-MM-DD)
+      const date = new Date(profile.dob);
+      const isoString = date.toISOString();
+      const dateStr = isoString.split("T")[0];
+      if (dateStr) {
+        form.setValue("dob", dateStr);
+      }
     }
-    if (profile.term) form.setValue("term", profile.term);
-    if (profile.heard_from_where)
-      form.setValue("heard_from_where", profile.heard_from_where);
-    if (profile.member_ideas)
-      form.setValue("member_ideas", profile.member_ideas);
   };
 
   useEffect(() => {
@@ -120,15 +79,10 @@ export default function CompleteProfilePage() {
       if (isValid) {
         const formData = form.getValues();
 
-        // Map faculty to enum value
         const profileData = {
           first_name: formData.first_name,
           last_name: formData.last_name,
-          wat_iam: formData.wat_iam,
-          faculty: facultyMap[formData.faculty] ?? "other_non_waterloo",
-          term: formData.term,
-          heard_from_where: formData.heard_from_where,
-          member_ideas: formData.member_ideas || "",
+          dob: formData.dob,
         };
 
         await updateUserProfile(profileData);
@@ -189,10 +143,7 @@ export default function CompleteProfilePage() {
                     profile to finish setting up your account.
                   </p>
                   <p>
-                    And after all that hard work ... <br /> Welcome to the club!
-                  </p>
-                  <p className="text-sm text-gray-400">
-                    *If 2+ faculties that include Math, choose Math
+                    And after all that hard work ... <br /> Welcome to CxC!
                   </p>
                 </div>
               </div>
@@ -218,40 +169,19 @@ export default function CompleteProfilePage() {
                 />
                 <FormField
                   control={form.control}
-                  name="wat_iam"
-                  render={renderTextField("WatIAM (ex. slchow)", {
-                    variant: "auth",
-                  })}
-                />
-                <FormField
-                  control={form.control}
-                  name="faculty"
-                  render={renderSelectField("Faculty", facultyOptions, {
-                    variant: "auth",
-                  })}
-                />
-                <FormField
-                  control={form.control}
-                  name="term"
-                  render={renderSelectField(
-                    "Current/Last completed term",
-                    termOptions,
-                    { variant: "auth" }
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="heard_from_where"
-                  render={renderTextField("Where did you hear about us?", {
-                    variant: "auth",
-                  })}
-                />
-                <FormField
-                  control={form.control}
-                  name="member_ideas"
-                  render={renderTextAreaField(
-                    "[Optional] Share your ideas for new events or improvements!",
-                    { variant: "auth" }
+                  name="dob"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormControl>
+                        <Input
+                          {...field}
+                          type="date"
+                          placeholder="Date of Birth"
+                          className="!h-auto !text-base border-gray-100/80 !bg-black px-4.5 py-3.5 placeholder:text-gray-100/80 rounded-lg xl:px-6 xl:py-4.5"
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
                   )}
                 />
               </div>

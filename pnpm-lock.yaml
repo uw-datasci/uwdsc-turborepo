@@ -59,6 +59,9 @@ importers:
       react-hook-form:
         specifier: ^7.63.0
         version: 7.63.0(react@19.1.1)
+      swr:
+        specifier: ^2.3.6
+        version: 2.3.6(react@19.1.1)
       zod:
         specifier: ^3.25.76
         version: 3.25.76
