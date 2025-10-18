@@ -33,7 +33,8 @@ export class ProfileRepository extends BaseWebRepository {
           heard_from_where = $6,
           member_ideas = $7,
           updated_at = NOW()
-        WHERE id = $8
+          is_math_soc_member = $8,
+        WHERE id = $9
         RETURNING *
       `;
 
@@ -45,6 +46,7 @@ export class ProfileRepository extends BaseWebRepository {
         data.term,
         data.heard_from_where,
         data.member_ideas || null,
+        data.faculty === "math",
         userId,
       ];
 

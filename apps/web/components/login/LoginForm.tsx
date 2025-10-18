@@ -13,6 +13,7 @@ import { useRouter } from "next/navigation";
 import { renderLoginTextField } from "../LoginFormHelper";
 import { Loader2 } from "lucide-react";
 import { VerifyEmailModal } from "./VerifyEmailModal";
+import { login } from "@/lib/api/auth";
 
 export function LoginForm() {
   const [authError, setAuthError] = useState<string>("");
@@ -31,44 +32,35 @@ export function LoginForm() {
     setIsLoading(true);
 
     try {
-      const response = await fetch("/api/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          email: data.email,
-          password: data.password,
-        }),
+      const responseData = await login({
+        email: data.email,
+        password: data.password,
       });
 
-      const responseData = await response.json();
-
-      if (response.ok) {
-        // Check if this is a successful login with unverified email
-        if (responseData.error === "email_not_verified") {
+      // Check if this is a successful login with unverified email
+      if (responseData.error === "email_not_verified") {
+        setUserEmail(data.email);
+        setShowVerifyModal(true);
+      } else if (responseData.session && responseData.user) {
+        if (responseData.user.email_confirmed_at) {
+          // Email verified, redirect to landing
+          router.push("/");
+        } else {
+          // Email not verified, show modal
           setUserEmail(data.email);
           setShowVerifyModal(true);
-        } else if (responseData.session && responseData.user) {
-          if (responseData.user.email_confirmed_at) {
-            // Email verified, redirect to landing
-            router.push("/");
-          } else {
-            // Email not verified, show modal
-            setUserEmail(data.email);
-            setShowVerifyModal(true);
-          }
-        } else {
-          // Fallback: refresh and let middleware handle
-          router.refresh();
         }
       } else {
-        // Handle error response
-        setAuthError(
-          responseData.error || responseData.message || "Login failed"
-        );
+        // Fallback: refresh and let middleware handle
+        router.refresh();
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error("An unexpected error occurred:", error);
-      setAuthError("An unexpected error occurred. Please try again.");
+      setAuthError(
+        error?.error ||
+          error?.message ||
+          "An unexpected error occurred. Please try again."
+      );
     } finally {
       setIsLoading(false);
     }

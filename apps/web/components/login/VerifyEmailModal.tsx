@@ -11,6 +11,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@uwdsc/ui";
+import { resendVerificationEmail } from "@/lib/api";
 
 interface VerifyEmailModalProps {
   open: boolean;
@@ -36,21 +37,12 @@ export function VerifyEmailModal({
     setResendStatus("");
 
     try {
-      const response = await fetch("/api/auth/resend-verification-email", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email }),
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        setResendStatus("Verification email resent successfully.");
-      } else {
-        setResendStatus(data.error || "Failed to resend verification email.");
-      }
+      await resendVerificationEmail({ email });
+      setResendStatus("Verification email resent successfully.");
     } catch (error: any) {
-      setResendStatus(error?.message || "Something went wrong.");
+      setResendStatus(
+        error?.error || error?.message || "Failed to resend verification email."
+      );
     } finally {
       setIsLoading(false);
     }

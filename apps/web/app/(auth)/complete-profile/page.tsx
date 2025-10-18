@@ -18,6 +18,8 @@ import {
 import Typing from "@/components/register/Typing";
 import { useRouter } from "next/navigation";
 import { Loader2 } from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
+import { getAuthMe, updateUserProfile } from "@/lib/api";
 
 // Map the displayed faculty options to enum values
 const facultyMap: Record<string, string> = {
@@ -53,12 +55,23 @@ const termOptions = [
   "5B",
 ];
 
+const facultyReverseMap: Record<string, string> = {
+  math: "Math",
+  engineering: "Engineering",
+  science: "Science",
+  arts: "Arts",
+  health: "Health",
+  environment: "Environment",
+  other_non_waterloo: "Other/Non-Waterloo",
+};
+
 export default function CompleteProfilePage() {
   const [isLoading, setIsLoading] = useState(false);
   const [authError, setAuthError] = useState("");
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isCheckingAuth, setIsCheckingAuth] = useState(true);
   const router = useRouter();
+  const { mutate } = useAuth();
 
   const form = useForm<CompleteProfileFormValues>({
     resolver: zodResolver(completeProfileSchema),
@@ -66,52 +79,28 @@ export default function CompleteProfilePage() {
     mode: "onTouched",
   });
 
+  const prefillForm = (profile: any) => {
+    if (profile.first_name) form.setValue("first_name", profile.first_name);
+    if (profile.last_name) form.setValue("last_name", profile.last_name);
+    if (profile.wat_iam) form.setValue("wat_iam", profile.wat_iam);
+    if (profile.faculty) {
+      const mappedFaculty = facultyReverseMap[profile.faculty];
+      if (mappedFaculty) form.setValue("faculty", mappedFaculty);
+    }
+    if (profile.term) form.setValue("term", profile.term);
+    if (profile.heard_from_where)
+      form.setValue("heard_from_where", profile.heard_from_where);
+    if (profile.member_ideas)
+      form.setValue("member_ideas", profile.member_ideas);
+  };
+
   useEffect(() => {
-    // Check if user is authenticated
     const checkAuth = async () => {
       try {
-        const response = await fetch("/api/auth/me");
-        if (response.ok) {
-          const data = await response.json();
-          setIsAuthenticated(true);
-
-          // Pre-fill form if any data is available from profile
-          if (data.profile) {
-            const profile = data.profile;
-            if (profile.first_name)
-              form.setValue("first_name", profile.first_name);
-            if (profile.last_name)
-              form.setValue("last_name", profile.last_name);
-            if (profile.wat_iam) form.setValue("wat_iam", profile.wat_iam);
-
-            // Map faculty enum value back to display value
-            const facultyReverseMap: Record<string, string> = {
-              math: "Math",
-              engineering: "Engineering",
-              science: "Science",
-              arts: "Arts",
-              health: "Health",
-              environment: "Environment",
-              other_non_waterloo: "Other/Non-Waterloo",
-            };
-            if (profile.faculty) {
-              const mappedFaculty = facultyReverseMap[profile.faculty];
-              if (mappedFaculty) {
-                form.setValue("faculty", mappedFaculty);
-              }
-            }
-
-            if (profile.term) form.setValue("term", profile.term);
-            if (profile.heard_from_where)
-              form.setValue("heard_from_where", profile.heard_from_where);
-            if (profile.member_ideas)
-              form.setValue("member_ideas", profile.member_ideas);
-          }
-        } else {
-          // Not authenticated, redirect to login
-          router.push("/login");
-        }
-      } catch (error) {
+        const data = await getAuthMe();
+        setIsAuthenticated(true);
+        if (data.profile) prefillForm(data.profile);
+      } catch (error: any) {
         console.error("Auth check failed:", error);
         router.push("/login");
       } finally {
@@ -142,27 +131,20 @@ export default function CompleteProfilePage() {
           member_ideas: formData.member_ideas || "",
         };
 
-        const res = await fetch("/api/user/profile", {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(profileData),
-        });
+        await updateUserProfile(profileData);
 
-        const data = await res.json();
-        if (res.ok) {
-          // Redirect to home page after successful profile completion
-          router.push("/");
-        } else {
-          setAuthError(
-            data.error || data.message || "Failed to update profile"
-          );
-        }
+        // Refresh the user profile in the auth context
+        await mutate();
+        // Redirect to home page after successful profile completion
+        router.push("/");
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
-      setAuthError("An unexpected error occurred. Please try again");
+      setAuthError(
+        error?.error ||
+          error?.message ||
+          "An unexpected error occurred. Please try again"
+      );
     } finally {
       setIsLoading(false);
     }

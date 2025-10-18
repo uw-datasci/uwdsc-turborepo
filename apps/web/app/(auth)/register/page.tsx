@@ -10,6 +10,7 @@ import { useRouter } from "next/navigation";
 import { Loader2, Mail, ArrowRight } from "lucide-react";
 import { renderRegistrationTextField } from "@/components/RegistrationFormHelper";
 import { motion, AnimatePresence } from "framer-motion";
+import { register, resendVerificationEmail } from "@/lib/api";
 
 // Simple schema for email and password only
 const registerSchema = z
@@ -71,27 +72,22 @@ export default function RegisterPage() {
       if (isValid) {
         const formData = form.getValues();
 
-        const res = await fetch("/api/auth/register", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            email: formData.email,
-            password: formData.password,
-          }),
+        await register({
+          email: formData.email,
+          password: formData.password,
         });
 
-        const data = await res.json();
-        if (res.ok) {
-          // Show verify email screen with animation
-          setRegisteredEmail(formData.email);
-          setIsRegistered(true);
-        } else {
-          setAuthError(data.error || data.message || "Registration failed");
-        }
+        // Show verify email screen with animation
+        setRegisteredEmail(formData.email);
+        setIsRegistered(true);
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
-      setAuthError("An unexpected error occurred. Please try again");
+      setAuthError(
+        error?.error ||
+          error?.message ||
+          "An unexpected error occurred. Please try again"
+      );
     } finally {
       setIsLoading(false);
     }
@@ -110,21 +106,12 @@ export default function RegisterPage() {
     setResendStatus("");
 
     try {
-      const response = await fetch("/api/auth/resend-verification-email", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: registeredEmail }),
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        setResendStatus("Verification email resent successfully.");
-      } else {
-        setResendStatus(data.error || "Failed to resend verification email.");
-      }
+      await resendVerificationEmail({ email: registeredEmail });
+      setResendStatus("Verification email resent successfully.");
     } catch (error: any) {
-      setResendStatus(error?.message || "Something went wrong.");
+      setResendStatus(
+        error?.error || error?.message || "Failed to resend verification email."
+      );
     } finally {
       setIsResending(false);
     }
