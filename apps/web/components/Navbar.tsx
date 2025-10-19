@@ -7,6 +7,7 @@ import { UserAvatar } from "./navbar/UserAvatar";
 import { usePathname } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
 import Image from "next/image";
+import Link from "next/link";
 
 export function Navbar() {
   const pathname = usePathname();
@@ -24,14 +25,17 @@ export function Navbar() {
     <div className="fixed left-0 right-0 z-50 px-12 py-8">
       <div className="relative flex items-center justify-between mx-auto">
         {/* DSC Logo */}
-        <div className="relative w-12 h-12 lg:w-14 lg:h-14">
+        <Link
+          href="/"
+          className="relative w-12 h-12 lg:w-14 lg:h-14 hover:cursor-pointer"
+        >
           <Image
             src="/logos/dsc.svg"
             alt="uwdsc logo"
             fill
             className="object-contain"
           />
-        </div>
+        </Link>
 
         {/* Centered Navbar */}
         <div className="absolute left-1/2 -translate-x-1/2">
@@ -42,8 +46,8 @@ export function Navbar() {
             className="hidden lg:block px-8 py-2 !overflow-visible"
           >
             <NavigationMenu viewport={false}>
-              <NavigationMenuList className="gap-8">
-                <NavLinks />
+              <NavigationMenuList className="gap-4">
+                <NavLinks profile={profile} />
                 {isAdminOrExec && (
                   <AdminDropdown userStatus={userStatus as "admin" | "exec"} />
                 )}

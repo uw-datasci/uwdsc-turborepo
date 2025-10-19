@@ -4,7 +4,7 @@ import Hero from "@/components/home/Hero";
 import { useAuth } from "@/contexts/AuthContext";
 
 export default function Home() {
-  const { profile, isLoading, isAuthenticated } = useAuth();
+  const { profile, isLoading, isAuthenticated, mutate } = useAuth();
 
   if (isLoading) {
     return (
@@ -13,6 +13,7 @@ export default function Home() {
       </div>
     );
   }
+  console.log(profile, isAuthenticated);
 
   const getGreeting = () => {
     if (profile?.first_name) {
@@ -26,7 +27,7 @@ export default function Home() {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen">
-      <Hero />
+      <Hero profile={profile} mutate={mutate} />
       {/* <div className="text-center">
         <h1 className="text-4xl font-bold">{getGreeting()} 👋</h1>
         <p className="mt-4 text-lg text-muted-foreground">

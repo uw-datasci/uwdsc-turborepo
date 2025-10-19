@@ -45,7 +45,7 @@ export function UserAvatar() {
         <Link href="/login">
           <Button
             variant="ghost"
-            className="h-10 flex flex-row items-center gap-2 px-4"
+            className="h-10 flex flex-row items-center gap-2 px-4 rounded-md hover:text-[var(--nav-hover-blue)]"
           >
             <LogIn className="h-4 w-4" />
             <span className="text-sm font-medium">Log In</span>
@@ -97,7 +97,7 @@ export function UserAvatar() {
               <NavigationMenuLink asChild>
                 <Link
                   href="/passport"
-                  className="flex flex-row items-center gap-3 rounded-md p-3 no-underline outline-none transition-colors hover:bg-muted/30 focus:bg-muted/30"
+                  className="flex flex-row items-center gap-3 rounded-md p-3 no-underline outline-none transition-colors hover:bg-muted/75 focus:bg-muted/75"
                 >
                   <User className="h-4 w-4 shrink-0" />
                   <span className="text-sm font-medium leading-normal">
@@ -111,7 +111,7 @@ export function UserAvatar() {
               <NavigationMenuLink asChild>
                 <Link
                   href="/settings"
-                  className="flex flex-row items-center gap-3 rounded-md p-3 no-underline outline-none transition-colors hover:bg-muted/30 focus:bg-muted/30"
+                  className="flex flex-row items-center gap-3 rounded-md p-3 no-underline outline-none transition-colors hover:bg-muted/75 focus:bg-muted/75"
                 >
                   <Settings className="h-4 w-4 shrink-0" />
                   <span className="text-sm font-medium leading-normal">
@@ -120,11 +120,11 @@ export function UserAvatar() {
                 </Link>
               </NavigationMenuLink>
             </li>
-            <li className="border-t border-border/50 pt-1">
+            <li className="border-t border-white/30 pt-1">
               <Button
                 variant="ghost"
                 onClick={handleSignOut}
-                className="w-full h-auto flex flex-row items-center justify-start gap-3 p-3 hover:bg-destructive/10 hover:text-destructive focus:bg-destructive/10 focus:text-destructive rounded-md"
+                className="w-full h-auto flex flex-row items-center justify-start gap-3 p-3 hover:!bg-muted/75 hover:text-destructive focus:bg-muted/75 focus:text-destructive rounded-md"
               >
                 <LogOut className="h-4 w-4 shrink-0" />
                 <span className="text-sm font-medium leading-normal">

@@ -10,6 +10,7 @@ export {
   CardDescription,
   CardContent,
 } from "./components/card";
+export { CountingNumber } from "./components/counting-numbers";
 export {
   Form,
   FormControl,
