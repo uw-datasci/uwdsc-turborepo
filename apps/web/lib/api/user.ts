@@ -10,6 +10,10 @@ import type {
   GetProfileResponse,
   UpdateProfileRequest,
   UpdateProfileResponse,
+  GetAllProfilesResponse,
+  MemberProfile,
+  GetMembershipStatsResponse,
+  MembershipStats,
 } from "@/types/api";
 import { createApiError } from "./errors";
 
@@ -62,4 +66,44 @@ export async function updateUserProfile(
   }
 
   return data;
+}
+
+// ============================================================================
+// Admin API Functions
+// ============================================================================
+
+/**
+ * Get all user profiles (admin only)
+ *
+ * @returns Promise with array of all member profiles
+ * @throws Error if request fails or unauthorized
+ */
+export async function getAllProfiles(): Promise<MemberProfile[]> {
+  const response = await fetch("/api/admin/memberships");
+
+  const data: GetAllProfilesResponse = await response.json();
+
+  if (!response.ok) {
+    throw createApiError(data, response.status);
+  }
+
+  return data.profiles;
+}
+
+/**
+ * Get membership statistics (admin only)
+ *
+ * @returns Promise with membership statistics
+ * @throws Error if request fails or unauthorized
+ */
+export async function getMembershipStats(): Promise<MembershipStats> {
+  const response = await fetch("/api/admin/memberships?stats=true");
+
+  const data: GetMembershipStatsResponse = await response.json();
+
+  if (!response.ok) {
+    throw createApiError(data, response.status);
+  }
+
+  return data.stats;
 }

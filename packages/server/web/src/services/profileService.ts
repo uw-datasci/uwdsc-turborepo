@@ -64,4 +64,36 @@ export class ProfileService {
       return false;
     }
   }
+
+  /**
+   * Get all user profiles (admin only)
+   */
+  async getAllProfiles(): Promise<any[]> {
+    try {
+      return await this.repository.getAllProfiles();
+    } catch (error) {
+      throw new ApiError(
+        `Failed to get all profiles: ${(error as Error).message}`,
+        500
+      );
+    }
+  }
+
+  /**
+   * Get membership statistics (admin only)
+   */
+  async getMembershipStats(): Promise<{
+    totalUsers: number;
+    paidUsers: number;
+    mathSocMembers: number;
+  }> {
+    try {
+      return await this.repository.getMembershipStats();
+    } catch (error) {
+      throw new ApiError(
+        `Failed to get membership stats: ${(error as Error).message}`,
+        500
+      );
+    }
+  }
 }

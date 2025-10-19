@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 
 const siteUrl = "https://www.uwdatascience.ca/"; // Update with your actual domain
 
@@ -34,11 +34,14 @@ export const baseMetadata: Metadata = {
     shortcut: "/meta/favicon.ico",
   },
   manifest: "/meta/manifest.json",
-  themeColor: "#000211",
   other: {
     "msapplication-TileColor": "#000211",
     "msapplication-TileImage": "/meta/ms-icon-144x144.png",
   },
+};
+
+export const baseViewport: Viewport = {
+  themeColor: "#000211",
 };
 
 /**

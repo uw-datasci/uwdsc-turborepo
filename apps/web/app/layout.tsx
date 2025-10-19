@@ -1,10 +1,10 @@
 import "@uwdsc/ui/globals.css";
 import "../styles.css";
 import { Geist, Geist_Mono } from "next/font/google";
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { ThemeProvider } from "@uwdsc/ui";
 import { Navbar } from "@/components/Navbar";
-import { baseMetadata } from "@/lib/metadata";
+import { baseMetadata, baseViewport } from "@/lib/metadata";
 import { AuthProvider } from "@/contexts/AuthContext";
 
 const geistSans = Geist({
@@ -37,6 +37,8 @@ export const metadata: Metadata = {
     images: ["/meta/og-image.png"],
   },
 };
+
+export const viewport: Viewport = baseViewport;
 
 export default function RootLayout({
   children,

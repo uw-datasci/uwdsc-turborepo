@@ -14,7 +14,12 @@ export {
 } from "./auth";
 
 // Export all user functions
-export { getUserProfile, updateUserProfile } from "./user";
+export {
+  getUserProfile,
+  updateUserProfile,
+  getAllProfiles,
+  getMembershipStats,
+} from "./user";
 
 // Export all types
 export type * from "@/types/api";

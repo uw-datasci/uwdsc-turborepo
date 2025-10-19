@@ -93,4 +93,68 @@ export class ProfileRepository extends BaseWebRepository {
       return null;
     }
   }
+
+  /**
+   * Get all user profiles with email from auth.users
+   * Used for admin membership management
+   */
+  async getAllProfiles(): Promise<any[]> {
+    try {
+      const query = `
+        SELECT 
+          p.id,
+          au.email,
+          p.first_name,
+          p.last_name,
+          p.user_status,
+          p.has_paid,
+          p.is_math_soc_member,
+          p.faculty,
+          p.term,
+          p.wat_iam,
+          p.created_at,
+          p.updated_at
+        FROM profiles p
+        LEFT JOIN auth.users au ON p.id = au.id
+        ORDER BY p.created_at DESC
+      `;
+
+      const result = await this.pool.query(query);
+      return result.rows;
+    } catch (error: any) {
+      console.error("Error fetching all profiles:", error);
+      throw error;
+    }
+  }
+
+  /**
+   * Get membership statistics
+   */
+  async getMembershipStats(): Promise<{
+    totalUsers: number;
+    paidUsers: number;
+    mathSocMembers: number;
+  }> {
+    try {
+      const query = `
+        SELECT 
+          COUNT(*) as total_users,
+          COUNT(*) FILTER (WHERE has_paid = true) as paid_users,
+          COUNT(*) FILTER (WHERE has_paid = true AND is_math_soc_member = true) as math_soc_members
+        FROM profiles
+      `;
+
+      const result = await this.pool.query(query);
+      const row = result.rows[0];
+
+      return {
+        totalUsers: parseInt(row.total_users, 10),
+        paidUsers: parseInt(row.paid_users, 10),
+        mathSocMembers: parseInt(row.math_soc_members, 10),
+      };
+    } catch (error: any) {
+      console.error("Error fetching membership stats:", error);
+      throw error;
+    }
+  }
 }
