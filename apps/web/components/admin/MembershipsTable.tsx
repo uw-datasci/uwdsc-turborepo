@@ -2,56 +2,17 @@
 
 import { useCallback, useMemo, useRef } from "react";
 import { AgGridReact } from "ag-grid-react";
-import {
-  ModuleRegistry,
-  AllCommunityModule,
-  themeQuartz,
-} from "ag-grid-community";
 import type { ColDef } from "ag-grid-community";
 import { Button, Card } from "@uwdsc/ui";
 import { Download } from "lucide-react";
 import type { MemberProfile } from "@/types/api";
-
-// Register AG Grid modules
-ModuleRegistry.registerModules([AllCommunityModule]);
-
-// Create AG Grid theme with dark mode shadcn colors
-const agTheme = themeQuartz.withParams({
-  // Base colors from shadcn dark mode
-  backgroundColor: "hsl(224 71% 4%)",
-  foregroundColor: "hsl(213 31% 91%)",
-
-  // Borders
-  borderColor: "hsl(216 34% 17%)",
-  borderRadius: 8,
-
-  // Headers
-  headerBackgroundColor: "hsl(224 71% 4%)",
-  headerTextColor: "hsl(213 31% 91%)",
-  headerFontWeight: 600,
-
-  // Rows
-  rowBorder: true,
-  oddRowBackgroundColor: "hsl(224 71% 4%)",
-
-  // Hover state
-  rowHoverColor: "hsl(215 28% 17%)",
-
-  // Selected rows
-  selectedRowBackgroundColor: "hsl(217 33% 17%)",
-
-  // Inputs and filters
-  inputBackgroundColor: "hsl(224 71% 4%)",
-  inputBorder: "solid 1px hsl(216 34% 17%)",
-  inputFocusBorder: "solid 1px hsl(216 87% 52%)",
-
-  // Accent color (primary)
-  accentColor: "hsl(216 87% 52%)",
-
-  // Spacing
-  spacing: 8,
-  cellHorizontalPadding: 16,
-});
+import {
+  defaultColDef,
+  defaultGridOptions,
+  commonColumnDefs,
+  exportToCSV,
+  cellRenderers,
+} from "@/lib/ag-grid";
 
 interface MembershipsTableProps {
   profiles: MemberProfile[];
@@ -60,137 +21,30 @@ interface MembershipsTableProps {
 export function MembershipsTable({ profiles }: MembershipsTableProps) {
   const gridRef = useRef<AgGridReact>(null);
 
-  // Column definitions
+  // Column definitions using abstracted utilities
   const columnDefs = useMemo<ColDef<MemberProfile>[]>(
     () => [
-      {
-        field: "email",
-        headerName: "Email",
-        filter: "agTextColumnFilter",
-        floatingFilter: true,
-        flex: 2,
-        minWidth: 250,
-      },
-      {
-        field: "first_name",
-        headerName: "First Name",
-        filter: "agTextColumnFilter",
-        floatingFilter: true,
-        flex: 1,
-        minWidth: 150,
-      },
-      {
-        field: "last_name",
-        headerName: "Last Name",
-        filter: "agTextColumnFilter",
-        floatingFilter: true,
-        flex: 1,
-        minWidth: 150,
-      },
-      {
-        field: "user_status",
-        headerName: "Status",
-        filter: "agTextColumnFilter",
-        floatingFilter: true,
-        flex: 1,
-        minWidth: 120,
-      },
-      {
-        field: "has_paid",
-        headerName: "Has Paid",
-        filter: "agTextColumnFilter",
-        floatingFilter: true,
-        cellRenderer: (params: any) => (
-          <span
-            className={
-              params.value ? "text-green-400 font-medium" : "text-gray-400"
-            }
-          >
-            {params.value ? "Yes" : "No"}
-          </span>
-        ),
-        flex: 1,
-        minWidth: 100,
-      },
-      {
-        field: "is_math_soc_member",
-        headerName: "MathSoc",
-        filter: "agTextColumnFilter",
-        floatingFilter: true,
-        cellRenderer: (params: any) => (
-          <span
-            className={
-              params.value ? "text-blue-400 font-medium" : "text-gray-400"
-            }
-          >
-            {params.value ? "Yes" : "No"}
-          </span>
-        ),
-        flex: 1,
-        minWidth: 100,
-      },
-      {
-        field: "faculty",
-        headerName: "Faculty",
-        filter: "agTextColumnFilter",
-        floatingFilter: true,
-        flex: 1,
-        minWidth: 150,
-        cellRenderer: (params: any) => params.value || "—",
-      },
-      {
-        field: "term",
-        headerName: "Term",
-        filter: "agTextColumnFilter",
-        floatingFilter: true,
-        flex: 1,
-        minWidth: 120,
-        cellRenderer: (params: any) => params.value || "—",
-      },
-      {
-        field: "wat_iam",
-        headerName: "WatIAM",
-        filter: "agTextColumnFilter",
-        floatingFilter: true,
-        flex: 1,
-        minWidth: 150,
-        cellRenderer: (params: any) => params.value || "—",
-      },
-      {
-        field: "created_at",
-        headerName: "Created At",
-        filter: "agDateColumnFilter",
-        floatingFilter: true,
-        valueFormatter: (params) => {
-          if (!params.value) return "—";
-          return new Date(params.value).toLocaleDateString("en-US", {
-            year: "numeric",
-            month: "short",
-            day: "numeric",
-          });
-        },
-        flex: 1,
-        minWidth: 130,
-      },
+      commonColumnDefs.email(),
+      commonColumnDefs.firstName(),
+      commonColumnDefs.lastName(),
+      commonColumnDefs.text("user_status", "Status"),
+      commonColumnDefs.boolean("has_paid", "Has Paid"),
+      commonColumnDefs.boolean("is_math_soc_member", "MathSoc"),
+      commonColumnDefs.text("faculty", "Faculty"),
+      commonColumnDefs.text("term", "Term"),
+      commonColumnDefs.text("wat_iam", "WatIAM"),
+      commonColumnDefs.date("created_at", "Created At"),
     ],
     []
   );
 
-  // Default column definition
-  const defaultColDef = useMemo<ColDef>(
-    () => ({
-      sortable: true,
-      resizable: true,
-    }),
-    []
-  );
-
-  // Export to CSV
+  // Export to CSV using abstracted utility
   const onExportCsv = useCallback(() => {
     if (gridRef.current?.api) {
-      gridRef.current.api.exportDataAsCsv({
-        fileName: `memberships-${new Date().toISOString().split("T")[0]}.csv`,
-      });
+      exportToCSV(
+        gridRef.current.api,
+        `memberships-${new Date().toISOString().split("T")[0]}`
+      );
     }
   }, []);
 
@@ -218,16 +72,7 @@ export function MembershipsTable({ profiles }: MembershipsTableProps) {
           rowData={profiles}
           columnDefs={columnDefs}
           defaultColDef={defaultColDef}
-          pagination={true}
-          paginationPageSize={20}
-          paginationPageSizeSelector={[10, 20, 50, 100]}
-          enableCellTextSelection={true}
-          rowSelection={{
-            mode: "multiRow",
-            enableClickSelection: false,
-          }}
-          animateRows={true}
-          theme={agTheme}
+          {...defaultGridOptions}
         />
       </div>
 

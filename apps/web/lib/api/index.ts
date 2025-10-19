@@ -19,7 +19,7 @@ export {
   updateUserProfile,
   getAllProfiles,
   getMembershipStats,
-} from "./user";
+} from "./profile";
 
 // Export all types
 export type * from "@/types/api";
