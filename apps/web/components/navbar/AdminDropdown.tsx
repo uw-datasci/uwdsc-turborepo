@@ -44,7 +44,7 @@ export function AdminDropdown({ userStatus }: AdminDropdownProps) {
       <NavigationMenuTrigger className="text-sm sm:text-base !bg-transparent hover:!bg-transparent hover:text-primary data-[state=open]:!bg-transparent data-[state=open]:text-primary focus:!bg-transparent focus-visible:!bg-transparent">
         {label}
       </NavigationMenuTrigger>
-      <NavigationMenuContent className="!bg-transparent !border-0 !shadow-none">
+      <NavigationMenuContent className="!bg-transparent !border-0 !shadow-none !mt-5">
         <GlassSurface
           width="100%"
           height="auto"

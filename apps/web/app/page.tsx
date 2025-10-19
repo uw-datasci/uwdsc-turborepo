@@ -1,5 +1,6 @@
 "use client";
 
+import Hero from "@/components/home/Hero";
 import { useAuth } from "@/contexts/AuthContext";
 
 export default function Home() {
@@ -24,15 +25,16 @@ export default function Home() {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen">
-      <div className="text-center">
+    <div className="flex flex-col items-center justify-center min-h-screen">
+      <Hero />
+      {/* <div className="text-center">
         <h1 className="text-4xl font-bold">{getGreeting()} 👋</h1>
         <p className="mt-4 text-lg text-muted-foreground">
           {isAuthenticated
             ? "You're logged in!"
             : "Please log in to get started."}
         </p>
-      </div>
+      </div> */}
     </div>
   );
 }

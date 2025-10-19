@@ -87,3 +87,10 @@ export { cn } from "./lib/utils";
 
 // Providers
 export { ThemeProvider } from "./components/theme-provider";
+
+// Icons
+export { Mail, Instagram, Linkedin, Youtube } from "react-feather";
+
+export { RxDiscordLogo } from "react-icons/rx";
+
+export { RiSpotifyLine, RiTiktokLine, RiTwitterXLine } from "react-icons/ri";

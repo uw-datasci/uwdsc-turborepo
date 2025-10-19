@@ -66,7 +66,7 @@ export function UserAvatar() {
       : "User";
 
   return (
-    <NavigationMenuItem className="relative pl-8 before:absolute before:left-0 before:h-10 before:w-px before:bg-border">
+    <NavigationMenuItem className="relative pl-8 before:absolute before:left-0 before:h-10 before:w-px before:bg-white/35">
       <NavigationMenuTrigger className="h-10 w-10 rounded-full p-0 !bg-transparent hover:!bg-transparent focus:!bg-transparent focus-visible:!bg-transparent data-[state=open]:!bg-transparent hover:scale-105 transition-transform">
         <Avatar className="h-9 w-9">
           <AvatarImage src={undefined} alt={fullName} />
@@ -75,7 +75,7 @@ export function UserAvatar() {
           </AvatarFallback>
         </Avatar>
       </NavigationMenuTrigger>
-      <NavigationMenuContent className="!bg-transparent !border-0 !shadow-none">
+      <NavigationMenuContent className="!bg-transparent !border-0 !shadow-none !mt-5">
         <GlassSurface
           width="100%"
           height="auto"
@@ -124,7 +124,7 @@ export function UserAvatar() {
               <Button
                 variant="ghost"
                 onClick={handleSignOut}
-                className="w-full h-auto flex flex-row items-center justify-start gap-3 p-3 hover:bg-destructive/10 hover:text-destructive focus:bg-destructive/10 focus:text-destructive"
+                className="w-full h-auto flex flex-row items-center justify-start gap-3 p-3 hover:bg-destructive/10 hover:text-destructive focus:bg-destructive/10 focus:text-destructive rounded-md"
               >
                 <LogOut className="h-4 w-4 shrink-0" />
                 <span className="text-sm font-medium leading-normal">
