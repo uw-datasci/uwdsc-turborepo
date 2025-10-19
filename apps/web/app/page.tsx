@@ -1,6 +1,8 @@
 "use client";
 
-import Hero from "@/components/home/Hero";
+import ClubStats from "@/components/home_sections/ClubStats";
+import Hero from "@/components/home_sections/Hero";
+import WhatWeDo from "@/components/home_sections/WhatWeDo";
 import { useAuth } from "@/contexts/AuthContext";
 
 export default function Home() {
@@ -28,6 +30,8 @@ export default function Home() {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen">
       <Hero profile={profile} mutate={mutate} />
+      <WhatWeDo />
+      <ClubStats />
       {/* <div className="text-center">
         <h1 className="text-4xl font-bold">{getGreeting()} 👋</h1>
         <p className="mt-4 text-lg text-muted-foreground">

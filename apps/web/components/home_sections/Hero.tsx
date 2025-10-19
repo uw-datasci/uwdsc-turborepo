@@ -56,25 +56,6 @@ export default function Hero({ profile, mutate }: HeroProps) {
         </div>
         <p className="font-mono text-xl lg:text-2xl">{`{ EVENTS }`}</p>
       </div>
-      {/* Sponsor Us Link */}
-      <motion.button
-        className="p-3 text-xl hover:cursor-pointer hidden md:block md:absolute md:bottom-20 md:left-6 md:mb-0 md:text-2xl"
-        onClick={() => (window.location.href = "#contact")}
-        whileHover="hover"
-        initial="initial"
-      >
-        <p className="relative md:text-xl xl:text-2xl">
-          <motion.span
-            className="absolute bottom-0 left-0 h-[2px] bg-white cursor-pointer"
-            variants={{
-              initial: { width: "0%" },
-              hover: { width: "100%" },
-            }}
-            transition={{ duration: 0.2 }}
-          ></motion.span>
-          Sponsor us →
-        </p>
-      </motion.button>
 
       {/* Title + Description */}
       <div className="z-10 mt-20 flex max-w-4xl flex-col gap-6 px-8 sm:gap-10 text-center">
@@ -138,6 +119,26 @@ export default function Hero({ profile, mutate }: HeroProps) {
           </button>
         </GlassSurface>
       </div>
+
+      {/* Sponsor Us Link */}
+      <motion.button
+        className="p-3 text-xl mt-3 md:mt-0 hover:cursor-pointer md:block md:absolute md:bottom-20 md:left-6 md:text-2xl"
+        onClick={() => (window.location.href = "#contact")}
+        whileHover="hover"
+        initial="initial"
+      >
+        <p className="relative md:text-xl xl:text-2xl">
+          <motion.span
+            className="absolute bottom-0 left-0 h-[2px] bg-white cursor-pointer"
+            variants={{
+              initial: { width: "0%" },
+              hover: { width: "100%" },
+            }}
+            transition={{ duration: 0.2 }}
+          ></motion.span>
+          Sponsor us →
+        </p>
+      </motion.button>
     </section>
   );
 }
