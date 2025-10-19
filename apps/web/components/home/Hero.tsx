@@ -41,16 +41,16 @@ export default function Hero({ profile, mutate }: HeroProps) {
 
       {/* Absolutely Positioned Info */}
       {/* Members Stat */}
-      <div className="absolute left-3 top-24 flex flex-col gap-3 items-center sm:left-6 sm:top-32">
-        <div className="text-black dark:text-white text-4xl lg:text-5xl">
+      <div className="absolute left-3 top-24 flex flex-col gap-1 md:gap-3 items-center sm:left-6 sm:top-32">
+        <div className="text-black dark:text-white text-3xl lg:text-5xl">
           <CountingNumber number={memberCount} inViewOnce={true} />
           <span className="">+</span>
         </div>
         <p className="font-mono text-xl lg:text-2xl">{`{ MEMBERS }`}</p>
       </div>
       {/* Events Stat */}
-      <div className="absolute bottom-10 right-3 flex flex-col gap-3 items-center sm:bottom-20 sm:right-6">
-        <div className="text-black dark:text-white text-4xl lg:text-5xl">
+      <div className="absolute bottom-10 right-3 flex flex-col gap-1 md:gap-3 items-center sm:bottom-20 sm:right-6">
+        <div className="text-black dark:text-white text-3xl lg:text-5xl">
           <CountingNumber number={eventCount} inViewOnce={true} />
           <span className="">+</span>
         </div>
@@ -100,49 +100,44 @@ export default function Hero({ profile, mutate }: HeroProps) {
           </button>
         </div>
       ) : (
-        <button
-          className="z-10 py-6 md:py-8 hover: cursor-pointer"
-          onClick={() => {
-            router.push("/register");
-          }}
-        >
-          Sign in →
-        </button>
+        <div className="lg:hidden z-10 py-6 md:py-8 hover: cursor-pointer">
+          <GlassSurface
+            width="100%"
+            height="auto"
+            borderRadius={9999}
+            className="px-3 py-1 md:px-6 md:py-3 !overflow-visible hover:cursor-pointer"
+          >
+            <button
+              className="text-base md:text-xl font-medium flex items-center w-full justify-center hover:cursor-pointer"
+              onClick={() => {
+                router.push("/login");
+              }}
+            >
+              Log in →
+            </button>
+          </GlassSurface>
+        </div>
       )}
 
       {/* Check-in button */}
-      <motion.div
-        className={`z-10 w-fit ${profile ? "lg:mt-10" : ""}`}
-        initial="initial"
-        whileHover="hover"
-      >
+      <div className={`z-10 w-fit lg:mt-10`}>
         <GlassSurface
           width="100%"
           height="auto"
           borderRadius={9999}
-          className="px-4 py-2 md:px-6 md:py-3 !overflow-visible hover:cursor-pointer"
+          className={`${profile ? "px-4 py-2" : "px-3 py-1"} md:px-6 md:py-3 !overflow-visible hover:cursor-pointer`}
         >
           <button
             className="text-base md:text-xl font-medium flex items-center w-full justify-center hover:cursor-pointer"
             onClick={() => {
               if (profile) router.push("/memCheckIn");
-              else router.push("/login");
+              else router.push("/register");
             }}
           >
-            Check in for an event
-            <motion.span
-              className="inline-block ml-2"
-              variants={{
-                initial: { width: 0, opacity: 0 },
-                hover: { width: "auto", opacity: 1 },
-              }}
-              transition={{ type: "spring", stiffness: 400, damping: 20 }}
-            >
-              →
-            </motion.span>
+            {profile ? "Check in for an event →" : "Sign up →"}
           </button>
         </GlassSurface>
-      </motion.div>
+      </div>
     </section>
   );
 }

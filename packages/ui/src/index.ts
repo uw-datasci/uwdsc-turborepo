@@ -94,4 +94,9 @@ export { Mail, Instagram, Linkedin, Youtube } from "react-feather";
 
 export { RxDiscordLogo } from "react-icons/rx";
 
-export { RiSpotifyLine, RiTiktokLine, RiTwitterXLine } from "react-icons/ri";
+export {
+  RiSpotifyLine,
+  RiTiktokLine,
+  RiTwitterXLine,
+  RiArrowDropDownLine,
+} from "react-icons/ri";
