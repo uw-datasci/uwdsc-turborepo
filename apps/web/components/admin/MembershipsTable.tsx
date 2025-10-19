@@ -11,7 +11,6 @@ import {
   defaultGridOptions,
   commonColumnDefs,
   exportToCSV,
-  cellRenderers,
 } from "@/lib/ag-grid";
 
 interface MembershipsTableProps {
