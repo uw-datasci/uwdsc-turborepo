@@ -59,10 +59,7 @@ export function MembershipsTable({ profiles }: MembershipsTableProps) {
         </Button>
       </div>
 
-      <div
-        className="rounded-lg overflow-hidden border"
-        style={{ height: "600px", width: "100%" }}
-      >
+      <div className="rounded-lg overflow-hidden border h-[600px] w-full">
         <AgGridReact
           ref={gridRef}
           rowData={profiles}
