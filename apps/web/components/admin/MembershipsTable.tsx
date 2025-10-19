@@ -24,15 +24,12 @@ export function MembershipsTable({ profiles }: MembershipsTableProps) {
   const columnDefs = useMemo<ColDef<MemberProfile>[]>(
     () => [
       commonColumnDefs.email(),
-      commonColumnDefs.firstName(),
-      commonColumnDefs.lastName(),
+      commonColumnDefs.text("wat_iam", "WatIAM"),
       commonColumnDefs.text("user_status", "Status"),
       commonColumnDefs.boolean("has_paid", "Has Paid"),
       commonColumnDefs.boolean("is_math_soc_member", "MathSoc"),
       commonColumnDefs.text("faculty", "Faculty"),
       commonColumnDefs.text("term", "Term"),
-      commonColumnDefs.text("wat_iam", "WatIAM"),
-      commonColumnDefs.date("created_at", "Created At"),
     ],
     []
   );

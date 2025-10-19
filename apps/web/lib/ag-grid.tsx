@@ -148,32 +148,6 @@ export const commonColumnDefs = {
   }),
 
   /**
-   * First name column with text filter
-   */
-  firstName: (options?: Partial<ColDef>): ColDef => ({
-    field: "first_name",
-    headerName: "First Name",
-    filter: "agTextColumnFilter",
-    floatingFilter: true,
-    flex: 1,
-    minWidth: 150,
-    ...options,
-  }),
-
-  /**
-   * Last name column with text filter
-   */
-  lastName: (options?: Partial<ColDef>): ColDef => ({
-    field: "last_name",
-    headerName: "Last Name",
-    filter: "agTextColumnFilter",
-    floatingFilter: true,
-    flex: 1,
-    minWidth: 150,
-    ...options,
-  }),
-
-  /**
    * Boolean column with Yes/No rendering
    */
   boolean: (
