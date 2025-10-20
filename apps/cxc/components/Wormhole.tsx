@@ -202,7 +202,7 @@ function WormholeWithRings({ partType }: { partType: 'top' | 'middle' | 'bottom'
 
 export function WormholeTop() {
   return (
-    <div className="absolute inset-0 -z-10">
+    <div className="absolute inset-x-0 top-0 h-screen -z-10 overflow-hidden">
       <Canvas
         camera={{ 
           position: [0, -0.8, 35],
@@ -221,7 +221,7 @@ export function WormholeTop() {
 
 export function WormholeMiddle() {
   return (
-    <div className="absolute inset-0 -z-10">
+    <div className="absolute inset-x-0 top-0 h-screen -z-10 overflow-hidden">
       <Canvas
         camera={{ position: [0, 0, 30], fov: 75 }}
         style={{ background: 'black' }}
@@ -234,7 +234,7 @@ export function WormholeMiddle() {
 
 export function WormholeBottom() {
   return (
-    <div className="absolute inset-0 -z-10">
+    <div className="absolute inset-x-0 top-0 h-screen -z-10 overflow-hidden">
       <Canvas
         camera={{ 
           position: [0, -2, -30], 
