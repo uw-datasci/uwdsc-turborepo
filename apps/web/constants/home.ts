@@ -5,7 +5,18 @@ import computer from "@/public/graphics/computer.png";
 import documents from "@/public/graphics/documents.png";
 import chat from "@/public/graphics/chat.png";
 import { Stat, Event } from "@/types/home";
+
 import eventPlaceholder from "@/public/placeholder/event.png";
+import AiCompanion from "@/public/pastEvents/event-ai-companion.png";
+import BOT from "@/public/pastEvents/event-bot.png";
+import Bonfire from "@/public/pastEvents/event-eot-bonfire.png";
+import Estimathon from "@/public/pastEvents/event-eot-estimathon.png";
+import Langchain from "@/public/pastEvents/event-intro-to-langchain.png";
+import Karaoke from "@/public/pastEvents/event-karaoke.png";
+import Point72 from "@/public/pastEvents/event-point72-panel.png";
+import BOT_S25 from "@/public/pastEvents/event-s25bot.png";
+import SpeedFriending from "@/public/pastEvents/event-speed-friending.png";
+import Trivia from "@/public/pastEvents/event-trivia.png";
 
 export const WHAT_WE_DO_CARDS = [
   {
@@ -78,46 +89,46 @@ export const PAST_EVENTS: Event[] = [
   {
     id: "2",
     title: "BOT ",
-    image: eventPlaceholder,
+    image: BOT,
   },
   {
     id: "3",
     title: "Point72 Q&A Panel",
-    image: eventPlaceholder,
+    image: Point72,
   },
   {
     id: "4",
     title: "Karaoke Night",
-    image: eventPlaceholder,
+    image: Karaoke,
   },
   {
     id: "5",
     title: "How to Build an AI Companion",
-    image: eventPlaceholder,
+    image: AiCompanion,
   },
   {
     id: "6",
     title: "EOT Estimathon",
-    image: eventPlaceholder,
+    image: Estimathon,
   },
   {
     id: "7",
     title: "Bonfire",
-    image: eventPlaceholder,
+    image: Bonfire,
   },
   {
     id: "8",
     title: "Speed Friending",
-    image: eventPlaceholder,
+    image: SpeedFriending,
   },
   {
     id: "9",
     title: "DSC Trivia Night",
-    image: eventPlaceholder,
+    image: Trivia,
   },
   {
     id: "10",
     title: "Intro to Langchain",
-    image: eventPlaceholder,
+    image: Langchain,
   },
 ];

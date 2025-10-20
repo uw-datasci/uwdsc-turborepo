@@ -8,8 +8,12 @@ export type Stat = {
   suffix: string;
 };
 
-export type Event = {
+export interface Event {
   id: string;
   title: string;
   image: StaticImageData;
-};
+  description?: string;
+  date?: string;
+  location?: string;
+  link?: string;
+}

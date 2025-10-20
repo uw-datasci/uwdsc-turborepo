@@ -10,7 +10,17 @@ export {
   CardDescription,
   CardContent,
 } from "./components/card";
+
+export {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselPrevious,
+  CarouselNext,
+} from "./components/carousel";
+
 export { CountingNumber } from "./components/counting-numbers";
+
 export {
   Form,
   FormControl,
@@ -21,10 +31,15 @@ export {
   FormMessage,
   useFormField,
 } from "./components/form";
+
 export { Input } from "./components/input";
+
 export { Label } from "./components/label";
+
 export { RadioGroup, RadioGroupItem } from "./components/radio-group";
+
 export { Textarea } from "./components/textarea";
+
 export {
   Select,
   SelectContent,
@@ -37,6 +52,7 @@ export {
   SelectTrigger,
   SelectValue,
 } from "./components/select";
+
 export {
   NavigationMenu,
   NavigationMenuList,
@@ -48,6 +64,7 @@ export {
   NavigationMenuViewport,
   navigationMenuTriggerStyle,
 } from "./components/navigation-menu";
+
 export {
   DropdownMenu,
   DropdownMenuPortal,
@@ -65,6 +82,7 @@ export {
   DropdownMenuSubTrigger,
   DropdownMenuSubContent,
 } from "./components/dropdown-menu";
+
 export {
   Dialog,
   DialogClose,
@@ -100,3 +118,5 @@ export {
   RiTwitterXLine,
   RiArrowDropDownLine,
 } from "react-icons/ri";
+
+export { ArrowLeft, ArrowRight, Clock, MapPin, Link } from "lucide-react";
