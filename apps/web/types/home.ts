@@ -17,3 +17,10 @@ export interface Event {
   location?: string;
   link?: string;
 }
+
+export type Sponsor = {
+  name: string;
+  logo: StaticImageData;
+  type?: string;
+  link?: string;
+};

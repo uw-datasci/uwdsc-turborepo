@@ -2,7 +2,9 @@
 
 import ClubStats from "@/components/home_sections/ClubStats";
 import Hero from "@/components/home_sections/Hero";
+import MailingList from "@/components/home_sections/MailingList";
 import PastEvents from "@/components/home_sections/PastEvents";
+import Sponsors from "@/components/home_sections/Sponsors";
 import WhatWeDo from "@/components/home_sections/WhatWeDo";
 import { useAuth } from "@/contexts/AuthContext";
 
@@ -23,6 +25,8 @@ export default function Home() {
       <WhatWeDo />
       <ClubStats />
       <PastEvents />
+      <Sponsors />
+      <MailingList />
     </div>
   );
 }

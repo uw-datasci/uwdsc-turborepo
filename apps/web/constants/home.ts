@@ -4,9 +4,9 @@ import folder from "@/public/graphics/folder.png";
 import computer from "@/public/graphics/computer.png";
 import documents from "@/public/graphics/documents.png";
 import chat from "@/public/graphics/chat.png";
-import { Stat, Event } from "@/types/home";
+import { Stat, Event, Sponsor } from "@/types/home";
 
-import eventPlaceholder from "@/public/placeholder/event.png";
+import EventPlaceholder from "@/public/placeholder/event.png";
 import AiCompanion from "@/public/pastEvents/event-ai-companion.png";
 import BOT from "@/public/pastEvents/event-bot.png";
 import Bonfire from "@/public/pastEvents/event-eot-bonfire.png";
@@ -14,9 +14,12 @@ import Estimathon from "@/public/pastEvents/event-eot-estimathon.png";
 import Langchain from "@/public/pastEvents/event-intro-to-langchain.png";
 import Karaoke from "@/public/pastEvents/event-karaoke.png";
 import Point72 from "@/public/pastEvents/event-point72-panel.png";
-import BOT_S25 from "@/public/pastEvents/event-s25bot.png";
 import SpeedFriending from "@/public/pastEvents/event-speed-friending.png";
 import Trivia from "@/public/pastEvents/event-trivia.png";
+
+import MathsocLogo from "@/public/logos/mathsoc.png";
+import MEF from "@/public/logos/mef.png";
+import Techyon from "@/public/logos/techyon.png";
 
 export const WHAT_WE_DO_CARDS = [
   {
@@ -84,7 +87,7 @@ export const PAST_EVENTS: Event[] = [
   {
     id: "1",
     title: "Upper Year Co-op Panel",
-    image: eventPlaceholder,
+    image: EventPlaceholder,
   },
   {
     id: "2",
@@ -131,4 +134,10 @@ export const PAST_EVENTS: Event[] = [
     title: "Intro to Langchain",
     image: Langchain,
   },
+];
+
+export const CURRENT_SPONSORS: Sponsor[] = [
+  { name: "MathSoc", logo: MathsocLogo },
+  { name: "MEF", logo: MEF },
+  { name: "Techyon", logo: Techyon, link: "https://techyon.org/" },
 ];
