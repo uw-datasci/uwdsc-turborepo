@@ -45,7 +45,7 @@ export function UserAvatar() {
         <Link href="/login">
           <Button
             variant="ghost"
-            className="h-10 flex flex-row items-center gap-2 px-4 rounded-md hover:text-[var(--nav-hover-blue)]"
+            className="h-10 flex flex-row items-center gap-2 px-4 rounded-md hover:text-nav-hover-blue"
           >
             <LogIn className="h-4 w-4" />
             <span className="text-sm font-medium">Log In</span>
@@ -70,7 +70,7 @@ export function UserAvatar() {
       <NavigationMenuTrigger className="h-10 w-10 rounded-full p-0 !bg-transparent hover:!bg-transparent focus:!bg-transparent focus-visible:!bg-transparent data-[state=open]:!bg-transparent hover:scale-105 transition-transform">
         <Avatar className="h-9 w-9">
           <AvatarImage src={undefined} alt={fullName} />
-          <AvatarFallback className="bg-primary text-primary-foreground">
+          <AvatarFallback className="bg-nav-hover-blue text-primary-foreground">
             {initials}
           </AvatarFallback>
         </Avatar>

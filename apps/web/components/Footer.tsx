@@ -53,8 +53,7 @@ export default function Footer() {
   return (
     <>
       <hr className="border-b-1 border-[#454545]" />
-      {/* mx-container: mx-7 sm:mx-9 md:mx-12 xl:mx-auto xl:max-w-[1200px] */}
-      <footer className="mx-7 sm:mx-9 md:mx-12 xl:mx-auto xl:max-w-[1200px] mb-12 mt-9 flex flex-col justify-between gap-8 sm:flex-row sm:items-center">
+      <footer className="mx-container mb-12 mt-9 flex flex-col justify-between gap-8 sm:flex-row sm:items-center">
         <div className="flex flex-col items-center sm:items-start">
           <div
             className="relative w-11.5 h-11.5 lg:w-13.5 lg:h-13.5 mb-4 hover:cursor-pointer"

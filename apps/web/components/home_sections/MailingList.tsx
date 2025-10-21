@@ -49,8 +49,7 @@ export default function MailingList() {
   };
 
   return (
-    // mb-section
-    <section className="mb-24 lg:mb-52 relative overflow-hidden w-full">
+    <section className="mb-section relative overflow-hidden w-full">
       <Image
         src={echo1}
         alt="echo 1"

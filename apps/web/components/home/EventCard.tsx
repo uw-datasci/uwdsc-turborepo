@@ -35,7 +35,7 @@ export default function EventCard({
   };
 
   return (
-    <div className="flex h-full w-[245px] md:w-[320px] xl:w-[360px] aspect-square flex-col overflow-hidden rounded-4xl border border-[var(--grey3)]">
+    <div className="flex h-full w-[245px] md:w-[320px] xl:w-[360px] aspect-square flex-col overflow-hidden rounded-4xl border border-grey3">
       <Image src={image} alt={title} className="aspect-[3/2] object-cover" />
       <div className="relative flex-1 whitespace-normal">
         <div className="bg-gradient-purple absolute inset-0 opacity-10" />

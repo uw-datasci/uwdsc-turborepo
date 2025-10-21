@@ -81,7 +81,7 @@ export function NavLinks({ profile }: NavLinksProps) {
         <NavigationMenuItem key={link.href} className="relative">
           <Link
             href={link.href}
-            className="inline-flex items-center justify-center px-2 sm:px-3 md:px-4 py-2 text-sm sm:text-base font-medium transition-colors hover:text-[var(--nav-hover-blue)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 relative z-10 text-nowrap"
+            className="inline-flex items-center justify-center px-2 sm:px-3 md:px-4 py-2 text-sm sm:text-base font-medium transition-colors hover:text-nav-hover-blue focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 relative z-10 text-nowrap"
           >
             {link.label}
           </Link>

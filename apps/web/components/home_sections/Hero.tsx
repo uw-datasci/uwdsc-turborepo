@@ -69,7 +69,7 @@ export default function Hero({ profile, mutate }: HeroProps) {
         </p>
       </div>
       {profile ? (
-        <div className="flex flex-row gap-4 lg:hidden z-10 text-center text-[var(--grey1)] py-6 text-sm md:text-base md:py-8">
+        <div className="flex flex-row gap-4 lg:hidden z-10 text-center text-grey1 py-6 text-sm md:text-base md:py-8">
           <p>
             Logged in as <b>{profile?.first_name + " " + profile?.last_name}</b>
           </p>

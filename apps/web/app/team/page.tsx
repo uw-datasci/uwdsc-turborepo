@@ -6,8 +6,6 @@ import { TEAM } from "@/constants/team";
 
 export default function Team() {
   return (
-    // mx-container: mx-7 sm:mx-9 md:mx-12 xl:mx-auto xl:max-w-[1200px]
-    // mb-section: mb-24 lg:mb-52
     <SectionWrapper className="pt-14 lg:pt-20">
       <h1 className="mb-14 text-center text-5xl font-bold text-white sm:text-6xl lg:text-7xl">
         Team

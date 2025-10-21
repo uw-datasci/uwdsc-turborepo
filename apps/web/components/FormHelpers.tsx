@@ -62,7 +62,7 @@ const inputStyles: Record<FormFieldVariant, string> = {
   auth: "!h-auto !text-base border-gray-100/80 !bg-black px-4.5 py-3.5 placeholder:text-gray-100/80 rounded-lg xl:px-6 xl:py-4.5",
   application: "",
   mailingList:
-    "w-full rounded-md border !border-[var(--grey1)] !bg-[var(--grey4)] !h-auto py-3.5 pl-4.5 text-white outline-none placeholder:!text-[var(--grey1)] md:px-6 md:py-4.5 pr-32 md:text-lg",
+    "w-full rounded-md border !border-grey1 !bg-grey4 !h-auto py-3.5 pl-4.5 text-white outline-none placeholder:!text-grey1 md:px-6 md:py-4.5 pr-32 md:text-lg",
 };
 
 const selectTriggerStyles: Record<FormFieldVariant, string> = {
