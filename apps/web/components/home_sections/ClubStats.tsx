@@ -1,7 +1,6 @@
 "use client";
 
 import { CountingNumber } from "@uwdsc/ui/index";
-import { Stat } from "@/types/home";
 import SectionTitle from "../team/SectionTitle";
 import { CLUB_STATS } from "@/constants/home";
 import SectionWrapper from "../SectionWrapper";
@@ -21,7 +20,7 @@ export default function ClubStats() {
             className="text-center text-5xl lg:text-7xl font-bold md:min-w-[225px] xl:min-w-xs"
             key={stat.id}
           >
-            <p className="mb-2 font-display font-bold text-white flex items-center justify-center">
+            <p className="font-family-clash mb-2 font-bold text-white flex items-center justify-center">
               {stat.prefix}
               <CountingNumber
                 number={stat.stat}

@@ -29,7 +29,7 @@ export default function PastEvents() {
 
         <CarouselNext className="rounded-md md:!p-5 !border-purple-500" />
         <CarouselContent className="">
-          {/* // TODO: Replace constant with fetch from db */}
+          {/* // TODO: Replace constant with fetch from db - add case for loading, or empty events - refer to website-v2*/}
           {PAST_EVENTS.map((event, index) => (
             <CarouselItem key={index} className="md:basis-1/2 xl:basis-1/3">
               <div className="p-1">
