@@ -13,15 +13,15 @@ function WormholeWithRings({ partType }: { partType: 'top' | 'middle' | 'bottom'
       return {
         height: 30,
         frontRadius: 10,
-        backRadius: 30,
-        curve: 2.0,
+        backRadius: 35,
+        curve: 4,
         perspective: 'down',
         frontHeight: 15,
         backHeight: 30
       };
     } else if (partType === 'middle') {
       return {
-        height: 25,
+        height: 35,
         frontRadius: 8,
         backRadius: 7.2,
         curve: 0.2,
@@ -111,7 +111,7 @@ function WormholeWithRings({ partType }: { partType: 'top' | 'middle' | 'bottom'
   // Create moving rings that follow wormhole shape
   const rings = useMemo(() => {
     const ringArray: THREE.Line[] = [];
-    const numRings = 5;
+    const numRings = 6;
     
     for (let i = 0; i < numRings; i++) {
       // Create ring as a perfect circle - let the group rotation handle the perspective
@@ -143,7 +143,7 @@ function WormholeWithRings({ partType }: { partType: 'top' | 'middle' | 'bottom'
   // Animate the rings to follow wormhole shape
   useFrame((state) => {
     rings.forEach((ring, index) => {
-      const speed = 0.02;
+      const speed = 0.04;
       const offset = (index / rings.length) * wormholeGeometry.height;
       
       let animatedY;
@@ -202,51 +202,47 @@ function WormholeWithRings({ partType }: { partType: 'top' | 'middle' | 'bottom'
 
 export function WormholeTop() {
   return (
-    <div className="absolute inset-x-0 top-0 h-screen -z-10 overflow-hidden">
-      <Canvas
-        camera={{ 
-          position: [0, -0.8, 35],
-          fov: 75
-        }}
-        style={{ background: 'black' }}
-        onCreated={({ camera }) => {
-          camera.lookAt(0, 0, -20);
-        }}
-      >
-        <WormholeWithRings partType="top" />
-      </Canvas>
+    <div className="block h-[40vh] overflow-hidden -z-10">
+      <div style={{ transform: 'translateY(-20%)', height: '100vh' }}>
+        <Canvas
+          camera={{ position: [0, -0.8, 40], fov: 75 }}
+          style={{ background: 'black' }}
+          onCreated={({ camera }) => camera.lookAt(0, 0, 0)}
+        >
+          <WormholeWithRings partType="top" />
+        </Canvas>
+      </div>
     </div>
   );
 }
 
 export function WormholeMiddle() {
   return (
-    <div className="absolute inset-x-0 top-0 h-screen -z-10 overflow-hidden">
-      <Canvas
-        camera={{ position: [0, 0, 30], fov: 75 }}
-        style={{ background: 'black' }}
-      >
-        <WormholeWithRings partType="middle" />
-      </Canvas>
+    <div className="block h-[60vh] overflow-hidden -z-10">
+      <div style={{ transform: 'translateY(-20%)', height: '100vh' }}>
+        <Canvas
+          camera={{ position: [0, 0, 30], fov: 75 }}
+          style={{ background: 'black' }}
+        >
+          <WormholeWithRings partType="middle" />
+        </Canvas>
+      </div>
     </div>
   );
 }
 
 export function WormholeBottom() {
   return (
-    <div className="absolute inset-x-0 top-0 h-screen -z-10 overflow-hidden">
-      <Canvas
-        camera={{ 
-          position: [0, -2, -30], 
-          fov: 75
-        }}
-        style={{ background: 'black' }}
-        onCreated={({ camera }) => {
-          camera.lookAt(0, 0, -20);
-        }}
-      >
-        <WormholeWithRings partType="bottom" />
-      </Canvas>
+    <div className="block h-[60vh] overflow-hidden -z-10">
+      <div style={{ transform: 'translateY(-40%)', height: '100vh' }}>
+        <Canvas
+          camera={{ position: [0, -2, -30], fov: 75 }}
+          style={{ background: 'black' }}
+          onCreated={({ camera }) => camera.lookAt(0, 0, -20)}
+        >
+          <WormholeWithRings partType="bottom" />
+        </Canvas>
+      </div>
     </div>
   );
 }
