@@ -1,9 +1,4 @@
-import * as React from "react";
-import chat from "@/public/graphics/chat.png";
-
 import {
-  Card,
-  CardContent,
   Carousel,
   CarouselContent,
   CarouselItem,
@@ -13,12 +8,11 @@ import {
 import { PAST_EVENTS } from "@/constants/home";
 import SectionTitle from "../team/SectionTitle";
 import EventCard from "../home/EventCard";
-import { useState } from "react";
+import SectionWrapper from "../SectionWrapper";
 
 export default function PastEvents() {
   return (
-    // mb-section, mx-container
-    <section className=" mb-24 lg:mb-52 mx-7 sm:mx-9 md:mx-12 xl:mx-auto xl:max-w-[1200px]">
+    <SectionWrapper>
       <SectionTitle
         mb="mb-8 lg:mb-12"
         className="text-xl md:!text-2xl text-nowrap"
@@ -45,6 +39,6 @@ export default function PastEvents() {
           ))}
         </CarouselContent>
       </Carousel>
-    </section>
+    </SectionWrapper>
   );
 }

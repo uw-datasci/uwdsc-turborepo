@@ -3,7 +3,6 @@ import { useState } from "react";
 import Image from "next/image";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
 import { FormField, Button, Form } from "@uwdsc/ui";
 import { Loader2 } from "lucide-react";
 
@@ -50,6 +49,7 @@ export default function MailingList() {
   };
 
   return (
+    // mb-section
     <section className="mb-24 lg:mb-52 relative overflow-hidden w-full">
       <Image
         src={echo1}

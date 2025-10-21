@@ -1,6 +1,8 @@
 "use client";
 
 import ClubStats from "@/components/home_sections/ClubStats";
+import ContactUs from "@/components/home_sections/ContactUs";
+import FAQ from "@/components/home_sections/FAQ";
 import Hero from "@/components/home_sections/Hero";
 import MailingList from "@/components/home_sections/MailingList";
 import PastEvents from "@/components/home_sections/PastEvents";
@@ -27,6 +29,8 @@ export default function Home() {
       <PastEvents />
       <Sponsors />
       <MailingList />
+      <FAQ />
+      <ContactUs />
     </div>
   );
 }

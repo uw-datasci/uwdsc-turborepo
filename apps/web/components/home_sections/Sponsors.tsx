@@ -2,10 +2,11 @@ import { CURRENT_SPONSORS } from "@/constants/home";
 import SectionTitle from "../team/SectionTitle";
 import Link from "next/link";
 import Image from "next/image";
+import SectionWrapper from "../SectionWrapper";
 
 export default function Sponsors() {
   return (
-    <section className="mx-7 sm:mx-9 md:mx-12 xl:mx-auto xl:max-w-[1200px] mb-24 lg:mb-52 pt-14 lg:pt-20">
+    <SectionWrapper className="pt-14 lg:pt-20">
       <SectionTitle mb="mb-20" className="text-xl md:!text-2xl text-nowrap">
         OUR SPONSORS
       </SectionTitle>
@@ -43,6 +44,6 @@ export default function Sponsors() {
           );
         })}
       </div>
-    </section>
+    </SectionWrapper>
   );
 }

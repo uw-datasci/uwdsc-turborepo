@@ -4,10 +4,11 @@ import { CountingNumber } from "@uwdsc/ui/index";
 import { Stat } from "@/types/home";
 import SectionTitle from "../team/SectionTitle";
 import { CLUB_STATS } from "@/constants/home";
+import SectionWrapper from "../SectionWrapper";
 
 export default function ClubStats() {
   return (
-    <section className=" mb-24 lg:mb-52 mx-7 sm:mx-9 md:mx-12 xl:mx-auto xl:max-w-[1200px]">
+    <SectionWrapper>
       <SectionTitle
         mb="mb-8 lg:mb-12"
         className="text-xl md:!text-2xl text-nowrap"
@@ -36,6 +37,6 @@ export default function ClubStats() {
           </div>
         ))}
       </div>
-    </section>
+    </SectionWrapper>
   );
 }

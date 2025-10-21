@@ -1,6 +1,15 @@
 // Components
+export {
+  Accordion,
+  AccordionItem,
+  AccordionTrigger,
+  AccordionContent,
+} from "./components/accordion";
+
 export { Avatar, AvatarImage, AvatarFallback } from "./components/avatar";
+
 export { Button, buttonVariants } from "./components/button";
+
 export {
   Card,
   CardHeader,

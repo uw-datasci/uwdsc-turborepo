@@ -24,3 +24,9 @@ export type Sponsor = {
   type?: string;
   link?: string;
 };
+
+export type QandA = {
+  id: string;
+  question: string;
+  answer: string;
+};
