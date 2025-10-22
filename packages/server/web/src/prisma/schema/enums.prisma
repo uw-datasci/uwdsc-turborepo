@@ -1,12 +1,12 @@
-enum UserStatus {
+enum UserStatusEnum {
   member
   admin
   exec
 
-  @@map("user_status")
+  @@map("user_status_enum")
 }
 
-enum Faculty {
+enum FacultyEnum {
   math
   engineering
   science
@@ -15,18 +15,18 @@ enum Faculty {
   environment
   other_non_waterloo
 
-  @@map("faculty")
+  @@map("faculty_enum")
 }
 
-enum PaymentMethod {
+enum PaymentMethodEnum {
   cash
   online
   math_soc
 
-  @@map("payment_method")
+  @@map("payment_method_enum")
 }
 
-enum ApplicationStatus {
+enum ApplicationStatusEnum {
   draft
   submitted
   under_review
@@ -34,10 +34,10 @@ enum ApplicationStatus {
   rejected
   waitlisted
 
-  @@map("application_status")
+  @@map("application_status_enum")
 }
 
-enum Role {
+enum RoleEnum {
   events_exec
   events_co_vp
   design_exec
@@ -56,10 +56,10 @@ enum Role {
   general
   supplementary
 
-  @@map("role")
+  @@map("role_enum")
 }
 
-enum QuestionType {
+enum QuestionTypeEnum {
   text
   textarea
   multiple_choice
@@ -68,5 +68,5 @@ enum QuestionType {
   date
   number
 
-  @@map("question_type")
+  @@map("question_type_enum")
 }

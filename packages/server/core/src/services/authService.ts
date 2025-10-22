@@ -1,117 +1,198 @@
-import {
-  createConnectionPool,
-  createKyselyInstance,
-} from "../database/connection";
+import { ApiError } from "../utils/errors";
 import { AuthRepository } from "../repository/authRepository";
-import {
-  RegisterData,
-  LoginData,
-  AuthResponse,
-  UserResponse,
-  SignOutResponse,
-} from "../types/auth";
+import type { SupabaseClient } from "@supabase/supabase-js";
+
+export interface LoginData {
+  email: string;
+  password: string;
+}
+
+export interface RegisterData {
+  email: string;
+  password: string;
+}
 
 export class AuthService {
-  private readonly authRepository: AuthRepository;
+  private readonly repository: AuthRepository;
 
-  constructor() {
-    const pool = createConnectionPool(process.env.DATABASE_URL!);
-    const db = createKyselyInstance(pool);
-    this.authRepository = new AuthRepository(db, pool);
+  constructor(supabaseClient: SupabaseClient) {
+    this.repository = new AuthRepository(supabaseClient);
   }
 
-  async register(data: RegisterData): Promise<AuthResponse> {
+  /**
+   * Authenticate user with email and password
+   */
+  async login(credentials: LoginData) {
     try {
-      const email = data.email.toLowerCase().trim();
+      const { data, error } = await this.repository.signInWithPassword({
+        email: credentials.email,
+        password: credentials.password,
+      });
 
-      const { data: authData, error } = await this.authRepository.createUser({
-        email,
-        password: data.password,
+      if (error) {
+        // Check for specific error cases
+        if (error.message.includes("Email not confirmed")) {
+          return {
+            success: false,
+            needsVerification: true,
+            email: credentials.email,
+            error: "Email not verified",
+          };
+        }
+
+        return {
+          success: false,
+          error: error.message,
+        };
+      }
+
+      return {
+        success: true,
+        user: data.user,
+        session: data.session,
+      };
+    } catch (error) {
+      throw new ApiError(`Login failed: ${(error as Error).message}`, 500);
+    }
+  }
+
+  /**
+   * Register new user
+   */
+  async register(credentials: RegisterData, emailRedirectTo: string) {
+    try {
+      const { data, error } = await this.repository.signUp({
+        email: credentials.email,
+        password: credentials.password,
+        emailRedirectTo,
       });
 
       if (error) {
         return {
           success: false,
-          user: null,
-          session: null,
           error: error.message,
         };
       }
 
+      // Check if email confirmation is required
+      const needsEmailConfirmation = data.user && !data.session;
+
       return {
         success: true,
-        user: authData.user,
-        session: authData.session,
-        error: null,
+        user: data.user,
+        session: data.session,
+        needsEmailConfirmation,
+        message: needsEmailConfirmation
+          ? "Please check your email to verify your account"
+          : "Registration successful",
       };
-    } catch {
-      return {
-        success: false,
-        user: null,
-        session: null,
-        error: "Registration failed",
-      };
+    } catch (error) {
+      throw new ApiError(
+        `Registration failed: ${(error as Error).message}`,
+        500
+      );
     }
   }
 
-  async login(data: LoginData): Promise<AuthResponse> {
+  /**
+   * Sign out current user
+   */
+  async signOut() {
     try {
-      const email = data.email.toLowerCase().trim();
-
-      const { data: authData, error } =
-        await this.authRepository.authenticateUser({
-          email,
-          password: data.password,
-        });
+      const { error } = await this.repository.signOut();
 
       if (error) {
         return {
           success: false,
-          user: null,
-          session: null,
           error: error.message,
         };
       }
 
       return {
         success: true,
-        user: authData.user,
-        session: authData.session,
-        error: null,
+        message: "Signed out successfully",
       };
-    } catch {
-      return {
-        success: false,
-        user: null,
-        session: null,
-        error: "Login failed",
-      };
+    } catch (error) {
+      throw new ApiError(`Sign out failed: ${(error as Error).message}`, 500);
     }
   }
 
-  async getCurrentUser(): Promise<UserResponse> {
+  /**
+   * Get current authenticated user
+   */
+  async getCurrentUser() {
     try {
-      const user = await this.authRepository.getCurrentUser();
+      const { data, error } = await this.repository.getUser();
+
+      if (error || !data.user) {
+        return {
+          success: false,
+          user: null,
+          error: error?.message || "Not authenticated",
+        };
+      }
+
       return {
         success: true,
-        user,
-        error: null,
+        user: data.user,
       };
-    } catch {
-      return {
-        success: false,
-        user: null,
-        error: "Failed to get user",
-      };
+    } catch (error) {
+      throw new ApiError(
+        `Failed to get user: ${(error as Error).message}`,
+        500
+      );
     }
   }
 
-  async signOut(): Promise<SignOutResponse> {
+  /**
+   * Resend verification email
+   */
+  async resendVerificationEmail(email: string, emailRedirectTo: string) {
     try {
-      const { error } = await this.authRepository.signOutUser();
-      return { success: !error, error: error?.message || null };
-    } catch {
-      return { success: false, error: "Sign out failed" };
+      const { error } = await this.repository.resendVerificationEmail(
+        email,
+        emailRedirectTo
+      );
+
+      if (error) {
+        return {
+          success: false,
+          error: error.message,
+        };
+      }
+
+      return {
+        success: true,
+        message: "Verification email sent successfully",
+      };
+    } catch (error) {
+      throw new ApiError(
+        `Failed to resend verification email: ${(error as Error).message}`,
+        500
+      );
+    }
+  }
+
+  /**
+   * Exchange code for session
+   */
+  async exchangeCodeForSession(code: string) {
+    try {
+      const error = await this.repository.exchangeCodeForSession(code);
+
+      if (error) {
+        return {
+          success: false,
+          error: error.message,
+        };
+      }
+
+      return { success: true, error: null };
+    } catch (error) {
+      throw new ApiError(
+        `Failed to exchange code for session: ${(error as Error).message}`,
+        500
+      );
     }
   }
 }

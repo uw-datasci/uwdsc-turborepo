@@ -1,33 +1,86 @@
-import { BaseRepository } from "@uwdsc/server/core/repository/baseRepository";
-import { LoginData, RegisterData } from "../types/auth";
+import type { SupabaseClient } from "@supabase/supabase-js";
 
-export class AuthRepository extends BaseRepository {
-  async createUser(data: RegisterData) {
-    return await this.client.auth.signUp({
-      email: data.email,
-      password: data.password,
+export interface LoginCredentials {
+  email: string;
+  password: string;
+}
+
+export interface RegisterCredentials {
+  email: string;
+  password: string;
+  emailRedirectTo?: string;
+}
+
+export class AuthRepository {
+  private readonly client: SupabaseClient;
+
+  constructor(client: SupabaseClient) {
+    this.client = client;
+  }
+
+  /**
+   * Sign in user with email and password
+   */
+  async signInWithPassword(credentials: LoginCredentials) {
+    const { data, error } = await this.client.auth.signInWithPassword({
+      email: credentials.email,
+      password: credentials.password,
     });
+
+    return { data, error };
   }
 
-  async authenticateUser(data: LoginData) {
-    return await this.client.auth.signInWithPassword({
-      email: data.email,
-      password: data.password,
+  /**
+   * Sign up new user
+   */
+  async signUp(credentials: RegisterCredentials) {
+    const { data, error } = await this.client.auth.signUp({
+      email: credentials.email,
+      password: credentials.password,
+      options: {
+        emailRedirectTo: credentials.emailRedirectTo,
+      },
     });
+
+    return { data, error };
   }
 
-  async getCurrentUser() {
-    const {
-      data: { session },
-      error,
-    } = await this.client.auth.getSession();
-    if (error) {
-      throw new Error(`Failed to get current user: ${error.message}`);
-    }
-    return session?.user || null;
+  /**
+   * Sign out current user
+   */
+  async signOut() {
+    const { error } = await this.client.auth.signOut();
+    return { error };
   }
 
-  async signOutUser() {
-    return await this.client.auth.signOut();
+  /**
+   * Get current authenticated user
+   */
+  async getUser() {
+    const { data, error } = await this.client.auth.getUser();
+    return { data, error };
+  }
+
+  /**
+   * Resend verification email
+   */
+  async resendVerificationEmail(email: string, emailRedirectTo?: string) {
+    const { data, error } = await this.client.auth.resend({
+      type: "signup",
+      email,
+      options: {
+        emailRedirectTo,
+      },
+    });
+
+    return { data, error };
+  }
+
+  /**
+   * Exchange code for session
+   */
+  async exchangeCodeForSession(code: string) {
+    const { error } = await this.client.auth.exchangeCodeForSession(code);
+    return error;
   }
 }
