@@ -64,21 +64,18 @@ export const CLUB_STATS: Stat[] = [
     id: "workshops-held",
     title: "Workshops Held",
     stat: 100,
-    prefix: "",
     suffix: "+",
   },
   {
     id: "current-members",
     title: "Current Members",
     stat: 300,
-    prefix: "",
     suffix: "+",
   },
   {
     id: "instagram-followers",
     title: "Instagram Followers",
     stat: 4000,
-    prefix: "",
     suffix: "+",
   },
 ];

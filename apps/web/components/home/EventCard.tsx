@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { Event } from "@/types/home";
-import { Clock, Link, MapPin } from "@uwdsc/ui/index";
+import { Clock, MapPin, Link } from "lucide-react";
 
 type EventCardProps = Event & {
   startTime?: string;

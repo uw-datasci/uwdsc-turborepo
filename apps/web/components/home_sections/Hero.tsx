@@ -2,7 +2,7 @@
 
 import { signOut } from "@/lib/api";
 import { UserProfile } from "@/types/api";
-import { CountingNumber, GlassSurface } from "@uwdsc/ui/index";
+import { CountingNumber, GlassSurface } from "@uwdsc/ui";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -12,7 +12,7 @@ interface HeroProps {
   mutate: () => Promise<UserProfile | null | undefined>;
 }
 
-export default function Hero({ profile, mutate }: HeroProps) {
+export default function Hero({ profile, mutate }: Readonly<HeroProps>) {
   const [memberCount, setMemberCount] = useState(350); // TODO: update count from db
   const [eventCount, setEventCount] = useState(20); // TODO: update count from db
   const router = useRouter();
@@ -111,7 +111,7 @@ export default function Hero({ profile, mutate }: HeroProps) {
           <button
             className="text-base md:text-xl font-medium flex items-center w-full justify-center hover:cursor-pointer"
             onClick={() => {
-              if (profile) router.push("/memCheckIn");
+              if (profile) router.push("/check-in");
               else router.push("/register");
             }}
           >
@@ -123,7 +123,7 @@ export default function Hero({ profile, mutate }: HeroProps) {
       {/* Sponsor Us Link */}
       <motion.button
         className="p-3 text-xl mt-3 md:mt-0 hover:cursor-pointer md:block md:absolute md:bottom-20 md:left-6 md:text-2xl"
-        onClick={() => (window.location.href = "#contact")}
+        onClick={() => (globalThis.location.href = "#contact")}
         whileHover="hover"
         initial="initial"
       >

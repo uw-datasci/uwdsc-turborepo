@@ -27,7 +27,7 @@ export function Navbar() {
     ];
 
     if (profile) {
-      baseLinks.splice(2, 0, { href: "/memCheckIn", label: "Check In" });
+      baseLinks.splice(2, 0, { href: "/check-in", label: "Check In" });
     }
 
     return baseLinks;

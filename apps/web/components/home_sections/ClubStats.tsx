@@ -21,7 +21,6 @@ export default function ClubStats() {
             key={stat.id}
           >
             <p className="font-family-clash mb-2 font-bold text-white flex items-center justify-center">
-              {stat.prefix}
               <CountingNumber
                 number={stat.stat}
                 inView={true}

@@ -11,7 +11,7 @@ import WhatWeDo from "@/components/home_sections/WhatWeDo";
 import { useAuth } from "@/contexts/AuthContext";
 
 export default function Home() {
-  const { profile, isLoading, isAuthenticated, mutate } = useAuth();
+  const { profile, isLoading, mutate } = useAuth();
 
   if (isLoading) {
     return (

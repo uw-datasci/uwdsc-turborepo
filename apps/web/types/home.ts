@@ -4,7 +4,6 @@ export type Stat = {
   id: string;
   title: string;
   stat: number;
-  prefix: string;
   suffix: string;
 };
 
