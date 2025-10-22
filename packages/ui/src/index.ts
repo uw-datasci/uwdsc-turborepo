@@ -10,6 +10,8 @@ export { Avatar, AvatarImage, AvatarFallback } from "./components/avatar";
 
 export { Button, buttonVariants } from "./components/button";
 
+export { Badge, badgeVariants } from "./components/badge";
+
 export {
   Card,
   CardHeader,
@@ -106,6 +108,25 @@ export {
 } from "./components/dialog";
 
 export { GlassSurface } from "./components/GlassSurface";
+
+export {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetFooter,
+  SheetTitle,
+  SheetTrigger,
+  SheetClose,
+} from "./components/sheet";
+
+export { Separator } from "./components/separator";
+
+export {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "./components/collapsible";
 
 // Hooks
 export * from "./hooks";

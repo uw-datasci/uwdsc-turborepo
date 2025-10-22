@@ -64,6 +64,7 @@ export default function Footer() {
               alt="uwdsc logo"
               fill
               className="object-contain"
+              priority
             />
           </div>
           <a

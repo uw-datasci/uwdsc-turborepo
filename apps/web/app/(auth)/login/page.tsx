@@ -22,6 +22,7 @@ export default function LoginPage() {
                 alt="uwdsc logo"
                 fill
                 className="object-contain"
+                priority
               />
             </div>
             <div className="">

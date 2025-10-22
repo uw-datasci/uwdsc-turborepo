@@ -11,7 +11,7 @@ import {
   NavigationMenuLink,
   GlassSurface,
 } from "@uwdsc/ui";
-import { User, Settings, LogOut, LogIn } from "lucide-react";
+import { User, LogOut, LogIn } from "lucide-react";
 import Link from "next/link";
 import { useAuth } from "@/contexts/AuthContext";
 import { signOut } from "@/lib/api";
@@ -107,19 +107,6 @@ export function UserAvatar() {
               </NavigationMenuLink>
             </li>
 
-            <li>
-              <NavigationMenuLink asChild>
-                <Link
-                  href="/settings"
-                  className="flex flex-row items-center gap-3 rounded-md p-3 no-underline outline-none transition-colors hover:bg-muted/75 focus:bg-muted/75"
-                >
-                  <Settings className="h-4 w-4 shrink-0" />
-                  <span className="text-sm font-medium leading-normal">
-                    Settings
-                  </span>
-                </Link>
-              </NavigationMenuLink>
-            </li>
             <li className="border-t border-white/30 pt-1">
               <Button
                 variant="ghost"

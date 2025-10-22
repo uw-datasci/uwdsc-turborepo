@@ -6,7 +6,7 @@ import {
   AccordionTrigger,
 } from "@uwdsc/ui/index";
 
-export default function FAQ() {
+export default function Faq() {
   return (
     // emulate mx-container with padding instead bc of w-full
     <section className="px-7 sm:px-9 md:px-12 xl:max-w-[1200px] mb-section gap-8 md:gap-14 grid lg:grid-cols-[4fr_5fr] w-full">

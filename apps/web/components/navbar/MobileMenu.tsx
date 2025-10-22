@@ -1,13 +1,27 @@
 "use client";
 
-import { useState, useMemo } from "react";
-import Link from "next/link";
+import React, { useState } from "react";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+  SheetClose,
+  Button,
+  Separator,
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+  Badge,
+  SheetDescription,
+} from "@uwdsc/ui";
 import Image from "next/image";
-import { UserProfile } from "@/types/api";
-import { useAuth } from "@/contexts/AuthContext";
-import { signOut } from "@/lib/api";
+import Link from "next/link";
+import { ChevronDown, ChevronUp } from "lucide-react";
+import { signOut, type UserProfile } from "@/lib/api";
 import { useRouter } from "next/navigation";
-import { RiArrowDropDownLine } from "@uwdsc/ui/index";
+import { useAuth } from "@/contexts/AuthContext";
 
 interface NavLink {
   href: string;
@@ -18,13 +32,6 @@ interface AdminLink {
   href: string;
   title: string;
   adminOnly?: boolean;
-}
-
-interface MobileMenuProps {
-  isOpen: boolean;
-  onClose: () => void;
-  profile: UserProfile | null;
-  userStatus?: string | null;
 }
 
 const adminLinks: AdminLink[] = [
@@ -43,43 +50,42 @@ const adminLinks: AdminLink[] = [
   },
 ];
 
-export function MobileMenu({
-  isOpen,
-  onClose,
-  profile,
-  userStatus,
-}: MobileMenuProps) {
-  const [isAdminDropdownOpen, setIsAdminDropdownOpen] = useState(false);
-  const { mutate } = useAuth();
-  const router = useRouter();
+interface MobileMenuProps {
+  navLinks: NavLink[];
+  profile: UserProfile | null;
+  isAdminOrExec: boolean;
+  adminLabel: string;
+  visibleAdminLinks: AdminLink[];
+}
 
-  const navLinks: NavLink[] = useMemo(() => {
-    const baseLinks: NavLink[] = [
-      { href: "/", label: "Home" },
-      { href: "/team", label: "Team" },
-      { href: "/apply", label: "Apply" },
-      { href: "/calendar", label: "Calendar" },
-    ];
-
-    if (profile) {
-      baseLinks.splice(1, 0, { href: "/memCheckIn", label: "Check In" });
-    }
-
-    return baseLinks;
-  }, [profile]);
-
-  const isAdminOrExec = userStatus === "admin" || userStatus === "exec";
-  const isAdmin = userStatus === "admin";
-  const adminLabel = userStatus === "admin" ? "Admin" : "Exec";
-  const visibleAdminLinks = adminLinks.filter(
-    (link) => !link.adminOnly || isAdmin
+function HamburgerIcon() {
+  return (
+    <div className="ml-auto flex flex-col gap-[5px] lg:hidden hover:cursor-pointer hover:scale-105 transition-all duration-200">
+      <div className="h-[3px] w-[22px] rounded-full bg-white" />
+      <div className="h-[3px] w-8 rounded-full bg-white" />
+      <div className="h-[3px] w-[22px] translate-x-[10px] rounded-full bg-white" />
+    </div>
   );
+}
+
+export function MobileMenu({
+  navLinks,
+  profile,
+  isAdminOrExec,
+  adminLabel,
+  visibleAdminLinks,
+}: Readonly<MobileMenuProps>) {
+  const router = useRouter();
+  const { mutate } = useAuth();
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isAdminDropdownOpen, setIsAdminDropdownOpen] = useState(false);
+
+  const faculty = `${profile?.faculty?.charAt(0).toUpperCase()}${profile?.faculty?.slice(1)}`;
 
   const handleSignOut = async () => {
     try {
       await signOut();
       await mutate();
-      onClose();
       router.push("/");
     } catch (error) {
       console.error("Failed to sign out:", error);
@@ -87,129 +93,166 @@ export function MobileMenu({
   };
 
   return (
-    <div
-      className={`fixed inset-0 z-40 overflow-y-auto bg-black/50 backdrop-blur-md transition-transform duration-300 lg:hidden ${
-        isOpen ? "translate-x-0" : "translate-x-full"
-      }`}
-    >
-      {/* Header */}
-      <header className="flex items-center justify-between px-6 py-4">
-        <Link href="/" onClick={onClose} className="relative w-12 h-12">
-          <Image
-            src="/logos/dsc.svg"
-            alt="uwdsc logo"
-            fill
-            className="object-contain"
-          />
-        </Link>
-        <button
-          type="button"
-          onClick={onClose}
-          className="flex flex-col gap-[5px] hover:cursor-pointer"
-          aria-label="Close menu"
-        >
-          <div className="h-[3px] w-[22px] translate-x-[10px] rounded-full bg-white" />
-          <div className="h-[3px] w-8 rounded-full bg-white" />
-          <div className="h-[3px] w-[22px] rounded-full bg-white" />
-        </button>
-      </header>
+    <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
+      <SheetTrigger>
+        <HamburgerIcon />
+      </SheetTrigger>
+      <SheetContent
+        side="right"
+        className="w-full sm:max-w-sm p-0 [&>button]:hidden"
+      >
+        <div className="flex flex-col h-full">
+          <SheetHeader className="text-left border-b bg-muted/30 px-6 py-4 relative">
+            <SheetTitle className="flex items-center gap-3">
+              <SheetClose asChild>
+                <Link
+                  href="/"
+                  className="relative w-10 h-10 transition-transform hover:scale-105"
+                >
+                  <Image
+                    src="/logos/dsc.svg"
+                    alt="uwdsc logo"
+                    fill
+                    className="object-contain"
+                    priority
+                  />
+                </Link>
+              </SheetClose>
+              <span className="text-xl font-semibold">Navigation</span>
+            </SheetTitle>
+            <SheetDescription />
+            {/* Custom Close Button */}
+            <SheetClose asChild>
+              <div className="absolute top-6 right-6 w-6 h-6 flex items-center justify-center hover:bg-accent/20 rounded transition-colors">
+                {/* <div className="ml-auto flex flex-col gap-[5px] lg:hidden hover:cursor-pointer hover:scale-105 transition-all duration-200">
+                  <div className="h-[3px] w-[22px] rounded-full bg-white" />
+                  <div className="h-[3px] w-8 rounded-full bg-white" />
+                  <div className="h-[3px] w-[22px] translate-x-[10px] rounded-full bg-white" />
+                </div> */}
+                <HamburgerIcon />
+              </div>
+            </SheetClose>
+          </SheetHeader>
 
-      {/* Navigation */}
-      <nav className="grid gap-4 px-6 py-6 text-white">
-        {/* Main Navigation Links */}
-        {navLinks.map((link) => (
-          <div key={link.href}>
-            <Link
-              href={link.href}
-              onClick={onClose}
-              className="block text-4xl font-bold"
-            >
-              {link.label}
-            </Link>
-            <hr className="my-4 border-t-2 border-white" />
-          </div>
-        ))}
+          <div className="flex flex-col flex-1 overflow-y-auto">
+            {/* Main Navigation Links */}
+            <div className="px-6 py-2">
+              <nav className="space-y-1">
+                {navLinks.map((link) => (
+                  <SheetClose key={link.href} asChild>
+                    <Button
+                      variant="ghost"
+                      className="w-full justify-start text-lg py-3 px-4 h-auto font-semibold hover:bg-accent/50 transition-colors rounded-lg"
+                      asChild
+                    >
+                      <Link href={link.href}>{link.label}</Link>
+                    </Button>
+                  </SheetClose>
+                ))}
+              </nav>
+            </div>
 
-        {/* Admin/Exec Dropdown */}
-        {isAdminOrExec && (
-          <div>
-            <button
-              onClick={() => setIsAdminDropdownOpen((prev) => !prev)}
-              className="flex w-full flex-row items-center justify-between text-4xl font-bold"
-            >
-              {adminLabel}
-              <RiArrowDropDownLine
-                className={`transform transition-transform duration-300 ${
-                  isAdminDropdownOpen ? "rotate-180" : ""
-                }`}
-                size={50}
-              />
-            </button>
-            {isAdminDropdownOpen && (
-              <div className="rounded-md text-xl">
-                <ul className="py-2 font-normal">
-                  {visibleAdminLinks.map((link) => (
-                    <li key={link.href} className="my-2">
-                      <Link
-                        href={link.href}
-                        onClick={onClose}
-                        className="hover:underline"
-                      >
-                        {link.title}
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
+            {/* Admin/Exec Dropdown */}
+            {isAdminOrExec && (
+              <div className="px-6 py-1">
+                <Separator className="mb-2" />
+                <Collapsible
+                  open={isAdminDropdownOpen}
+                  onOpenChange={setIsAdminDropdownOpen}
+                >
+                  <CollapsibleTrigger asChild>
+                    <Button
+                      variant="ghost"
+                      className="w-full justify-between text-lg py-3 px-4 h-auto font-semibold hover:bg-accent/50 transition-colors rounded-lg"
+                    >
+                      {adminLabel}
+                      {isAdminDropdownOpen ? (
+                        <ChevronUp className="h-5 w-5" />
+                      ) : (
+                        <ChevronDown className="h-5 w-5" />
+                      )}
+                    </Button>
+                  </CollapsibleTrigger>
+                  <CollapsibleContent className="space-y-1 mt-1">
+                    {visibleAdminLinks.map((link) => (
+                      <SheetClose key={link.href} asChild>
+                        <Button
+                          variant="ghost"
+                          className="w-full justify-start text-base py-2 px-6 h-auto hover:bg-accent/50 transition-colors rounded-lg"
+                          asChild
+                        >
+                          <Link href={link.href}>{link.title}</Link>
+                        </Button>
+                      </SheetClose>
+                    ))}
+                  </CollapsibleContent>
+                </Collapsible>
               </div>
             )}
-            <hr className="my-4 border-t-2 border-white" />
-          </div>
-        )}
 
-        {/* User Section */}
-        {/* {profile ? (
-          <div className="mt-8 space-y-4">
-            <div className="text-lg text-gray-300">
-              <p className="font-semibold">
-                {profile.first_name} {profile.last_name}
-              </p>
-              <p className="text-sm">{profile.email}</p>
-            </div>
-            <div className="space-y-2">
-              <Link
-                href="/passport"
-                onClick={onClose}
-                className="block text-xl font-semibold hover:underline"
-              >
-                My Passport
-              </Link>
-              <Link
-                href="/settings"
-                onClick={onClose}
-                className="block text-xl font-semibold hover:underline"
-              >
-                Settings
-              </Link>
-              <button
-                onClick={handleSignOut}
-                className="block text-xl font-semibold hover:underline text-red-400"
-              >
-                Log Out
-              </button>
-            </div>
+            {/* User Section */}
+            {profile ? (
+              <div className="mt-auto border-t bg-muted/30">
+                <div className="px-6 py-4">
+                  <div className="mb-3 mx-4">
+                    <div className="flex items-center gap-2 mb-2">
+                      <p className="font-semibold text-lg text-foreground">
+                        {profile.first_name} {profile.last_name}
+                      </p>
+
+                      <Badge variant="default" className="text-xs px-2">
+                        {faculty}
+                      </Badge>
+                    </div>
+
+                    <p className="text-sm text-muted-foreground mb-1">
+                      {profile.email}
+                    </p>
+
+                    <p className="text-sm text-muted-foreground">
+                      WatIAM: {profile.wat_iam}
+                    </p>
+                  </div>
+
+                  <nav className="space-y-1">
+                    <SheetClose asChild>
+                      <Button
+                        variant="ghost"
+                        className="w-full justify-start text-base py-2 px-4 h-auto font-medium hover:bg-accent/50 transition-colors rounded-lg"
+                        asChild
+                      >
+                        <Link href="/passport">My Passport</Link>
+                      </Button>
+                    </SheetClose>
+                    <Separator className="my-1" />
+                    <Button
+                      variant="ghost"
+                      className="w-full justify-start text-base py-2 px-4 h-auto font-medium text-destructive hover:text-destructive hover:bg-destructive/10 transition-colors rounded-lg"
+                      onClick={handleSignOut}
+                    >
+                      Log Out
+                    </Button>
+                  </nav>
+                </div>
+              </div>
+            ) : (
+              <div className="mt-auto border-t bg-muted/30">
+                <div className="px-6 py-3">
+                  <SheetClose asChild>
+                    <Button
+                      variant="outline"
+                      className="w-full text-base py-2 h-auto font-medium rounded-lg"
+                      asChild
+                    >
+                      <Link href="/login">Log In</Link>
+                    </Button>
+                  </SheetClose>
+                </div>
+              </div>
+            )}
           </div>
-        ) : (
-          <div className="mt-8 space-y-4">
-            <Link
-              href="/login"
-              onClick={onClose}
-              className="block text-2xl font-bold hover:underline"
-            >
-              Log In
-            </Link>
-          </div>
-        )} */}
-      </nav>
-    </div>
+        </div>
+      </SheetContent>
+    </Sheet>
   );
 }

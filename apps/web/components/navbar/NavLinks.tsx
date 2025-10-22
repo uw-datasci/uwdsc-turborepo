@@ -14,7 +14,7 @@ interface NavLink {
 }
 
 interface NavLinksProps {
-  profile: UserProfile | null;
+  readonly profile: UserProfile | null;
 }
 
 export function NavLinks({ profile }: NavLinksProps) {
@@ -32,8 +32,8 @@ export function NavLinks({ profile }: NavLinksProps) {
     ];
 
     if (profile) {
-      // Insert "Check In" after "Home"
-      baseLinks.splice(1, 0, { href: "/memCheckIn", label: "Check In" });
+      // Insert "Check In" after "Team"
+      baseLinks.splice(2, 0, { href: "/check-in", label: "Check In" });
     }
 
     return baseLinks;

@@ -1,7 +1,7 @@
 import "@uwdsc/ui/globals.css";
 import "../styles.css";
 import { Geist, Geist_Mono } from "next/font/google";
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { ThemeProvider } from "@uwdsc/ui";
 import { Navbar } from "@/components/Navbar";
 import { baseMetadata } from "@/lib/metadata";
@@ -37,6 +37,10 @@ export const metadata: Metadata = {
     description: "University of Waterloo Data Science Club website",
     images: ["/meta/og-image.png"],
   },
+};
+
+export const viewport: Viewport = {
+  themeColor: "#000211",
 };
 
 export default function RootLayout({
