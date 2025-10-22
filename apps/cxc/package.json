@@ -13,6 +13,9 @@
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
+    "@react-three/drei": "^10.7.6",
+    "@react-three/fiber": "^9.3.0",
+    "@types/three": "^0.180.0",
     "@uwdsc/server/cxc": "workspace:*",
     "@uwdsc/ui": "workspace:*",
     "dotenv": "^17.2.2",
@@ -25,7 +28,8 @@
     "react-dom": "^19.1.1",
     "react-hook-form": "^7.63.0",
     "swr": "^2.3.6",
-    "zod": "^3.25.76"
+    "zod": "^3.25.76",
+    "three": "^0.180.0"
   },
   "devDependencies": {
     "@types/node": "^20.19.9",
