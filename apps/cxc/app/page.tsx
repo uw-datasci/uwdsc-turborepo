@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { AboutCXC } from "@/components/AboutCXC";
 import {
   Card,
   CardContent,
@@ -236,6 +237,7 @@ export default function Home() {
           </Card>
         </motion.div>
       </div>
+      <AboutCXC />
     </div>
   );
 }
