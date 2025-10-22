@@ -37,3 +37,6 @@ npm-debug.log*
 
 # Prisma
 **/prisma/generated
+
+# VSCode
+.vscode/
