@@ -5,24 +5,39 @@ import { usePathname } from "next/navigation";
 import { NavigationMenuItem } from "@uwdsc/ui";
 import { motion } from "framer-motion";
 import { useTheme } from "next-themes";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { UserProfile } from "@/types/api";
 
 interface NavLink {
   href: string;
   label: string;
 }
 
-const navLinks: NavLink[] = [
-  { href: "/", label: "Home" },
-  { href: "/team", label: "Team" },
-  { href: "/apply", label: "Apply" },
-  { href: "/calendar", label: "Calendar" },
-];
+interface NavLinksProps {
+  readonly profile: UserProfile | null;
+}
 
-export function NavLinks() {
+export function NavLinks({ profile }: NavLinksProps) {
   const pathname = usePathname();
   const { theme, systemTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
+
+  // Dynamically set nav links based on authentication
+  const navLinks: NavLink[] = useMemo(() => {
+    const baseLinks: NavLink[] = [
+      { href: "/", label: "Home" },
+      { href: "/team", label: "Team" },
+      { href: "/apply", label: "Apply" },
+      { href: "/calendar", label: "Calendar" },
+    ];
+
+    if (profile) {
+      // Insert "Check In" after "Team"
+      baseLinks.splice(2, 0, { href: "/check-in", label: "Check In" });
+    }
+
+    return baseLinks;
+  }, [profile]);
 
   useEffect(() => setMounted(true), []);
 
@@ -66,7 +81,7 @@ export function NavLinks() {
         <NavigationMenuItem key={link.href} className="relative">
           <Link
             href={link.href}
-            className="inline-flex items-center justify-center px-2 sm:px-3 md:px-4 py-2 text-sm sm:text-base font-medium transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 relative z-10"
+            className="inline-flex items-center justify-center px-2 sm:px-3 md:px-4 py-2 text-sm sm:text-base font-medium transition-colors hover:text-nav-hover-blue focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 relative z-10 text-nowrap"
           >
             {link.label}
           </Link>

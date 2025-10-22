@@ -11,7 +11,7 @@ import {
   NavigationMenuLink,
   GlassSurface,
 } from "@uwdsc/ui";
-import { User, Settings, LogOut, LogIn } from "lucide-react";
+import { User, LogOut, LogIn } from "lucide-react";
 import Link from "next/link";
 import { useAuth } from "@/contexts/AuthContext";
 import { signOut } from "@/lib/api";
@@ -45,7 +45,7 @@ export function UserAvatar() {
         <Link href="/login">
           <Button
             variant="ghost"
-            className="h-10 flex flex-row items-center gap-2 px-4"
+            className="h-10 flex flex-row items-center gap-2 px-4 rounded-md hover:text-nav-hover-blue"
           >
             <LogIn className="h-4 w-4" />
             <span className="text-sm font-medium">Log In</span>
@@ -66,16 +66,16 @@ export function UserAvatar() {
       : "User";
 
   return (
-    <NavigationMenuItem className="relative pl-8 before:absolute before:left-0 before:h-10 before:w-px before:bg-border">
+    <NavigationMenuItem className="relative pl-8 before:absolute before:left-0 before:h-10 before:w-px before:bg-white/35">
       <NavigationMenuTrigger className="h-10 w-10 rounded-full p-0 !bg-transparent hover:!bg-transparent focus:!bg-transparent focus-visible:!bg-transparent data-[state=open]:!bg-transparent hover:scale-105 transition-transform">
         <Avatar className="h-9 w-9">
           <AvatarImage src={undefined} alt={fullName} />
-          <AvatarFallback className="bg-primary text-primary-foreground">
+          <AvatarFallback className="bg-nav-hover-blue text-primary-foreground">
             {initials}
           </AvatarFallback>
         </Avatar>
       </NavigationMenuTrigger>
-      <NavigationMenuContent className="!bg-transparent !border-0 !shadow-none">
+      <NavigationMenuContent className="!bg-transparent !border-0 !shadow-none !mt-5">
         <GlassSurface
           width="100%"
           height="auto"
@@ -97,7 +97,7 @@ export function UserAvatar() {
               <NavigationMenuLink asChild>
                 <Link
                   href="/passport"
-                  className="flex flex-row items-center gap-3 rounded-md p-3 no-underline outline-none transition-colors hover:bg-muted/30 focus:bg-muted/30"
+                  className="flex flex-row items-center gap-3 rounded-md p-3 no-underline outline-none transition-colors hover:bg-muted/75 focus:bg-muted/75"
                 >
                   <User className="h-4 w-4 shrink-0" />
                   <span className="text-sm font-medium leading-normal">
@@ -107,24 +107,11 @@ export function UserAvatar() {
               </NavigationMenuLink>
             </li>
 
-            <li>
-              <NavigationMenuLink asChild>
-                <Link
-                  href="/settings"
-                  className="flex flex-row items-center gap-3 rounded-md p-3 no-underline outline-none transition-colors hover:bg-muted/30 focus:bg-muted/30"
-                >
-                  <Settings className="h-4 w-4 shrink-0" />
-                  <span className="text-sm font-medium leading-normal">
-                    Settings
-                  </span>
-                </Link>
-              </NavigationMenuLink>
-            </li>
-            <li className="border-t border-border/50 pt-1">
+            <li className="border-t border-white/30 pt-1">
               <Button
                 variant="ghost"
                 onClick={handleSignOut}
-                className="w-full h-auto flex flex-row items-center justify-start gap-3 p-3 hover:bg-destructive/10 hover:text-destructive focus:bg-destructive/10 focus:text-destructive"
+                className="w-full h-auto flex flex-row items-center justify-start gap-3 p-3 hover:!bg-muted/75 hover:text-destructive focus:bg-muted/75 focus:text-destructive rounded-md"
               >
                 <LogOut className="h-4 w-4 shrink-0" />
                 <span className="text-sm font-medium leading-normal">

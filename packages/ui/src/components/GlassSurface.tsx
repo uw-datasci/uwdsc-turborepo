@@ -1,5 +1,6 @@
 "use client";
 
+import { useTheme } from "next-themes";
 import React, { useEffect, useRef, useState, useId } from "react";
 
 export interface GlassSurfaceProps {
@@ -45,6 +46,7 @@ export interface GlassSurfaceProps {
 
 const useDarkMode = () => {
   const [isDark, setIsDark] = useState(false);
+  const { forcedTheme } = useTheme();
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -57,7 +59,7 @@ const useDarkMode = () => {
     return () => mediaQuery.removeEventListener("change", handler);
   }, []);
 
-  return isDark;
+  return isDark || forcedTheme === "dark";
 };
 
 const GlassSurface: React.FC<GlassSurfaceProps> = ({
