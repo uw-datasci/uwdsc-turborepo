@@ -17,9 +17,7 @@ export default function Home() {
       </div>
       <WormholeTop />
       <div className="border-t border-b border-white/50 min-h-[500px] flex items-center justify-center">
-        <h1 className="font-bold text-5xl md:text-8xl text-center">
-          Placeholder for Content
-        </h1>
+        <AboutCXC />
       </div>
       <WormholeMiddle />
       <div className="border-t border-b border-white/50 min-h-[500px] flex items-center justify-center">
@@ -28,7 +26,6 @@ export default function Home() {
         </h1>
       </div>
       <WormholeBottom />
-      <AboutCXC />
     </div>
   );
 }
