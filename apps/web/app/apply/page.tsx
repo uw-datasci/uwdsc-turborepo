@@ -206,7 +206,7 @@ export default function ApplyPage() {
         </CardHeader>
 
         <CardContent>
-          <div className="space-y-6 overflow-hidden">
+          <div className="space-y-6 overflow-visible">
             <AnimatePresence mode="wait" custom={direction}>
               <motion.div
                 key={currentStep}

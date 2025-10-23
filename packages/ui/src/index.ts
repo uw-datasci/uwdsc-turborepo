@@ -1,6 +1,17 @@
 // Components
+export {
+  Accordion,
+  AccordionItem,
+  AccordionTrigger,
+  AccordionContent,
+} from "./components/accordion";
+
 export { Avatar, AvatarImage, AvatarFallback } from "./components/avatar";
+
 export { Button, buttonVariants } from "./components/button";
+
+export { Badge, badgeVariants } from "./components/badge";
+
 export {
   Card,
   CardHeader,
@@ -10,6 +21,17 @@ export {
   CardDescription,
   CardContent,
 } from "./components/card";
+
+export {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselPrevious,
+  CarouselNext,
+} from "./components/carousel";
+
+export { CountingNumber } from "./components/counting-numbers";
+
 export {
   Form,
   FormControl,
@@ -20,10 +42,15 @@ export {
   FormMessage,
   useFormField,
 } from "./components/form";
+
 export { Input } from "./components/input";
+
 export { Label } from "./components/label";
+
 export { RadioGroup, RadioGroupItem } from "./components/radio-group";
+
 export { Textarea } from "./components/textarea";
+
 export {
   Select,
   SelectContent,
@@ -36,6 +63,7 @@ export {
   SelectTrigger,
   SelectValue,
 } from "./components/select";
+
 export {
   NavigationMenu,
   NavigationMenuList,
@@ -47,6 +75,7 @@ export {
   NavigationMenuViewport,
   navigationMenuTriggerStyle,
 } from "./components/navigation-menu";
+
 export {
   DropdownMenu,
   DropdownMenuPortal,
@@ -64,6 +93,7 @@ export {
   DropdownMenuSubTrigger,
   DropdownMenuSubContent,
 } from "./components/dropdown-menu";
+
 export {
   Dialog,
   DialogClose,
@@ -79,6 +109,25 @@ export {
 
 export { GlassSurface } from "./components/GlassSurface";
 
+export {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetFooter,
+  SheetTitle,
+  SheetTrigger,
+  SheetClose,
+} from "./components/sheet";
+
+export { Separator } from "./components/separator";
+
+export {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "./components/collapsible";
+
 // Hooks
 export * from "./hooks";
 
@@ -87,3 +136,17 @@ export { cn } from "./lib/utils";
 
 // Providers
 export { ThemeProvider } from "./components/theme-provider";
+
+// Icons
+export { Mail, Instagram, Linkedin, Youtube } from "react-feather";
+
+export { RxDiscordLogo } from "react-icons/rx";
+
+export {
+  RiSpotifyLine,
+  RiTiktokLine,
+  RiTwitterXLine,
+  RiArrowDropDownLine,
+} from "react-icons/ri";
+
+export { ArrowLeft, ArrowRight, Clock, MapPin, Link } from "lucide-react";

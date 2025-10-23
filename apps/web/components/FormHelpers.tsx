@@ -27,7 +27,7 @@ import { ControllerRenderProps } from "react-hook-form";
 // Types
 // ============================================================================
 
-type FormFieldVariant = "default" | "auth" | "application";
+type FormFieldVariant = "default" | "auth" | "application" | "mailingList";
 
 interface TextFieldOptions {
   label?: string;
@@ -61,18 +61,22 @@ const inputStyles: Record<FormFieldVariant, string> = {
   default: "",
   auth: "!h-auto !text-base border-gray-100/80 !bg-black px-4.5 py-3.5 placeholder:text-gray-100/80 rounded-lg xl:px-6 xl:py-4.5",
   application: "",
+  mailingList:
+    "w-full rounded-md border !border-grey1 !bg-grey4 !h-auto py-3.5 pl-4.5 text-white outline-none placeholder:!text-grey1 md:px-6 md:py-4.5 pr-32 md:text-lg",
 };
 
 const selectTriggerStyles: Record<FormFieldVariant, string> = {
   default: "w-full",
   auth: "w-full !bg-black !h-auto !px-4.5 !py-3.5 !rounded-lg xl:px-6 xl:py-4.5 border border-gray-100/75 text-base",
   application: "w-full",
+  mailingList: "",
 };
 
 const selectContentStyles: Record<FormFieldVariant, string> = {
   default: "bg-slate-700",
   auth: "bg-black !max-h-64 !overflow-y-auto border-gray-100/75",
   application: "bg-slate-700",
+  mailingList: "",
 };
 
 const selectItemStyles: Record<FormFieldVariant, string> = {
@@ -81,12 +85,14 @@ const selectItemStyles: Record<FormFieldVariant, string> = {
   auth: "text-slate-200 focus:text-white hover:!bg-slate-600/50 hover:text-white rounded-sm px-3 py-3.5 hover:bg-grey4 xl:px-4 xl:py-4 text-base",
   application:
     "text-slate-200 focus:bg-slate-600 focus:text-white hover:bg-slate-600 hover:text-white transition-colors",
+  mailingList: "",
 };
 
 const textareaStyles: Record<FormFieldVariant, string> = {
   default: "",
   auth: "min-h-[6rem] max-h-[10rem] border-gray-100/80 bg-black px-4.5 py-3.5 placeholder:text-gray-100/80 rounded-lg xl:px-6 xl:py-4.5 !text-base",
   application: "",
+  mailingList: "",
 };
 
 // ============================================================================

@@ -178,6 +178,7 @@ export default function CompleteProfilePage() {
                   alt="uwdsc logo"
                   fill
                   className="object-contain"
+                  priority
                 />
               </div>
               <div className="text-center md:text-start">
