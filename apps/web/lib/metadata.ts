@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 
 const siteUrl = "https://www.uwdatascience.ca/"; // Update with your actual domain
 
@@ -38,6 +38,10 @@ export const baseMetadata: Metadata = {
     "msapplication-TileColor": "#000211",
     "msapplication-TileImage": "/meta/ms-icon-144x144.png",
   },
+};
+
+export const baseViewport: Viewport = {
+  themeColor: "#000211",
 };
 
 /**

@@ -17,6 +17,8 @@
     "@supabase/supabase-js": "^2.75.1",
     "@uwdsc/server/web": "workspace:*",
     "@uwdsc/ui": "workspace:*",
+    "ag-grid-community": "^34.2.0",
+    "ag-grid-react": "^34.2.0",
     "dotenv": "^17.2.2",
     "framer-motion": "^12.23.12",
     "lucide-react": "^0.475.0",

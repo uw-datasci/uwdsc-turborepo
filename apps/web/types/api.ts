@@ -95,6 +95,43 @@ export interface GetProfileResponse {
 }
 
 // ============================================================================
+// Admin/Membership Types
+// ============================================================================
+
+export interface MemberProfile {
+  id: string;
+  email: string;
+  first_name: string | null;
+  last_name: string | null;
+  user_status: string | null;
+  has_paid: boolean;
+  is_math_soc_member: boolean;
+  faculty: string | null;
+  term: string | null;
+  wat_iam: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface GetAllProfilesResponse {
+  profiles: MemberProfile[];
+  error?: string;
+  message?: string;
+}
+
+export interface MembershipStats {
+  totalUsers: number;
+  paidUsers: number;
+  mathSocMembers: number;
+}
+
+export interface GetMembershipStatsResponse {
+  stats: MembershipStats;
+  error?: string;
+  message?: string;
+}
+
+// ============================================================================
 // Error Types
 // ============================================================================
 

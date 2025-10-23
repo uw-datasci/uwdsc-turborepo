@@ -4,7 +4,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import type { Metadata, Viewport } from "next";
 import { ThemeProvider } from "@uwdsc/ui";
 import { Navbar } from "@/components/Navbar";
-import { baseMetadata } from "@/lib/metadata";
+import { baseMetadata, baseViewport } from "@/lib/metadata";
 import { AuthProvider } from "@/contexts/AuthContext";
 import Footer from "@/components/Footer";
 
@@ -39,9 +39,7 @@ export const metadata: Metadata = {
   },
 };
 
-export const viewport: Viewport = {
-  themeColor: "#000211",
-};
+export const viewport: Viewport = baseViewport;
 
 export default function RootLayout({
   children,

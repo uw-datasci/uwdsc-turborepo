@@ -7,12 +7,12 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Admin | UWaterloo Data Science Club",
     description: "UWaterloo Data Science Club admin dashboard",
-    images: ['/meta/og-image.png'],
+    images: ["/meta/og-image.png"],
   },
   twitter: {
-    card: 'summary',
+    card: "summary",
     description: "UWaterloo Data Science Club admin dashboard",
-    images: ['/meta/og-image.png'],
+    images: ["/meta/og-image.png"],
   },
 };
 
@@ -21,10 +21,5 @@ export default function AdminLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  return (
-    <div className="container mx-auto px-4 py-12">
-      {children}
-    </div>
-  );
+  return <div className="container mx-auto px-4 py-12">{children}</div>;
 }
-
