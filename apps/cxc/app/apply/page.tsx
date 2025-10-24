@@ -11,7 +11,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
-import { AvailablePositions } from "@/components/application/banners/AvailablePositions";
 import { DueDateTag } from "@/components/application/DueDateTag";
 import { Intro, Submitted } from "@/components/application/steps";
 import {
@@ -23,6 +22,7 @@ import { AppInfo } from "@/types/application";
 import { Button, Card, CardContent, CardHeader, CardTitle } from "@uwdsc/ui";
 import { AnimatePresence, motion } from "framer-motion";
 import { Loader2, MoveLeft, MoveRight, User } from "lucide-react";
+import { Unavailable } from "@/components/application/Unavailable";
 
 // Animation variants for sliding transitions
 const slideVariants = {
@@ -149,7 +149,7 @@ export default function ApplyPage() {
     }
   };
 
-  if (!appInfo) return null;
+  if (!appInfo) return <Unavailable />;
 
   if (currentStep === 5) return <Submitted />;
 
@@ -163,11 +163,7 @@ export default function ApplyPage() {
         </h1>
       </div>
 
-      <AvailablePositions />
-
-      <Card
-        className={`mx-auto max-w-4xl shadow-md backdrop-blur-md ${currentStep === 0 ? "bg-gradient-blue" : "bg-slate-900"}`}
-      >
+      <Card className="mx-auto max-w-4xl shadow-md backdrop-blur-md">
         <CardHeader
           className={`${currentStep === 0 ? "" : "bg-gradient-blue"} rounded-t-xl -mt-6 py-4`}
         >
