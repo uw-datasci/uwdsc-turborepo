@@ -5,7 +5,6 @@ model Application {
     resume_id    BigInt?
     status       application_status_enum @default(draft)
     role         role_enum
-    term         String
     comments     String?
     created_at   DateTime                @default(now())
     updated_at   DateTime                @default(now())
@@ -15,6 +14,6 @@ model Application {
     resume  Resume?             @relation(fields: [resume_id], references: [id], onDelete: SetNull)
     answers ApplicationAnswer[]
 
-    @@unique([profile_id, role, term])
+    @@unique([profile_id, role])
     @@map("applications")
 }

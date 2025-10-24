@@ -1,5 +1,5 @@
 export const STEP_NAMES = [
-  "",
+  "DSC Application",
   "Personal Details",
   "General",
   "Positions",
