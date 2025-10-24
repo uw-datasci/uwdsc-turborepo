@@ -18,8 +18,8 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   ...baseMetadata,
   title: {
-    default: "CXC - UWaterloo Data Science Competition",
-    template: "%s | CXC - UWaterloo DSC",
+    default: "CxC - UWaterloo Data Science Competition",
+    template: "%s | CxC - UWaterloo DSC",
   },
   description:
     "UWaterloo's premier data science competition bridging students and industry. Tackle real-world challenges, compete for prizes, and showcase innovative data science solutions.",
@@ -27,14 +27,14 @@ export const metadata: Metadata = {
     "data science, competition, hackathon, uwaterloo, machine learning, analytics, cxc, conrad centre",
   openGraph: {
     type: "website",
-    title: "CXC - UWaterloo Data Science Competition",
+    title: "CxC - UWaterloo Data Science Competition",
     description:
       "UWaterloo's premier data science competition bridging students and industry",
     images: ["/meta/og-image.png"],
   },
   twitter: {
     card: "summary_large_image",
-    title: "CXC - UWaterloo Data Science Competition",
+    title: "CxC - UWaterloo Data Science Competition",
     description:
       "UWaterloo's premier data science competition bridging students and industry",
     images: ["/meta/og-image.png"],

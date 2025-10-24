@@ -65,7 +65,7 @@ export function Submitted() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 1.6 }}
         >
-          Thank you for your interest in participating in CXC! We have received
+          Thank you for your interest in participating in CxC! We have received
           your application and will review it carefully. Stay tuned for updates!
         </motion.p>
 
