@@ -1,23 +1,21 @@
-"use client";
-
-import { AboutCXC } from "@/components/AboutCXC";
+import { AboutCxC } from "@/components/home/AboutCxC";
 import {
   WormholeTop,
   WormholeMiddle,
   WormholeBottom,
-} from "@/components/Wormhole";
+} from "@/components/home/Wormhole";
 
 export default function Home() {
   return (
     <div>
       <div className="border-b border-white/50 flex items-center justify-center overflow-hidden">
         <p className="font-semibold text-[length:50vw] leading-none whitespace-nowrap tracking-tighter -mb-[15%] -ml-2 sm:-ml-4 md:-ml-6 xl:-ml-10">
-          CXC
+          CxC
         </p>
       </div>
       <WormholeTop />
       <div className="border-t border-b border-white/50 min-h-[500px] flex items-center justify-center">
-        <AboutCXC />
+        <AboutCxC />
       </div>
       <WormholeMiddle />
       <div className="border-t border-b border-white/50 min-h-[500px] flex items-center justify-center">

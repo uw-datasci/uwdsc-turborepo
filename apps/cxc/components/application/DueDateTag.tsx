@@ -1,4 +1,3 @@
-import { Term } from "@/types/application";
 import { motion } from "framer-motion";
 import { ClockIcon } from "lucide-react";
 

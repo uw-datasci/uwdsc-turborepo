@@ -39,7 +39,7 @@ import tanayKashyap from "@/public/teams/Tanay-Kashyap.jpeg";
 import lunaNguyen from "@/public/teams/Luna-Nguyen.jpg";
 import dishitaChawla from "@/public/teams/Dishita-Chawla.jpg";
 
-// CXC
+// CxC
 import michaelZhang from "@/public/teams/Michael-Zhang.jpg";
 import davidHe from "@/public/teams/David-He.png";
 import adhyaSharma from "@/public/teams/Adhya-Sharma.jpg";

@@ -2,11 +2,11 @@
 
 import { motion } from "framer-motion";
 
-export function AboutCXC() {
+export function AboutCxC() {
   return (
     <section className="relative bg-[#0C0C0C] text-white py-24 overflow-hidden">
       <div className="container mx-auto px-6 text-center">
-        <h2 className="text-3xl md:text-4xl font-semibold mb-6">About CXC</h2>
+        <h2 className="text-3xl md:text-4xl font-semibold mb-6">About CxC</h2>
         <p className="text-lg md:text-xl text-gray-300 max-w-2xl mx-auto mb-16">
           Canada&apos;s largest student-run data hackathon. We are a
           beginner-friendly datathon that brings together students and companies
