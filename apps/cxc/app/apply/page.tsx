@@ -11,21 +11,18 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
-import { AvailablePositions } from "@/components/application/banners/AvailablePositions";
 import { DueDateTag } from "@/components/application/DueDateTag";
+import { Intro, Submitted } from "@/components/application/steps";
 import {
-  General,
-  Intro,
-  Personal,
-  Positions,
-  Resume,
-  Submitted,
-} from "@/components/application/steps";
-import { STEP_NAMES } from "@/constants/application";
-import { Term } from "@/types/application";
+  APPLICATION_DEADLINE,
+  APPLICATION_RELEASE_DATE,
+  STEP_NAMES,
+} from "@/constants/application";
+import { AppInfo } from "@/types/application";
 import { Button, Card, CardContent, CardHeader, CardTitle } from "@uwdsc/ui";
 import { AnimatePresence, motion } from "framer-motion";
 import { Loader2, MoveLeft, MoveRight, User } from "lucide-react";
+import { Unavailable } from "@/components/application/Unavailable";
 
 // Animation variants for sliding transitions
 const slideVariants = {
@@ -33,10 +30,7 @@ const slideVariants = {
     x: direction > 0 ? 1000 : -1000,
     opacity: 0,
   }),
-  center: {
-    x: 0,
-    opacity: 1,
-  },
+  center: { x: 0, opacity: 1 },
   exit: (direction: number) => ({
     x: direction > 0 ? -1000 : 1000,
     opacity: 0,
@@ -44,18 +38,18 @@ const slideVariants = {
 };
 
 export default function ApplyPage() {
-  const [currentTerm, setCurrentTerm] = useState<Term | null>(null);
+  const [appInfo, setAppInfo] = useState<AppInfo | null>(null);
   const [currentStep, setCurrentStep] = useState<number>(0);
   const [direction, setDirection] = useState<number>(1); // 1 for forward, -1 for backward
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const { setProgressValue } = useApplicationProgress();
 
   useEffect(() => {
-    setCurrentTerm({
-      id: "1",
-      termName: "Winter 2025",
-      appReleaseDate: new Date(),
-      appDeadline: new Date(),
+    // TODO: Fetch questions from database
+
+    setAppInfo({
+      appReleaseDate: APPLICATION_RELEASE_DATE,
+      appDeadline: APPLICATION_DEADLINE,
       questions: [],
     });
   }, []);
@@ -83,7 +77,7 @@ export default function ApplyPage() {
     try {
       // TODO: Replace with actual API call
       // Example: await updateApplication(form.getValues());
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      await new Promise((resolve) => setTimeout(resolve, 1000)); // TO REMOVE
 
       goToStep(currentStep + 1);
     } catch (error) {
@@ -141,39 +135,35 @@ export default function ApplyPage() {
     switch (currentStep) {
       case 0:
         return <Intro onStartApplication={handleStartApplication} />;
-      case 1:
-        return <Personal form={form} />;
-      case 2:
-        return <General form={form} />;
-      case 3:
-        return <Positions form={form} />;
-      case 4:
-        return <Resume form={form} />;
+
+      // TODO: Add Components Corresponding to other steps
+
+      // case 1:
+      //   return <component-name form={form} />;
+      // case 2:
+      //   return <component-name form={form} />;
+      // case 3:
+      //   return <component-name form={form} />;
+      // case 4:
+      //   return <component-name form={form} />;
     }
   };
 
-  if (!currentTerm) return null;
+  if (!appInfo) return <Unavailable />;
 
   if (currentStep === 5) return <Submitted />;
 
   return (
     <div className="container mx-auto px-4 py-12">
-      <DueDateTag deadline={currentTerm.appReleaseDate} />
+      <DueDateTag deadline={appInfo.appReleaseDate} />
 
       <div className="mx-auto max-w-4xl text-center mb-6">
         <h1 className="mb-2 text-3xl font-bold text-white">
-          DSC Exec Application Form
+          CxC Hacker Application
         </h1>
-        <p className="text-3xl font-semibold text-blue-400">
-          {currentTerm.termName}
-        </p>
       </div>
 
-      <AvailablePositions />
-
-      <Card
-        className={`mx-auto max-w-4xl shadow-md backdrop-blur-md ${currentStep === 0 ? "bg-gradient-blue" : "bg-slate-900"}`}
-      >
+      <Card className="mx-auto max-w-4xl shadow-md backdrop-blur-md">
         <CardHeader
           className={`${currentStep === 0 ? "" : "bg-gradient-blue"} rounded-t-xl -mt-6 py-4`}
         >

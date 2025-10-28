@@ -262,7 +262,7 @@ export function MyComponent() {
 # Development
 pnpm dev                    # Start all apps
 pnpm dev:web               # Start main website only
-pnpm dev:cxc               # Start CXC app only
+pnpm dev:cxc               # Start CxC app only
 
 # Building
 pnpm build                 # Build all packages

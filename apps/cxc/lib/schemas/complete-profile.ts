@@ -1,9 +1,9 @@
 import { z } from "zod";
 
 /**
- * Complete profile form validation schema for CXC
+ * Complete profile form validation schema for CxC
  * Used after email verification to complete user registration
- * CXC Profile includes: first_name, last_name, dob, role, nfc_id
+ * CxC Profile includes: first_name, last_name, dob, role, nfc_id
  */
 export const completeProfileSchema = z.object({
   first_name: z.string().trim().min(1, "First name is required"),
