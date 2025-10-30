@@ -4,6 +4,9 @@ import {
   WormholeMiddle,
   WormholeBottom,
 } from "@/components/home/Wormhole";
+import { Sponsors } from "@/components/home/Sponsors";
+import { FollowUs } from "@/components/home/FollowUs";
+import { Faq } from "@/components/home/Faq";
 
 export default function Home() {
   return (
@@ -18,11 +21,9 @@ export default function Home() {
         <AboutCxC />
       </div>
       <WormholeMiddle />
-      <div className="border-t border-b border-white/50 min-h-[500px] flex items-center justify-center">
-        <h1 className="font-bold text-5xl md:text-8xl text-center">
-          Placeholder for Content
-        </h1>
-      </div>
+      <Sponsors />
+      <Faq />
+      <FollowUs />
       <WormholeBottom />
     </div>
   );
