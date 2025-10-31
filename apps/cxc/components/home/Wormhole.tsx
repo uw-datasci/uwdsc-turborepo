@@ -243,7 +243,6 @@ export function WormholeTop() {
       <div className="transform -translate-y-[20%] h-[40vh] sm:h-[75vh] lg:h-[100vh]">
         <Canvas
           camera={{ position: [0, -0.8, 40], fov: 75 }}
-          style={{ background: "black" }}
           onCreated={({ camera }) => camera.lookAt(0, 0, 0)}
         >
           <WormholeWithRings partType="top" />
@@ -257,10 +256,7 @@ export function WormholeMiddle() {
   return (
     <div className="block h-[25vh] sm:h-[45vh] lg:h-[55vh] overflow-hidden -z-10">
       <div className="transform -translate-y-[20%] h-[40vh] sm:h-[75vh] lg:h-[100vh]">
-        <Canvas
-          camera={{ position: [0, 0, 30], fov: 75 }}
-          style={{ background: "black" }}
-        >
+        <Canvas camera={{ position: [0, 0, 30], fov: 75 }}>
           <WormholeWithRings partType="middle" />
         </Canvas>
       </div>
@@ -274,7 +270,6 @@ export function WormholeBottom() {
       <div className="transform -translate-y-[40%] h-[40vh] sm:h-[75vh] lg:h-[100vh]">
         <Canvas
           camera={{ position: [0, -2, -30], fov: 75 }}
-          style={{ background: "black" }}
           onCreated={({ camera }) => camera.lookAt(0, 0, -20)}
         >
           <WormholeWithRings partType="bottom" />

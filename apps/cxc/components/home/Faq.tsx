@@ -1,11 +1,16 @@
 "use client";
 import { GENERAL_FAQ } from "../../constants/home";
-import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "@uwdsc/ui/index";
+import {
+  Accordion,
+  AccordionItem,
+  AccordionTrigger,
+  AccordionContent,
+} from "@uwdsc/ui/index";
 
-export function Faq () {
-      return (
+export function Faq() {
+  return (
     // emulate mx-container with padding instead bc of w-full
-    <section className="container mx-auto px-16 flex flex-col md:flex-row items-center md:items-start justify-center space-y-4 md:space-y-0 md:space-x-20">
+    <section className="container mx-auto px-8 md:px-16 flex flex-col md:flex-row items-center md:items-start justify-center space-y-4 md:space-y-0 md:space-x-20 mb-10 md:mb-20">
       <h2 className="text-4xl font-light text-white md:text-5xl">
         FREQUENTLY ASKED QUESTIONS
       </h2>
@@ -13,7 +18,7 @@ export function Faq () {
         {GENERAL_FAQ.map((faq, i) => {
           const lines = faq.answer.split("\n").map((line, i) => (
             <p
-              className={`leading-[1.75] font-light text-white text-sm md:text-base`}
+              className={`leading-[1.75] font-light text-white text-sm md:text-base pt-5`}
               key={i}
             >
               {line}
@@ -23,10 +28,10 @@ export function Faq () {
             <AccordionItem
               value={`item-${i}`}
               key={faq.id}
-              className="!border-black !mb-4"
+              className="!border-none !mb-4"
             >
               <AccordionTrigger
-                className={`text-[#7CA3DE] items-center py-1 px-1 hover:no-underline hover:cursor-pointer font-light text-lg [&>svg]:text-[#7CA3DE] [&>svg]:size-10 [&>svg]:stroke-[1] [&[data-state=open]>svg]:text-black data-[state=open]:bg-[#A6C3EA] data-[state=open]:text-black`}
+                className={`text-[#7CA3DE] items-center py-1 px-2 hover:no-underline hover:cursor-pointer font-light text-lg [&>svg]:text-[#7CA3DE] [&>svg]:size-10 [&>svg]:stroke-[1] [&[data-state=open]>svg]:text-black data-[state=open]:bg-[#A6C3EA] data-[state=open]:text-black`}
               >
                 {faq.question}
               </AccordionTrigger>

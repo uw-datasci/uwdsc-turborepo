@@ -10,7 +10,7 @@ import { Faq } from "@/components/home/Faq";
 
 export default function Home() {
   return (
-    <div>
+    <div className="bg-cxc-background">
       <div className="border-b border-white/50 flex items-center justify-center overflow-hidden">
         <p className="font-semibold text-[length:50vw] leading-none whitespace-nowrap tracking-tighter -mb-[15%] -ml-2 sm:-ml-4 md:-ml-6 xl:-ml-10">
           CxC
@@ -21,9 +21,11 @@ export default function Home() {
         <AboutCxC />
       </div>
       <WormholeMiddle />
-      <Sponsors />
-      <Faq />
-      <FollowUs />
+      <div className="border-t border-b border-white/50">
+        <Sponsors />
+        <Faq />
+        <FollowUs />
+      </div>
       <WormholeBottom />
     </div>
   );

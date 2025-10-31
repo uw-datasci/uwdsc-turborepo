@@ -4,7 +4,7 @@ import Image from "next/image";
 
 export function Sponsors() {
   return (
-    <section className="relative bg-[#0C0C0C] text-white py-24 overflow-hidden">
+    <section className="relative text-white py-24 overflow-hidden mb-10 md:mb-20">
       <div className="container mx-auto px-6 text-center">
         {/* Title */}
         <h2 className="text-3xl md:text-4xl font-semibold mb-12">
@@ -18,21 +18,24 @@ export function Sponsors() {
               key={sponsor.name}
               className="max-h-[112px] py-12 flex items-center justify-center text-lg font-medium text-white"
             >
-              <Image src={sponsor.logo} alt={sponsor.name} className="h-[112px] object-contain" />
+              <Image
+                src={sponsor.logo}
+                alt={sponsor.name}
+                className="h-[112px] object-contain"
+              />
             </div>
-
           ))}
         </div>
 
         {/* form */}
-        <p className="text-lg md:text-xl text-white max-w-2xl mx-auto mb-0">
-            Want to become a sponsor?{" "}
-            <a
-                href="#"
-                className="underline text-white hover:text-gray-200 transition"
-            >
+        <p className="text-lg md:text-xl text-white max-w-2xl mx-auto mt-20">
+          Want to become a sponsor?{" "}
+          <a
+            href="#"
+            className="underline text-white hover:text-gray-200 transition"
+          >
             Fill out this form
-            </a>
+          </a>
         </p>
       </div>
     </section>
