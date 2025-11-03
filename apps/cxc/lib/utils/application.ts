@@ -17,6 +17,24 @@ export const isStepValid = (
     // TODO: Implement validation for each steps
     case 1: // Personal Details
       return true;
+    case 2:
+      return true;
+    case 3:
+      return true;
+    case 4:
+      const prior_hackathon_experience = form.watch("prior_hackathon_experience");
+      const resume = form.watch("resume");
+      const github = form.watch("github");
+      const linkedin = form.watch("linkedin");
+      const other_link = form.watch("other_link");
+      return (
+        !errors.prior_hackathon_experience &&
+        !errors.resume &&
+        !errors.github &&
+        !errors.linkedin &&
+        !errors.other_link &&
+        prior_hackathon_experience.length > 0
+      );
     default:
       return true;
   }

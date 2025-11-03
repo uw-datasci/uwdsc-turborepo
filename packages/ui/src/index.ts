@@ -128,6 +128,8 @@ export {
   CollapsibleTrigger,
 } from "./components/collapsible";
 
+export { Checkbox } from "./components/checkbox";
+
 // Hooks
 export * from "./hooks";
 
