@@ -1,4 +1,4 @@
-import  AboutCxC  from "@/components/home/AboutCxC";
+import AboutCxC from "@/components/home/AboutCxC";
 import {
   WormholeTop,
   WormholeMiddle,
@@ -19,7 +19,7 @@ export default function Home() {
         </p>
       </div>
       <WormholeTop />
-      <div className="border-t border-b border-white/50 min-h-[500px] flex items-center justify-center">
+      <div className="border-t border-b border-white/50">
         <AboutCxC />
       </div>
       <WormholeMiddle />

@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { motion } from "framer-motion";
+import { motion, useInView } from "framer-motion";
 
 interface RippleGroupProps {
   cx: number;
@@ -15,6 +15,9 @@ interface RippleGroupProps {
   opacity?: number;
   scale?: number;
   delayOffset?: number;
+  vertOffset?: number;
+  horzOffset?: number;
+  inView: boolean;
 }
 
 const generateRings = (
@@ -23,7 +26,9 @@ const generateRings = (
   innerRx: number,
   innerRy: number,
   count: number,
-  solidCount = 2
+  solidCount = 2,
+  vertOffset = 10,
+  horzOffset = 0
 ) => {
   const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
 
@@ -32,8 +37,9 @@ const generateRings = (
     const rx = lerp(innerRx, outerRx, t);
     const ry = lerp(innerRy, outerRy, t);
     const isSolid = i < solidCount;
-    const cyOffset = t * 20; // downward offset for visual depth
-    return { rx, ry, dashed: !isSolid, cyOffset };
+    const cyOffset = t * vertOffset; // downward offset for visual depth
+    const cxOffset = t * horzOffset; // left/right offset
+    return { rx, ry, dashed: !isSolid, cyOffset, cxOffset };
   });
 };
 
@@ -49,8 +55,20 @@ const RippleGroup = ({
   opacity = 1,
   scale = 1,
   delayOffset = 0,
+  vertOffset,
+  horzOffset,
+  inView,
 }: RippleGroupProps) => {
-  const rings = generateRings(outerRx, outerRy, innerRx, innerRy, count, solidCount);
+  const rings = generateRings(
+    outerRx,
+    outerRy,
+    innerRx,
+    innerRy,
+    count,
+    solidCount,
+    vertOffset,
+    horzOffset
+  );
 
   return (
     <svg
@@ -64,20 +82,20 @@ const RippleGroup = ({
       {rings.map((r, i) => (
         <motion.ellipse
           key={i}
-          cx={cx}
+          cx={cx + r.cxOffset}
           cy={cy + r.cyOffset}
           rx={r.rx}
           ry={r.ry}
           fill="none"
           stroke="currentColor"
-          strokeWidth={3} // thicker lines
+          strokeWidth={3}
           strokeDasharray={r.dashed ? "6 8" : undefined}
           className="text-white"
-          animate={{ scale: [1, 1.05, 1], opacity: [0.3, 0.7, 0.3] }}
+          initial={{ scale: 0, opacity: 0 }}
+          animate={inView ? { scale: 1, opacity: 1 } : {}}
           transition={{
-            duration: 4 + i * 0.3,
-            repeat: Infinity,
-            ease: "easeInOut",
+            duration: 0.8,
+            ease: "easeOut",
             delay: delayOffset + i * 0.15,
           }}
         />
@@ -91,50 +109,56 @@ interface RipplesProps {
 }
 
 export default function Ripples({ height = 200 }: RipplesProps) {
+  const ref = React.useRef(null);
+  const inView = useInView(ref, { once: true, amount: 0.3 });
+
   return (
-    <div className="relative w-full" style={{ height }}>
+    <div ref={ref} className="relative w-full my-30" style={{ height }}>
       {/* Medium Left Ripple */}
-      <div className="absolute -left-[16%] top-[50%] -translate-y-1/2 scale-[1] opacity-70 w-[500px] h-[360px]">
+      <div className="absolute top-[50%] -translate-y-1/2 -translate-x-1/2 md:-translate-x-1/3 lg:-translate-x-1/4 xl:-translate-x-1/5 w-[800px] h-[360px] scale-[0.5] sm:scale-[0.6] md:scale-[0.7] lg:scale-[0.8] xl:scale-[0.9]">
         <RippleGroup
           cx={600}
           cy={300}
-          outerRx={400}
-          outerRy={120}
-          innerRx={250}
-          innerRy={50}
+          outerRx={650}
+          outerRy={170}
+          innerRx={300}
+          innerRy={90}
           count={4}
           solidCount={2}
-          delayOffset={0.2}
+          vertOffset={50}
+          inView={inView}
         />
       </div>
 
       {/* Small Center Ripple (higher) */}
-      <div className="absolute left-1/2 top-[33%] -translate-x-1/2 -translate-y-1/2 scale-[0.7] opacity-60 w-[500px] h-[360px]">
+      <div className="absolute left-[42%] top-[35%] -translate-x-1/2 -translate-y-1/2 w-[800px] h-[360px] scale-[0.5] sm:scale-[0.6] md:scale-[0.7] lg:scale-[0.8] xl:scale-[0.9]">
         <RippleGroup
           cx={600}
           cy={300}
-          outerRx={200}
+          outerRx={225}
           outerRy={60}
-          innerRx={140}
-          innerRy={40}
+          innerRx={150}
+          innerRy={35}
           count={2}
           solidCount={2}
-          delayOffset={0}
+          inView={inView}
         />
       </div>
 
       {/* Large Right Ripple */}
-      <div className="absolute -right-[16%] top-[52%] -translate-y-1/2 scale-[1.1] opacity-80 w-[500px] h-[360px]">
+      <div className="absolute -left-[45%] sm:-right-[85%] sm:left-auto md:-right-[60%] lg:-right-[35%] xl:-right-[20%] top-[52%] -translate-y-1/2 w-[1200px] h-[360px] scale-[0.5] sm:scale-[0.6] md:scale-[0.7] lg:scale-[0.8] xl:scale-[0.9]">
         <RippleGroup
           cx={600}
           cy={300}
-          outerRx={500}
+          outerRx={900}
           outerRy={150}
-          innerRx={250}
-          innerRy={60}
+          innerRx={375}
+          innerRy={70}
           count={5}
           solidCount={3}
-          delayOffset={0.4}
+          vertOffset={60}
+          horzOffset={-100}
+          inView={inView}
         />
       </div>
     </div>
