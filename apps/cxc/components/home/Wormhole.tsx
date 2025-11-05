@@ -160,6 +160,38 @@ function WormholeWithRings({
     return ringArray;
   }, []);
 
+  const cubes = useMemo(() => {
+    const cubeArray: THREE.Mesh[] = [];
+    const numCubes = 8;
+    const cubeSize = 1.5;
+
+    for (let i = 0; i < numCubes; i++) {
+      const geometry = new THREE.BoxGeometry(cubeSize, cubeSize, cubeSize);
+      const material = new THREE.MeshBasicMaterial({
+        color: 0xffffff,
+        transparent: true,
+        opacity: 0.8,
+        wireframe: true,
+      });
+
+      const cube = new THREE.Mesh(geometry, material);
+      
+      cube.userData = {
+        angle: Math.random() * Math.PI * 2,
+        speed: 0.02 + Math.random() * 0.02,
+        rotationSpeed: {
+          x: (Math.random() - 0.5) * 0.05,
+          y: (Math.random() - 0.5) * 0.05,
+          z: (Math.random() - 0.5) * 0.05,
+        }
+      };
+
+      cubeArray.push(cube);
+    }
+
+    return cubeArray;
+  }, []);
+
   // Animate the rings to follow wormhole shape
   useFrame((state) => {
     rings.forEach((ring, index) => {
@@ -211,6 +243,59 @@ function WormholeWithRings({
 
       (ring.material as THREE.LineBasicMaterial).opacity = Math.max(opacity, 0);
     });
+
+    cubes.forEach((cube, index) => {
+      const speed = cube.userData.speed;
+      const offset = (index / cubes.length) * wormholeGeometry.height;
+
+      let animatedY;
+      if (partType === "bottom") {
+        animatedY =
+          -(wormholeGeometry.height * 0.5) +
+          ((state.clock.elapsedTime * speed * wormholeGeometry.height +
+            offset) %
+            wormholeGeometry.height);
+      } else {
+        animatedY =
+          wormholeGeometry.height * 0.5 -
+          ((state.clock.elapsedTime * speed * wormholeGeometry.height +
+            offset) %
+            wormholeGeometry.height);
+      }
+
+      const halfHeight = wormholeGeometry.height * 0.5;
+      if (Math.abs(animatedY) > halfHeight) {
+        cube.visible = false;
+        return;
+      }
+
+      cube.visible = true;
+
+      const radius = getRadiusAtY(animatedY);
+      
+      cube.userData.angle += cube.userData.speed * 0.5;
+      
+      const spiralRadius = radius * (0.3 + Math.sin(animatedY * 0.1) * 0.2);
+      const x = Math.cos(cube.userData.angle) * spiralRadius;
+      const z = Math.sin(cube.userData.angle) * spiralRadius;
+
+      cube.position.set(x, animatedY, z);
+
+      cube.rotation.x += cube.userData.rotationSpeed.x;
+      cube.rotation.y += cube.userData.rotationSpeed.y;
+      cube.rotation.z += cube.userData.rotationSpeed.z;
+
+      const edgeDistance = Math.abs(animatedY) / halfHeight;
+      const fadeZone = 0.15;
+      let opacity = 0.8;
+
+      if (edgeDistance > 1.0 - fadeZone) {
+        const fadeProgress = (edgeDistance - (1.0 - fadeZone)) / fadeZone;
+        opacity = 0.8 * (1.0 - fadeProgress);
+      }
+
+      (cube.material as THREE.MeshBasicMaterial).opacity = Math.max(opacity, 0);
+    });
   });
 
   return (
@@ -233,6 +318,11 @@ function WormholeWithRings({
       {rings.map((ring, index) => (
         <primitive key={`ring-${index}`} object={ring} />
       ))}
+
+      {/* Flowing cubes */}
+      {cubes.map((cube, index) => (
+        <primitive key={`cube-${index}`} object={cube} />
+      ))}
     </group>
   );
 }
@@ -243,7 +333,6 @@ export function WormholeTop() {
       <div className="transform -translate-y-[20%] h-[40vh] sm:h-[75vh] lg:h-[100vh]">
         <Canvas
           camera={{ position: [0, -0.8, 40], fov: 75 }}
-          style={{ background: "black" }}
           onCreated={({ camera }) => camera.lookAt(0, 0, 0)}
         >
           <WormholeWithRings partType="top" />
@@ -257,10 +346,7 @@ export function WormholeMiddle() {
   return (
     <div className="block h-[25vh] sm:h-[45vh] lg:h-[55vh] overflow-hidden -z-10">
       <div className="transform -translate-y-[20%] h-[40vh] sm:h-[75vh] lg:h-[100vh]">
-        <Canvas
-          camera={{ position: [0, 0, 30], fov: 75 }}
-          style={{ background: "black" }}
-        >
+        <Canvas camera={{ position: [0, 0, 30], fov: 75 }}>
           <WormholeWithRings partType="middle" />
         </Canvas>
       </div>
@@ -274,7 +360,6 @@ export function WormholeBottom() {
       <div className="transform -translate-y-[40%] h-[40vh] sm:h-[75vh] lg:h-[100vh]">
         <Canvas
           camera={{ position: [0, -2, -30], fov: 75 }}
-          style={{ background: "black" }}
           onCreated={({ camera }) => camera.lookAt(0, 0, -20)}
         >
           <WormholeWithRings partType="bottom" />
