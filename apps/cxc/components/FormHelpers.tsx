@@ -12,7 +12,9 @@ import {
   SelectItem,
   RadioGroup,
   RadioGroupItem,
+  Combobox,
 } from "@uwdsc/ui";
+import type { ComboboxOption } from "@uwdsc/ui";
 import { ComponentProps } from "react";
 import { ControllerRenderProps } from "react-hook-form";
 
@@ -53,6 +55,14 @@ interface RadioFieldOptions {
   required?: boolean;
 }
 
+interface ComboboxFieldOptions {
+  label?: string;
+  required?: boolean;
+  variant?: FormFieldVariant;
+  searchPlaceholder?: string;
+  emptyMessage?: string;
+}
+
 // ============================================================================
 // Styling Variants
 // ============================================================================
@@ -60,19 +70,21 @@ interface RadioFieldOptions {
 const inputStyles: Record<FormFieldVariant, string> = {
   default: "",
   auth: "!h-auto !text-base border-gray-100/80 !bg-black px-4.5 py-3.5 placeholder:text-gray-100/80 rounded-lg xl:px-6 xl:py-4.5",
-  application: "",
+  application:
+    "!border-0 !border-b !rounded-none !px-3 !shadow-none !bg-white/5 hover:!bg-white/10 focus:!bg-white/10 transition-colors",
 };
 
 const selectTriggerStyles: Record<FormFieldVariant, string> = {
   default: "w-full",
   auth: "w-full !bg-black !h-auto !px-4.5 !py-3.5 !rounded-lg xl:px-6 xl:py-4.5 border border-gray-100/75 text-base",
-  application: "w-full",
+  application:
+    "w-full !border-0 !border-b !rounded-none !px-3 !shadow-none !bg-white/5 hover:!bg-white/10",
 };
 
 const selectContentStyles: Record<FormFieldVariant, string> = {
   default: "bg-slate-700",
   auth: "bg-black !max-h-64 !overflow-y-auto border-gray-100/75",
-  application: "bg-slate-700",
+  application: "!bg-zinc-900 !rounded-none !border-0 !shadow-lg",
 };
 
 const selectItemStyles: Record<FormFieldVariant, string> = {
@@ -80,13 +92,27 @@ const selectItemStyles: Record<FormFieldVariant, string> = {
     "text-slate-200 focus:bg-slate-600 focus:text-white hover:bg-slate-600 hover:text-white transition-colors",
   auth: "text-slate-200 focus:text-white hover:!bg-slate-600/50 hover:text-white rounded-sm px-3 py-3.5 hover:bg-grey4 xl:px-4 xl:py-4 text-base",
   application:
-    "text-slate-200 focus:bg-slate-600 focus:text-white hover:bg-slate-600 hover:text-white transition-colors",
+    "!text-gray-200 focus:!bg-zinc-700 focus:!text-white hover:!bg-zinc-700 hover:!text-white transition-colors",
 };
 
 const textareaStyles: Record<FormFieldVariant, string> = {
   default: "",
   auth: "min-h-[6rem] max-h-[10rem] border-gray-100/80 bg-black px-4.5 py-3.5 placeholder:text-gray-100/80 rounded-lg xl:px-6 xl:py-4.5 !text-base",
-  application: "",
+  application:
+    "!border-0 !border-b !rounded-none !px-3 !shadow-none !bg-white/5 hover:!bg-white/10 focus:!bg-white/10 transition-colors",
+};
+
+const comboboxStyles: Record<FormFieldVariant, string> = {
+  default: "",
+  auth: "!h-auto !text-base border-gray-100/80 !bg-black px-4.5 py-3.5 rounded-lg xl:px-6 xl:py-4.5",
+  application:
+    "!border-0 !border-b !rounded-none !px-3 !shadow-none !bg-white/5 hover:!bg-white/10",
+};
+
+const comboboxContentStyles: Record<FormFieldVariant, string> = {
+  default: "",
+  auth: "",
+  application: "!rounded-none !border-0 !shadow-lg",
 };
 
 // ============================================================================
@@ -112,7 +138,7 @@ export const renderTextField = <T extends Record<string, any>>(
   return ({ field }: { field: ControllerRenderProps<T, any> }) => (
     <FormItem>
       {label && (
-        <FormLabel className="mb-1">
+        <FormLabel className={variant === "application" ? "mb-2" : "mb-1"}>
           {label} {required && <span className="text-red-500">*</span>}
         </FormLabel>
       )}
@@ -149,7 +175,7 @@ export const renderSelectField = <T extends Record<string, any>>(
   return ({ field }: { field: ControllerRenderProps<T, any> }) => (
     <FormItem>
       {label && (
-        <FormLabel className="mb-1">
+        <FormLabel className={variant === "application" ? "mb-2" : "mb-1"}>
           {label} {required && <span className="text-red-500">*</span>}
         </FormLabel>
       )}
@@ -201,7 +227,13 @@ export const renderTextAreaField = <T extends Record<string, any>>(
   return ({ field }: { field: ControllerRenderProps<T, any> }) => (
     <FormItem>
       {label && (
-        <FormLabel className="mb-1 leading-relaxed">
+        <FormLabel
+          className={
+            variant === "application"
+              ? "mb-2 leading-relaxed"
+              : "mb-1 leading-relaxed"
+          }
+        >
           {label} {required && <span className="text-red-500">*</span>}
         </FormLabel>
       )}
@@ -254,6 +286,53 @@ export const renderRadioField = <T extends Record<string, any>>(
             <FormLabel className="font-normal cursor-pointer">No</FormLabel>
           </FormItem>
         </RadioGroup>
+      </FormControl>
+      <FormMessage />
+    </FormItem>
+  );
+};
+
+/**
+ * Render a combobox field with searchable dropdown
+ *
+ * @example
+ * // Auth form
+ * renderComboboxField("Select your program", programOptions, { variant: "auth" })
+ *
+ * // Application form with label
+ * renderComboboxField("Select position", positionOptions, { label: "Position", required: true })
+ */
+export const renderComboboxField = <T extends Record<string, any>>(
+  placeholder: string,
+  options: ComboboxOption[],
+  fieldOptions: ComboboxFieldOptions = {}
+) => {
+  const {
+    label,
+    required = false,
+    variant = "default",
+    searchPlaceholder = "Search...",
+    emptyMessage = "No option found.",
+  } = fieldOptions;
+
+  return ({ field }: { field: ControllerRenderProps<T, any> }) => (
+    <FormItem>
+      {label && (
+        <FormLabel className={variant === "application" ? "mb-2" : "mb-1"}>
+          {label} {required && <span className="text-red-500">*</span>}
+        </FormLabel>
+      )}
+      <FormControl>
+        <Combobox
+          options={options}
+          value={field.value}
+          onValueChange={field.onChange}
+          placeholder={placeholder}
+          searchPlaceholder={searchPlaceholder}
+          emptyMessage={emptyMessage}
+          className={comboboxStyles[variant]}
+          contentClassName={comboboxContentStyles[variant]}
+        />
       </FormControl>
       <FormMessage />
     </FormItem>
@@ -321,4 +400,20 @@ export function renderRadioFieldWithLabel<T extends Record<string, any>>(
   label: string
 ) {
   return renderRadioField<T>(label, { required: true });
+}
+
+/**
+ * Render combobox field for application forms (with label)
+ */
+export function renderComboboxFieldWithLabel<T extends Record<string, any>>(
+  label: string,
+  placeholder: string,
+  options: ComboboxOption[],
+  required: boolean = true
+) {
+  return renderComboboxField<T>(placeholder, options, {
+    label,
+    required,
+    variant: "application",
+  });
 }
