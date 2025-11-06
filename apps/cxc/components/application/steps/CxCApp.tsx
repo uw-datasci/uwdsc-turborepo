@@ -13,25 +13,13 @@ import { AppFormValues } from "@/lib/schemas/application";
 import { MessageSquare } from "lucide-react";
 import { renderTextAreaFieldWithLabel as renderTextAreaField } from "@/components/FormHelpers";
 import { GeneralTip } from "../banners/GeneralTip";
+import { questions } from "@/constants/application";
 
-interface GeneralProps {
+interface CxCAppProps {
   readonly form: UseFormReturn<AppFormValues>;
 }
 
-const questions = [
-  {
-    name: "cxc_gain" as const,
-    question: "What do you hope to gain from your time at CxC...?",
-    placeholder: "Long Answer (500 char limit)",
-  },
-  {
-    name: "silly_q" as const,
-    question: "Silly Q Here",
-    placeholder: "Long Answer (200 char limit)",
-  },
-];
-
-export function General({ form }: GeneralProps) {
+export function CxCApp ({ form }: CxCAppProps) {
   return (
     <div className="space-y-6">
       <GeneralTip />
