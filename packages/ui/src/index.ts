@@ -129,6 +129,27 @@ export {
 } from "./components/collapsible";
 
 export { Checkbox } from "./components/checkbox";
+export {
+  Command,
+  CommandDialog,
+  CommandInput,
+  CommandList,
+  CommandEmpty,
+  CommandGroup,
+  CommandItem,
+  CommandShortcut,
+  CommandSeparator,
+} from "./components/command";
+
+export { Combobox } from "./components/combobox";
+export type { ComboboxOption, ComboboxProps } from "./components/combobox";
+
+export {
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+  PopoverAnchor,
+} from "./components/popover";
 
 // Hooks
 export * from "./hooks";
