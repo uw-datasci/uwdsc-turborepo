@@ -12,94 +12,19 @@ import { UseFormReturn } from "react-hook-form";
 import { AppFormValues } from "@/lib/schemas/application";
 import { GraduationCap } from "lucide-react";
 import {
-  renderSelectFieldWithLabel as renderSelectField,
   renderTextFieldWithLabel as renderTextField,
+  renderComboboxFieldWithLabel as renderComboboxField,
 } from "@/components/FormHelpers";
+import {
+  graduationYears,
+  universityOptions,
+  programOptions,
+} from "@/constants/application";
 import { useEffect } from "react";
 
 interface EducationProps {
   readonly form: UseFormReturn<AppFormValues>;
 }
-
-const graduationYears = [
-  "1st Year",
-  "2nd Year",
-  "3rd Year",
-  "4th Year",
-  "5th Year+",
-];
-
-const programOptions = [
-  "Computer Science",
-  "Data Science",
-  "Mathematics",
-  "Engineering",
-  "Sciences",
-  "Arts",
-  "Business",
-  "Health/Life Sciences",
-  "Other",
-];
-
-const universityOptions = [
-  "Acadia University",
-  "Bishop’s University",
-  "Brandon University",
-  "Brock University",
-  "Cape Breton University",
-  "Carleton University",
-  "Concordia University",
-  "Dalhousie University",
-  "École Polytechnique de Montréal",
-  "HEC Montréal",
-  "Lakehead University",
-  "Laurentian University",
-  "MacEwan University",
-  "McGill University",
-  "McMaster University",
-  "Memorial University of Newfoundland",
-  "Mount Allison University",
-  "Mount Royal University",
-  "Mount Saint Vincent University",
-  "Ontario Tech University",
-  "Queen’s University",
-  "Saint Mary’s University",
-  "Simon Fraser University",
-  "St. Francis Xavier University",
-  "St. Thomas University",
-  "Thompson Rivers University",
-  "Toronto Metropolitan University",
-  "Trent University",
-  "Université de Montréal",
-  "Université du Québec à Chicoutimi",
-  "Université du Québec à Montréal",
-  "Université du Québec à Rimouski",
-  "Université du Québec à Trois-Rivières",
-  "Université du Québec en Abitibi-Témiscamingue",
-  "Université du Québec en Outaouais",
-  "Université Laval",
-  "University of Alberta",
-  "University of British Columbia",
-  "University of Calgary",
-  "University of Guelph",
-  "University of King’s College",
-  "University of Lethbridge",
-  "University of Manitoba",
-  "University of New Brunswick",
-  "University of Northern British Columbia",
-  "University of Ottawa",
-  "University of Prince Edward Island",
-  "University of Regina",
-  "University of Saskatchewan",
-  "University of Toronto",
-  "University of Victoria",
-  "University of Waterloo",
-  "University of Western Ontario",
-  "Wilfrid Laurier University",
-  "York University",
-  "Yukon University",
-  "Other",
-];
 
 export function Education({ form }: EducationProps) {
   const universityName = form.watch("university_name");
@@ -132,10 +57,13 @@ export function Education({ form }: EducationProps) {
             <FormField
               control={form.control}
               name="university_name"
-              render={renderSelectField(
+              render={renderComboboxField(
                 "University Name",
-                "Select your university name",
-                universityOptions
+                "Select your university...",
+                universityOptions,
+                true,
+                "Search universities...",
+                "No university found."
               )}
             />
 
@@ -154,10 +82,13 @@ export function Education({ form }: EducationProps) {
             <FormField
               control={form.control}
               name="program"
-              render={renderSelectField(
+              render={renderComboboxField(
                 "Program of Study",
-                "Select your program of study",
-                programOptions
+                "Select your program...",
+                programOptions,
+                true,
+                "Search programs...",
+                "No program found."
               )}
             />
 
@@ -176,10 +107,13 @@ export function Education({ form }: EducationProps) {
             <FormField
               control={form.control}
               name="year_of_study"
-              render={renderSelectField(
+              render={renderComboboxField(
                 "Year of Study",
-                "Select your year of study",
-                graduationYears
+                "Select your year...",
+                graduationYears,
+                true,
+                "Search years...",
+                "No year found."
               )}
             />
           </CardContent>
