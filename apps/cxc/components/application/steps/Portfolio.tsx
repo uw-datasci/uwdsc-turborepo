@@ -17,6 +17,7 @@ import {
 } from "@uwdsc/ui";
 import { UseFormReturn } from "react-hook-form";
 import { AppFormValues } from "@/lib/schemas/application";
+import { renderTextField, renderCheckboxGroupField, renderFileUploadField } from "@/components/FormHelpers";
 
 interface PortfolioProps {
     readonly form: UseFormReturn<AppFormValues>;
@@ -52,39 +53,7 @@ export function Portfolio({ form }: PortfolioProps) {
                     <FormField
                     control={form.control}
                     name="prior_hackathon_experience"
-                    render={({ field }) => (
-                        <fieldset className="space-y-4">
-                            <legend className="sr-only">
-                                Prior Hackathon Experience
-                            </legend>
-                            {options.map((option) => (
-                                <FormItem key={option} className="flex items-center space-x-3">
-                                    <FormControl>
-                                        <Checkbox
-                                        checked={field.value?.includes(option)}
-                                        onCheckedChange={(checked) => {
-                                            const isChecked = checked === true;
-                                            const newValue = Array.isArray(field.value) ? [...field.value] : [];
-                                            if (isChecked) {
-                                                newValue.push(option);
-                                            } else {
-                                                const index = newValue.indexOf(option);
-                                                if (index > -1) {
-                                                    newValue.splice(index, 1);
-                                                }
-                                            }
-                                            field.onChange(newValue);
-                                        }}
-                                        />
-                                    </FormControl>
-                                    <FormLabel className="font-normal">
-                                        {option}
-                                    </FormLabel>
-                                    <FormMessage />
-                                </FormItem>
-                            ))}
-                        </fieldset>
-                    )}
+                    render={renderCheckboxGroupField("Prior Hackathon Experience", options)}
                     />
                 </CardContent>
             </Card>
@@ -99,27 +68,7 @@ export function Portfolio({ form }: PortfolioProps) {
                     <FormField
                     control={form.control}
                     name="resume"
-                    render={({ field: {value, onChange, ...fieldProps} }) => (
-                        <FormItem>
-                            <FormLabel>Upload your resume</FormLabel>
-                            <FormControl>
-                                <Input
-                                type="file"
-                                className="h-auto py-2 file:cursor-pointer"
-                                accept=".pdf,.doc,.docx"
-                                onChange={(e) => {
-                                    const file = e.target.files?.[0] ?? null;
-                                    onChange(file);
-                                }}
-                                {...fieldProps}
-                                />
-                            </FormControl>
-                            <FormDescription>
-                                Upload your resume (PDF or Word document)
-                            </FormDescription>
-                            <FormMessage />
-                        </FormItem>
-                    )}
+                    render={renderFileUploadField("Upload your resume (pdf or word document)", ".pdf,.doc,.docx")}
                     />
                 </CardContent>
             </Card>
@@ -134,61 +83,25 @@ export function Portfolio({ form }: PortfolioProps) {
                     <FormField
                     control={form.control}
                     name="github"
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>GitHub</FormLabel>
-                            <FormControl>
-                            <Input
-                                type="url"
-                                placeholder="https://github.com/..."
-                                {...field}
-                            />
-                            </FormControl>
-                            <FormDescription>
-                            Link to your GitHub profile
-                            </FormDescription>
-                            <FormMessage />
-                        </FormItem>
+                    render={renderTextField(
+                        "https://github.com/...",
+                        { label: "GitHub Profile" }
                     )}
                     />
                     <FormField
                     control={form.control}
                     name="linkedin"
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>Linkedin</FormLabel>
-                            <FormControl>
-                            <Input
-                                type="url"
-                                placeholder="https://linkedin.com/in/..."
-                                {...field}
-                            />
-                            </FormControl>
-                            <FormDescription>
-                            Link to your LinkedIn profile
-                            </FormDescription>
-                            <FormMessage />
-                        </FormItem>
+                    render={renderTextField(
+                        "https://linkedin.com/in/...",
+                        { label: "LinkedIn Profile" }
                     )}
                     />
                     <FormField
                     control={form.control}
                     name="other_link"
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>Other link (website, Devpost, etc.)</FormLabel>
-                            <FormControl>
-                            <Input
-                                type="url"
-                                placeholder="https://..."
-                                {...field}
-                            />
-                            </FormControl>
-                            <FormDescription>
-                            Link to your other profiles or projects
-                            </FormDescription>
-                            <FormMessage />
-                        </FormItem>
+                    render={renderTextField(
+                        "https://",
+                        { label: "Other Link (Portfolio, Personal Website, etc.)" }
                     )}
                     />
                 </CardContent>
