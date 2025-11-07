@@ -64,6 +64,14 @@ interface ComboboxFieldOptions {
   emptyMessage?: string;
 }
 
+interface FileUploadFieldOptions {
+  required?: boolean;
+}
+
+interface CheckboxGroupFieldOptions {
+  required?: boolean;
+}
+
 // ============================================================================
 // Styling Variants
 // ============================================================================
@@ -346,13 +354,15 @@ export const renderComboboxField = <T extends Record<string, any>>(
  * @example
  * renderFileUploadField("Upload your resume")
  */
-export function renderFileUploadField<T extends Record<string, any>>(
+export const renderFileUploadField = <T extends Record<string, any>>(
   label: string,
-  accept: string
-) {
+  accept: string,
+  fieldOptions: FileUploadFieldOptions = {}
+) => {
+  const { required = false } = fieldOptions;
   return ({ field: { value, onChange, ...fieldProps } }: { field: ControllerRenderProps<T, any> }) => (
     <FormItem>
-      <FormLabel> {label} </FormLabel>
+      <FormLabel> {label} {required && <span className="text-red-500">*</span>} </FormLabel>
       <FormControl>
         <Input
           type="file"
@@ -383,13 +393,15 @@ export function renderFileUploadField<T extends Record<string, any>>(
  *   "None", "Hacker", "Judge", "Mentor", "Organizer"
  * ])
  */
-export function renderCheckboxGroupField<T extends Record<string, any>>(
+export const renderCheckboxGroupField = <T extends Record<string, any>>(
   label: string,
-  options: string[]
-) {
+  options: string[],
+  fieldOptions: CheckboxGroupFieldOptions = {}
+) => {
+  const { required = false } = fieldOptions;
   return ({ field }: { field: ControllerRenderProps<T, any> }) => (
     <FormItem>
-      <FormLabel>{label}</FormLabel>
+      <FormLabel>{label} {required && <span className="text-red-500">*</span>}</FormLabel>
       <fieldset className="space-y-4">
         {options.map((option) => (
           <FormItem key={option} className="flex items-center space-x-3">

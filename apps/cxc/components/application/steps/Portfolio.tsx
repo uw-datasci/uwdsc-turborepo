@@ -46,14 +46,13 @@ export function Portfolio({ form }: PortfolioProps) {
                 <CardHeader>
                     <CardTitle className="flex items-center text-xl">
                         Give us information about your prior hackathon experience (select all that apply)
-                        <span className="ml-1 text-red-500">*</span>
                     </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-6">
                     <FormField
                     control={form.control}
                     name="prior_hackathon_experience"
-                    render={renderCheckboxGroupField("Prior Hackathon Experience", options)}
+                    render={renderCheckboxGroupField("Prior Hackathon Experience", options, { required: true })}
                     />
                     <FormField
                     control={form.control}
@@ -73,7 +72,7 @@ export function Portfolio({ form }: PortfolioProps) {
                     <FormField
                     control={form.control}
                     name="resume"
-                    render={renderFileUploadField("Upload your resume (pdf or word document)", ".pdf,.doc,.docx")}
+                    render={renderFileUploadField("Upload your resume (pdf or word document)", ".pdf,.doc,.docx", {required: false})}
                     />
                 </CardContent>
             </Card>
