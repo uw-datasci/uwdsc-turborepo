@@ -17,7 +17,7 @@ import {
 } from "@uwdsc/ui";
 import { UseFormReturn } from "react-hook-form";
 import { AppFormValues } from "@/lib/schemas/application";
-import { renderTextField, renderCheckboxGroupField, renderFileUploadField } from "@/components/FormHelpers";
+import { renderTextField, renderCheckboxGroupField, renderFileUploadField, renderSelectField } from "@/components/FormHelpers";
 
 interface PortfolioProps {
     readonly form: UseFormReturn<AppFormValues>;
@@ -54,6 +54,11 @@ export function Portfolio({ form }: PortfolioProps) {
                     control={form.control}
                     name="prior_hackathon_experience"
                     render={renderCheckboxGroupField("Prior Hackathon Experience", options)}
+                    />
+                    <FormField
+                    control={form.control}
+                    name="hackathons_attended"
+                    render={renderSelectField("Number of Hackathons Attended", ["0", "1", "2", "3", "4+"], {label: "Number of Hackathons Attended", required: true})}
                     />
                 </CardContent>
             </Card>

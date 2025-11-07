@@ -360,7 +360,12 @@ export function renderFileUploadField<T extends Record<string, any>>(
           accept={accept}
           onChange={(e) => {
             const file = e.target.files?.[0] ?? null;
-            onChange(file);
+            if (file) {
+              onChange(file);
+            } else {
+              e.target.value = "";
+              onChange(undefined);
+            }
           }}
           {...fieldProps}
         />

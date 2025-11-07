@@ -23,17 +23,16 @@ export const isStepValid = (
       return true;
     case 4:
       const prior_hackathon_experience = form.watch("prior_hackathon_experience");
-      const resume = form.watch("resume");
-      const github = form.watch("github");
-      const linkedin = form.watch("linkedin");
-      const other_link = form.watch("other_link");
+      const hackathons_attended = form.watch("hackathons_attended");
       return (
         !errors.prior_hackathon_experience &&
         !errors.resume &&
         !errors.github &&
         !errors.linkedin &&
         !errors.other_link &&
-        prior_hackathon_experience.length > 0
+        !errors.hackathons_attended &&
+        prior_hackathon_experience.length > 0 &&
+        hackathons_attended !== undefined
       );
     default:
       return true;
