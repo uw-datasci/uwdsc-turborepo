@@ -28,7 +28,6 @@ CREATE TABLE "public"."applications" (
     "profile_id" UUID NOT NULL,
     "resume_id" BIGINT,
     "status" "public"."application_status_enum" NOT NULL DEFAULT 'draft',
-    "role" "public"."role_enum" NOT NULL,
     "term" TEXT NOT NULL,
     "comments" TEXT,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
