@@ -2,16 +2,12 @@
 model Application {
     id           BigInt                  @id @default(autoincrement())
     profile_id   String                  @db.Uuid
-    resume_id    BigInt?
     status       application_status_enum @default(draft)
-    comments     String?
     created_at   DateTime                @default(now())
     updated_at   DateTime                @default(now())
     submitted_at DateTime?
 
-    profile Profile             @relation(fields: [profile_id], references: [id])
-    resume  Resume?             @relation(fields: [resume_id], references: [id], onDelete: SetNull)
-    answers ApplicationAnswer[]
+    profile Profile @relation(fields: [profile_id], references: [id])
 
     @@unique([profile_id])
     @@map("applications")
