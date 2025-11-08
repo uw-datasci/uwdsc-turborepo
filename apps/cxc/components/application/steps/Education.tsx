@@ -7,6 +7,7 @@ import {
   CardContent,
   Form,
   FormField,
+  FormControl,
 } from "@uwdsc/ui";
 import { UseFormReturn } from "react-hook-form";
 import { AppFormValues } from "@/lib/schemas/application";
@@ -14,6 +15,7 @@ import { GraduationCap } from "lucide-react";
 import {
   renderTextFieldWithLabel as renderTextField,
   renderComboboxFieldWithLabel as renderComboboxField,
+  renderSelectFieldWithLabel as renderSelectField,
 } from "@/components/FormHelpers";
 import {
   graduationYears,
@@ -107,13 +109,10 @@ export function Education({ form }: EducationProps) {
             <FormField
               control={form.control}
               name="year_of_study"
-              render={renderComboboxField(
+              render={renderSelectField(
                 "Year of Study",
-                "Select your year...",
-                graduationYears,
-                true,
-                "Search years...",
-                "No year found."
+                "Select your year of study",
+                graduationYears
               )}
             />
           </CardContent>
