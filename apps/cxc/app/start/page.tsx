@@ -56,7 +56,7 @@ export default function StartPage() {
       {/* Mobile View */}
       <div className="md:hidden relative min-h-screen">
         <div className="absolute inset-0 -z-10">
-          <MobileAppWormhole />
+          <MobileAppWormhole opacity={0.8} />
         </div>
         <div className="relative min-h-screen z-10 p-8 overflow-hidden flex flex-col gap-12 justify-center items-center">
           <div className="text-center">

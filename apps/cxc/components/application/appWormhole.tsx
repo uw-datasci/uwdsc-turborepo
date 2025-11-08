@@ -4,6 +4,10 @@ import { Canvas, useFrame } from "@react-three/fiber";
 import { useRef, useMemo } from "react";
 import * as THREE from "three";
 
+interface AppWormholeProps {
+  opacity?: number;
+}
+
 function WormholeWithRings() {
   const groupRef = useRef<THREE.Group>(null);
 
@@ -167,9 +171,9 @@ function WormholeWithRings() {
   );
 }
 
-export function DesktopAppWormhole() {
+export function DesktopAppWormhole({ opacity = 1 }: AppWormholeProps) {
   return (
-    <div className="block h-[100vh] overflow-hidden -z-10">
+    <div className="block h-full overflow-hidden -z-10" style={{ opacity }}>
       <div className="h-[135vh]">
         <Canvas
           camera={{ position: [-12, 45, 0], fov: 50 }}
@@ -182,9 +186,9 @@ export function DesktopAppWormhole() {
   );
 }
 
-export function MobileAppWormhole() {
+export function MobileAppWormhole({ opacity = 1 }: AppWormholeProps) {
   return (
-    <div className="block h-[100vh] overflow-hidden -z-1 opacity-80">
+    <div className="block h-full overflow-hidden -z-1" style={{ opacity }}>
       <div className="h-[110vh]">
         <Canvas
           camera={{ position: [-0.75, 75, -0.5], fov: 45 }}

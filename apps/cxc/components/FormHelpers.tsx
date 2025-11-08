@@ -13,6 +13,7 @@ import {
   RadioGroup,
   RadioGroupItem,
   Combobox,
+  cn,
 } from "@uwdsc/ui";
 import type { ComboboxOption } from "@uwdsc/ui";
 import { ComponentProps } from "react";
@@ -71,14 +72,14 @@ const inputStyles: Record<FormFieldVariant, string> = {
   default: "",
   auth: "!h-auto !text-base border-gray-100/80 !bg-black px-4.5 py-3.5 placeholder:text-gray-100/80 rounded-lg xl:px-6 xl:py-4.5",
   application:
-    "!border-0 !border-b !rounded-none !px-3 !shadow-none !bg-white/5 hover:!bg-white/10 focus:!bg-white/10 transition-colors",
+    "!h-auto !border-0 !text-base !border-b-[2px] !rounded-none !px-4.5 !py-4 !shadow-none !bg-white/5 hover:!bg-white/10 focus:!bg-white/10 transition-colors",
 };
 
 const selectTriggerStyles: Record<FormFieldVariant, string> = {
   default: "w-full",
   auth: "w-full !bg-black !h-auto !px-4.5 !py-3.5 !rounded-lg xl:px-6 xl:py-4.5 border border-gray-100/75 text-base",
   application:
-    "w-full !border-0 !border-b !rounded-none !px-3 !shadow-none !bg-white/5 hover:!bg-white/10",
+    "!h-auto w-full !border-0 !border-b !rounded-none !px-3 !shadow-none !bg-white/5 hover:!bg-white/10",
 };
 
 const selectContentStyles: Record<FormFieldVariant, string> = {
@@ -99,14 +100,14 @@ const textareaStyles: Record<FormFieldVariant, string> = {
   default: "",
   auth: "min-h-[6rem] max-h-[10rem] border-gray-100/80 bg-black px-4.5 py-3.5 placeholder:text-gray-100/80 rounded-lg xl:px-6 xl:py-4.5 !text-base",
   application:
-    "!border-0 !border-b !rounded-none !px-3 !shadow-none !bg-white/5 hover:!bg-white/10 focus:!bg-white/10 transition-colors",
+    "!h-auto !border-0 !border-b !rounded-none !px-3 !shadow-none !bg-white/5 hover:!bg-white/10 focus:!bg-white/10 transition-colors",
 };
 
 const comboboxStyles: Record<FormFieldVariant, string> = {
   default: "",
   auth: "!h-auto !text-base border-gray-100/80 !bg-black px-4.5 py-3.5 rounded-lg xl:px-6 xl:py-4.5",
   application:
-    "!border-0 !border-b !rounded-none !px-3 !shadow-none !bg-white/5 hover:!bg-white/10",
+    "!h-auto !border-0 !border-b !rounded-none !px-3 !shadow-none !bg-white/5 hover:!bg-white/10",
 };
 
 const comboboxContentStyles: Record<FormFieldVariant, string> = {
@@ -135,7 +136,13 @@ export const renderTextField = <T extends Record<string, any>>(
 ) => {
   const { label, required = false, variant = "default", inputProps } = options;
 
-  return ({ field }: { field: ControllerRenderProps<T, any> }) => (
+  return ({
+    field,
+    fieldState,
+  }: {
+    field: ControllerRenderProps<T, any>;
+    fieldState: { error?: { message?: string } };
+  }) => (
     <FormItem>
       {label && (
         <FormLabel className={variant === "application" ? "mb-2" : "mb-1"}>
@@ -147,7 +154,12 @@ export const renderTextField = <T extends Record<string, any>>(
           {...field}
           {...inputProps}
           placeholder={placeholder}
-          className={inputStyles[variant]}
+          className={cn(
+            inputStyles[variant],
+            variant === "application" &&
+              !fieldState.error &&
+              "focus-visible:ring-white/30 focus-visible:border-white"
+          )}
         />
       </FormControl>
       <FormMessage />
