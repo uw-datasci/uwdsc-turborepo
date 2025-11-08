@@ -1,5 +1,6 @@
 "use client";
 
+import { Button } from "@uwdsc/ui/index";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 
@@ -32,12 +33,12 @@ export default function Navbar() {
       </div>
 
       {/* Sign up button */}
-      <button
-        className="bg-white text-black text-sm sm:text-base px-4 py-2 font-medium hover:cursor-pointer hover:scale-105 duration-200"
+      <Button
         onClick={() => router.push("/register")}
+        className="!bg-white !text-black text-sm sm:text-base rounded-none !h-auto px-4 py-2 hover:!scale-105 hover:!bg-white"
       >
-        Sign up<span className="ml-4">→</span>
-      </button>
+        Sign up<span className="ml-8">→</span>
+      </Button>
     </div>
   );
 }

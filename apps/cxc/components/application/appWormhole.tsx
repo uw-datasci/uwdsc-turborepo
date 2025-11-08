@@ -13,7 +13,7 @@ function WormholeWithRings() {
       height: 70,
       frontRadius: 12,
       backRadius: 30,
-      curve: 2,
+      curve: 2.5,
       perspective: "down",
       frontHeight: 15,
       backHeight: 30,
@@ -77,17 +77,15 @@ function WormholeWithRings() {
     const numRings = 14;
 
     for (let i = 0; i < numRings; i++) {
-      // Create ring as an ellipse
       const points = [];
       const segments = 64;
       const radiusX = 1;
-      const radiusZ = 1; // Creates ellipse by having different X and Z radii
 
       for (let j = 0; j <= segments; j++) {
         const angle = (j / segments) * Math.PI * 2;
         const x = Math.cos(angle) * radiusX;
         const y = 0;
-        const z = Math.sin(angle) * radiusZ;
+        const z = Math.sin(angle);
         points.push(new THREE.Vector3(x, y, z));
       }
 
@@ -151,7 +149,11 @@ function WormholeWithRings() {
   });
 
   return (
-    <group ref={groupRef} rotation={[Math.PI * 0.15, 0, 0]}>
+    <group
+      ref={groupRef}
+      rotation={[Math.PI * 0.15, 0, 0]}
+      position={[3, 0, 0]}
+    >
       {/* Wormhole grid structure */}
       {gridLines.map((line, index) => (
         <primitive key={`line-${index}`} object={line} />
@@ -165,12 +167,27 @@ function WormholeWithRings() {
   );
 }
 
-export function AppWormhole() {
+export function DesktopAppWormhole() {
   return (
     <div className="block h-[100vh] overflow-hidden -z-10">
       <div className="h-[135vh]">
         <Canvas
-          camera={{ position: [-20, 50, 0], fov: 55 }}
+          camera={{ position: [-12, 45, 0], fov: 50 }}
+          onCreated={({ camera }) => camera.lookAt(0, 0, 0)}
+        >
+          <WormholeWithRings />
+        </Canvas>
+      </div>
+    </div>
+  );
+}
+
+export function MobileAppWormhole() {
+  return (
+    <div className="block h-[100vh] overflow-hidden -z-1 opacity-80">
+      <div className="h-[110vh]">
+        <Canvas
+          camera={{ position: [-0.75, 75, -0.5], fov: 45 }}
           onCreated={({ camera }) => camera.lookAt(0, 0, 0)}
         >
           <WormholeWithRings />

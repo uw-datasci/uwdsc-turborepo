@@ -148,6 +148,10 @@ html {
   --font-family-clash: "ClashDisplay-Variable", sans-serif;
 }
 
+.cxc-app-font {
+  font-family: var(--font-host-grotesk);
+}
+
 @font-face {
   font-family: "Satoshi-Variable";
   src:
