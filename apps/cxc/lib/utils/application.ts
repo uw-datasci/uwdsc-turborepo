@@ -17,6 +17,15 @@ export const isStepValid = (
     // TODO: Implement validation for each steps
     case 1: // Personal Details
       return true;
+    case 2: 
+      return true;
+    case 3:
+      const dietary_restrictions = form.watch("dietary_restrictions");
+      const tshirt_size = form.watch("tshirt_size");
+      return (
+        (!errors.dietary_restrictions && dietary_restrictions !== undefined) &&
+        (!errors.tshirt_size && tshirt_size !== undefined)
+      );
     default:
       return true;
   }
