@@ -7,7 +7,6 @@ import {
   CardContent,
   Form,
   FormField,
-  FormControl,
 } from "@uwdsc/ui";
 import { UseFormReturn } from "react-hook-form";
 import { AppFormValues } from "@/lib/schemas/application";
