@@ -87,12 +87,13 @@ export default function RegisterPage() {
       if (isValid) {
         const formData = form.getValues();
 
-        // TODO: Implement trigger
         await register({
-          // firstName: formData.firstName,
-          // lastName: formData.lastName,
           email: formData.email,
           password: formData.password,
+          metadata: {
+            first_name: formData.firstName,
+            last_name: formData.lastName,
+          },
         });
 
         // Show verify email screen with animation
@@ -368,7 +369,7 @@ export default function RegisterPage() {
       {/* Mobile View */}
       <div className="md:hidden relative min-h-screen">
         <div className="absolute inset-0 -z-10">
-          <MobileAppWormhole opacity={0.6} />
+          <MobileAppWormhole opacity={0.3} />
         </div>
         <div className="relative min-h-screen z-10 p-8 overflow-hidden flex flex-col gap-12 justify-center">
           <AnimatePresence mode="wait">

@@ -9,6 +9,7 @@ export interface RegisterCredentials {
   email: string;
   password: string;
   emailRedirectTo?: string;
+  metadata?: object;
 }
 
 export class AuthRepository {
@@ -38,7 +39,8 @@ export class AuthRepository {
       email: credentials.email,
       password: credentials.password,
       options: {
-        emailRedirectTo: credentials.emailRedirectTo,
+        emailRedirectTo: credentials?.emailRedirectTo,
+        data: credentials?.metadata,
       },
     });
 
