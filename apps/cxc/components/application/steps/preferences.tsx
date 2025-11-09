@@ -50,46 +50,51 @@ export function Preferences({ form }: PreferencesProps) {
   return (
     <div className="space-y-6">
       <Form {...form}>
-        <Card className="border-white/20 bg-slate-800">
+        <Card className="bg-zinc-900/50">
           <CardHeader>
-            <CardTitle className="flex items-center text-xl">
-              <Shirt className="mr-2 h-5 w-5 text-blue-300" />
-              Preferences
+            <CardTitle className="flex items-center text-lg font-semibold">
+              About You
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-6">
-
-            {/* Dietary Restrictions */}
-            <FormField
-              control={form.control}
-              name="dietary_restrictions"
-              render={renderSelectField(
-                "Dietary Restrictions",
-                 DIETARY_OPTIONS,
-                {label: "Select any dietary restriction", required: true},
-              )}
-            />
-
-            {dietaryRestriction === "Other" && (
-              <FormField
-                control={form.control}
-                name="dietary_restrictions_other"
-                render={renderTextField(
-                  "Other Dietary Restriction",
-                  "Enter custom restriction"
-                )}
-              />
-            )}
-
-            <FormField
-              control={form.control}
-              name="tshirt_size"
-              render={renderSelectField(
-                "T-Shirt Size",
-                TSHIRT_OPTIONS,
-                {label: "Select your T-shirt size...", required:true},
-              )}
-            />
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {/* Dietary Restrictions */}
+                <div className="flex flex-col space-y-4">
+                    <FormField
+                    control={form.control}
+                    name="dietary_restrictions"
+                    render={renderSelectField(
+                        "Dietary Restrictions",
+                        DIETARY_OPTIONS,
+                        {label: "Select any dietary restriction", required: true},
+                    )}
+                    />
+                    
+                    {dietaryRestriction === "Other" && (
+                    <FormField
+                        control={form.control}
+                        name="dietary_restrictions_other"
+                        render={renderTextField(
+                        "Other Dietary Restriction",
+                        "Enter custom restriction"
+                        )}
+                    />
+                    )}  
+                </div>
+            
+                {/* T-Shirt Size */}
+                <div>
+                    <FormField
+                    control={form.control}
+                    name="tshirt_size"
+                    render={renderSelectField(
+                        "T-Shirt Size",
+                        TSHIRT_OPTIONS,
+                        {label: "Select your T-shirt size...", required:true},
+                    )}
+                    />
+                </div>
+            </div> 
           </CardContent>
         </Card>
       </Form>
