@@ -1,4 +1,4 @@
-import { BaseCxcRepository } from "./baseCxcRepository";
+import { BaseRepository } from "@uwdsc/server/core/repository/baseRepository";
 
 export interface ProfileUpdateData {
   first_name: string;
@@ -6,7 +6,7 @@ export interface ProfileUpdateData {
   dob: Date;
 }
 
-export class ProfileRepository extends BaseCxcRepository {
+export class ProfileRepository extends BaseRepository {
   /**
    * Update user profile by user ID
    * Uses raw pg query for direct database access
@@ -31,7 +31,7 @@ export class ProfileRepository extends BaseCxcRepository {
 
       const values = [data.first_name, data.last_name, data.dob, userId];
 
-      const result = await this.pool.query(query, values);
+      const result = await this.db.query(query, values);
 
       if (result.rowCount === 0) {
         return {
@@ -62,7 +62,7 @@ export class ProfileRepository extends BaseCxcRepository {
         WHERE id = $1
       `;
 
-      const result = await this.pool.query(query, [userId]);
+      const result = await this.db.query(query, [userId]);
 
       if (result.rowCount === 0) {
         return null;

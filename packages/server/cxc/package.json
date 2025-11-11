@@ -9,15 +9,13 @@
   "dependencies": {
     "@prisma/client": "^6.16.1",
     "@supabase/supabase-js": "^2.49.0",
-    "@uwdsc/server/core": "workspace:*",
-    "kysely": "^0.28.7"
+    "@uwdsc/server/core": "workspace:*"
   },
   "devDependencies": {
     "@types/node": "^20.19.9",
     "@uwdsc/eslint-config": "workspace:*",
     "@uwdsc/typescript-config": "workspace:*",
     "prisma": "^6.16.1",
-    "prisma-kysely": "^2.2.1",
     "typescript": "^5.9.2"
   },
   "exports": {

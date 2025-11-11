@@ -1,4 +1,4 @@
-import { BaseWebRepository } from "./baseWebRepository";
+import { BaseRepository } from "@uwdsc/server/core/repository/baseRepository";
 
 export interface ProfileUpdateData {
   first_name: string;
@@ -10,7 +10,7 @@ export interface ProfileUpdateData {
   member_ideas?: string;
 }
 
-export class ProfileRepository extends BaseWebRepository {
+export class ProfileRepository extends BaseRepository {
   /**
    * Update user profile by user ID
    * Uses raw pg query for direct database access
@@ -50,7 +50,7 @@ export class ProfileRepository extends BaseWebRepository {
         userId,
       ];
 
-      const result = await this.pool.query(query, values);
+      const result = await this.db.query(query, values);
 
       if (result.rowCount === 0) {
         return {
@@ -81,7 +81,7 @@ export class ProfileRepository extends BaseWebRepository {
         WHERE id = $1
       `;
 
-      const result = await this.pool.query(query, [userId]);
+      const result = await this.db.query(query, [userId]);
 
       if (result.rowCount === 0) {
         return null;
@@ -119,7 +119,7 @@ export class ProfileRepository extends BaseWebRepository {
         ORDER BY p.created_at DESC
       `;
 
-      const result = await this.pool.query(query);
+      const result = await this.db.query(query);
       return result.rows;
     } catch (error: any) {
       console.error("Error fetching all profiles:", error);
@@ -144,13 +144,13 @@ export class ProfileRepository extends BaseWebRepository {
         FROM profiles
       `;
 
-      const result = await this.pool.query(query);
+      const result = await this.db.query(query);
       const row = result.rows[0];
 
       return {
-        totalUsers: parseInt(row.total_users, 10),
-        paidUsers: parseInt(row.paid_users, 10),
-        mathSocMembers: parseInt(row.math_soc_members, 10),
+        totalUsers: Number.parseInt(row.total_users),
+        paidUsers: Number.parseInt(row.paid_users),
+        mathSocMembers: Number.parseInt(row.math_soc_members),
       };
     } catch (error: any) {
       console.error("Error fetching membership stats:", error);
