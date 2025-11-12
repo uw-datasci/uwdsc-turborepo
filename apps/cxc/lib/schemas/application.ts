@@ -36,3 +36,17 @@ export const applicationDefaultValues: Partial<AppFormValues> = {
   university_name_other: "",
   program_other: "",
 };
+
+//personal
+export const personalInfoSchema = z.object({
+  firstName: z.string().min(1, "First Name is required"),
+  lastName: z.string().min(1, "Last Name is required"),
+  email: z.string().email("Invalid email address"),
+  phone: z.string().min(1, "Phone Number is required"),
+  discord: z.string().min(1, "Discord handle is required"),
+  gender: z.string().min(1, "Please select a gender"),
+  ethnicity: z.string().min(1, "Please select an ethnicity"),
+});
+
+export type PersonalInfoFormValues = z.infer<typeof personalInfoSchema>;
+

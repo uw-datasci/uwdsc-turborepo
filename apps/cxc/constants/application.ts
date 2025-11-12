@@ -87,3 +87,14 @@ export const BLANK_APPLICATION = {
 
 export const APPLICATION_RELEASE_DATE = new Date(); // Set actual release date here
 export const APPLICATION_DEADLINE = new Date(); // Set actual deadline here
+
+//personal
+export const PERSONAL_INFO_FIELDS = {
+  firstName: "firstName",
+  lastName: "lastName",
+  email: "email",
+  phone: "phone",
+  discord: "discord",
+  gender: "gender",
+  ethnicity: "ethnicity",
+};
