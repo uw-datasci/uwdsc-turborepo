@@ -64,6 +64,9 @@ jobs:
     timeout-minutes: 5
 
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
       - name: Setup project
         uses: ./.github/actions/setup-project
 
@@ -85,6 +88,9 @@ jobs:
     timeout-minutes: 5
 
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
       - name: Setup project
         uses: ./.github/actions/setup-project
 
@@ -106,6 +112,9 @@ jobs:
     timeout-minutes: 10
 
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
       - name: Setup project
         uses: ./.github/actions/setup-project
 

@@ -4,9 +4,6 @@ description: 'Quick setup for jobs that depend on the setup job'
 runs:
   using: 'composite'
   steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
-
     - name: Setup Node.js
       uses: actions/setup-node@v4
       with:
