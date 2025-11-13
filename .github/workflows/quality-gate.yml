@@ -79,7 +79,7 @@ jobs:
             ${{ runner.os }}-turbo-lint-
 
       - name: Run linting
-        run: pnpm run lint
+        run: pnpm lint
 
   type-check:
     name: Type Check
@@ -103,7 +103,7 @@ jobs:
             ${{ runner.os }}-turbo-typecheck-
 
       - name: Run type checking
-        run: pnpm run check-types
+        run: pnpm check-types
 
   build:
     name: Build Apps
@@ -132,7 +132,7 @@ jobs:
             ${{ runner.os }}-turbo-build-
 
       - name: Run build
-        run: pnpm run build
+        run: pnpm build
         env:
           NODE_ENV: production
 
