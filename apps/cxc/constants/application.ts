@@ -1,8 +1,22 @@
 import { type ComboboxOption } from "@uwdsc/ui";
-
-export const STEP_NAMES = ["CxC Application", "Personal Details", "Education"];
+export const STEP_NAMES = [
+  "Intro",
+  "Personal Details",
+  "Education",
+  "Preferences",
+  "Portfolio",
+  "CxC Application",
+];
 
 export const PERSONAL_FIELDS = ["first_name", "last_name", "email", "dob"];
+
+export const PORTFOLIO_FIELDS = [
+  "prior_hackathon_experience",
+  "resume",
+  "github",
+  "linkedin",
+  "other_link",
+];
 
 export const EDUCATION_FIELDS = [
   "program",
@@ -77,6 +91,11 @@ export const BLANK_APPLICATION = {
   last_name: "",
   email: "",
   dob: "",
+  prior_hackathon_experience: [],
+  resume: null,
+  github: "",
+  linkedin: "",
+  other_link: "",
   program: "",
   year_of_study: "",
   university_name: "",
@@ -85,5 +104,29 @@ export const BLANK_APPLICATION = {
   status: "draft",
 };
 
+export const questions = [
+  {
+    name: "cxc_gain" as const,
+    question: "What do you hope to gain from your time at CxC...?",
+    placeholder: "Long Answer (500 char limit)",
+  },
+  {
+    name: "silly_q" as const,
+    question: "Silly Q Here",
+    placeholder: "Long Answer (200 char limit)",
+  },
+];
+
 export const APPLICATION_RELEASE_DATE = new Date(); // Set actual release date here
 export const APPLICATION_DEADLINE = new Date(); // Set actual deadline here
+
+//personal
+export const PERSONAL_INFO_FIELDS = {
+  firstName: "first_name",
+  lastName: "last_name",
+  email: "email",
+  phone: "phone",
+  discord: "discord",
+  gender: "gender",
+  ethnicity: "ethnicity",
+} as const;
