@@ -45,6 +45,7 @@ export function PersonalInfo({ form }: PersonalInfoProps) {
                 label: "Email",
                 required: true,
                 inputProps: { type: "email" },
+                variant: "application",
               })}
             />
 
@@ -55,6 +56,7 @@ export function PersonalInfo({ form }: PersonalInfoProps) {
                 label: "Phone Number",
                 required: true,
                 inputProps: { type: "tel" },
+                variant: "application",
               })}
             />
 
@@ -64,6 +66,7 @@ export function PersonalInfo({ form }: PersonalInfoProps) {
               render={renderTextField("Discord", {
                 label: "Discord",
                 required: true,
+                variant: "application",
               })}
             />
             <FormField
@@ -75,6 +78,7 @@ export function PersonalInfo({ form }: PersonalInfoProps) {
                 {
                   label: "Select any dietary restriction",
                   required: true,
+                  variant: "application",
                 }
               )}
             />
@@ -85,6 +89,7 @@ export function PersonalInfo({ form }: PersonalInfoProps) {
                 name="dietary_restrictions_other"
                 render={renderTextField("Other Dietary Restriction", {
                   label: "Enter custom restriction",
+                  variant: "application",
                 })}
               />
             )}
@@ -94,6 +99,7 @@ export function PersonalInfo({ form }: PersonalInfoProps) {
               render={renderSelectField("T-Shirt Size", TSHIRT_OPTIONS, {
                 label: "Select your T-shirt size...",
                 required: true,
+                variant: "application",
               })}
             />
 
@@ -103,7 +109,7 @@ export function PersonalInfo({ form }: PersonalInfoProps) {
               render={renderSelectField(
                 "Select Gender",
                 ["Male", "Female", "Non-binary", "Other", "Prefer not to say"],
-                { label: "Gender", required: true }
+                { label: "Gender", required: true, variant: "application" }
               )}
             />
 
@@ -122,7 +128,7 @@ export function PersonalInfo({ form }: PersonalInfoProps) {
                   "Pacific Islander",
                   "Other",
                 ],
-                { label: "Ethnicity", required: true }
+                { label: "Ethnicity", required: true, variant: "application" }
               )}
             />
           </CardContent>

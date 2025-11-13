@@ -11,7 +11,7 @@ import {
 import { UseFormReturn } from "react-hook-form";
 import { AppFormValues } from "@/lib/schemas/application";
 import { MessageSquare } from "lucide-react";
-import { renderTextAreaFieldWithLabel as renderTextAreaField } from "@/components/FormHelpers";
+import { renderTextAreaField } from "@/components/FormHelpers";
 import { GeneralTip } from "../banners/GeneralTip";
 import { questions } from "@/constants/application";
 
@@ -19,7 +19,7 @@ interface CxCAppProps {
   readonly form: UseFormReturn<AppFormValues>;
 }
 
-export function CxCApp ({ form }: CxCAppProps) {
+export function CxCApp({ form }: CxCAppProps) {
   return (
     <div className="space-y-6">
       <GeneralTip />
@@ -38,7 +38,11 @@ export function CxCApp ({ form }: CxCAppProps) {
                 key={q.name}
                 control={form.control}
                 name={q.name}
-                render={renderTextAreaField(q.question, q.placeholder)}
+                render={renderTextAreaField(q.placeholder, {
+                  label: q.question,
+                  required: true,
+                  variant: "application",
+                })}
               />
             ))}
           </CardContent>

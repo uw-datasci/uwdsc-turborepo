@@ -80,6 +80,7 @@ export function Experience({ form }: ExperienceProps) {
                 name="university_name_other"
                 render={renderTextField("Please specify your university name", {
                   label: "Enter your university name",
+                  variant: "application",
                 })}
               />
             )}
@@ -107,7 +108,10 @@ export function Experience({ form }: ExperienceProps) {
                 name="program_other"
                 render={renderTextField(
                   "Please specify your program of study",
-                  { label: "Enter your program of study" }
+                  {
+                    label: "Enter your program of study",
+                    variant: "application",
+                  }
                 )}
               />
             )}
@@ -118,6 +122,7 @@ export function Experience({ form }: ExperienceProps) {
               name="year_of_study"
               render={renderSelectField("Year of Study", graduationYears, {
                 label: "Select your year of study",
+                variant: "application",
               })}
             />
           </CardContent>
@@ -130,6 +135,7 @@ export function Experience({ form }: ExperienceProps) {
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-6">
+            {/* TODO: Add variant applciatn for checkbox group */}
             <FormField
               control={form.control}
               name="prior_hackathon_experience"
@@ -146,7 +152,11 @@ export function Experience({ form }: ExperienceProps) {
               render={renderSelectField(
                 "Number of Hackathons Attended",
                 ["0", "1", "2", "3", "4+"],
-                { label: "Number of Hackathons Attended", required: true }
+                {
+                  label: "Number of Hackathons Attended",
+                  required: true,
+                  variant: "application",
+                }
               )}
             />
           </CardContent>
@@ -159,6 +169,7 @@ export function Experience({ form }: ExperienceProps) {
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-6">
+            {/* TODO: add applicaiton variatn for resume upload */}
             <FormField
               control={form.control}
               name="resume"
@@ -183,6 +194,7 @@ export function Experience({ form }: ExperienceProps) {
               name="github"
               render={renderTextField("https://github.com/...", {
                 label: "GitHub Profile",
+                variant: "application",
               })}
             />
             <FormField
@@ -190,6 +202,7 @@ export function Experience({ form }: ExperienceProps) {
               name="linkedin"
               render={renderTextField("https://linkedin.com/in/...", {
                 label: "LinkedIn Profile",
+                variant: "application",
               })}
             />
             <FormField
@@ -197,6 +210,7 @@ export function Experience({ form }: ExperienceProps) {
               name="other_link"
               render={renderTextField("https://", {
                 label: "Other Link (Portfolio, Personal Website, etc.)",
+                variant: "application",
               })}
             />
           </CardContent>
