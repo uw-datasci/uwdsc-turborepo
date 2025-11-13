@@ -421,11 +421,15 @@ export function renderComboboxFieldWithLabel<T extends Record<string, any>>(
   label: string,
   placeholder: string,
   options: ComboboxOption[],
-  required: boolean = true
+  required: boolean = true,
+  searchPlaceholder?: string,
+  emptyMessage?: string
 ) {
   return renderComboboxField<T>(placeholder, options, {
     label,
     required,
     variant: "application",
+    searchPlaceholder,
+    emptyMessage,
   });
 }
