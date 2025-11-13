@@ -120,7 +120,7 @@ export const questions = [
 export const APPLICATION_RELEASE_DATE = new Date(); // Set actual release date here
 export const APPLICATION_DEADLINE = new Date(); // Set actual deadline here
 
-//personal
+// personal
 export const PERSONAL_INFO_FIELDS = {
   email: "email",
   phone: "phone",
@@ -128,3 +128,23 @@ export const PERSONAL_INFO_FIELDS = {
   gender: "gender",
   ethnicity: "ethnicity",
 } as const;
+
+export const DIETARY_OPTIONS = [
+  "None",
+  "Vegetarian",
+  "Vegan",
+  "Gluten-Free",
+  "Halal",
+  "Kosher",
+  "Other",
+];
+
+export const TSHIRT_OPTIONS = ["XS", "S", "M", "L", "XL", "XXL"];
+
+export const HACKER_EXPERIENCE_OPTIONS = [
+  "None",
+  "Hacker",
+  "Judge",
+  "Mentor",
+  "Organizer",
+];

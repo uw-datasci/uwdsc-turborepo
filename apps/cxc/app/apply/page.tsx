@@ -14,12 +14,11 @@ import { useForm } from "react-hook-form";
 import { DueDateTag } from "@/components/application/DueDateTag";
 import {
   Intro,
-  Portfolio,
   PersonalInfo,
+  Experience,
+  CxCApp,
   Submitted,
-  Education,
 } from "@/components/application/steps";
-import {Preferences} from "@/components/application/steps/preferences";
 
 import {
   APPLICATION_DEADLINE,
@@ -31,7 +30,6 @@ import { Button, Card, CardContent, CardHeader, CardTitle } from "@uwdsc/ui";
 import { AnimatePresence, motion } from "framer-motion";
 import { Loader2, MoveLeft, MoveRight, User } from "lucide-react";
 import { Unavailable } from "@/components/application/Unavailable";
-import { CxCApp } from "@/components/application/steps/CxCApp";
 
 // Animation variants for sliding transitions
 const slideVariants = {
@@ -144,20 +142,12 @@ export default function ApplyPage() {
     switch (currentStep) {
       case 0:
         return <Intro onStartApplication={handleStartApplication} />;
-        
-      // TODO: Add Components Corresponding to other steps
 
       case 1:
         return <PersonalInfo form={form} />;
       case 2:
-        return <Education form={form} />;
+        return <Experience form={form} />;
       case 3:
-        return <Preferences form={form} />;
-      case 4:
-        return <Portfolio form={form} />;
-      // case 4:
-      //   return <component-name form={form} />;
-      case 5:
         return <CxCApp form={form} />;
     }
   };

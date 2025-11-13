@@ -10,14 +10,26 @@ import {
 } from "@uwdsc/ui";
 import { UseFormReturn } from "react-hook-form";
 import { renderTextField, renderSelectField } from "@/components/FormHelpers";
-import { PERSONAL_INFO_FIELDS } from "@/constants/application";
+import {
+  DIETARY_OPTIONS,
+  PERSONAL_INFO_FIELDS,
+  TSHIRT_OPTIONS,
+} from "@/constants/application";
 import { AppFormValues } from "@/lib/schemas/application";
+import { useEffect } from "react";
 
 interface PersonalInfoProps {
   readonly form: UseFormReturn<AppFormValues>;
 }
 
 export function PersonalInfo({ form }: PersonalInfoProps) {
+  const dietaryRestriction = form.watch("dietary_restrictions");
+
+  useEffect(() => {
+    if (dietaryRestriction !== "Other") {
+      form.setValue("dietary_restrictions_other", "");
+    }
+  }, [dietaryRestriction, form]);
   return (
     <div className="space-y-6">
       <Form {...form}>
@@ -51,6 +63,36 @@ export function PersonalInfo({ form }: PersonalInfoProps) {
               name={PERSONAL_INFO_FIELDS.discord}
               render={renderTextField("Discord", {
                 label: "Discord",
+                required: true,
+              })}
+            />
+            <FormField
+              control={form.control}
+              name="dietary_restrictions"
+              render={renderSelectField(
+                "Dietary Restrictions",
+                DIETARY_OPTIONS,
+                {
+                  label: "Select any dietary restriction",
+                  required: true,
+                }
+              )}
+            />
+
+            {dietaryRestriction === "Other" && (
+              <FormField
+                control={form.control}
+                name="dietary_restrictions_other"
+                render={renderTextField("Other Dietary Restriction", {
+                  label: "Enter custom restriction",
+                })}
+              />
+            )}
+            <FormField
+              control={form.control}
+              name="tshirt_size"
+              render={renderSelectField("T-Shirt Size", TSHIRT_OPTIONS, {
+                label: "Select your T-shirt size...",
                 required: true,
               })}
             />

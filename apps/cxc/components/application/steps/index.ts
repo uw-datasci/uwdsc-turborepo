@@ -1,5 +1,5 @@
 export * from "./Intro";
-export * from "./Portfolio";
+export * from "./Personal";
+export * from "./Experience";
+export * from "./CxCApp";
 export * from "./Submitted";
-export * from "./Education";
-export * from "./Personal"; //added
