@@ -9,6 +9,10 @@ export const applicationSchema = z.object({
   last_name: z.string().min(1, "Last name is required"),
   dob: z.string().min(1, "Date of birth is required"),
   email: z.string().email("Valid email is required"),
+  phone: z.string().min(1, "Phone number is required"),
+  discord: z.string().min(1, "Discord handle is required"),
+  gender: z.string().min(1, "Gender is required"),
+  ethnicity: z.string().min(1, "Ethnicity is required"),
   prior_hackathon_experience: z
     .array(z.enum(["None", "Hacker", "Judge", "Mentor", "Organizer"]))
     .min(1, "Please select at least one option"),
@@ -40,6 +44,10 @@ export const applicationDefaultValues: Partial<AppFormValues> = {
   last_name: "",
   dob: "",
   email: "",
+  phone: "",
+  discord: "",
+  gender: "",
+  ethnicity: "",
   prior_hackathon_experience: [],
   hackathons_attended: undefined,
   resume: undefined,
@@ -54,3 +62,16 @@ export const applicationDefaultValues: Partial<AppFormValues> = {
   university_name_other: "",
   program_other: "",
 };
+
+//personal
+export const personalInfoSchema = z.object({
+  firstName: z.string().min(1, "First Name is required"),
+  lastName: z.string().min(1, "Last Name is required"),
+  email: z.string().email("Invalid email address"),
+  phone: z.string().min(1, "Phone Number is required"),
+  discord: z.string().min(1, "Discord handle is required"),
+  gender: z.string().min(1, "Please select a gender"),
+  ethnicity: z.string().min(1, "Please select an ethnicity"),
+});
+
+export type PersonalInfoFormValues = z.infer<typeof personalInfoSchema>;

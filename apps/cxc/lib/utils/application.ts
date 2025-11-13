@@ -1,6 +1,7 @@
 import { UseFormReturn } from "react-hook-form";
 import { AppFormValues } from "@/lib/schemas/application";
 
+
 /**
  * Checks if the current step in the application form is valid
  * @param form - The react-hook-form instance
