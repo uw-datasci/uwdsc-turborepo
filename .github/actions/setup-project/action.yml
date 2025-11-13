@@ -1,4 +1,4 @@
-name: 'Setup Project (Lightweight)'
+name: 'Initialize Project'
 description: 'Quick setup for jobs that depend on the setup job'
 
 runs:
