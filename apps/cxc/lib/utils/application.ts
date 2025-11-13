@@ -18,6 +18,21 @@ export const isStepValid = (
     // TODO: Implement validation for each steps
     case 1: // Personal Details
       return true;
+    case 3:
+      return true;
+    case 4:
+      const prior_hackathon_experience = form.watch("prior_hackathon_experience");
+      const hackathons_attended = form.watch("hackathons_attended");
+      return (
+        !errors.prior_hackathon_experience &&
+        !errors.resume &&
+        !errors.github &&
+        !errors.linkedin &&
+        !errors.other_link &&
+        !errors.hackathons_attended &&
+        prior_hackathon_experience.length > 0 &&
+        hackathons_attended !== undefined
+      );
     case 5: // CxC App
       return (
         values.cxc_gain?.trim().length > 0 &&

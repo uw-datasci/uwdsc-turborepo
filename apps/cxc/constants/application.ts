@@ -1,7 +1,9 @@
-export const STEP_NAMES = ["Intro", "Personal Details", "Education", "Preferences", "Portfolio", "CxC Application"];
 import { type ComboboxOption } from "@uwdsc/ui";
+export const STEP_NAMES = ["Intro", "Personal Details", "Education", "Preferences", "Portfolio", "CxC Application"];
 
 export const PERSONAL_FIELDS = ["first_name", "last_name", "email", "dob"];
+
+export const PORTFOLIO_FIELDS = ["prior_hackathon_experience", "resume", "github", "linkedin", "other_link"];
 
 export const EDUCATION_FIELDS = [
   "program",
@@ -76,6 +78,11 @@ export const BLANK_APPLICATION = {
   last_name: "",
   email: "",
   dob: "",
+  prior_hackathon_experience: [],
+  resume: null,
+  github: "",
+  linkedin: "",
+  other_link: "",
   program: "",
   year_of_study: "",
   university_name: "",
