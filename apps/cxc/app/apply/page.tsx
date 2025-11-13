@@ -23,6 +23,7 @@ import { Button, Card, CardContent, CardHeader, CardTitle } from "@uwdsc/ui";
 import { AnimatePresence, motion } from "framer-motion";
 import { Loader2, MoveLeft, MoveRight, User } from "lucide-react";
 import { Unavailable } from "@/components/application/Unavailable";
+import { CxCApp } from "@/components/application/steps/CxCApp";
 
 // Animation variants for sliding transitions
 const slideVariants = {
@@ -97,7 +98,7 @@ export default function ApplyPage() {
   };
 
   const renderButton = () => {
-    const isLastStep = currentStep === 4;
+    const isLastStep = currentStep === 6;
     const isButtonDisabled = !isStepValid(form, currentStep) || isLoading;
 
     let buttonClassName = "hover:scale-105 ";
@@ -146,12 +147,15 @@ export default function ApplyPage() {
       //   return <component-name form={form} />;
       // case 4:
       //   return <component-name form={form} />;
+      case 5:
+        return <CxCApp form={form} />;
+      
     }
   };
 
   if (!appInfo) return <Unavailable />;
 
-  if (currentStep === 5) return <Submitted />;
+  if (currentStep === 6) return <Submitted />;
 
   return (
     <div className="container mx-auto px-4 py-12">
@@ -178,7 +182,7 @@ export default function ApplyPage() {
                 </CardTitle>
               </div>
 
-              {currentStep !== 0 && currentStep !== 5 && (
+              {currentStep !== 0 && currentStep !== 6 && (
                 <p className="text-sm text-gray-300 mt-1">
                   Mandatory fields are marked with an asterisk{" "}
                   <span className="text-red-500">*</span>
@@ -207,7 +211,7 @@ export default function ApplyPage() {
               </motion.div>
             </AnimatePresence>
 
-            {currentStep !== 0 && currentStep !== 5 && (
+            {currentStep !== 0 && currentStep !== 6 && (
               <div className="flex justify-between pt-4">
                 <Button
                   size="lg"
