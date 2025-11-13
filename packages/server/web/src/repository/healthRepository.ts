@@ -1,7 +1,7 @@
-import { BaseWebRepository } from "./baseWebRepository";
+import { BaseRepository } from "@uwdsc/server/core/repository/baseRepository";
 import { HealthCheck } from "../types/health";
 
-export class HealthRepository extends BaseWebRepository {
+export class HealthRepository extends BaseRepository {
   /**
    * Get system health information
    */
@@ -10,7 +10,7 @@ export class HealthRepository extends BaseWebRepository {
     let supabaseConnected = true;
     let supabaseError = null;
     try {
-      await this.pool.query(`SELECT 1`);
+      await this.db.query(`SELECT 1`);
     } catch {
       supabaseConnected = false;
       supabaseError = "Connection failed";

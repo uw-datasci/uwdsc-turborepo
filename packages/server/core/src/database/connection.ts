@@ -1,5 +1,4 @@
 import { Pool } from "pg";
-import { Kysely, PostgresDialect } from "kysely";
 
 /**
  * Create a PostgreSQL connection pool optimized for Supabase
@@ -18,21 +17,6 @@ export const createConnectionPool = (databaseUrl: string): Pool => {
     // Good timeouts for complex queries through pooler
     statement_timeout: 30000, // 30s for complex analytics
     query_timeout: 30000,
-  });
-};
-
-/**
- * Create a Kysely instance for type-safe SQL queries
- * @param pool - PostgreSQL connection pool
- * @returns Configured Kysely instance
- */
-export const createKyselyInstance = <Database>(
-  pool: Pool
-): Kysely<Database> => {
-  return new Kysely<Database>({
-    dialect: new PostgresDialect({
-      pool,
-    }),
   });
 };
 

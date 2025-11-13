@@ -13,6 +13,7 @@ import {
   RadioGroup,
   RadioGroupItem,
   Combobox,
+  Checkbox,
 } from "@uwdsc/ui";
 import type { ComboboxOption } from "@uwdsc/ui";
 import { ComponentProps } from "react";
@@ -61,6 +62,14 @@ interface ComboboxFieldOptions {
   variant?: FormFieldVariant;
   searchPlaceholder?: string;
   emptyMessage?: string;
+}
+
+interface FileUploadFieldOptions {
+  required?: boolean;
+}
+
+interface CheckboxGroupFieldOptions {
+  required?: boolean;
 }
 
 // ============================================================================
@@ -335,6 +344,90 @@ export const renderComboboxField = <T extends Record<string, any>>(
         />
       </FormControl>
       <FormMessage />
+    </FormItem>
+  );
+};
+
+/**
+ * Render file upload field (for resumes, etc.)
+ *
+ * @example
+ * renderFileUploadField("Upload your resume")
+ */
+export const renderFileUploadField = <T extends Record<string, any>>(
+  label: string,
+  accept: string,
+  fieldOptions: FileUploadFieldOptions = {}
+) => {
+  const { required = false } = fieldOptions;
+  return ({ field: { value, onChange, ...fieldProps } }: { field: ControllerRenderProps<T, any> }) => (
+    <FormItem>
+      <FormLabel> {label} {required && <span className="text-red-500">*</span>} </FormLabel>
+      <FormControl>
+        <Input
+          type="file"
+          className="h-auto py-2 file:cursor-pointer"
+          accept={accept}
+          onChange={(e) => {
+            const file = e.target.files?.[0] ?? null;
+            if (file) {
+              onChange(file);
+            } else {
+              e.target.value = "";
+              onChange(undefined);
+            }
+          }}
+          {...fieldProps}
+        />
+      </FormControl>
+      <FormMessage />
+    </FormItem>
+  );
+};
+
+/**
+ * Render multi-select checkbox group field
+ *
+ * @example
+ * renderCheckboxGroupField("Prior Hackathon Experience", [
+ *   "None", "Hacker", "Judge", "Mentor", "Organizer"
+ * ])
+ */
+export const renderCheckboxGroupField = <T extends Record<string, any>>(
+  label: string,
+  options: string[],
+  fieldOptions: CheckboxGroupFieldOptions = {}
+) => {
+  const { required = false } = fieldOptions;
+  return ({ field }: { field: ControllerRenderProps<T, any> }) => (
+    <FormItem>
+      <FormLabel>{label} {required && <span className="text-red-500">*</span>}</FormLabel>
+      <fieldset className="space-y-4">
+        {options.map((option) => (
+          <FormItem key={option} className="flex items-center space-x-3">
+            <FormControl>
+              <Checkbox
+                checked={field.value?.includes(option)}
+                onCheckedChange={(checked) => {
+                  const isChecked = checked === true;
+                  const newValue = Array.isArray(field.value) ? [...field.value] : [];
+                  if (isChecked) {
+                    newValue.push(option);
+                  } else {
+                    const index = newValue.indexOf(option);
+                    if (index > -1) {
+                      newValue.splice(index, 1);
+                    }
+                  }
+                  field.onChange(newValue);
+                }}
+              />
+            </FormControl>
+            <FormLabel className="font-normal">{option}</FormLabel>
+            <FormMessage />
+          </FormItem>
+        ))}
+      </fieldset>
     </FormItem>
   );
 };

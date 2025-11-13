@@ -128,6 +128,7 @@ export {
   CollapsibleTrigger,
 } from "./components/collapsible";
 
+export { Checkbox } from "./components/checkbox";
 export {
   Command,
   CommandDialog,
