@@ -146,7 +146,7 @@ export default function RegisterPage() {
             <DesktopAppWormhole opacity={0.5} />
           </div>
 
-          <div className="absolute inset-0 flex flex-col justify-between py-20 px-12 z-10">
+          <div className="absolute inset-0 flex flex-col justify-between py-24 px-12 z-10">
             <div>
               <StepIndicator currentStep={0} totalSteps={6} label="CXC 2026" />
             </div>
@@ -163,7 +163,7 @@ export default function RegisterPage() {
         </div>
 
         {/* Right Side - Form */}
-        <div className="px-12 py-20 overflow-hidden md:w-3/5 flex flex-col gap-12 justify-end">
+        <div className="px-12 py-24 overflow-hidden md:w-3/5 flex flex-col gap-12">
           <AnimatePresence mode="wait">
             {isRegistered ? (
               <motion.div
