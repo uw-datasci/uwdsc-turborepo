@@ -1,7 +1,6 @@
 import { UseFormReturn } from "react-hook-form";
 import { AppFormValues } from "@/lib/schemas/application";
 
-
 /**
  * Checks if the current step in the application form is valid
  * @param form - The react-hook-form instance
@@ -20,9 +19,24 @@ export const isStepValid = (
     case 1: // Personal Details
       return true;
     case 3:
-      return true;
+      const dietary_restrictions = form.watch("dietary_restrictions");
+      const dietary_restrictions_other = form.watch(
+        "dietary_restrictions_other"
+      );
+      const tshirt_size = form.watch("tshirt_size");
+      return (
+        !errors.dietary_restrictions &&
+        dietary_restrictions !== undefined &&
+        !errors.tshirt_size &&
+        tshirt_size !== undefined &&
+        !errors.dietary_restrictions_other &&
+        (dietary_restrictions !== "Other" ||
+          (dietary_restrictions_other?.trim().length ?? 0) > 0)
+      );
     case 4:
-      const prior_hackathon_experience = form.watch("prior_hackathon_experience");
+      const prior_hackathon_experience = form.watch(
+        "prior_hackathon_experience"
+      );
       const hackathons_attended = form.watch("hackathons_attended");
       return (
         !errors.prior_hackathon_experience &&
