@@ -11,13 +11,12 @@ export const isStepValid = (
   form: UseFormReturn<AppFormValues>,
   currentStep: number
 ): boolean => {
+  const values = form.getValues();
   const { errors } = form.formState;
 
   switch (currentStep) {
     // TODO: Implement validation for each steps
     case 1: // Personal Details
-      return true;
-    case 2:
       return true;
     case 3:
       return true;
@@ -34,6 +33,31 @@ export const isStepValid = (
         prior_hackathon_experience.length > 0 &&
         hackathons_attended !== undefined
       );
+    case 5: // CxC App
+      return (
+        values.cxc_gain?.trim().length > 0 &&
+        values.silly_q?.trim().length > 0 &&
+        !errors.cxc_gain &&
+        !errors.silly_q
+      );
+    case 2: // Education
+      const universityName = form.watch("university_name");
+      const program = form.watch("program");
+      const universityNameOther = form.watch("university_name_other");
+      const programOther = form.watch("program_other");
+
+      const isUniversityValid =
+        !errors.university_name &&
+        !!universityName &&
+        (universityName !== "Other" || !!universityNameOther);
+
+      const isProgramValid =
+        !errors.program && !!program && (program !== "Other" || !!programOther);
+
+      const isYearValid =
+        !errors.year_of_study && !!form.watch("year_of_study");
+
+      return isUniversityValid && isProgramValid && isYearValid;
     default:
       return true;
   }

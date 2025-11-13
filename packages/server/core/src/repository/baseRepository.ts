@@ -1,16 +1,13 @@
 import { Pool } from "pg";
-import { Kysely } from "kysely";
+import { createConnectionPool } from "../database/connection";
 
 /**
- * Enhanced BaseRepository with connection pooling and raw SQL capabilities
- * @template Database - Prisma/Kysely generated database type
+ * BaseRepository with database connection
  */
-export abstract class BaseRepository<Database = any> {
-  protected db: Kysely<Database>;
-  protected pool: Pool;
+export abstract class BaseRepository {
+  protected db: Pool;
 
-  constructor(db: Kysely<Database>, pool: Pool) {
-    this.db = db;
-    this.pool = pool;
+  constructor() {
+    this.db = createConnectionPool(process.env.NEXT_PUBLIC_DATABASE_URL!);
   }
 }
