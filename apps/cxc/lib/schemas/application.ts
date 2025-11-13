@@ -9,12 +9,14 @@ export const applicationSchema = z.object({
   last_name: z.string().min(1, "Last name is required"),
   dob: z.string().min(1, "Date of birth is required"),
   email: z.string().email("Valid email is required"),
-  prior_hackathon_experience: z.array(z.enum(["None", "Hacker", "Judge", "Mentor", "Organizer"])).min(1, "Please select at least one option"),
+  prior_hackathon_experience: z
+    .array(z.enum(["None", "Hacker", "Judge", "Mentor", "Organizer"]))
+    .min(1, "Please select at least one option"),
   hackathons_attended: z.enum(["0", "1", "2", "3", "4+"]),
   resume: z.instanceof(File).optional(),
   github: z.string().url().optional().or(z.literal("")),
   linkedin: z.string().url().optional().or(z.literal("")),
-  other_link: z.string().url().optional().or(z.literal(""))
+  other_link: z.string().url().optional().or(z.literal("")),
   cxc_gain: z.string().max(500),
   silly_q: z.string().max(200),
   program: z.string().min(1, "Program is required"),
