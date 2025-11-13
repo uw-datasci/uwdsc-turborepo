@@ -8,6 +8,7 @@
     "dev:web": "turbo dev --filter=web...",
     "dev:cxc": "turbo dev --filter=cxc...",
     "lint": "turbo lint",
+    "check-types": "turbo check-types",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "ui:add": "node scripts/ui-add.js"
   },
