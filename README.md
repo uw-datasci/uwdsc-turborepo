@@ -52,6 +52,9 @@ uwdsc-website-v3/
 ├── packages/               # Shared packages
 │   ├── ui/                 # Design system components
 │   ├── server/             # Backend services & data layer
+│   │   ├── core/          # Shared backend utilities (auth, file services)
+│   │   ├── web/           # Web app backend with Prisma
+│   │   └── cxc/           # CxC app backend with Prisma
 │   ├── eslint-config/      # Shared ESLint configurations
 │   └── typescript-config/  # Shared TypeScript configurations
 └── scripts/                # Build and utility scripts
@@ -65,13 +68,22 @@ uwdsc-website-v3/
 
 - **Purpose**: Primary UW Data Science Club website
 - **Tech Stack**: Next.js 15, React 19, TypeScript
-- **Dependencies**: `@uwdsc/ui`, `@uwdsc/server`
+- **Dependencies**: `@uwdsc/ui`, `@uwdsc/server/web`
+- **Key Directories**:
+  - `app/` - Next.js App Router pages and API routes
+  - `components/` - React components (molecules/organisms)
+  - `lib/api/` - Client-side API functions
+  - `lib/schemas/` - Zod validation schemas
+  - `contexts/` - React Context providers
+  - `constants/` - App-wide constants
+  - `types/` - TypeScript type definitions
 
 #### `apps/cxc/` - CxC App
 
 - **Purpose**: Dedicated CxC app
 - **Tech Stack**: Next.js 15, React 19, TypeScript
-- **Dependencies**: Same as web app
+- **Dependencies**: `@uwdsc/ui`, `@uwdsc/server/cxc`
+- **Key Directories**: Same structure as web app
 
 ### Shared Packages (`packages/`)
 
@@ -84,14 +96,42 @@ uwdsc-website-v3/
 
 #### `packages/server/` - Backend Services
 
-- **Purpose**: Database layer, services, repositories, and types
-- **Tech Stack**: Supabase, Prisma, TypeScript
+The server package is split into three sub-packages for better separation of concerns:
+
+##### `packages/server/core/` - Shared Backend Utilities
+
+- **Purpose**: Common backend services shared across apps
+- **Tech Stack**: Supabase, TypeScript, PostgreSQL
+- **Exports**: `@uwdsc/server/core/*`
 - **Structure**:
-  - `database/` - Database client and configuration
-  - `services/` - Business logic layer
-  - `repository/` - Data access layer
-  - `types/` - Shared TypeScript types
-  - `middleware/` - Request/response middleware
+  - `database/` - Supabase client and connection utilities
+  - `services/` - Shared services (auth, file, resume)
+  - `repository/` - Shared data access layer (base repository, auth, file)
+  - `types/` - Common TypeScript types
+  - `utils/` - Error handling and utilities
+
+##### `packages/server/web/` - Web App Backend
+
+- **Purpose**: Backend services specific to the main website
+- **Tech Stack**: Prisma, Supabase, TypeScript
+- **Exports**: `@uwdsc/server/web/*`
+- **Dependencies**: Extends `@uwdsc/server/core`
+- **Structure**:
+  - `prisma/schema/` - Prisma schema files (application, event, profile, etc.)
+  - `prisma/generated/` - Generated Prisma client
+  - `services/` - Web-specific business logic
+  - `repository/` - Web-specific data access layer
+  - `types/` - Web-specific types
+  - `middleware/` - (Placeholder for future middleware)
+  - `policies/` - (Placeholder for authorization policies)
+
+##### `packages/server/cxc/` - CxC App Backend
+
+- **Purpose**: Backend services specific to CxC app
+- **Tech Stack**: Prisma, Supabase, TypeScript
+- **Exports**: `@uwdsc/server/cxc/*`
+- **Dependencies**: Extends `@uwdsc/server/core`
+- **Structure**: Same as web backend with CxC-specific schemas
 
 #### `packages/eslint-config/` & `packages/typescript-config/`
 
@@ -102,14 +142,14 @@ uwdsc-website-v3/
 
 Our application follows a clean architecture pattern with clear separation of concerns:
 
-### Flow: React Component → API Route → Service → Repository → Database
+### Flow: React Component → Client API → API Route → Service → Repository → Database
 
 ```
 ┌─────────────────┐     ┌─────────────────┐    ┌─────────────────┐
 │   React Page    │───▶│ lib/api/ funcs  │───▶│   app/api/      │
 │   (Frontend)    │     │  (Client SDK)   │    │  (API Routes)   │
 └─────────────────┘     └─────────────────┘    └─────────────────┘
-                                │
+
 ┌─────────────────┐     ┌─────────────────┐    ┌─────────────────┐
 │    Database     │◀───│   Repository    │◀───│    Service      │
 │   (Supabase)    │     │  (Data Layer)   │    │ (Business Logic)│
@@ -123,47 +163,55 @@ Our application follows a clean architecture pattern with clear separation of co
    - These are your **molecular components** built from UI atoms
 
 2. **Client API Functions** (`apps/{web,cxc}/lib/api/`)
-   - Abstract API calls for frontend consumption
-   - Handle request/response formatting
-   - _Note: Currently being set up_
+   - Type-safe API wrapper functions for frontend consumption
+   - Handle request/response formatting and error handling
+   - Example: `register()`, `login()`, `getProfile()`
+   - Import types from `apps/{app}/types/api.ts`
 
 3. **API Routes** (`apps/{web,cxc}/app/api/`)
-   - Next.js API routes (e.g., `/api/health`)
    - Handle HTTP requests and responses
-   - Thin layer that calls services
+   - Thin layer that calls service methods
+   - Import services from respective server package
 
-4. **Services** (`packages/server/src/services/`)
+4. **Services** (`packages/server/{core,web,cxc}/src/services/`)
    - Business logic and validation
    - Example: `HealthService.getSystemHealth()`
    - Orchestrate repository calls
+   - Shared services in `core`, app-specific in `web`/`cxc`
 
-5. **Repositories** (`packages/server/src/repository/`)
+5. **Repositories** (`packages/server/{core,web,cxc}/src/repository/`)
    - Data access layer
-   - Direct database interactions
+   - Direct database interactions via Prisma or Supabase client
    - Extend `BaseRepository` for common functionality
+   - Core repositories in `core`, app-specific in `web`/`cxc`
 
-6. **Database** (Supabase)
-   - PostgreSQL with Supabase client
-   - Managed through Prisma schema
+6. **Database**
+   - **Prisma**: App-specific database schemas for web and cxc
+   - **Supabase**: Authentication and shared services
+   - PostgreSQL as the underlying database
 
 ### Example Flow: Health Check
 
 ```typescript
-// 1. React component calls API function
+// 1. React component (apps/web/app/page.tsx) calls API function
+import { getSystemHealth } from "@/lib/api";
 const health = await getSystemHealth();
 
-// 2. API function calls Next.js route
-fetch("/api/health");
+// 2. API function (apps/web/lib/api/health.ts) calls Next.js route
+const response = await fetch("/api/health");
+return response.json();
 
-// 3. API route calls service
+// 3. API route (apps/web/app/api/health/route.ts) calls service
+import { HealthService } from "@uwdsc/server/web/services/healthService";
 const healthService = new HealthService();
 const healthData = await healthService.getSystemHealth();
 
-// 4. Service calls repository
+// 4. Service (packages/server/web/src/services/healthService.ts) calls repository
 return await this.repository.getSystemHealth();
 
-// 5. Repository queries database
-const { data } = await this.client.from("health").select("*");
+// 5. Repository (packages/server/web/src/repository/healthRepository.ts) queries database
+const isHealthy = await this.checkDatabaseConnection();
+return { status: isHealthy ? "healthy" : "unhealthy", ... };
 ```
 
 ## 🎨 Design System Architecture
@@ -181,11 +229,11 @@ Atoms (packages/ui/) → Molecules (app/components/) → Organisms → Templates
 - Basic UI elements from shadcn/ui
 - Examples: `Button`, `Card`, `Input`
 - Highly reusable, no business logic
-- Import path: `@uwdsc/ui/components/{component-name}`
+- Import path: `@uwdsc/ui`
 
 ```tsx
-import { Button } from "@uwdsc/ui/components/button";
-import { Card } from "@uwdsc/ui/components/card";
+import { Button } from "@uwdsc/ui";
+import { Card, CardContent, CardHeader } from "@uwdsc/ui";
 ```
 
 #### **Molecules** (`apps/{web,cxc}/components/`)
@@ -196,8 +244,8 @@ import { Card } from "@uwdsc/ui/components/card";
 
 ```tsx
 // Example: MotionCard combines Card atoms with Framer Motion
-import { Card, CardContent, CardHeader } from "@uwdsc/ui/components/card";
-import { Button } from "@uwdsc/ui/components/button";
+import { Card, CardContent, CardHeader } from "@uwdsc/ui";
+import { Button } from "@uwdsc/ui";
 
 export function MotionCard() {
   return (
@@ -229,11 +277,18 @@ pnpm ui:add dialog
 
 ```tsx
 // apps/web/components/MyComponent.tsx
-import { Button } from "@uwdsc/ui/components/button";
-import { Card } from "@uwdsc/ui/components/card";
+import { Button } from "@uwdsc/ui";
+import { Card, CardContent } from "@uwdsc/ui";
 
 export function MyComponent() {
   // Your component logic using atoms
+  return (
+    <Card>
+      <CardContent>
+        <Button>Click me</Button>
+      </CardContent>
+    </Card>
+  );
 }
 ```
 
@@ -243,17 +298,31 @@ export function MyComponent() {
 
 1. **UI Components**: Add shadcn components with `pnpm ui:add <name>`
 2. **App Components**: Create molecules in `apps/{app}/components/`
-3. **API Development**:
+3. **Client API Functions**: Add type-safe wrappers in `apps/{app}/lib/api/`
+4. **Validation Schemas**: Define Zod schemas in `apps/{app}/lib/schemas/`
+5. **API Development**:
    - Add routes in `apps/{app}/app/api/`
-   - Create services in `packages/server/src/services/`
-   - Add repositories in `packages/server/src/repository/`
-4. **Types**: Define in `packages/server/src/types/`
+   - For shared logic: Create services/repositories in `packages/server/core/src/`
+   - For app-specific logic: Create in `packages/server/{web,cxc}/src/`
+6. **Types**:
+   - Frontend types: `apps/{app}/types/`
+   - Backend types: `packages/server/{core,web,cxc}/src/types/`
+7. **Prisma Schemas**: Define in `packages/server/{web,cxc}/src/prisma/schema/`
 
 ### Best Practices
 
 - **Component Organization**: Keep atoms in `@uwdsc/ui`, molecules in app components
-- **API Layer**: Always go through the service → repository pattern
-- **Type Safety**: Define types in the server package and share them
+- **API Layer**:
+  - Frontend: Use client API functions from `lib/api/`
+  - Backend: Always follow the service → repository pattern
+  - Import from correct server package (`core`, `web`, or `cxc`)
+- **Type Safety**:
+  - Define API types in `apps/{app}/types/api.ts`
+  - Define backend types in `packages/server/{package}/src/types/`
+  - Use Zod schemas for validation in `lib/schemas/`
+- **Database**:
+  - App-specific schemas go in respective Prisma schema folders
+  - Shared auth/file operations use Supabase via core package
 - **Styling**: Use Tailwind CSS classes, leverage design tokens from UI package
 
 ### Common Commands
@@ -285,14 +354,17 @@ Each app may require environment variables. Check individual app directories for
 - [Next.js Documentation](https://nextjs.org/docs)
 - [Shadcn/ui Components](https://ui.shadcn.com/)
 - [Tailwind CSS](https://tailwindcss.com/)
+- [Prisma Documentation](https://www.prisma.io/docs)
 - [Supabase Documentation](https://supabase.com/docs)
 - [Turborepo Documentation](https://turbo.build/repo/docs)
+- [Zod Documentation](https://zod.dev/) (for schema validation)
 
 ## 🆘 Getting Help
 
 - Check existing components in `packages/ui/src/components/`
-- Review API examples in `apps/web/app/api/health/`
-- Look at service patterns in `packages/server/src/services/`
+- Review API examples in `apps/web/app/api/health/` and `apps/web/lib/api/`
+- Look at service patterns in `packages/server/core/src/services/` (shared) or `packages/server/web/src/services/` (app-specific)
+- Check Prisma schemas in `packages/server/{web,cxc}/src/prisma/schema/`
 - Reach out to your VPs for more questions/clarifications
 
 Happy coding! 🚀
