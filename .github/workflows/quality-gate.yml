@@ -147,7 +147,7 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            const generateReport = require('./.github/scripts/quality-gate-report.js');
+            const main = require('./.github/scripts/ci/quality-gate-report.js');
 
             const jobResults = {
               lint: '${{ needs.lint.result }}',
@@ -155,11 +155,13 @@ jobs:
               build: '${{ needs.build.result }}'
             };
 
-            await generateReport({ github, context, core }, jobResults)
+            await main({ github, context, core }, jobResults)
 
       - name: Check quality gate status
         run: |
-          if [ "${{ needs.lint.result }}" == "success" ] && [ "${{ needs.type-check.result }}" == "success" ] && [ "${{ needs.build.result }}" == "success" ]; then
+          if [ "${{ needs.lint.result }}" == "success" ] && \
+          [ "${{ needs.type-check.result }}" == "success" ] && \
+          [ "${{ needs.build.result }}" == "success" ]; then
             exit 0
           else
             exit 1

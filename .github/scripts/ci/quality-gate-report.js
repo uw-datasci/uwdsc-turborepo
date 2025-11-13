@@ -5,7 +5,7 @@
  * Updates existing comments to avoid spam.
  */
 
-module.exports = async ({ github, context, core }, jobResults) => {
+async function main({ github, context, core }, jobResults) {
   // Don't run on non-PR events
   if (context.eventName !== "pull_request") {
     core.info("Not a pull request event, skipping PR comment");
@@ -103,4 +103,6 @@ module.exports = async ({ github, context, core }, jobResults) => {
     core.setFailed(`Failed to post PR comment: ${error.message}`);
     throw error;
   }
-};
+}
+
+module.exports = main;
