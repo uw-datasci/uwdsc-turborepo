@@ -37,9 +37,7 @@ export class AuthRepository {
     const { data, error } = await this.client.auth.signUp({
       email: credentials.email,
       password: credentials.password,
-      options: {
-        emailRedirectTo: credentials.emailRedirectTo,
-      },
+      options: { emailRedirectTo: credentials.emailRedirectTo },
     });
 
     return { data, error };
