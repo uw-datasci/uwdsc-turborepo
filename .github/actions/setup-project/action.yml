@@ -1,4 +1,4 @@
-name: 'Initialize Project'
+name: 'Setup Project'
 description: 'Quick setup for jobs that depend on the setup job'
 
 runs:
@@ -26,3 +26,4 @@ runs:
           packages/*/node_modules
           packages/server/*/node_modules
         key: ${{ runner.os }}-node-modules-${{ hashFiles('**/pnpm-lock.yaml') }}
+

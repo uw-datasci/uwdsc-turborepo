@@ -65,7 +65,7 @@ jobs:
 
     steps:
       - name: Setup project
-        uses: ./.github/actions/setup-project.yml
+        uses: ./.github/actions/setup-project
 
       - name: Setup Turbo cache
         uses: actions/cache@v4
@@ -86,7 +86,7 @@ jobs:
 
     steps:
       - name: Setup project
-        uses: ./.github/actions/setup-project.yml
+        uses: ./.github/actions/setup-project
 
       - name: Setup Turbo cache
         uses: actions/cache@v4
@@ -107,7 +107,7 @@ jobs:
 
     steps:
       - name: Setup project
-        uses: ./.github/actions/setup-project.yml
+        uses: ./.github/actions/setup-project
 
       - name: Setup environment files
         run: |
@@ -147,7 +147,7 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            const main = require('./.github/scripts/ci/quality-gate-report.js');
+            const { main } = require('./.github/scripts/ci/quality-gate-report.js');
 
             const jobResults = {
               lint: '${{ needs.lint.result }}',
