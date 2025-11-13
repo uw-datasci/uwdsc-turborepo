@@ -12,7 +12,13 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
 import { DueDateTag } from "@/components/application/DueDateTag";
-import { Intro, Portfolio, Submitted, Education } from "@/components/application/steps";
+import {
+  Intro,
+  Portfolio,
+  PersonalInfo,
+  Submitted,
+  Education,
+} from "@/components/application/steps";
 import {
   APPLICATION_DEADLINE,
   APPLICATION_RELEASE_DATE,
@@ -139,8 +145,8 @@ export default function ApplyPage() {
 
       // TODO: Add Components Corresponding to other steps
 
-      // case 1:
-      //   return <component-name form={form} />;
+      case 1:
+        return <PersonalInfo form={form} />;
       case 2:
         return <Education form={form} />;
       // case 3:
@@ -151,7 +157,6 @@ export default function ApplyPage() {
       //   return <component-name form={form} />;
       case 5:
         return <CxCApp form={form} />;
-      
     }
   };
 

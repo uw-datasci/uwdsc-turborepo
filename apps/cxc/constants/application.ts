@@ -1,9 +1,22 @@
 import { type ComboboxOption } from "@uwdsc/ui";
-export const STEP_NAMES = ["Intro", "Personal Details", "Education", "Preferences", "Portfolio", "CxC Application"];
+export const STEP_NAMES = [
+  "Intro",
+  "Personal Details",
+  "Education",
+  "Preferences",
+  "Portfolio",
+  "CxC Application",
+];
 
 export const PERSONAL_FIELDS = ["first_name", "last_name", "email", "dob"];
 
-export const PORTFOLIO_FIELDS = ["prior_hackathon_experience", "resume", "github", "linkedin", "other_link"];
+export const PORTFOLIO_FIELDS = [
+  "prior_hackathon_experience",
+  "resume",
+  "github",
+  "linkedin",
+  "other_link",
+];
 
 export const EDUCATION_FIELDS = [
   "program",
@@ -104,17 +117,16 @@ export const questions = [
   },
 ];
 
-
 export const APPLICATION_RELEASE_DATE = new Date(); // Set actual release date here
 export const APPLICATION_DEADLINE = new Date(); // Set actual deadline here
 
 //personal
 export const PERSONAL_INFO_FIELDS = {
-  firstName: "firstName",
-  lastName: "lastName",
+  firstName: "first_name",
+  lastName: "last_name",
   email: "email",
   phone: "phone",
   discord: "discord",
   gender: "gender",
   ethnicity: "ethnicity",
-};
+} as const;
