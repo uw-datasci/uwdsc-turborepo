@@ -7,7 +7,7 @@ Welcome to the UW Data Science Club website repository! This guide will help you
 ### Prerequisites
 
 - Node.js >= 20
-- pnpm 10.4.1+ (our package manager)
+- pnpm 10.4.1+
 
 ### Installation
 
