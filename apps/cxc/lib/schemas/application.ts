@@ -28,6 +28,10 @@ export const applicationSchema = z.object({
   university_name: z.string().min(1, "University name is required"),
   university_name_other: z.string().optional(),
   program_other: z.string().optional(),
+ 
+  dietary_restrictions: z.enum(["None","Vegetarian", "Vegan","Gluten-Free", "Halal", "Kosher", "Other", ]),
+  dietary_restrictions_other: z.string().optional(),
+  tshirt_size: z.enum(["XS", "S", "M", "L", "XL", "XXL"])
 });
 
 /**
@@ -44,6 +48,10 @@ export const applicationDefaultValues: Partial<AppFormValues> = {
   last_name: "",
   dob: "",
   email: "",
+  
+  dietary_restrictions: undefined,
+  dietary_restrictions_other: "",
+  tshirt_size: undefined,
   phone: "",
   discord: "",
   gender: "",
