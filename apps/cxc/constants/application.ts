@@ -122,8 +122,6 @@ export const APPLICATION_DEADLINE = new Date(); // Set actual deadline here
 
 //personal
 export const PERSONAL_INFO_FIELDS = {
-  firstName: "first_name",
-  lastName: "last_name",
   email: "email",
   phone: "phone",
   discord: "discord",

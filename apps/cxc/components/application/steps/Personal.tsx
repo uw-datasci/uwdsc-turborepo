@@ -28,24 +28,6 @@ export function PersonalInfo({ form }: PersonalInfoProps) {
           <CardContent className="space-y-6">
             <FormField
               control={form.control}
-              name={PERSONAL_INFO_FIELDS.firstName}
-              render={renderTextField("First Name", {
-                label: "First Name",
-                required: true,
-              })}
-            />
-
-            <FormField
-              control={form.control}
-              name={PERSONAL_INFO_FIELDS.lastName}
-              render={renderTextField("Last Name", {
-                label: "Last Name",
-                required: true,
-              })}
-            />
-
-            <FormField
-              control={form.control}
               name={PERSONAL_INFO_FIELDS.email}
               render={renderTextField("Email", {
                 label: "Email",
