@@ -11,6 +11,11 @@ export const applicationSchema = z.object({
   email: z.string().email("Valid email is required"),
   cxc_gain: z.string().max(500),
   silly_q: z.string().max(200),
+  program: z.string().min(1, "Program is required"),
+  year_of_study: z.string().min(1, "Year of study is required"),
+  university_name: z.string().min(1, "University name is required"),
+  university_name_other: z.string().optional(),
+  program_other: z.string().optional(),
 });
 
 /**
@@ -29,4 +34,9 @@ export const applicationDefaultValues: Partial<AppFormValues> = {
   email: "",
   cxc_gain: "",
   silly_q: "",
+  program: "",
+  year_of_study: "",
+  university_name: "",
+  university_name_other: "",
+  program_other: "",
 };
