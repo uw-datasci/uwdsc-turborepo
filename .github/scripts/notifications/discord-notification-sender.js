@@ -236,4 +236,4 @@ async function main(core, github, context, deploymentInfo) {
   }
 }
 
-module.exports = main;
+module.exports = { main };

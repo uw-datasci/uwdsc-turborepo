@@ -129,4 +129,4 @@ async function main(github, context) {
   }
 }
 
-module.exports = main;
+module.exports = { main };

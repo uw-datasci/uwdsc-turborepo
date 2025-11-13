@@ -105,4 +105,4 @@ async function main({ github, context, core }, jobResults) {
   }
 }
 
-module.exports = main;
+module.exports = { main };
