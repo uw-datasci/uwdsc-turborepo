@@ -151,8 +151,8 @@ export default function ApplyPage() {
         return <PersonalInfo form={form} />;
       case 2:
         return <Education form={form} />;
-      // case 3:
-      //   return <Preferences form={form} />;
+      case 3:
+        return <Preferences form={form} />;
       case 4:
         return <Portfolio form={form} />;
       // case 4:
