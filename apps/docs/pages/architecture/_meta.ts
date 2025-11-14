@@ -1,8 +1,18 @@
 export default {
-  overview: "Overview",
-  monorepo: "Monorepo Structure",
-  "design-system": "Design System",
-  "api-flow": "API Architecture",
-  "data-flow": "Data Flow"
+  overview: {
+    title: "Overview"
+  },
+  monorepo: {
+    title: "Monorepo Structure"
+  },
+  "design-system": {
+    title: "Design System"
+  },
+  "api-flow": {
+    title: "API Architecture"
+  },
+  "data-flow": {
+    title: "Data Flow"
+  }
 }
 

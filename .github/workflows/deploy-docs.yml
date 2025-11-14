@@ -2,7 +2,7 @@ name: Deploy Documentation
 
 on:
   push:
-    branches: [main, github-pages-documentation]
+    branches: [main]
   workflow_dispatch:
 
 permissions:
@@ -20,32 +20,32 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      
+
       - name: Setup pnpm
         uses: pnpm/action-setup@v2
         with:
           version: 10.20.0
-          
+
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
-          cache: 'pnpm'
-          
+          node-version: "20"
+          cache: "pnpm"
+
       - name: Install dependencies
         run: pnpm install
-        
+
       - name: Build docs
         run: pnpm build:docs
-        
+
       - name: Add .nojekyll
         run: touch apps/docs/out/.nojekyll
-        
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
           path: ./apps/docs/out
-          
+
   deploy:
     needs: build
     runs-on: ubuntu-latest
@@ -56,4 +56,3 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
-

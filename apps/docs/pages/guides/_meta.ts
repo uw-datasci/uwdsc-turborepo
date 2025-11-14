@@ -1,7 +1,15 @@
 export default {
-  "adding-components": "Adding Components",
-  "creating-api": "Creating API Endpoints",
-  database: "Database Setup",
-  development: "Development Tips"
+  "adding-components": {
+    title: "Adding Components"
+  },
+  "creating-api": {
+    title: "Creating API Endpoints"
+  },
+  database: {
+    title: "Database Setup"
+  },
+  development: {
+    title: "Development Tips"
+  }
 }
 

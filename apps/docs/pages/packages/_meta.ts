@@ -1,6 +1,12 @@
 export default {
-  ui: "UI Package",
-  server: "Server Package",
-  config: "Configuration Packages"
+  ui: {
+    title: "UI Package"
+  },
+  server: {
+    title: "Server Package"
+  },
+  config: {
+    title: "Configuration Packages"
+  }
 }
 

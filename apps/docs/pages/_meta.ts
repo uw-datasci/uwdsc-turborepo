@@ -1,9 +1,21 @@
 export default {
-  index: "Introduction",
-  "getting-started": "Getting Started",
-  architecture: "Architecture",
-  guides: "Guides",
-  packages: "Packages",
-  contributing: "Contributing"
+  index: {
+    title: "Introduction"
+  },
+  "getting-started": {
+    title: "Getting Started"
+  },
+  architecture: {
+    title: "Architecture"
+  },
+  guides: {
+    title: "Guides"
+  },
+  packages: {
+    title: "Packages"
+  },
+  contributing: {
+    title: "Contributing"
+  }
 }
 
