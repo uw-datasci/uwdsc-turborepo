@@ -28,8 +28,8 @@ export default {
   ),
   primaryHue: 200,
   sidebar: {
-    defaultMenuCollapseLevel: 1,
-    toggleButton: true,
+    defaultMenuCollapseLevel: Infinity,
+    toggleButton: false,
   },
 };
 
