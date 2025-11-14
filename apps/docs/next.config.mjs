@@ -10,8 +10,7 @@ export default withNextra({
   images: {
     unoptimized: true,
   },
-  basePath: process.env.NODE_ENV === "production" ? "/uwdsc-website-v3" : "",
-  assetPrefix:
-    process.env.NODE_ENV === "production" ? "/uwdsc-website-v3/" : "",
+  basePath: "",
+  assetPrefix: "",
   reactStrictMode: true,
 });
