@@ -1,11 +1,8 @@
 import { type ComboboxOption } from "@uwdsc/ui";
 export const STEP_NAMES = [
-  "Intro",
-  "Personal Details",
-  "Education",
-  "Preferences",
-  "Portfolio",
-  "CxC Application",
+  "Your Info",
+  "Your Experience",
+  "Application questions",
 ];
 
 export const PERSONAL_FIELDS = ["first_name", "last_name", "email", "dob"];
@@ -104,19 +101,6 @@ export const BLANK_APPLICATION = {
   status: "draft",
 };
 
-export const questions = [
-  {
-    name: "cxc_gain" as const,
-    question: "What do you hope to gain from your time at CxC...?",
-    placeholder: "Long Answer (500 char limit)",
-  },
-  {
-    name: "silly_q" as const,
-    question: "Silly Q Here",
-    placeholder: "Long Answer (200 char limit)",
-  },
-];
-
 export const APPLICATION_RELEASE_DATE = new Date(); // Set actual release date here
 export const APPLICATION_DEADLINE = new Date(); // Set actual deadline here
 
@@ -129,6 +113,8 @@ export const PERSONAL_INFO_FIELDS = {
   ethnicity: "ethnicity",
 } as const;
 
+export const TSHIRT_OPTIONS = ["XS", "S", "M", "L", "XL", "XXL"];
+
 export const DIETARY_OPTIONS = [
   "None",
   "Vegetarian",
@@ -139,12 +125,44 @@ export const DIETARY_OPTIONS = [
   "Other",
 ];
 
-export const TSHIRT_OPTIONS = ["XS", "S", "M", "L", "XL", "XXL"];
+export const GENDERS = [
+  "Male",
+  "Female",
+  "Non-binary",
+  "Other",
+  "Prefer not to say",
+];
 
+export const ETHNICITIES = [
+  "Asian",
+  "Black or African",
+  "Hispanic or Latino",
+  "White",
+  "Indigenous",
+  "Middle Eastern",
+  "Pacific Islander",
+  "Other",
+];
+
+// experience
 export const HACKER_EXPERIENCE_OPTIONS = [
   "None",
   "Hacker",
   "Judge",
   "Mentor",
   "Organizer",
+];
+
+// cxc app questions
+export const questions = [
+  {
+    name: "cxc_gain" as const,
+    question: "What do you hope to gain from your time at CxC...?",
+    placeholder: "Long Answer (500 char limit)",
+  },
+  {
+    name: "silly_q" as const,
+    question: "Silly Q Here",
+    placeholder: "Long Answer (200 char limit)",
+  },
 ];

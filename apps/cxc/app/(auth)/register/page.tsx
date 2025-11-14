@@ -16,6 +16,7 @@ import {
 } from "@/components/application/AppWormhole";
 import { StepIndicator } from "@/components/application/StepIndicator";
 import Image from "next/image";
+import DSCLogo from "@/components/DSCLogo";
 
 // Updated schema with first name and last name
 const registerSchema = z
@@ -150,15 +151,11 @@ export default function RegisterPage() {
             <div>
               <StepIndicator currentStep={0} totalSteps={6} label="CXC 2026" />
             </div>
-            <div className="relative w-24 h-24">
-              <Image
-                src="/logos/dsc.svg"
-                alt="uwdsc logo"
-                fill
-                className="object-contain"
-                priority
-              />
-            </div>
+            <DSCLogo
+              size={24}
+              className="hidden md:block"
+              onClick={() => router.push("/")}
+            />
           </div>
         </div>
 

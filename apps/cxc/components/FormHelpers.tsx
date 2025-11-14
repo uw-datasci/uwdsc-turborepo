@@ -81,14 +81,14 @@ const inputStyles: Record<FormFieldVariant, string> = {
   default: "",
   auth: "!h-auto !text-base border-gray-100/80 !bg-black px-4.5 py-3.5 placeholder:text-gray-100/80 rounded-lg xl:px-6 xl:py-4.5",
   application:
-    "!h-auto !border-0 !text-base !border-b-[2px] !rounded-none !px-4.5 !py-4 !shadow-none !bg-white/5 hover:!bg-white/10 focus:!bg-white/10 transition-colors",
+    "!h-auto !border-0 !px-4.5 !py-4 !text-base !border-b-[2px] !bg-cxc-input-bg !rounded-none !shadow-none transition-colors",
 };
 
 const selectTriggerStyles: Record<FormFieldVariant, string> = {
   default: "w-full",
   auth: "w-full !bg-black !h-auto !px-4.5 !py-3.5 !rounded-lg xl:px-6 xl:py-4.5 border border-gray-100/75 text-base",
   application:
-    "!h-auto w-full !border-0 !border-b !rounded-none !px-3 !shadow-none !bg-white/5 hover:!bg-white/10",
+    "w-full !h-auto !px-4.5 !py-4 !text-base !border-0 !border-b !bg-cxc-input-bg !rounded-none !shadow-none",
 };
 
 const selectContentStyles: Record<FormFieldVariant, string> = {
@@ -372,9 +372,16 @@ export const renderFileUploadField = <T extends Record<string, any>>(
   fieldOptions: FileUploadFieldOptions = {}
 ) => {
   const { required = false } = fieldOptions;
-  return ({ field: { value, onChange, ...fieldProps } }: { field: ControllerRenderProps<T, any> }) => (
+  return ({
+    field: { value, onChange, ...fieldProps },
+  }: {
+    field: ControllerRenderProps<T, any>;
+  }) => (
     <FormItem>
-      <FormLabel> {label} {required && <span className="text-red-500">*</span>} </FormLabel>
+      <FormLabel>
+        {" "}
+        {label} {required && <span className="text-red-500">*</span>}{" "}
+      </FormLabel>
       <FormControl>
         <Input
           type="file"
@@ -413,7 +420,9 @@ export const renderCheckboxGroupField = <T extends Record<string, any>>(
   const { required = false } = fieldOptions;
   return ({ field }: { field: ControllerRenderProps<T, any> }) => (
     <FormItem>
-      <FormLabel>{label} {required && <span className="text-red-500">*</span>}</FormLabel>
+      <FormLabel>
+        {label} {required && <span className="text-red-500">*</span>}
+      </FormLabel>
       <fieldset className="space-y-4">
         {options.map((option) => (
           <FormItem key={option} className="flex items-center space-x-3">
@@ -422,7 +431,9 @@ export const renderCheckboxGroupField = <T extends Record<string, any>>(
                 checked={field.value?.includes(option)}
                 onCheckedChange={(checked) => {
                   const isChecked = checked === true;
-                  const newValue = Array.isArray(field.value) ? [...field.value] : [];
+                  const newValue = Array.isArray(field.value)
+                    ? [...field.value]
+                    : [];
                   if (isChecked) {
                     newValue.push(option);
                   } else {

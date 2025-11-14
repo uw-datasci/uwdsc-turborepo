@@ -14,14 +14,12 @@ export const isStepValid = (
   const { errors } = form.formState;
 
   switch (currentStep) {
-    case 1: // Personal Details
+    case 0: // Personal Details
       const dietary_restrictions = form.watch("dietary_restrictions");
       const dietary_restrictions_other = form.watch(
         "dietary_restrictions_other"
       );
       const tshirt_size = form.watch("tshirt_size");
-      const gender = form.watch("gender");
-      const ethnicity = form.watch("ethnicity");
 
       const validAboutYou =
         !errors.dietary_restrictions &&
@@ -33,14 +31,10 @@ export const isStepValid = (
           (dietary_restrictions_other?.trim().length ?? 0) > 0);
 
       const validContactInfo =
-        !errors.email &&
-        !errors.phone &&
-        !errors.discord &&
-        gender !== undefined &&
-        ethnicity !== undefined;
+        !errors.email && !errors.phone && !errors.discord;
 
       return validAboutYou && validContactInfo;
-    case 2: // Experience
+    case 1: // Experience
       const universityName = form.watch("university_name");
       const program = form.watch("program");
       const universityNameOther = form.watch("university_name_other");
@@ -74,7 +68,7 @@ export const isStepValid = (
       // TODO: ^ change to number input instead of dropdown later
 
       return isUniversityValid && isProgramValid && isYearValid && validHackExp;
-    case 3: // CxC App
+    case 2: // CxC App
       return !errors.cxc_gain && !errors.silly_q;
     default:
       return true;

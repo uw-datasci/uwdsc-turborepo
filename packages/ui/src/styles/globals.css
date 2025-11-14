@@ -42,6 +42,7 @@
   --sidebar-ring: oklch(0.606 0.25 292.717);
 
   /* cxc */
+  --cxc-input-bg: oklch(0.2478 0 0);
 
   /* web */
   --nav-hover-blue: oklch(61.53% 0.16853 255.741);
@@ -85,6 +86,7 @@
   --sidebar-ring: oklch(0.541 0.281 293.009);
 
   /* cxc */
+  --cxc-input-bg: oklch(0.2478 0 0);
 
   /* web */
   --nav-hover-blue: oklch(61.53% 0.16853 255.741);
@@ -137,6 +139,7 @@ html {
   --color-sidebar-ring: var(--sidebar-ring);
 
   /* cxc */
+  --color-cxc-input-bg: var(--cxc-input-bg);
 
   /* web */
   --color-nav-hover-blue: var(--nav-hover-blue);

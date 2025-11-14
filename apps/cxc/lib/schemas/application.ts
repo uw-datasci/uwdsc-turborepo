@@ -21,8 +21,8 @@ export const applicationSchema = z.object({
   ]),
   dietary_restrictions_other: z.string().optional(),
 
-  gender: z.string().min(1, "Gender is required"),
-  ethnicity: z.string().min(1, "Ethnicity is required"),
+  gender: z.string().optional(),
+  ethnicity: z.string().optional(),
 
   // experience
   university_name: z.string().min(1, "University name is required"),

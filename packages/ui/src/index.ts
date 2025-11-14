@@ -173,3 +173,5 @@ export {
 } from "react-icons/ri";
 
 export { ArrowLeft, ArrowRight, Clock, MapPin, Link } from "lucide-react";
+
+export { ArrowRightIcon } from "@phosphor-icons/react";

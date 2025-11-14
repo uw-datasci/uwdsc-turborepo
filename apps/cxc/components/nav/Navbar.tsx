@@ -1,8 +1,8 @@
 "use client";
 
-import { Button } from "@uwdsc/ui/index";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import AppStepButton from "../application/AppStepButton";
 
 export default function Navbar() {
   const router = useRouter();
@@ -33,12 +33,13 @@ export default function Navbar() {
       </div>
 
       {/* Sign up button */}
-      <Button
+      <AppStepButton
+        text="Sign up"
         onClick={() => router.push("/register")}
-        className="!bg-white !text-black text-sm sm:text-base rounded-none !h-auto px-4 py-2 hover:!scale-105 hover:!bg-white"
-      >
-        Sign up<span className="ml-8">→</span>
-      </Button>
+        className="!px-3 !py-2 text-base"
+        marginLeft="ml-8"
+        iconSize={16}
+      />
     </div>
   );
 }

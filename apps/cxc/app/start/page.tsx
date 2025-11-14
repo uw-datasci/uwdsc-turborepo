@@ -4,7 +4,7 @@ import {
   DesktopAppWormhole,
   MobileAppWormhole,
 } from "@/components/application/AppWormhole";
-import { Button } from "@uwdsc/ui/index";
+import AppStepButton from "@/components/application/AppStepButton";
 import { useRouter } from "next/navigation";
 
 export default function StartPage() {
@@ -36,20 +36,16 @@ export default function StartPage() {
             application
           </h1>
           <div className="flex flex-wrap gap-8 font-normal">
-            <Button
+            <AppStepButton
+              text="Log in"
               onClick={() => router.push("/login")}
-              className="!bg-white !text-black text-lg rounded-none !h-auto px-4 py-2 hover:!scale-105 hover:!bg-white"
-            >
-              Log in
-              <span className="ml-8 font-sans">→</span>
-            </Button>
-            <Button
+              className="!px-4.5 !py-4 text-xl"
+            />
+            <AppStepButton
+              text="Sign up"
               onClick={() => router.push("/register")}
-              className="!bg-white !text-black text-lg rounded-none !h-auto px-4 py-2 hover:!scale-105 hover:!bg-white"
-            >
-              Sign up
-              <span className="ml-8 font-sans">→</span>
-            </Button>
+              className="!px-4.5 !py-4 text-xl"
+            />
           </div>
         </div>
       </div>
@@ -68,20 +64,20 @@ export default function StartPage() {
             </p>
           </div>
           <div className="flex flex-wrap gap-8 font-normal">
-            <Button
+            <AppStepButton
+              text="Log in"
               onClick={() => router.push("/login")}
-              className="!bg-white !text-black text-base rounded-none !h-auto px-3 py-2 hover:!scale-105 hover:!bg-white"
-            >
-              Log in
-              <span className="ml-4 font-sans">→</span>
-            </Button>
-            <Button
+              className="!px-3 !py-2 text-base"
+              marginLeft="ml-8"
+              iconSize={16}
+            />
+            <AppStepButton
+              text="Sign up"
               onClick={() => router.push("/register")}
-              className="!bg-white !text-black text-base rounded-none !h-auto px-3 py-2 hover:!scale-105 hover:!bg-white"
-            >
-              Sign up
-              <span className="ml-4 font-sans">→</span>
-            </Button>
+              className="!px-3 !py-2 text-base"
+              marginLeft="ml-8"
+              iconSize={16}
+            />
           </div>
         </div>
       </div>
