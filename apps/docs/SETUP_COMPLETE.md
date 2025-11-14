@@ -126,7 +126,7 @@ pnpm build                 # Build for production
 ```
 apps/docs/
 ├── pages/                 # Documentation pages
-│   ├── _meta.json        # Navigation structure
+│   ├── _meta.ts          # Navigation structure
 │   ├── index.mdx         # Home page
 │   ├── getting-started.mdx
 │   ├── architecture/     # Architecture docs
@@ -167,7 +167,7 @@ project: {
 ### Add Pages
 
 1. Create `.mdx` file in `pages/`
-2. Update `_meta.json` for navigation
+2. Update `_meta.ts` for navigation
 3. Content automatically appears in sidebar
 
 ### Change Colors

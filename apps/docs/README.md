@@ -36,7 +36,7 @@ The static site will be generated in `out/` directory.
 ### Create a New Page
 
 1. Create a new `.mdx` file in `pages/` directory
-2. Add entry to `_meta.json` for navigation
+2. Add entry to `_meta.ts` for navigation
 
 Example:
 
@@ -52,13 +52,13 @@ More content here.
 
 ### Navigation Structure
 
-Edit `_meta.json` files to control navigation:
+Edit `_meta.ts` files to control navigation:
 
-```json
-{
-  "index": "Introduction",
+```typescript
+export default {
+  index: "Introduction",
   "getting-started": "Getting Started",
-  "guides": "Guides"
+  guides: "Guides"
 }
 ```
 
