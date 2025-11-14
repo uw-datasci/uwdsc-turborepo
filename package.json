@@ -8,7 +8,6 @@
     "dev:web": "turbo dev --filter=web...",
     "dev:cxc": "turbo dev --filter=cxc...",
     "dev:docs": "turbo dev --filter=docs...",
-    "build:docs": "turbo build --filter=docs",
     "lint": "turbo lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "ui:add": "node scripts/ui-add.js"
