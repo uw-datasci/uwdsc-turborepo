@@ -19,6 +19,8 @@ import {
   Submitted,
   Education,
 } from "@/components/application/steps";
+import {Preferences} from "@/components/application/steps/preferences";
+
 import {
   APPLICATION_DEADLINE,
   APPLICATION_RELEASE_DATE,
@@ -142,15 +144,15 @@ export default function ApplyPage() {
     switch (currentStep) {
       case 0:
         return <Intro onStartApplication={handleStartApplication} />;
-
+        
       // TODO: Add Components Corresponding to other steps
 
       case 1:
         return <PersonalInfo form={form} />;
       case 2:
         return <Education form={form} />;
-      // case 3:
-      //   return <component-name form={form} />;
+      case 3:
+        return <Preferences form={form} />;
       case 4:
         return <Portfolio form={form} />;
       // case 4:
