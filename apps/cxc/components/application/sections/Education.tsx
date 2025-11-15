@@ -37,88 +37,86 @@ export function Education({ form }: EducationProps) {
   }, [programName, form]);
 
   return (
-    <div className="space-y-6">
-      <Form {...form}>
-        <AppSection
-          label="Education"
-          description="You must be in post-secondary education to attend CxC!"
-        >
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 items-start">
-            {/* University Name Column */}
-            <div className="space-y-4">
-              <FormField
-                control={form.control}
-                name="university_name"
-                render={renderComboboxField(
-                  "Select your university...",
-                  UNIVERSITY_OPTIONS,
-                  {
-                    label: "University Name",
-                    required: true,
-                    searchPlaceholder: "Search universities...",
-                    emptyMessage: "No university found.",
-                    variant: "application",
-                  }
-                )}
-              />
-
-              {universityName === "Other" && (
-                <FormField
-                  control={form.control}
-                  name="university_name_other"
-                  render={renderTextField("University Name", {
-                    label: "Specify university name",
-                    required: true,
-                    variant: "application",
-                  })}
-                />
-              )}
-            </div>
-
-            {/* Program of Study Column */}
-            <div className="space-y-4">
-              <FormField
-                control={form.control}
-                name="program"
-                render={renderComboboxField(
-                  "Select your program...",
-                  PROGRAM_OPTIONS,
-                  {
-                    label: "Program of Study",
-                    required: true,
-                    searchPlaceholder: "Search programs...",
-                    emptyMessage: "No program found.",
-                    variant: "application",
-                  }
-                )}
-              />
-
-              {programName === "Other" && (
-                <FormField
-                  control={form.control}
-                  name="program_other"
-                  render={renderTextField("Program of Study", {
-                    label: "Specify program of study",
-                    required: true,
-                    variant: "application",
-                  })}
-                />
-              )}
-            </div>
-
-            {/* Year of Study - spans both columns on mobile, single column on desktop */}
+    <Form {...form}>
+      <AppSection
+        label="Education"
+        description="You must be in post-secondary education to attend CxC!"
+      >
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 items-start">
+          {/* University Name Column */}
+          <div className="space-y-4">
             <FormField
               control={form.control}
-              name="year_of_study"
-              render={renderSelectField("Year of Study", GRADUATION_YEARS, {
-                label: "Select your year of study",
-                required: true,
-                variant: "application",
-              })}
+              name="university_name"
+              render={renderComboboxField(
+                "Select your university...",
+                UNIVERSITY_OPTIONS,
+                {
+                  label: "University Name",
+                  required: true,
+                  searchPlaceholder: "Search universities...",
+                  emptyMessage: "No university found.",
+                  variant: "application",
+                }
+              )}
             />
+
+            {universityName === "Other" && (
+              <FormField
+                control={form.control}
+                name="university_name_other"
+                render={renderTextField("University Name", {
+                  label: "Specify university name",
+                  required: true,
+                  variant: "application",
+                })}
+              />
+            )}
           </div>
-        </AppSection>
-      </Form>
-    </div>
+
+          {/* Program of Study Column */}
+          <div className="space-y-4">
+            <FormField
+              control={form.control}
+              name="program"
+              render={renderComboboxField(
+                "Select your program...",
+                PROGRAM_OPTIONS,
+                {
+                  label: "Program of Study",
+                  required: true,
+                  searchPlaceholder: "Search programs...",
+                  emptyMessage: "No program found.",
+                  variant: "application",
+                }
+              )}
+            />
+
+            {programName === "Other" && (
+              <FormField
+                control={form.control}
+                name="program_other"
+                render={renderTextField("Program of Study", {
+                  label: "Specify program of study",
+                  required: true,
+                  variant: "application",
+                })}
+              />
+            )}
+          </div>
+
+          {/* Year of Study - spans both columns on mobile, single column on desktop */}
+          <FormField
+            control={form.control}
+            name="year_of_study"
+            render={renderSelectField("Year of Study", GRADUATION_YEARS, {
+              label: "Select your year of study",
+              required: true,
+              variant: "application",
+            })}
+          />
+        </div>
+      </AppSection>
+    </Form>
   );
 }

@@ -113,7 +113,7 @@ const textareaStyles: Record<FormFieldVariant, string> = {
   default: "",
   auth: "min-h-[6rem] max-h-[10rem] border-gray-100/80 bg-black px-4.5 py-3.5 placeholder:text-gray-100/80 rounded-lg xl:px-6 xl:py-4.5 !text-base",
   application:
-    "!h-auto !border-0 !border-b !rounded-none !px-3 !shadow-none !bg-white/5 hover:!bg-white/10 focus:!bg-white/10 transition-colors",
+    "!h-auto min-h-[8rem] !border-0 !border-b !rounded-none !px-3 !shadow-none !bg-white/5 hover:!bg-white/10 focus:!bg-white/10 transition-colors !text-base",
 };
 
 const comboboxStyles: Record<FormFieldVariant, string> = {
@@ -384,7 +384,7 @@ export const renderFileUploadField = <T extends Record<string, any>>(
       )}
 
       <FormControl>
-        <div className="relative w-fit mt-2">
+        <div className="relative w-fit">
           <Input
             type="file"
             id={`file-upload-${fieldProps.name}`}

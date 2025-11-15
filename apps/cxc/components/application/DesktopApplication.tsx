@@ -34,6 +34,8 @@ import {
   PriorHackExp,
   LinksAndDocs,
 } from "./sections";
+import { CxCGain } from "./sections/CxCGain";
+import { SillyQ } from "./sections/SillyQ";
 
 // Animation variants for sliding transitions
 const slideVariants = {
@@ -48,7 +50,7 @@ const slideVariants = {
   }),
 };
 
-const FINAL_STEP_COUNT = STEP_NAMES.length - 1;
+const FINAL_STEP_COUNT = STEP_NAMES.length;
 
 export default function DesktopApplication() {
   const [appInfo, setAppInfo] = useState<AppInfo | null>(null);
@@ -157,7 +159,12 @@ export default function DesktopApplication() {
           </div>
         );
       case 2:
-        return <CxCApp form={form} />;
+        return (
+          <div className="flex flex-col gap-12">
+            <CxCGain form={form} />
+            <SillyQ form={form} />
+          </div>
+        );
     }
   };
 
@@ -177,7 +184,7 @@ export default function DesktopApplication() {
           <div>
             <StepIndicator
               currentStep={currentStep + 1}
-              totalSteps={FINAL_STEP_COUNT + 1}
+              totalSteps={FINAL_STEP_COUNT}
               label="CXC 2026"
             />
           </div>

@@ -22,49 +22,43 @@ export function AboutYou({ form }: AboutYouProps) {
   }, [dietaryRestriction, form]);
 
   return (
-    <div className="space-y-6">
-      <Form {...form}>
-        <AppSection label="About you">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 items-start">
-            <FormField
-              control={form.control}
-              name="tshirt_size"
-              render={renderSelectField("T-Shirt Size", TSHIRT_OPTIONS, {
-                label: "Select your T-shirt size",
-                required: true,
-                variant: "application",
-              })}
-            />
-            {/* TODO: Should this be multiselect? having 'other' might work as is*/}
-            <FormField
-              control={form.control}
-              name="dietary_restrictions"
-              render={renderSelectField(
-                "Dietary Restrictions",
-                DIETARY_OPTIONS,
-                {
-                  label: "Select any dietary restrictions",
-                  required: true,
-                  variant: "application",
-                }
-              )}
-            />
+    <Form {...form}>
+      <AppSection label="About you">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 items-start">
+          <FormField
+            control={form.control}
+            name="tshirt_size"
+            render={renderSelectField("T-Shirt Size", TSHIRT_OPTIONS, {
+              label: "Select your T-shirt size",
+              required: true,
+              variant: "application",
+            })}
+          />
+          {/* TODO: Should this be multiselect? having 'other' might work as is*/}
+          <FormField
+            control={form.control}
+            name="dietary_restrictions"
+            render={renderSelectField("Dietary Restrictions", DIETARY_OPTIONS, {
+              label: "Select any dietary restrictions",
+              required: true,
+              variant: "application",
+            })}
+          />
 
-            {dietaryRestriction === "Other" && (
-              <div className="md:col-start-2">
-                <FormField
-                  control={form.control}
-                  name="dietary_restrictions_other"
-                  render={renderTextField("Other Dietary Restriction", {
-                    label: "Please specify dietary restrictions",
-                    variant: "application",
-                  })}
-                />
-              </div>
-            )}
-          </div>
-        </AppSection>
-      </Form>
-    </div>
+          {dietaryRestriction === "Other" && (
+            <div className="md:col-start-2">
+              <FormField
+                control={form.control}
+                name="dietary_restrictions_other"
+                render={renderTextField("Other Dietary Restriction", {
+                  label: "Please specify dietary restrictions",
+                  variant: "application",
+                })}
+              />
+            </div>
+          )}
+        </div>
+      </AppSection>
+    </Form>
   );
 }

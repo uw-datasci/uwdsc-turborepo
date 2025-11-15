@@ -1,5 +1,5 @@
 interface AppSectionProps {
-  label: string;
+  label?: string;
   description?: string;
 }
 
@@ -10,7 +10,7 @@ export default function AppSection({
 }: React.PropsWithChildren<AppSectionProps>) {
   return (
     <div className="flex flex-col gap-4 cxc-app-font">
-      <p>{label}</p>
+      {label && <p>{label}</p>}
       {children}
       {description && <p className="font-light text-sm">{description}</p>}
     </div>

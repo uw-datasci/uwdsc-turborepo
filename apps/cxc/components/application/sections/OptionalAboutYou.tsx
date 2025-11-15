@@ -26,33 +26,31 @@ export function OptionalAboutYou({ form }: OptionalAboutYouProps) {
   }, [dietaryRestriction, form]);
 
   return (
-    <div className="space-y-6">
-      <Form {...form}>
-        <AppSection
-          label="Optional"
-          description="These are used for analytical purposes only."
-        >
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 items-start">
-            <FormField
-              control={form.control}
-              name={PERSONAL_INFO_FIELDS.gender}
-              render={renderSelectField("Select Gender", GENDERS, {
-                label: "Select your gender",
-                variant: "application",
-              })}
-            />
+    <Form {...form}>
+      <AppSection
+        label="Optional"
+        description="These are used for analytical purposes only."
+      >
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 items-start">
+          <FormField
+            control={form.control}
+            name={PERSONAL_INFO_FIELDS.gender}
+            render={renderSelectField("Select Gender", GENDERS, {
+              label: "Select your gender",
+              variant: "application",
+            })}
+          />
 
-            <FormField
-              control={form.control}
-              name={PERSONAL_INFO_FIELDS.ethnicity}
-              render={renderSelectField("Select Ethnicity", ETHNICITIES, {
-                label: "Select your ethnicity",
-                variant: "application",
-              })}
-            />
-          </div>
-        </AppSection>
-      </Form>
-    </div>
+          <FormField
+            control={form.control}
+            name={PERSONAL_INFO_FIELDS.ethnicity}
+            render={renderSelectField("Select Ethnicity", ETHNICITIES, {
+              label: "Select your ethnicity",
+              variant: "application",
+            })}
+          />
+        </div>
+      </AppSection>
+    </Form>
   );
 }
