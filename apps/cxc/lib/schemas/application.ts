@@ -34,12 +34,29 @@ export const applicationSchema = z.object({
   prior_hackathon_experience: z
     .array(z.enum(["None", "Hacker", "Judge", "Mentor", "Organizer"]))
     .min(1, "Please select at least one option"),
-  // TODO: change to number input instead of dropdown later
-  hackathons_attended: z.enum(["0", "1", "2", "3", "4+"]),
+  hackathons_attended: z.coerce.number().int().min(0),
 
-  github: z.string().url().optional().or(z.literal("")),
-  linkedin: z.string().url().optional().or(z.literal("")),
-  // TODO: add one more for twitter like figma
+  github: z
+    .string()
+    .regex(/^$|^https:\/\/github\.com\/[A-Za-z0-9-]+\/?$/, {
+      message: "Invalid GitHub URL",
+    })
+    .optional()
+    .or(z.literal("")),
+  linkedin: z
+    .string()
+    .regex(/^$|^https:\/\/(www\.)?linkedin\.com\/in\/[A-Za-z0-9-]+\/?$/, {
+      message: "Invalid LinkedIn URL",
+    })
+    .optional()
+    .or(z.literal("")),
+  x: z
+    .string()
+    .regex(/^$|^https:\/\/(twitter\.com|x\.com)\/[A-Za-z0-9_]{1,15}\/?$/, {
+      message: "Invalid X URL",
+    })
+    .optional()
+    .or(z.literal("")),
   other_link: z.string().url().optional().or(z.literal("")),
   resume: z.instanceof(File).optional(),
 
@@ -79,6 +96,7 @@ export const applicationDefaultValues: Partial<AppFormValues> = {
   resume: undefined,
   github: "",
   linkedin: "",
+  x: "",
   other_link: "",
   cxc_gain: "",
   silly_q: "",

@@ -23,7 +23,7 @@ export const EDUCATION_FIELDS = [
   "program_other",
 ];
 
-export const graduationYears = [
+export const GRADUATION_YEARS = [
   "1st Year",
   "2nd Year",
   "3rd Year",
@@ -31,7 +31,7 @@ export const graduationYears = [
   "5th Year+",
 ];
 
-export const programOptions: ComboboxOption[] = [
+export const PROGRAM_OPTIONS: ComboboxOption[] = [
   { value: "Computer Science", label: "Computer Science" },
   { value: "Data Science", label: "Data Science" },
   { value: "Mathematics", label: "Mathematics" },
@@ -48,7 +48,7 @@ export const programOptions: ComboboxOption[] = [
   { value: "Other", label: "Other" },
 ];
 
-export const universityOptions: ComboboxOption[] = [
+export const UNIVERSITY_OPTIONS: ComboboxOption[] = [
   { value: "University of Waterloo", label: "University of Waterloo" },
   {
     value: "University of Toronto St. George",

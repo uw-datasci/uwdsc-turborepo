@@ -32,11 +32,12 @@ export function OptionalAboutYou({ form }: OptionalAboutYouProps) {
           label="Optional"
           description="These are used for analytical purposes only."
         >
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 items-start">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 items-start">
             <FormField
               control={form.control}
               name={PERSONAL_INFO_FIELDS.gender}
               render={renderSelectField("Select Gender", GENDERS, {
+                label: "Select your gender",
                 variant: "application",
               })}
             />
@@ -45,6 +46,7 @@ export function OptionalAboutYou({ form }: OptionalAboutYouProps) {
               control={form.control}
               name={PERSONAL_INFO_FIELDS.ethnicity}
               render={renderSelectField("Select Ethnicity", ETHNICITIES, {
+                label: "Select your ethnicity",
                 variant: "application",
               })}
             />

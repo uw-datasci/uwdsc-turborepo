@@ -25,15 +25,17 @@ export function AboutYou({ form }: AboutYouProps) {
     <div className="space-y-6">
       <Form {...form}>
         <AppSection label="About you">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 items-start">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 items-start">
             <FormField
               control={form.control}
               name="tshirt_size"
               render={renderSelectField("T-Shirt Size", TSHIRT_OPTIONS, {
+                label: "Select your T-shirt size",
                 required: true,
                 variant: "application",
               })}
             />
+            {/* TODO: Should this be multiselect? having 'other' might work as is*/}
             <FormField
               control={form.control}
               name="dietary_restrictions"
@@ -41,6 +43,7 @@ export function AboutYou({ form }: AboutYouProps) {
                 "Dietary Restrictions",
                 DIETARY_OPTIONS,
                 {
+                  label: "Select any dietary restrictions",
                   required: true,
                   variant: "application",
                 }
@@ -53,6 +56,7 @@ export function AboutYou({ form }: AboutYouProps) {
                   control={form.control}
                   name="dietary_restrictions_other"
                   render={renderTextField("Other Dietary Restriction", {
+                    label: "Please specify dietary restrictions",
                     variant: "application",
                   })}
                 />

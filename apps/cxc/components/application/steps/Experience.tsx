@@ -19,9 +19,9 @@ import {
   renderFileUploadField,
 } from "@/components/FormHelpers";
 import {
-  graduationYears,
-  universityOptions,
-  programOptions,
+  GRADUATION_YEARS,
+  UNIVERSITY_OPTIONS,
+  PROGRAM_OPTIONS,
   HACKER_EXPERIENCE_OPTIONS,
 } from "@/constants/application";
 import { useEffect } from "react";
@@ -63,7 +63,7 @@ export function Experience({ form }: ExperienceProps) {
               name="university_name"
               render={renderComboboxField(
                 "Select your university...",
-                universityOptions,
+                UNIVERSITY_OPTIONS,
                 {
                   label: "University Name",
                   required: true,
@@ -91,7 +91,7 @@ export function Experience({ form }: ExperienceProps) {
               name="program"
               render={renderComboboxField(
                 "Select your program...",
-                programOptions,
+                PROGRAM_OPTIONS,
                 {
                   label: "Program of Study",
                   required: true,
@@ -120,7 +120,7 @@ export function Experience({ form }: ExperienceProps) {
             <FormField
               control={form.control}
               name="year_of_study"
-              render={renderSelectField("Year of Study", graduationYears, {
+              render={renderSelectField("Year of Study", GRADUATION_YEARS, {
                 label: "Select your year of study",
                 variant: "application",
               })}
@@ -139,11 +139,10 @@ export function Experience({ form }: ExperienceProps) {
             <FormField
               control={form.control}
               name="prior_hackathon_experience"
-              render={renderCheckboxGroupField(
-                "Prior Hackathon Experience",
-                HACKER_EXPERIENCE_OPTIONS,
-                { required: true }
-              )}
+              render={renderCheckboxGroupField(HACKER_EXPERIENCE_OPTIONS, {
+                label: "Prior Hackathon Experience",
+                required: true,
+              })}
             />
             {/* TODO: change to number input instead of dropdown later */}
             <FormField
@@ -173,11 +172,10 @@ export function Experience({ form }: ExperienceProps) {
             <FormField
               control={form.control}
               name="resume"
-              render={renderFileUploadField(
-                "Upload your resume (pdf or word document)",
-                ".pdf,.doc,.docx",
-                { required: false }
-              )}
+              render={renderFileUploadField(".pdf,.doc,.docx", {
+                label: "Upload your resume (PDF or Word document)",
+                required: false,
+              })}
             />
           </CardContent>
         </Card>

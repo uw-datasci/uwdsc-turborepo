@@ -20,15 +20,20 @@ import { Loader2, User, ArrowLeftIcon } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { DueDateTag } from "./DueDateTag";
-import { AboutYou } from "./sections/AboutYou";
-import { ContactInfo } from "./sections/ContactInfo";
-import { OptionalAboutYou } from "./sections/OptionalAboutYou";
 import { Experience, CxCApp, Submitted } from "./steps";
 import { Unavailable } from "./Unavailable";
 import { DesktopAppWormhole } from "./AppWormhole";
 import { StepIndicator } from "./StepIndicator";
 import router from "next/router";
 import DSCLogo from "../DSCLogo";
+import {
+  ContactInfo,
+  AboutYou,
+  OptionalAboutYou,
+  Education,
+  PriorHackExp,
+  LinksAndDocs,
+} from "./sections";
 
 // Animation variants for sliding transitions
 const slideVariants = {
@@ -71,6 +76,7 @@ export default function DesktopApplication() {
   // Update progress bar based on current step
   useEffect(() => {
     // Step 0 (Intro) shows no progress, other steps show their step number
+    window.scrollTo({ top: 0, behavior: "auto" });
     setProgressValue(currentStep === 0 ? -1 : currentStep);
   }, [currentStep, setProgressValue]);
 
@@ -80,7 +86,6 @@ export default function DesktopApplication() {
       // TODO: Replace with actual API call
       // Example: await updateApplication(form.getValues());
       await new Promise((resolve) => setTimeout(resolve, 1000)); // TO REMOVE
-
       goToStep(currentStep + 1);
     } catch (error) {
       console.error(error);
@@ -144,7 +149,13 @@ export default function DesktopApplication() {
           </div>
         );
       case 1:
-        return <Experience form={form} />;
+        return (
+          <div className="flex flex-col gap-12">
+            <Education form={form} />
+            <PriorHackExp form={form} />
+            <LinksAndDocs form={form} />
+          </div>
+        );
       case 2:
         return <CxCApp form={form} />;
     }
