@@ -56,6 +56,7 @@ export function AboutYou({ form }: AboutYouProps) {
                 name={OPTIONAL_ABOUT_YOU_FIELDS.dietary_restrictions_other}
                 render={renderTextField("Other Dietary Restriction", {
                   label: "Please specify dietary restrictions",
+                  required: true,
                   variant: "application",
                 })}
               />
