@@ -1,5 +1,5 @@
 name: 'Setup Project'
-description: 'Quick setup for jobs that depend on the setup job'
+description: 'Setup Node.js, pnpm, and install dependencies with caching'
 
 runs:
   using: 'composite'
@@ -14,19 +14,20 @@ runs:
       with:
         version: 10.22.0
 
-    - name: Restore node_modules
-      id: cache-restore
+    - name: Get pnpm store directory
+      shell: bash
+      run: |
+        echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+
+    - name: Setup pnpm cache
       uses: actions/cache@v4
       with:
-        path: |
-          node_modules
-          apps/*/node_modules
-          packages/*/node_modules
-          packages/server/*/node_modules
-        key: ${{ runner.os }}-node-modules-${{ hashFiles('**/pnpm-lock.yaml') }}
+        path: ${{ env.STORE_PATH }}
+        key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+        restore-keys: |
+          ${{ runner.os }}-pnpm-store-
 
-    - name: Install dependencies (if cache miss)
-      if: steps.cache-restore.outputs.cache-hit != 'true'
+    - name: Install dependencies
       shell: bash
       run: pnpm install --frozen-lockfile
 
