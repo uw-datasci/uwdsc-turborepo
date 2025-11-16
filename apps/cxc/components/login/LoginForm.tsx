@@ -14,6 +14,7 @@ import { Loader2 } from "lucide-react";
 import { VerifyEmailModal } from "./VerifyEmailModal";
 import { login } from "@/lib/api/auth";
 import { useAuth } from "@/contexts/AuthContext";
+import AppSection from "../application/AppSection";
 
 export function LoginForm() {
   const [authError, setAuthError] = useState<string>("");
@@ -73,68 +74,79 @@ export function LoginForm() {
   return (
     <>
       <Form {...form}>
-        <form
-          onSubmit={form.handleSubmit(onSubmit)}
-          className="flex flex-col gap-4"
-        >
-          <FormField
-            control={form.control}
-            name="email"
-            render={renderTextField("Email (ex. slchow@uwaterloo.ca)", {
-              variant: "auth",
-              inputProps: { type: "email" },
-            })}
-          />
+        <form onSubmit={form.handleSubmit(onSubmit)} className="w-full">
+          <div className="flex flex flex-col gap-10 mb-8">
+            <div className="flex flex-col gap-4">
+              <AppSection label="Your credentials">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 items-start">
+                  {/* Email */}
+                  <div className="flex flex-col h-full">
+                    <FormField
+                      control={form.control}
+                      name="email"
+                      render={renderTextField("Email", {
+                        variant: "application",
+                        inputProps: { type: "email" },
+                      })}
+                    />
+                  </div>
+                  {/* Password */}
+                  <div className="flex flex-col h-full">
+                    <FormField
+                      control={form.control}
+                      name="password"
+                      render={renderTextField("Password", {
+                        variant: "application",
+                        inputProps: { type: "password", autoComplete: "off" },
+                      })}
+                    />
+                  </div>
+                </div>
+                {/* Show Authentication error */}
+                {authError && (
+                  <div className="text-red-400 text-base mb-4">{authError}</div>
+                )}
+              </AppSection>
+            </div>
+          </div>
 
-          <FormField
-            control={form.control}
-            name="password"
-            render={renderTextField("Password", {
-              variant: "auth",
-              inputProps: { type: "password", autoComplete: "off" },
-            })}
-          />
-
-          {/* Show Authentication error */}
-          {authError && (
-            <div className="text-red-400 text-base">{authError}</div>
-          )}
-          <div>
+          <div className="flex flex-col gap-4 font-normal">
             <Button
-              size="lg"
               disabled={isLoading}
               type="submit"
-              className="w-full rounded-md xl:rounded-lg text-lg font-bold !h-auto py-2.5"
+              className="!bg-white !text-black text-lg rounded-none !h-auto px-4 py-2 hover:!scale-105 hover:!bg-white w-fit"
             >
               {isLoading ? (
                 <>
                   <Loader2 className="w-5 h-5 animate-spin" strokeWidth={3} />
-                  Signing in
+                  Signing in...
                 </>
               ) : (
-                "Sign in"
+                <>
+                  Sign in
+                  <span className="ml-8 font-sans">→</span>
+                </>
               )}
             </Button>
-            <div className="flex flex-col md:flex-row justify-between items-start mt-1">
+
+            <div className="flex flex-col sm:flex-row justify-between">
               <Button
                 variant="link"
-                size="sm"
                 onClick={() => {}} // TODO: implement logic for forgot password
-                className="text-gray-400/60 hover:text-gray-200 transition-colors text-sm font-medium p-0"
+                className="text-gray-400/60 hover:text-gray-200 transition-colors text-sm font-medium p-0 w-fit"
                 type="button"
               >
                 Forgot password?
               </Button>
               <Button
                 variant="link"
-                size="sm"
                 onClick={() => {
                   router.push("/register");
                 }}
-                className="text-gray-400/60 hover:text-gray-200 transition-colors text-sm font-medium p-0"
+                className="text-gray-400/60 hover:text-gray-200 transition-colors text-sm font-medium p-0 w-fit"
                 type="button"
               >
-                Not a member yet? Join here.
+                Don't have an account yet? Sign up here.
               </Button>
             </div>
           </div>

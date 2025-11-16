@@ -15,7 +15,6 @@ import {
   MobileAppWormhole,
 } from "@/components/application/AppWormhole";
 import { StepIndicator } from "@/components/application/StepIndicator";
-import Image from "next/image";
 import DSCLogo from "@/components/DSCLogo";
 import { STEP_NAMES } from "@/constants/application";
 import MobileAppNav from "@/components/application/MobileAppNav";
@@ -24,8 +23,8 @@ import AppSection from "@/components/application/AppSection";
 // Updated schema with first name and last name
 const registerSchema = z
   .object({
-    firstName: z.string().min(1, "Please enter your first name"),
-    lastName: z.string().min(1, "Please enter your last name"),
+    first_name: z.string().min(1, "Please enter your first name"),
+    last_name: z.string().min(1, "Please enter your last name"),
     email: z.string().email("Please enter a valid email address"),
     password: z
       .string()
@@ -49,8 +48,8 @@ export default function RegisterPage() {
   const form = useForm<RegisterFormValues>({
     resolver: zodResolver(registerSchema),
     defaultValues: {
-      firstName: "",
-      lastName: "",
+      first_name: "",
+      last_name: "",
       email: "",
       password: "",
       confirmPassword: "",
@@ -61,15 +60,15 @@ export default function RegisterPage() {
   // Check if form is valid
   const isFormValid = () => {
     const { errors } = form.formState;
-    const firstName = form.watch("firstName");
-    const lastName = form.watch("lastName");
+    const firstName = form.watch("first_name");
+    const lastName = form.watch("last_name");
     const email = form.watch("email");
     const password = form.watch("password");
     const confirmPassword = form.watch("confirmPassword");
 
     return (
-      !errors.firstName &&
-      !errors.lastName &&
+      !errors.first_name &&
+      !errors.last_name &&
       !errors.email &&
       !errors.password &&
       !errors.confirmPassword &&
@@ -95,8 +94,8 @@ export default function RegisterPage() {
           email: formData.email,
           password: formData.password,
           metadata: {
-            first_name: formData.firstName,
-            last_name: formData.lastName,
+            first_name: formData.first_name,
+            last_name: formData.last_name,
           },
         });
 
@@ -250,7 +249,7 @@ export default function RegisterPage() {
                             <div className="flex-1">
                               <FormField
                                 control={form.control}
-                                name="firstName"
+                                name="first_name"
                                 render={renderTextField("First Name", {
                                   variant: "application",
                                   inputProps: { type: "text" },
@@ -261,7 +260,7 @@ export default function RegisterPage() {
                             <div className="flex-1">
                               <FormField
                                 control={form.control}
-                                name="lastName"
+                                name="last_name"
                                 render={renderTextField("Last Name", {
                                   variant: "application",
                                   inputProps: { type: "text" },
@@ -362,7 +361,7 @@ export default function RegisterPage() {
                         className="text-gray-400/60 hover:text-gray-200 transition-colors text-sm font-medium p-0 w-fit"
                         type="button"
                       >
-                        Already a member? Sign in here.
+                        Already have an account? Sign in here.
                       </Button>
                     </div>
                   </form>
@@ -456,7 +455,7 @@ export default function RegisterPage() {
                       <AppSection label="Your details">
                         <FormField
                           control={form.control}
-                          name="firstName"
+                          name="first_name"
                           render={renderTextField("First Name", {
                             variant: "application",
                             inputProps: { type: "text" },
@@ -464,7 +463,7 @@ export default function RegisterPage() {
                         />
                         <FormField
                           control={form.control}
-                          name="lastName"
+                          name="last_name"
                           render={renderTextField("Last Name", {
                             variant: "application",
                             inputProps: { type: "text" },
