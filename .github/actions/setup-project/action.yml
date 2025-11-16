@@ -15,6 +15,7 @@ runs:
         version: 10.22.0
 
     - name: Restore node_modules
+      id: cache-restore
       uses: actions/cache@v4
       with:
         path: |
@@ -23,4 +24,9 @@ runs:
           packages/*/node_modules
           packages/server/*/node_modules
         key: ${{ runner.os }}-node-modules-${{ hashFiles('**/pnpm-lock.yaml') }}
+
+    - name: Install dependencies (if cache miss)
+      if: steps.cache-restore.outputs.cache-hit != 'true'
+      shell: bash
+      run: pnpm install --frozen-lockfile
 
