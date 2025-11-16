@@ -9,7 +9,7 @@ export default function Navbar() {
   return (
     <div className="w-full px-8 py-6 flex items-center justify-between">
       {/* Left section - Logo and description */}
-      <div className="flex items-start md:gap-20 lg:gap-24 xl:gap-36">
+      <div className="flex items-start md:gap-8 lg:gap-24 xl:gap-36">
         {/* Logo */}
         <div className="relative w-12 h-12 sm:w-16 sm:h-16">
           <Image
@@ -31,15 +31,23 @@ export default function Navbar() {
           </p>
         </div>
       </div>
-
-      {/* Sign up button */}
-      <AppStepButton
-        text="Sign up"
-        onClick={() => router.push("/register")}
-        className="!px-3 !py-2 text-base"
-        marginLeft="ml-8"
-        iconSize={16}
-      />
+      <div className="flex flex-row gap-4">
+        <AppStepButton
+          text="Log in"
+          onClick={() => router.push("/login")}
+          className="!px-3 sm:!py-2 text-base"
+          marginLeft="ml-2 lg:ml-8"
+          iconSize={16}
+        />
+        {/* Sign up button */}
+        <AppStepButton
+          text="Sign up"
+          onClick={() => router.push("/register")}
+          className="!px-3 sm:!py-2 text-base"
+          marginLeft="ml-2 lg:ml-8"
+          iconSize={16}
+        />
+      </div>
     </div>
   );
 }

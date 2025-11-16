@@ -1,12 +1,16 @@
 interface StepIndicatorProps {
   currentStep: number;
   totalSteps: number;
+  stepName?: string;
+  subStepName?: string;
   label?: string;
 }
 
 export function StepIndicator({
   currentStep,
   totalSteps,
+  stepName,
+  subStepName,
   label = "CXC 2026",
 }: StepIndicatorProps) {
   // for extra step number validation
@@ -14,9 +18,17 @@ export function StepIndicator({
   return (
     <div className="flex flex-col gap-10 w-full">
       <div className="flex flex-col gap-10">
-        <h2 className="text-5xl md:text-6xl lg:text-7xl font-light">
-          Step {stepNumber}
-        </h2>
+        <div
+          className={`flex flex-col gap-3 ${subStepName ? "font-normal" : "font-light"}`}
+        >
+          <h3 className="block md:hidden text-white/75 text-2xl">
+            Step {stepNumber}: {stepName}
+          </h3>
+          <h2 className="text-4xl md:text-6xl lg:text-7xl">
+            {subStepName ? subStepName : `Step ${stepNumber}`}
+          </h2>
+        </div>
+
         {/* Step Progress Bars */}
         <div className="flex gap-2">
           {Array.from({ length: totalSteps }).map((_, index) => (
@@ -29,7 +41,7 @@ export function StepIndicator({
           ))}
         </div>
       </div>
-      <p className="text-lg md:text-3xl">{label}</p>
+      {label && <p className="text-lg md:text-3xl">{label}</p>}
     </div>
   );
 }

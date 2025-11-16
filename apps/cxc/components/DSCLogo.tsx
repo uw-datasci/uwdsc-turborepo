@@ -7,7 +7,7 @@ interface DSCLogoProps {
 }
 export default function DSCLogo({
   size = 24,
-  className,
+  className = "",
   onClick,
 }: DSCLogoProps) {
   return (

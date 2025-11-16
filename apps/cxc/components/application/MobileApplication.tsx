@@ -1,5 +1,3 @@
-"use client";
-
 import {
   STEP_NAMES,
   APPLICATION_RELEASE_DATE,
@@ -11,20 +9,15 @@ import {
   applicationSchema,
   applicationDefaultValues,
 } from "@/lib/schemas/application";
-import { isDesktopStepValid } from "@/lib/utils/application";
+import { isMobileStepValid } from "@/lib/utils/application";
 import { AppInfo } from "@/types/application";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ArrowLeftIcon, Button } from "@uwdsc/ui/index";
-import { AnimatePresence, motion } from "framer-motion";
-import { Loader2 } from "lucide-react";
+import { Button } from "@uwdsc/ui/index";
+import { ArrowLeftIcon, Loader2 } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { DueDateTag } from "./DueDateTag";
-import { Unavailable } from "./Unavailable";
-import { DesktopAppWormhole } from "./AppWormhole";
-import { StepIndicator } from "./StepIndicator";
-import router from "next/router";
-import DSCLogo from "../DSCLogo";
+import { MobileAppWormhole } from "./AppWormhole";
+import MobileAppNav from "./MobileAppNav";
 import {
   ContactInfo,
   AboutYou,
@@ -37,6 +30,8 @@ import {
   Review,
   Submitted,
 } from "./sections";
+import { StepIndicator } from "./StepIndicator";
+import { AnimatePresence, motion } from "framer-motion";
 
 // Animation variants for sliding transitions
 const slideVariants = {
@@ -52,10 +47,22 @@ const slideVariants = {
 };
 
 const FINAL_STEP_COUNT = STEP_NAMES.length;
+const NUMBER_PAGES = 8;
+const PAGE_NAMES = [
+  "Contact info",
+  "About you",
+  "Education",
+  "Hackathon experience",
+  "Documents",
+  "Question 1",
+  "Question 2",
+  "Complete application",
+];
 
-export default function DesktopApplication() {
+export default function MobileApplication() {
   const [appInfo, setAppInfo] = useState<AppInfo | null>(null);
   const [currentStep, setCurrentStep] = useState<number>(0);
+  const [currentPage, setCurrentPage] = useState<number>(0);
   const [direction, setDirection] = useState<number>(1); // 1 for forward, -1 for backward
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const { setProgressValue } = useApplicationProgress();
@@ -76,6 +83,8 @@ export default function DesktopApplication() {
     mode: "onTouched",
   });
 
+  // TODO: might need another context just to store the mobile progress val??
+  //       since desktop and mobile pages dont align
   // Update progress bar based on current step
   useEffect(() => {
     // Step 0 (Intro) shows no progress, other steps show their step number
@@ -89,7 +98,7 @@ export default function DesktopApplication() {
       // TODO: Replace with actual API call
       // Example: await updateApplication(form.getValues());
       await new Promise((resolve) => setTimeout(resolve, 1000)); // TO REMOVE
-      goToStep(currentStep + 1);
+      goToStep(currentPage + 1);
     } catch (error) {
       console.error(error);
     } finally {
@@ -98,18 +107,25 @@ export default function DesktopApplication() {
   };
 
   const handlePrevious = () => {
-    goToStep(currentStep - 1);
+    goToStep(currentPage - 1);
   };
 
   const goToStep = (step: number) => {
-    setDirection(step > currentStep ? 1 : -1);
-    setCurrentStep(step);
+    setDirection(step > currentPage ? 1 : -1);
+    setCurrentPage(step);
+    setCurrentStep(getCurrentStep());
+  };
+
+  const getCurrentStep = () => {
+    if (currentPage < 2) return 0;
+    if (currentPage < 5) return 1;
+    if (currentPage < 7) return 2;
+    return 3;
   };
 
   const renderButton = () => {
-    const isLastStep = currentStep === FINAL_STEP_COUNT - 1;
-    const isButtonDisabled =
-      !isDesktopStepValid(form, currentStep) || isLoading;
+    const isLastStep = currentPage === NUMBER_PAGES - 1;
+    const isButtonDisabled = !isMobileStepValid(form, currentPage) || isLoading;
 
     return (
       <Button
@@ -134,70 +150,52 @@ export default function DesktopApplication() {
   };
 
   const renderStep = () => {
-    switch (currentStep) {
+    switch (currentPage) {
       case 0:
+        return <ContactInfo form={form} />;
+      case 1:
         return (
-          <div className="flex flex-col gap-12">
-            <ContactInfo form={form} />
+          <div className="flex flex-col gap-10">
             <AboutYou form={form} />
             <OptionalAboutYou form={form} />
           </div>
         );
-      case 1:
-        return (
-          <div className="flex flex-col gap-12">
-            <Education form={form} />
-            <PriorHackExp form={form} />
-            <LinksAndDocs form={form} />
-          </div>
-        );
       case 2:
-        return (
-          <div className="flex flex-col gap-12">
-            <CxCGain form={form} />
-            <SillyQ form={form} />
-          </div>
-        );
+        return <Education form={form} />;
       case 3:
+        return <PriorHackExp form={form} />;
+      case 4:
+        return <LinksAndDocs form={form} />;
+      case 5:
+        return <CxCGain form={form} />;
+      case 6:
+        return <SillyQ form={form} />;
+      case 7:
         return <Review form={form} />;
     }
   };
 
   //   if (!appInfo) return <Unavailable />;
 
-  if (currentStep === FINAL_STEP_COUNT) return <Submitted />;
-
+  if (currentPage === NUMBER_PAGES) return <Submitted />;
   return (
-    <div className="hidden md:flex flex-col md:flex-row justify-between min-h-screen h-full cxc-app-font">
-      {/* Left Side - Wormhole */}
-      <div className="block border-r border-white/50 md:w-2/5 relative">
-        <div className="absolute inset-0">
-          <DesktopAppWormhole opacity={0.5} />
-        </div>
-
-        <div className="absolute inset-0 flex flex-col justify-between py-24 pl-12 pr-12 lg:pr-32 z-10">
-          <div>
-            <StepIndicator
-              currentStep={currentStep + 1}
-              totalSteps={FINAL_STEP_COUNT}
-              label="CXC 2026"
-            />
-          </div>
-          <DSCLogo
-            size={24}
-            className="hidden md:block"
-            onClick={() => router.push("/")}
-          />
-        </div>
+    <div className="md:hidden relative min-h-screen cxc-app-font flex flex-col">
+      <div className="absolute inset-0 -z-10">
+        <MobileAppWormhole opacity={0.4} />
       </div>
-
-      {/* Right Side - Form */}
-      <div className="px-12 py-24 overflow-hidden md:w-3/5 flex flex-col gap-12">
-        <h1 className="text-5xl font-normal">{STEP_NAMES[currentStep]}</h1>
-        <div className="space-y-6 overflow-visible">
+      <MobileAppNav />
+      <div className="relative z-10 p-5 overflow-hidden flex flex-col gap-12 flex-1">
+        <StepIndicator
+          currentStep={getCurrentStep() + 1}
+          totalSteps={FINAL_STEP_COUNT}
+          stepName={STEP_NAMES[currentStep]}
+          subStepName={PAGE_NAMES[currentPage]}
+          label=""
+        />
+        <div className="overflow-visible flex-1 flex flex-col justify-between">
           <AnimatePresence mode="wait" custom={direction}>
             <motion.div
-              key={currentStep}
+              key={currentPage}
               custom={direction}
               variants={slideVariants}
               initial="enter"
@@ -212,12 +210,12 @@ export default function DesktopApplication() {
             </motion.div>
           </AnimatePresence>
 
-          {currentStep !== FINAL_STEP_COUNT && (
+          {currentPage !== NUMBER_PAGES && (
             <div className="flex justify-between pt-4">
               <Button
                 size="lg"
                 onClick={handlePrevious}
-                disabled={currentStep === 0}
+                disabled={currentPage === 0}
                 className="rounded-none bg-black !h-auto !px-4.5 !py-4 text-white hover:scale-105 hover:bg-black/50"
               >
                 <ArrowLeftIcon size={24} className="!w-6 !h-6" />

@@ -17,10 +17,7 @@ interface LinksAndDocsProps {
 export function LinksAndDocs({ form }: LinksAndDocsProps) {
   return (
     <Form {...form}>
-      <AppSection
-        label="Links & documents (optional)"
-        description="Please upload a PDF or Word document file."
-      >
+      <AppSection label="Links & documents (optional)">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 items-start mb-4">
           <FormField
             control={form.control}

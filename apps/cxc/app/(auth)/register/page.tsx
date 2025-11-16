@@ -17,6 +17,9 @@ import {
 import { StepIndicator } from "@/components/application/StepIndicator";
 import Image from "next/image";
 import DSCLogo from "@/components/DSCLogo";
+import { STEP_NAMES } from "@/constants/application";
+import MobileAppNav from "@/components/application/MobileAppNav";
+import AppSection from "@/components/application/AppSection";
 
 // Updated schema with first name and last name
 const registerSchema = z
@@ -241,79 +244,86 @@ export default function RegisterPage() {
                     <div className="flex flex flex-col gap-10 mb-10">
                       <div className="flex flex-col gap-4">
                         {/* Details Section */}
-                        <h2 className="text-lg">Your details</h2>
-                        <div className="flex flex-col lg:flex-row gap-4">
-                          {/* First name */}
-                          <div className="flex-1">
-                            <FormField
-                              control={form.control}
-                              name="firstName"
-                              render={renderTextField("First Name", {
-                                variant: "application",
-                                inputProps: { type: "text" },
-                              })}
-                            />
+                        <AppSection label="Your details">
+                          <div className="flex flex-col lg:flex-row gap-4">
+                            {/* First name */}
+                            <div className="flex-1">
+                              <FormField
+                                control={form.control}
+                                name="firstName"
+                                render={renderTextField("First Name", {
+                                  variant: "application",
+                                  inputProps: { type: "text" },
+                                })}
+                              />
+                            </div>
+                            {/* Last name */}
+                            <div className="flex-1">
+                              <FormField
+                                control={form.control}
+                                name="lastName"
+                                render={renderTextField("Last Name", {
+                                  variant: "application",
+                                  inputProps: { type: "text" },
+                                })}
+                              />
+                            </div>
                           </div>
-                          {/* Last name */}
-                          <div className="flex-1">
-                            <FormField
-                              control={form.control}
-                              name="lastName"
-                              render={renderTextField("Last Name", {
-                                variant: "application",
-                                inputProps: { type: "text" },
-                              })}
-                            />
-                          </div>
-                        </div>
+                        </AppSection>
                       </div>
                       <div className="flex flex-col gap-4">
-                        <h2 className="text-lg">Your account</h2>
-
-                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 items-start">
-                          {/* Email */}
-                          <div className="flex flex-col h-full">
-                            <FormField
-                              control={form.control}
-                              name="email"
-                              render={renderTextField("Email", {
-                                variant: "application",
-                                inputProps: { type: "email" },
-                              })}
-                            />
-                          </div>
-                          {/* Password */}
-                          <div className="flex flex-col h-full">
-                            <FormField
-                              control={form.control}
-                              name="password"
-                              render={renderTextField(
-                                "Password (at least 8 characters)",
-                                {
+                        <AppSection
+                          label="Your account"
+                          description="We'll send you an email to confirm your account."
+                        >
+                          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 items-start">
+                            {/* Email */}
+                            <div className="flex flex-col h-full">
+                              <FormField
+                                control={form.control}
+                                name="email"
+                                render={renderTextField("Email", {
                                   variant: "application",
-                                  inputProps: {
-                                    type: "password",
-                                    autoComplete: "new-password",
-                                  },
-                                }
-                              )}
-                            />
+                                  inputProps: { type: "email" },
+                                })}
+                              />
+                            </div>
+                            {/* Password */}
+                            <div className="flex flex-col h-full">
+                              <FormField
+                                control={form.control}
+                                name="password"
+                                render={renderTextField(
+                                  "Password (at least 8 characters)",
+                                  {
+                                    variant: "application",
+                                    inputProps: {
+                                      type: "password",
+                                      autoComplete: "new-password",
+                                    },
+                                  }
+                                )}
+                              />
+                            </div>
+                            {/* Confirm password */}
+                            <div className="lg:col-start-2 flex flex-col h-full">
+                              <FormField
+                                control={form.control}
+                                name="confirmPassword"
+                                render={renderTextField(
+                                  "Confirm your password",
+                                  {
+                                    variant: "application",
+                                    inputProps: {
+                                      type: "password",
+                                      autoComplete: "new-password",
+                                    },
+                                  }
+                                )}
+                              />
+                            </div>
                           </div>
-                          {/* Confirm password */}
-                          <div className="lg:col-start-2 flex flex-col h-full">
-                            <FormField
-                              control={form.control}
-                              name="confirmPassword"
-                              render={renderTextField("Confirm your password", {
-                                variant: "application",
-                                inputProps: {
-                                  type: "password",
-                                  autoComplete: "new-password",
-                                },
-                              })}
-                            />
-                          </div>
-                        </div>
+                        </AppSection>
                       </div>
                     </div>
 
@@ -368,7 +378,8 @@ export default function RegisterPage() {
         <div className="absolute inset-0 -z-10">
           <MobileAppWormhole opacity={0.3} />
         </div>
-        <div className="relative min-h-screen z-10 p-8 overflow-hidden flex flex-col gap-12 justify-center">
+        <MobileAppNav />
+        <div className="relative z-10 p-5 overflow-hidden flex flex-col gap-12">
           <AnimatePresence mode="wait">
             {isRegistered ? (
               <motion.div
@@ -428,69 +439,80 @@ export default function RegisterPage() {
                 initial={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.5, ease: "easeInOut" }}
-                className="w-full"
+                className="w-full flex flex-col gap-9"
               >
-                <div className="text-center mb-8">
-                  <h1 className="text-5xl mb-6">Join Us!</h1>
-                  <p className="text-sm">
-                    Become a part of a growing community of data science
-                    enthusiasts.
-                  </p>
-                </div>
+                <StepIndicator
+                  currentStep={0}
+                  totalSteps={STEP_NAMES.length}
+                  stepName="Account"
+                  subStepName="Create your account"
+                  label=""
+                />
 
                 <Form {...form}>
                   <form onSubmit={handleSubmit} className="w-full">
                     <div className="flex flex-col gap-4 mb-6">
                       {/* First Name and Last Name stacked on mobile */}
-                      <FormField
-                        control={form.control}
-                        name="firstName"
-                        render={renderTextField("First Name", {
-                          variant: "application",
-                          inputProps: { type: "text" },
-                        })}
-                      />
-                      <FormField
-                        control={form.control}
-                        name="lastName"
-                        render={renderTextField("Last Name", {
-                          variant: "application",
-                          inputProps: { type: "text" },
-                        })}
-                      />
-                      <FormField
-                        control={form.control}
-                        name="email"
-                        render={renderTextField(
-                          "Email (ex. slchow@uwaterloo.ca)",
-                          {
+                      <AppSection label="Your details">
+                        <FormField
+                          control={form.control}
+                          name="firstName"
+                          render={renderTextField("First Name", {
                             variant: "application",
-                            inputProps: { type: "email" },
-                          }
-                        )}
-                      />
-                      <FormField
-                        control={form.control}
-                        name="password"
-                        render={renderTextField("Create DSC account password", {
-                          variant: "application",
-                          inputProps: {
-                            type: "password",
-                            autoComplete: "new-password",
-                          },
-                        })}
-                      />
-                      <FormField
-                        control={form.control}
-                        name="confirmPassword"
-                        render={renderTextField("Confirm your password", {
-                          variant: "application",
-                          inputProps: {
-                            type: "password",
-                            autoComplete: "new-password",
-                          },
-                        })}
-                      />
+                            inputProps: { type: "text" },
+                          })}
+                        />
+                        <FormField
+                          control={form.control}
+                          name="lastName"
+                          render={renderTextField("Last Name", {
+                            variant: "application",
+                            inputProps: { type: "text" },
+                          })}
+                        />
+                      </AppSection>
+
+                      <AppSection
+                        label="Your account"
+                        description="We'll send you an email to confirm your account."
+                      >
+                        <FormField
+                          control={form.control}
+                          name="email"
+                          render={renderTextField(
+                            "Email (ex. slchow@uwaterloo.ca)",
+                            {
+                              variant: "application",
+                              inputProps: { type: "email" },
+                            }
+                          )}
+                        />
+                        <FormField
+                          control={form.control}
+                          name="password"
+                          render={renderTextField(
+                            "Create DSC account password",
+                            {
+                              variant: "application",
+                              inputProps: {
+                                type: "password",
+                                autoComplete: "new-password",
+                              },
+                            }
+                          )}
+                        />
+                        <FormField
+                          control={form.control}
+                          name="confirmPassword"
+                          render={renderTextField("Confirm your password", {
+                            variant: "application",
+                            inputProps: {
+                              type: "password",
+                              autoComplete: "new-password",
+                            },
+                          })}
+                        />
+                      </AppSection>
                     </div>
 
                     {authError && (

@@ -113,7 +113,7 @@ const textareaStyles: Record<FormFieldVariant, string> = {
   default: "",
   auth: "min-h-[6rem] max-h-[10rem] border-gray-100/80 bg-black px-4.5 py-3.5 placeholder:text-gray-100/80 rounded-lg xl:px-6 xl:py-4.5 !text-base",
   application:
-    "!h-auto min-h-[8rem] !border-0 !border-b !rounded-none !px-3 !shadow-none !bg-white/5 hover:!bg-white/10 focus:!bg-white/10 transition-colors !text-base",
+    "!h-auto min-h-[15rem] sm:min-h-[8rem] !border-0 !border-b !rounded-none !px-3 !shadow-none !bg-cxc-input-bg transition-colors !text-base",
 };
 
 const comboboxStyles: Record<FormFieldVariant, string> = {
@@ -253,7 +253,7 @@ export const renderTextAreaField = <T extends Record<string, any>>(
   return ({ field }: { field: ControllerRenderProps<T, any> }) => (
     <FormItem>
       {label && (
-        <FormLabel className={`font-normal mb-1 leading-relaxed`}>
+        <FormLabel className={`font-normal mb-1 leading-relaxed text-base`}>
           {label} {required && <span className="text-destructive">*</span>}
         </FormLabel>
       )}
