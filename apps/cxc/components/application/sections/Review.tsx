@@ -89,21 +89,23 @@ const InfoRow = ({ form, label, icon }: InfoRowProps) => {
   }
 
   return (
-    <div className="flex flex-row gap-3 items-center">
-      {icon}{" "}
-      {isLinkField && displayValue !== NO_INPUT ? (
-        <a
-          className="underline decoration-1"
-          href={displayValue}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          {displayValue}
-        </a>
-      ) : (
-        // TODO: replace name with fetched name from user
-        <p className="break-words">{isName ? "John Doe" : displayValue}</p>
-      )}
+    <div className="flex flex-row gap-3 items-center min-w-0">
+      <div className="flex-shrink-0">{icon}</div>
+      <div className="min-w-0 flex-1">
+        {isLinkField && displayValue !== NO_INPUT ? (
+          <a
+            className="underline decoration-1 break-words"
+            href={displayValue}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {displayValue}
+          </a>
+        ) : (
+          // TODO: replace name with fetched name from user
+          <p className="break-words">{isName ? "John Doe" : displayValue}</p>
+        )}
+      </div>
     </div>
   );
 };
@@ -164,7 +166,7 @@ const PriorHackExpIcons = [
 
 const LinksIcons = [
   <GithubLogoIcon key="github" size={24} />,
-  <LinkedinLogoIcon key="linkedin" size={28} />,
+  <LinkedinLogoIcon key="linkedin" size={24} />,
   <XLogoIcon key="x" size={24} />,
   <LinkIcon key="link" size={24} />,
   <FileTextIcon key="resume" size={24} />,
