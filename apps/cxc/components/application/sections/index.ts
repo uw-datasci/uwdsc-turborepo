@@ -7,3 +7,4 @@ export * from "./LinksAndDocs";
 export * from "./CxCGain";
 export * from "./SillyQ";
 export * from "./Review";
+export * from "./Submitted";

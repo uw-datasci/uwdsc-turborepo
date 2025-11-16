@@ -14,13 +14,12 @@ import {
 import { isStepValid } from "@/lib/utils/application";
 import { AppInfo } from "@/types/application";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button } from "@uwdsc/ui/index";
+import { ArrowLeftIcon, Button } from "@uwdsc/ui/index";
 import { AnimatePresence, motion } from "framer-motion";
-import { Loader2, User, ArrowLeftIcon } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { DueDateTag } from "./DueDateTag";
-import { Experience, CxCApp, Submitted } from "./steps";
 import { Unavailable } from "./Unavailable";
 import { DesktopAppWormhole } from "./AppWormhole";
 import { StepIndicator } from "./StepIndicator";
@@ -36,6 +35,7 @@ import {
   CxCGain,
   SillyQ,
   Review,
+  Submitted,
 } from "./sections";
 
 // Animation variants for sliding transitions

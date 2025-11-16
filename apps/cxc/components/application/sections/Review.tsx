@@ -48,6 +48,7 @@ interface SectionReviewCardProps {
   iconArr: React.ReactNode[];
   labelArr: string[];
 }
+const NO_INPUT = "???";
 
 const InfoRow = ({ form, label, icon }: InfoRowProps) => {
   const value = form.getValues(label as keyof AppFormValues);
@@ -63,12 +64,12 @@ const InfoRow = ({ form, label, icon }: InfoRowProps) => {
       return value.name;
     }
     if (Array.isArray(value)) {
-      return value.join(", ");
+      return value.length > 0 ? value.join(", ") : NO_INPUT;
     }
 
     // For fields that have an "other" variant
     const otherFieldName = `${label}_other` as keyof AppFormValues;
-    const mainValue = String(value ?? "");
+    const mainValue = String(value || NO_INPUT);
 
     // If the main field is "Other", use the other field's value
     if (
@@ -76,10 +77,10 @@ const InfoRow = ({ form, label, icon }: InfoRowProps) => {
       otherFieldName in form.getValues()
     ) {
       const otherValue = form.getValues(otherFieldName);
-      return String(otherValue ?? "");
+      return String(otherValue || NO_INPUT);
     }
 
-    return mainValue;
+    return mainValue || NO_INPUT;
   }, [value, label, form]);
 
   // Don't render if this is an "_other" field (it's handled by the parent field)
@@ -90,7 +91,7 @@ const InfoRow = ({ form, label, icon }: InfoRowProps) => {
   return (
     <div className="flex flex-row gap-3 items-center">
       {icon}{" "}
-      {isLinkField ? (
+      {isLinkField && displayValue !== NO_INPUT ? (
         <a
           className="underline decoration-1"
           href={displayValue}
@@ -101,7 +102,7 @@ const InfoRow = ({ form, label, icon }: InfoRowProps) => {
         </a>
       ) : (
         // TODO: replace name with fetched name from user
-        <p>{isName ? "John Doe" : (displayValue ?? "???")}</p>
+        <p className="break-words">{isName ? "John Doe" : displayValue}</p>
       )}
     </div>
   );
@@ -163,7 +164,7 @@ const PriorHackExpIcons = [
 
 const LinksIcons = [
   <GithubLogoIcon key="github" size={24} />,
-  <LinkedinLogoIcon key="linkedin" size={24} />,
+  <LinkedinLogoIcon key="linkedin" size={28} />,
   <XLogoIcon key="x" size={24} />,
   <LinkIcon key="link" size={24} />,
   <FileTextIcon key="resume" size={24} />,
