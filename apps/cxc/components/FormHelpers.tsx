@@ -19,7 +19,7 @@ import {
   UploadSimpleIcon,
 } from "@uwdsc/ui";
 import type { ComboboxOption } from "@uwdsc/ui";
-import { ComponentProps, useState } from "react";
+import { ComponentProps, useEffect, useState } from "react";
 import { ControllerRenderProps } from "react-hook-form";
 
 /**
@@ -167,6 +167,7 @@ export const renderTextField = <T extends Record<string, any>>(
           {...field}
           {...inputProps}
           placeholder={placeholder}
+          value={field.value ?? ""}
           className={cn(
             inputStyles[variant],
             variant === "application" &&
@@ -369,61 +370,76 @@ export const renderFileUploadField = <T extends Record<string, any>>(
   fieldOptions: FileUploadFieldOptions = {}
 ) => {
   const { label, required = false } = fieldOptions;
-  const [fileName, setFileName] = useState("");
+
   return ({
     field: { value, onChange, ...fieldProps },
   }: {
     field: ControllerRenderProps<T, any>;
-  }) => (
-    <FormItem>
-      {label && (
-        <FormLabel className="font-normal">
-          {" "}
-          {label} {required && <span className="text-destructive">*</span>}{" "}
-        </FormLabel>
-      )}
+  }) => {
+    const [fileName, setFileName] = useState<string>(() => {
+      if (value) return value.name;
+      if (typeof value === "string") return value;
+      return "";
+    });
 
-      <FormControl>
-        <div className="relative w-fit">
-          <Input
-            type="file"
-            id={`file-upload-${fieldProps.name}`}
-            className="hidden"
-            accept={accept}
-            onChange={(e) => {
-              const file = e.target.files?.[0] ?? null;
-              if (file) {
-                onChange(file);
-                setFileName(file.name);
-              } else {
-                e.target.value = "";
-                onChange(undefined);
-                setFileName("");
-              }
-            }}
-            {...fieldProps}
-          />
-          <label
-            htmlFor={`file-upload-${fieldProps.name}`}
-            className="flex items-center gap-4 px-4 py-3 rounded-md cursor-pointer w-fit hover:outline hover:outline-white/50 duration-50"
-          >
-            {fileName ? (
-              <>
-                <FileTextIcon size={24} />
-                <span className="text-white">{fileName}</span>
-              </>
-            ) : (
-              <div className="flex flex-row gap-3">
-                <UploadSimpleIcon size={24} />
-                Resume
-              </div>
-            )}
-          </label>
-        </div>
-      </FormControl>
-      <FormMessage />
-    </FormItem>
-  );
+    useEffect(() => {
+      if (value) setFileName(value.name);
+      else if (typeof value === "string") setFileName(value);
+      else setFileName("");
+    }, [value]);
+
+    return (
+      <FormItem>
+        {label && (
+          <FormLabel className="font-normal">
+            {" "}
+            {label}{" "}
+            {required && <span className="text-destructive">*</span>}{" "}
+          </FormLabel>
+        )}
+
+        <FormControl>
+          <div className="relative w-fit">
+            <Input
+              type="file"
+              id={`file-upload-${fieldProps.name}`}
+              className="hidden"
+              accept={accept}
+              onChange={(e) => {
+                const file = e.target.files?.[0] ?? null;
+                if (file) {
+                  onChange(file);
+                  setFileName(file.name);
+                } else {
+                  e.target.value = "";
+                  onChange(undefined);
+                  setFileName("");
+                }
+              }}
+              {...fieldProps}
+            />
+            <label
+              htmlFor={`file-upload-${fieldProps.name}`}
+              className="flex items-center gap-4 px-4 py-3 rounded-md cursor-pointer w-fit hover:outline hover:outline-white/50 duration-50"
+            >
+              {fileName ? (
+                <>
+                  <FileTextIcon size={24} />
+                  <span className="text-white">{fileName}</span>
+                </>
+              ) : (
+                <div className="flex flex-row gap-3">
+                  <UploadSimpleIcon size={24} />
+                  Resume
+                </div>
+              )}
+            </label>
+          </div>
+        </FormControl>
+        <FormMessage />
+      </FormItem>
+    );
+  };
 };
 
 /**

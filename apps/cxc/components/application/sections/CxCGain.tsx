@@ -5,6 +5,7 @@ import { UseFormReturn } from "react-hook-form";
 import { renderTextAreaField } from "@/components/FormHelpers";
 import AppSection from "../AppSection";
 import { AppFormValues } from "@/lib/schemas/application";
+import { APP_Q_FIELDS } from "@/constants/application";
 
 interface CxCGainProps {
   readonly form: UseFormReturn<AppFormValues>;
@@ -17,7 +18,7 @@ export function CxCGain({ form }: CxCGainProps) {
         <FormField
           key="cxc_gain"
           control={form.control}
-          name="cxc_gain"
+          name={APP_Q_FIELDS.cxc_gain}
           render={renderTextAreaField("I hope to...", {
             label:
               "What do you hope to gain from your time at CxC? (max 500 char)",

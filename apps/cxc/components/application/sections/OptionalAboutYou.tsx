@@ -9,7 +9,7 @@ import { useEffect } from "react";
 import {
   ETHNICITIES,
   GENDERS,
-  PERSONAL_INFO_FIELDS,
+  OPTIONAL_ABOUT_YOU_FIELDS,
 } from "@/constants/application";
 
 interface OptionalAboutYouProps {
@@ -34,7 +34,7 @@ export function OptionalAboutYou({ form }: OptionalAboutYouProps) {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 items-start">
           <FormField
             control={form.control}
-            name={PERSONAL_INFO_FIELDS.gender}
+            name={OPTIONAL_ABOUT_YOU_FIELDS.gender}
             render={renderSelectField("Select Gender", GENDERS, {
               label: "Select your gender",
               variant: "application",
@@ -43,7 +43,7 @@ export function OptionalAboutYou({ form }: OptionalAboutYouProps) {
 
           <FormField
             control={form.control}
-            name={PERSONAL_INFO_FIELDS.ethnicity}
+            name={OPTIONAL_ABOUT_YOU_FIELDS.ethnicity}
             render={renderSelectField("Select Ethnicity", ETHNICITIES, {
               label: "Select your ethnicity",
               variant: "application",

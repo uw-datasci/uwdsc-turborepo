@@ -12,8 +12,9 @@ import { UseFormReturn } from "react-hook-form";
 import { renderTextField, renderSelectField } from "@/components/FormHelpers";
 import {
   DIETARY_OPTIONS,
-  PERSONAL_INFO_FIELDS,
+  CONTACT_INFO_FIELDS,
   TSHIRT_OPTIONS,
+  OPTIONAL_ABOUT_YOU_FIELDS,
 } from "@/constants/application";
 import { AppFormValues } from "@/lib/schemas/application";
 import { useEffect } from "react";
@@ -40,7 +41,7 @@ export function PersonalInfo({ form }: PersonalInfoProps) {
           <CardContent className="space-y-6">
             <FormField
               control={form.control}
-              name={PERSONAL_INFO_FIELDS.email}
+              name={CONTACT_INFO_FIELDS.email}
               render={renderTextField("Email", {
                 label: "Email",
                 required: true,
@@ -51,7 +52,7 @@ export function PersonalInfo({ form }: PersonalInfoProps) {
 
             <FormField
               control={form.control}
-              name={PERSONAL_INFO_FIELDS.phone}
+              name={CONTACT_INFO_FIELDS.phone}
               render={renderTextField("Phone Number", {
                 label: "Phone Number",
                 required: true,
@@ -62,7 +63,7 @@ export function PersonalInfo({ form }: PersonalInfoProps) {
 
             <FormField
               control={form.control}
-              name={PERSONAL_INFO_FIELDS.discord}
+              name={CONTACT_INFO_FIELDS.discord}
               render={renderTextField("Discord", {
                 label: "Discord",
                 required: true,
@@ -105,7 +106,7 @@ export function PersonalInfo({ form }: PersonalInfoProps) {
 
             <FormField
               control={form.control}
-              name={PERSONAL_INFO_FIELDS.gender}
+              name={OPTIONAL_ABOUT_YOU_FIELDS.gender}
               render={renderSelectField(
                 "Select Gender",
                 ["Male", "Female", "Non-binary", "Other", "Prefer not to say"],
@@ -115,7 +116,7 @@ export function PersonalInfo({ form }: PersonalInfoProps) {
 
             <FormField
               control={form.control}
-              name={PERSONAL_INFO_FIELDS.ethnicity}
+              name={OPTIONAL_ABOUT_YOU_FIELDS.ethnicity}
               render={renderSelectField(
                 "Select Ethnicity",
                 [

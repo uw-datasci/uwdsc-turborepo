@@ -27,14 +27,14 @@ export const applicationSchema = z.object({
   // experience
   university_name: z.string().min(1, "University name is required"),
   university_name_other: z.string().optional(),
-  program_other: z.string().optional(),
   program: z.string().min(1, "Program is required"),
+  program_other: z.string().optional(),
   year_of_study: z.string().min(1, "Year of study is required"),
 
   prior_hackathon_experience: z
     .array(z.enum(["None", "Hacker", "Judge", "Mentor", "Organizer"]))
     .min(1, "Please select at least one option"),
-  hackathons_attended: z.coerce.number().int().min(0),
+  hackathons_attended: z.enum(["0", "1", "2", "3", "4+"]),
 
   github: z
     .string()

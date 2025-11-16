@@ -4,3 +4,6 @@ export * from "./OptionalAboutYou";
 export * from "./Education";
 export * from "./PriorHackExp";
 export * from "./LinksAndDocs";
+export * from "./CxCGain";
+export * from "./SillyQ";
+export * from "./Review";

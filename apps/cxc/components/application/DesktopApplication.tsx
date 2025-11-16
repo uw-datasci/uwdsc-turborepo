@@ -33,9 +33,10 @@ import {
   Education,
   PriorHackExp,
   LinksAndDocs,
+  CxCGain,
+  SillyQ,
+  Review,
 } from "./sections";
-import { CxCGain } from "./sections/CxCGain";
-import { SillyQ } from "./sections/SillyQ";
 
 // Animation variants for sliding transitions
 const slideVariants = {
@@ -106,24 +107,15 @@ export default function DesktopApplication() {
   };
 
   const renderButton = () => {
-    const isLastStep = currentStep === FINAL_STEP_COUNT;
+    const isLastStep = currentStep === FINAL_STEP_COUNT - 1;
     const isButtonDisabled = !isStepValid(form, currentStep) || isLoading;
-
-    let buttonClassName = "hover:scale-105 ";
-    if (isLastStep) {
-      buttonClassName += "bg-gradient-orange text-white hover:opacity-90 ";
-      buttonClassName += isButtonDisabled ? "disabled" : "animate-glow-pulse";
-    } else {
-      buttonClassName +=
-        "rounded-none bg-white text-black !h-auto px-4.5 py-4 font-normal text-xl hover:bg-white/80";
-    }
 
     return (
       <Button
         size="lg"
         onClick={handleNext}
         disabled={isButtonDisabled}
-        className={buttonClassName}
+        className="rounded-none bg-white text-black !h-auto px-4.5 py-4 font-normal text-xl hover:bg-white/80 hover:scale-105"
       >
         {isLoading ? (
           <>
@@ -165,6 +157,8 @@ export default function DesktopApplication() {
             <SillyQ form={form} />
           </div>
         );
+      case 3:
+        return <Review form={form} />;
     }
   };
 

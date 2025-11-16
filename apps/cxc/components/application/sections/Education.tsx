@@ -13,6 +13,7 @@ import { useEffect } from "react";
 import {
   GRADUATION_YEARS,
   PROGRAM_OPTIONS,
+  UNIVERSITY_INFO_FIELDS,
   UNIVERSITY_OPTIONS,
 } from "@/constants/application";
 
@@ -47,7 +48,7 @@ export function Education({ form }: EducationProps) {
           <div className="space-y-4">
             <FormField
               control={form.control}
-              name="university_name"
+              name={UNIVERSITY_INFO_FIELDS.university_name}
               render={renderComboboxField(
                 "Select your university...",
                 UNIVERSITY_OPTIONS,
@@ -64,7 +65,7 @@ export function Education({ form }: EducationProps) {
             {universityName === "Other" && (
               <FormField
                 control={form.control}
-                name="university_name_other"
+                name={UNIVERSITY_INFO_FIELDS.university_name_other}
                 render={renderTextField("University Name", {
                   label: "Specify university name",
                   required: true,
@@ -78,7 +79,7 @@ export function Education({ form }: EducationProps) {
           <div className="space-y-4">
             <FormField
               control={form.control}
-              name="program"
+              name={UNIVERSITY_INFO_FIELDS.program}
               render={renderComboboxField(
                 "Select your program...",
                 PROGRAM_OPTIONS,
@@ -95,7 +96,7 @@ export function Education({ form }: EducationProps) {
             {programName === "Other" && (
               <FormField
                 control={form.control}
-                name="program_other"
+                name={UNIVERSITY_INFO_FIELDS.program_other}
                 render={renderTextField("Program of Study", {
                   label: "Specify program of study",
                   required: true,
@@ -108,7 +109,7 @@ export function Education({ form }: EducationProps) {
           {/* Year of Study - spans both columns on mobile, single column on desktop */}
           <FormField
             control={form.control}
-            name="year_of_study"
+            name={UNIVERSITY_INFO_FIELDS.year_of_study}
             render={renderSelectField("Year of Study", GRADUATION_YEARS, {
               label: "Select your year of study",
               required: true,

@@ -28,7 +28,9 @@ export const isStepValid = (
         tshirt_size !== undefined &&
         !errors.dietary_restrictions_other &&
         (dietary_restrictions !== "Other" ||
-          (dietary_restrictions_other?.trim().length ?? 0) > 0);
+          (dietary_restrictions_other?.trim().length ?? 0) > 0) &&
+        !errors.gender &&
+        !errors.ethnicity;
 
       const validContactInfo =
         !errors.email && !errors.phone && !errors.discord;
