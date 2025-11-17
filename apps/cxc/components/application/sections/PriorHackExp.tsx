@@ -5,7 +5,6 @@ import { UseFormReturn } from "react-hook-form";
 import {
   renderCheckboxGroupField,
   renderSelectField,
-  renderTextField,
 } from "@/components/FormHelpers";
 import {
   HACKER_EXPERIENCE_OPTIONS,
@@ -37,11 +36,15 @@ export function PriorHackExp({ form }: PriorHackExpProps) {
             <FormField
               control={form.control}
               name={PRIOR_HACK_EXP_FIELDS.hackathons_attended}
-              render={renderSelectField("Hackathons Attended", NUMBER_HACKATHONS, {
-                label: "Number of Hackathons Attended",
-                required: true,
-                variant: "application",
-              })}
+              render={renderSelectField(
+                "Hackathons Attended",
+                NUMBER_HACKATHONS,
+                {
+                  label: "Number of Hackathons Attended",
+                  required: true,
+                  variant: "application",
+                }
+              )}
             />
           </div>
         </div>

@@ -1,6 +1,6 @@
 "use client";
 
-import { Form, FormField, UploadSimpleIcon } from "@uwdsc/ui";
+import { Form, FormField } from "@uwdsc/ui";
 import { UseFormReturn } from "react-hook-form";
 import {
   renderTextField,
