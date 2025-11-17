@@ -58,7 +58,7 @@ export function Personal({ form }: PersonalProps) {
                 render={renderTextField(
                   "Personal Email Address",
                   "johndoe@gmail.com",
-                  { type: "email" }
+                  { type: "email" },
                 )}
               />
 
@@ -69,7 +69,7 @@ export function Personal({ form }: PersonalProps) {
                 render={renderTextField(
                   "UW Email Address",
                   "jdoe@uwaterloo.ca",
-                  { type: "email" }
+                  { type: "email" },
                 )}
               />
             </CardContent>
@@ -98,7 +98,7 @@ export function Personal({ form }: PersonalProps) {
                 render={renderSelectField(
                   "Academic Term (Current or Most Recent)",
                   "Select your academic term",
-                  terms
+                  terms,
                 )}
               />
 
@@ -109,7 +109,7 @@ export function Personal({ form }: PersonalProps) {
                 render={renderSelectField(
                   "Location Next Term",
                   "Select where you will be next term",
-                  locationOptions
+                  locationOptions,
                 )}
               />
             </CardContent>
@@ -125,7 +125,7 @@ export function Personal({ form }: PersonalProps) {
                 control={form.control}
                 name="club_experience"
                 render={renderRadioField(
-                  "Have you been a member of UW Data Science Club before?"
+                  "Have you been a member of UW Data Science Club before?",
                 )}
               />
             </CardContent>

@@ -10,7 +10,7 @@ export async function POST(req: NextRequest) {
     if (!file) {
       return Response.json(
         { error: "Missing 'file' upload field" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 

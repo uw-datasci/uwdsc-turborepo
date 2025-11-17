@@ -153,7 +153,7 @@ export const commonColumnDefs = {
   boolean: (
     field: string,
     headerName: string,
-    options?: Partial<ColDef>
+    options?: Partial<ColDef>,
   ): ColDef => ({
     field,
     headerName,
@@ -171,7 +171,7 @@ export const commonColumnDefs = {
   date: (
     field: string,
     headerName: string,
-    options?: Partial<ColDef>
+    options?: Partial<ColDef>,
   ): ColDef => ({
     field,
     headerName,
@@ -189,7 +189,7 @@ export const commonColumnDefs = {
   text: (
     field: string,
     headerName: string,
-    options?: Partial<ColDef>
+    options?: Partial<ColDef>,
   ): ColDef => ({
     field,
     headerName,
@@ -209,7 +209,7 @@ export const commonColumnDefs = {
  */
 export function exportToCSV(
   gridApi: any,
-  filename: string = `export-${new Date().toISOString().split("T")[0]}`
+  filename: string = `export-${new Date().toISOString().split("T")[0]}`,
 ) {
   if (gridApi) {
     gridApi.exportDataAsCsv({

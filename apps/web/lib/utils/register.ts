@@ -9,7 +9,7 @@ import { RegistrationFormValues } from "@/lib/schemas/register";
  */
 export const isStepValid = (
   form: UseFormReturn<RegistrationFormValues>,
-  currentStep: number
+  currentStep: number,
 ): boolean => {
   const { errors } = form.formState;
 

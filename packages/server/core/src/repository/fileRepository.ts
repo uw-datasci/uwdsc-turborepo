@@ -20,7 +20,7 @@ export class FileRepository {
    * Upload a file to Supabase storage
    */
   async uploadFile(
-    options: FileUploadOptions
+    options: FileUploadOptions,
   ): Promise<{ data: { path: string } | null; error: Error | null }> {
     const { file, objectKey, contentType } = options;
 

@@ -21,7 +21,7 @@ export class FileService {
   constructor(
     supabaseClient: SupabaseClient,
     bucketName: string,
-    validationConfig: FileValidationConfig
+    validationConfig: FileValidationConfig,
   ) {
     this.repository = new FileRepository(supabaseClient, bucketName);
     this.validationConfig = validationConfig;
@@ -120,7 +120,7 @@ export class FileService {
     } catch (error) {
       throw new ApiError(
         `File upload failed: ${(error as Error).message}`,
-        500
+        500,
       );
     }
   }
@@ -138,7 +138,7 @@ export class FileService {
     } catch (error) {
       throw new ApiError(
         `Failed to get file URL: ${(error as Error).message}`,
-        500
+        500,
       );
     }
   }
@@ -164,7 +164,7 @@ export class FileService {
     } catch (error) {
       throw new ApiError(
         `Failed to delete file: ${(error as Error).message}`,
-        500
+        500,
       );
     }
   }
@@ -173,7 +173,7 @@ export class FileService {
    * List user files
    */
   async listUserFiles(
-    userId: string
+    userId: string,
   ): Promise<
     { success: true; files: any[] } | { success: false; error: string }
   > {
@@ -194,7 +194,7 @@ export class FileService {
     } catch (error) {
       throw new ApiError(
         `Failed to list files: ${(error as Error).message}`,
-        500
+        500,
       );
     }
   }

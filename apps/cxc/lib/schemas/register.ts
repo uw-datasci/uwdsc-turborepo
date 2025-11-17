@@ -6,9 +6,8 @@ import { z } from "zod";
 
 export const registrationSchema = z
   .object({
-    first_name: z.string().trim().nonempty("First name is required"),
-    last_name: z.string().trim().nonempty("Last name is required"),
-    dob: z.string().nonempty("Date of birth is required"),
+    first_name: z.string().trim().nonempty("Please enter your first name"),
+    last_name: z.string().trim().nonempty("Please enter your last name"),
     email: z.string().email("Please enter a valid email address"),
     password: z
       .string()
@@ -25,7 +24,6 @@ export type RegistrationFormValues = z.infer<typeof registrationSchema>;
 export const registrationDefaultValues: Partial<RegistrationFormValues> = {
   first_name: "",
   last_name: "",
-  dob: "",
   email: "",
   password: "",
   confirmPassword: "",

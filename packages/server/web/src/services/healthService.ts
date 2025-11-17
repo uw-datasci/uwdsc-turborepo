@@ -18,7 +18,7 @@ export class HealthService {
     } catch (error) {
       throw new ApiError(
         `Failed to get system health: ${(error as Error).message}`,
-        500
+        500,
       );
     }
   }

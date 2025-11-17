@@ -10,7 +10,7 @@ import { AVAILABLE_POSITIONS } from "@/constants/positions";
  */
 export const isStepValid = (
   form: UseFormReturn<AppFormValues>,
-  currentStep: number
+  currentStep: number,
 ): boolean => {
   const { errors } = form.formState;
 
@@ -54,13 +54,13 @@ export const isStepValid = (
       // Helper function to validate position answers
       const validatePositionAnswers = (
         positionId: string | undefined,
-        answers: Record<string, string>
+        answers: Record<string, string>,
       ): boolean => {
         if (!positionId) return true; // No position selected, so valid
 
         // Find the position data to get the expected number of questions
         const positionData = AVAILABLE_POSITIONS.find(
-          (p) => p.id === positionId
+          (p) => p.id === positionId,
         );
         if (!positionData) return false;
 
@@ -77,15 +77,15 @@ export const isStepValid = (
       const hasPosition1 = !!position1;
       const hasPosition1Answers = validatePositionAnswers(
         position1,
-        position1Answers
+        position1Answers,
       );
       const hasPosition2Answers = validatePositionAnswers(
         position2,
-        position2Answers
+        position2Answers,
       );
       const hasPosition3Answers = validatePositionAnswers(
         position3,
-        position3Answers
+        position3Answers,
       );
 
       return (

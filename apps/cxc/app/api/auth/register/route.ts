@@ -4,12 +4,12 @@ import { createAuthService } from "@/lib/services";
 export async function POST(request: NextRequest): Promise<NextResponse> {
   try {
     const body = await request.json();
-    const { email, password } = body;
+    const { email, password, metadata } = body;
 
     if (!email || !password) {
       return NextResponse.json(
         { error: "Email and password are required" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -17,7 +17,8 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     const emailRedirectTo = `${process.env.NEXT_PUBLIC_APP_URL}/api/auth/callback?next=/complete-profile`;
     const result = await authService.register(
       { email, password },
-      emailRedirectTo
+      emailRedirectTo,
+      metadata,
     );
 
     if (!result.success) {
@@ -35,7 +36,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     console.error("Registration error:", error);
     return NextResponse.json(
       { error: "An unexpected error occurred" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
