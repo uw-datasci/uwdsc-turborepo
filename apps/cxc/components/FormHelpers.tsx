@@ -420,7 +420,7 @@ export const renderFileUploadField = <T extends Record<string, any>>(
             />
             <label
               htmlFor={`file-upload-${fieldProps.name}`}
-              className="flex items-center gap-4 px-4 py-3 rounded-md cursor-pointer w-fit hover:outline hover:outline-white/50 duration-50"
+              className={`flex items-center gap-4 px-4 py-3 rounded-md cursor-pointer w-fit duration-50 mt-2 border border-white/50${fileName ? "" : " border-dashed "}`}
             >
               {fileName ? (
                 <>

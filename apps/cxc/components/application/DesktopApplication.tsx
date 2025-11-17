@@ -218,7 +218,7 @@ export default function DesktopApplication() {
                 size="lg"
                 onClick={handlePrevious}
                 disabled={currentStep === 0}
-                className="rounded-none bg-black !h-auto !px-4.5 !py-4 text-white hover:scale-105 hover:bg-black/50"
+                className="rounded-none bg-black !h-auto !px-4.5 !py-4 text-white border border-white hover:scale-105 hover:bg-black/50"
               >
                 <ArrowLeftIcon size={24} className="!w-6 !h-6" />
               </Button>
