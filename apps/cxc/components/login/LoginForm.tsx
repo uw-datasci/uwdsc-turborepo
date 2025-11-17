@@ -104,7 +104,9 @@ export function LoginForm() {
                 </div>
                 {/* Show Authentication error */}
                 {authError && (
-                  <div className="text-red-400 text-base mb-4">{authError}</div>
+                  <div className="text-destructive text-base mb-4">
+                    {authError}
+                  </div>
                 )}
               </AppSection>
             </div>

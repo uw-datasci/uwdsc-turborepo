@@ -102,7 +102,7 @@ export function VerifyEmailModal({
               className={`text-sm text-center ${
                 resendStatus.includes("successfully")
                   ? "text-green-400"
-                  : "text-red-400"
+                  : "text-destructive"
               }`}
             >
               {resendStatus}

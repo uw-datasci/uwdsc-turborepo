@@ -166,7 +166,9 @@ export default function CompleteProfilePage() {
               </div>
               {/* Show error */}
               {authError && (
-                <div className="text-red-400 text-base mt-3">{authError}</div>
+                <div className="text-destructive text-base mt-3">
+                  {authError}
+                </div>
               )}
               <div className="flex flex-col gap-1 items-start justify-between mt-6">
                 <Button
