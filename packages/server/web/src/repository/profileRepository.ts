@@ -19,7 +19,7 @@ export class ProfileRepository extends BaseRepository {
    */
   async updateProfile(
     userId: string,
-    data: ProfileUpdateData
+    data: ProfileUpdateData,
   ): Promise<{ success: boolean; error?: string }> {
     try {
       const query = `

@@ -12,7 +12,7 @@ export const applicationSchema = z
       .email("UWaterloo email is required")
       .regex(
         /@uwaterloo\.ca$/,
-        "Must be a valid UWaterloo email (@uwaterloo.ca)"
+        "Must be a valid UWaterloo email (@uwaterloo.ca)",
       ),
     program: z.string().min(1, "Program is required"),
     academic_term: z.string().min(1, "Academic term is required"),
@@ -56,7 +56,7 @@ export const applicationSchema = z
               answer &&
               typeof answer === "string" &&
               answer.length >= 10 &&
-              answer.length <= 1000
+              answer.length <= 1000,
           )
         );
       }
@@ -65,7 +65,7 @@ export const applicationSchema = z
     {
       message: "Please answer all questions for your selected position",
       path: ["position_1_answers"],
-    }
+    },
   )
   .refine(
     (data) => {
@@ -81,7 +81,7 @@ export const applicationSchema = z
               answer &&
               typeof answer === "string" &&
               answer.length >= 10 &&
-              answer.length <= 1000
+              answer.length <= 1000,
           )
         );
       }
@@ -90,7 +90,7 @@ export const applicationSchema = z
     {
       message: "Please answer all questions for your selected position",
       path: ["position_2_answers"],
-    }
+    },
   )
   .refine(
     (data) => {
@@ -106,7 +106,7 @@ export const applicationSchema = z
               answer &&
               typeof answer === "string" &&
               answer.length >= 10 &&
-              answer.length <= 1000
+              answer.length <= 1000,
           )
         );
       }
@@ -115,7 +115,7 @@ export const applicationSchema = z
     {
       message: "Please answer all questions for your selected position",
       path: ["position_3_answers"],
-    }
+    },
   );
 
 /**

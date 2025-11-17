@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import Link from 'next/link';
+import Link from "next/link";
 
 export default function AuthCodeErrorPage() {
   return (
@@ -10,13 +10,13 @@ export default function AuthCodeErrorPage() {
         There was an error verifying your email. Please try again.
       </p>
       <div className="space-y-4">
-        <Link 
+        <Link
           href="/login"
           className="block w-full px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
         >
           Try Login Again
         </Link>
-        <Link 
+        <Link
           href="/register"
           className="block w-full px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700"
         >

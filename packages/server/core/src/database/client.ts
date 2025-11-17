@@ -7,7 +7,7 @@ import type { CookieOptions } from "@supabase/ssr";
 export function createSupabaseBrowserClient() {
   return createBrowserClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_DEFAULT_KEY!
+    process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_DEFAULT_KEY!,
   );
 }
 
@@ -39,7 +39,7 @@ export function createSupabaseServerClient(cookieStore: {
           }
         },
       },
-    }
+    },
   );
 }
 
@@ -69,7 +69,7 @@ export function createSupabaseMiddlewareClient<
         [key: string]: any;
       }) => void;
     };
-  }
+  },
 ) {
   return createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -90,6 +90,6 @@ export function createSupabaseMiddlewareClient<
           }
         },
       },
-    }
+    },
   );
 }

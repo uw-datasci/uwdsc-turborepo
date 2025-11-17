@@ -42,7 +42,7 @@ const RESUME_VALIDATION_CONFIG: FileValidationConfig = {
 export class ResumeService extends FileService {
   constructor(
     supabaseClient: SupabaseClient,
-    validationConfig: FileValidationConfig = RESUME_VALIDATION_CONFIG
+    validationConfig: FileValidationConfig = RESUME_VALIDATION_CONFIG,
   ) {
     super(supabaseClient, "resumes", validationConfig);
   }
@@ -72,7 +72,7 @@ export class ResumeService extends FileService {
    * List user resumes
    */
   async listUserResumes(
-    userId: string
+    userId: string,
   ): Promise<
     { success: true; resumes: any[] } | { success: false; error: string }
   > {

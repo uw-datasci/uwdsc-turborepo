@@ -28,7 +28,7 @@ const generateRings = (
   count: number,
   solidCount = 2,
   vertOffset = 10,
-  horzOffset = 0
+  horzOffset = 0,
 ) => {
   const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
 
@@ -67,7 +67,7 @@ const RippleGroup = ({
     count,
     solidCount,
     vertOffset,
-    horzOffset
+    horzOffset,
   );
 
   return (

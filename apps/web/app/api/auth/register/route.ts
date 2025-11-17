@@ -9,7 +9,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     if (!email || !password) {
       return NextResponse.json(
         { error: "Email and password are required" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -17,7 +17,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     const emailRedirectTo = `${process.env.NEXT_PUBLIC_APP_URL}/api/auth/callback?next=/complete-profile`;
     const result = await authService.register(
       { email, password },
-      emailRedirectTo
+      emailRedirectTo,
     );
 
     if (!result.success) {
@@ -35,7 +35,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     console.error("Registration error:", error);
     return NextResponse.json(
       { error: "An unexpected error occurred" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

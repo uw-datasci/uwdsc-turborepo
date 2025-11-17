@@ -1,20 +1,20 @@
-'use client';
+"use client";
 
-import * as React from 'react';
+import * as React from "react";
 import {
   type SpringOptions,
   type UseInViewOptions,
   useInView,
   useMotionValue,
   useSpring,
-} from 'motion/react';
+} from "motion/react";
 
-type CountingNumberProps = React.ComponentProps<'span'> & {
+type CountingNumberProps = React.ComponentProps<"span"> & {
   number: number;
   fromNumber?: number;
   padStart?: boolean;
   inView?: boolean;
-  inViewMargin?: UseInViewOptions['margin'];
+  inViewMargin?: UseInViewOptions["margin"];
   inViewOnce?: boolean;
   decimalSeparator?: string;
   transition?: SpringOptions;
@@ -27,9 +27,9 @@ function CountingNumber({
   fromNumber = 0,
   padStart = false,
   inView = false,
-  inViewMargin = '0px',
+  inViewMargin = "0px",
   inViewOnce = true,
-  decimalSeparator = '.',
+  decimalSeparator = ".",
   transition = { stiffness: 90, damping: 50 },
   decimalPlaces = 0,
   className,
@@ -40,10 +40,10 @@ function CountingNumber({
 
   const numberStr = number.toString();
   const decimals =
-    typeof decimalPlaces === 'number'
+    typeof decimalPlaces === "number"
       ? decimalPlaces
-      : numberStr.includes('.')
-        ? (numberStr.split('.')[1]?.length ?? 0)
+      : numberStr.includes(".")
+        ? (numberStr.split(".")[1]?.length ?? 0)
         : 0;
 
   const motionVal = useMotionValue(fromNumber);
@@ -59,7 +59,7 @@ function CountingNumber({
   }, [isInView, number, motionVal]);
 
   React.useEffect(() => {
-    const unsubscribe = springVal.on('change', (latest) => {
+    const unsubscribe = springVal.on("change", (latest) => {
       if (localRef.current) {
         let formatted =
           decimals > 0
@@ -67,13 +67,13 @@ function CountingNumber({
             : Math.round(latest).toString();
 
         if (decimals > 0) {
-          formatted = formatted.replace('.', decimalSeparator);
+          formatted = formatted.replace(".", decimalSeparator);
         }
 
         if (padStart) {
           const finalIntLength = Math.floor(Math.abs(number)).toString().length;
           const [intPart, fracPart] = formatted.split(decimalSeparator);
-          const paddedInt = intPart?.padStart(finalIntLength, '0') ?? '';
+          const paddedInt = intPart?.padStart(finalIntLength, "0") ?? "";
           formatted = fracPart
             ? `${paddedInt}${decimalSeparator}${fracPart}`
             : paddedInt;
@@ -87,9 +87,9 @@ function CountingNumber({
 
   const finalIntLength = Math.floor(Math.abs(number)).toString().length;
   const initialText = padStart
-    ? '0'.padStart(finalIntLength, '0') +
-      (decimals > 0 ? decimalSeparator + '0'.repeat(decimals) : '')
-    : '0' + (decimals > 0 ? decimalSeparator + '0'.repeat(decimals) : '');
+    ? "0".padStart(finalIntLength, "0") +
+      (decimals > 0 ? decimalSeparator + "0".repeat(decimals) : "")
+    : "0" + (decimals > 0 ? decimalSeparator + "0".repeat(decimals) : "");
 
   return (
     <span

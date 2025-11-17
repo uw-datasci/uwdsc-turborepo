@@ -18,7 +18,7 @@ export async function GET(request: Request) {
     if (userError || !user) {
       return NextResponse.json(
         { error: "Unauthorized", message: "Authentication required" },
-        { status: 401 }
+        { status: 401 },
       );
     }
 
@@ -46,7 +46,7 @@ export async function GET(request: Request) {
         error: "Internal server error",
         message: error.message || "Failed to fetch membership data",
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

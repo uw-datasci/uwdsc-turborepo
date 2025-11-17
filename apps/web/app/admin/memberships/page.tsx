@@ -29,7 +29,7 @@ export default function AdminMembershipsPage() {
       } catch (err) {
         console.error("Error fetching membership data:", err);
         setError(
-          err instanceof Error ? err.message : "Failed to load membership data"
+          err instanceof Error ? err.message : "Failed to load membership data",
         );
       } finally {
         setLoading(false);

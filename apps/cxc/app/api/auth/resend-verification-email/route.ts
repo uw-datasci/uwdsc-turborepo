@@ -14,7 +14,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     const emailRedirectTo = `${process.env.NEXT_PUBLIC_APP_URL}/api/auth/callback?next=/complete-profile`;
     const result = await authService.resendVerificationEmail(
       email,
-      emailRedirectTo
+      emailRedirectTo,
     );
 
     if (!result.success) {
@@ -29,7 +29,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     console.error("Resend verification error:", error);
     return NextResponse.json(
       { error: "An unexpected error occurred" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

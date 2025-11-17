@@ -41,7 +41,9 @@ export function VerifyEmailModal({
       setResendStatus("Verification email resent successfully.");
     } catch (error: any) {
       setResendStatus(
-        error?.error || error?.message || "Failed to resend verification email."
+        error?.error ||
+          error?.message ||
+          "Failed to resend verification email.",
       );
     } finally {
       setIsLoading(false);

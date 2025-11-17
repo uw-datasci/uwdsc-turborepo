@@ -38,7 +38,7 @@ export async function middleware(request: NextRequest) {
 
   // Check if route is protected
   const isProtectedRoute = protectedRoutes.some((route) =>
-    pathname.startsWith(route)
+    pathname.startsWith(route),
   );
   const isCompleteProfileRoute = pathname === "/complete-profile";
 

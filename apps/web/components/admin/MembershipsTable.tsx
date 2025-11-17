@@ -31,7 +31,7 @@ export function MembershipsTable({ profiles }: MembershipsTableProps) {
       commonColumnDefs.text("faculty", "Faculty"),
       commonColumnDefs.text("term", "Term"),
     ],
-    []
+    [],
   );
 
   // Export to CSV using abstracted utility
@@ -39,7 +39,7 @@ export function MembershipsTable({ profiles }: MembershipsTableProps) {
     if (gridRef.current?.api) {
       exportToCSV(
         gridRef.current.api,
-        `memberships-${new Date().toISOString().split("T")[0]}`
+        `memberships-${new Date().toISOString().split("T")[0]}`,
       );
     }
   }, []);

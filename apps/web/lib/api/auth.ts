@@ -28,7 +28,7 @@ import { createApiError } from "./errors";
  * @throws Error if registration fails
  */
 export async function register(
-  credentials: RegisterRequest
+  credentials: RegisterRequest,
 ): Promise<RegisterResponse> {
   const response = await fetch("/api/auth/register", {
     method: "POST",
@@ -94,7 +94,7 @@ export async function getAuthMe(): Promise<AuthMeResponse> {
  * @throws Error if resend fails
  */
 export async function resendVerificationEmail(
-  request: ResendVerificationEmailRequest
+  request: ResendVerificationEmailRequest,
 ): Promise<ResendVerificationEmailResponse> {
   const response = await fetch("/api/auth/resend-verification-email", {
     method: "POST",

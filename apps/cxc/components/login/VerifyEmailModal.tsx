@@ -41,7 +41,9 @@ export function VerifyEmailModal({
       setResendStatus("Verification email resent successfully.");
     } catch (error: any) {
       setResendStatus(
-        error?.error || error?.message || "Failed to resend verification email."
+        error?.error ||
+          error?.message ||
+          "Failed to resend verification email.",
       );
     } finally {
       setIsLoading(false);
@@ -102,7 +104,7 @@ export function VerifyEmailModal({
               className={`text-sm text-center ${
                 resendStatus.includes("successfully")
                   ? "text-green-400"
-                  : "text-red-400"
+                  : "text-destructive"
               }`}
             >
               {resendStatus}
