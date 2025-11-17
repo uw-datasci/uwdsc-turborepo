@@ -41,13 +41,13 @@ export function Positions({ form }: PositionsProps) {
   // Get available positions excluding already selected ones
   const getAvailablePositions = (
     currentPosition?: string,
-    includeNone: boolean = false
+    includeNone: boolean = false,
   ) => {
     const selected = [position1, position2, position3].filter(
-      (p) => p && p !== currentPosition
+      (p) => p && p !== currentPosition,
     );
     const available = AVAILABLE_POSITIONS.filter(
-      (p) => !selected.includes(p.id)
+      (p) => !selected.includes(p.id),
     ).map((p) => p.name);
 
     // Add "None" option for optional positions
@@ -119,7 +119,7 @@ export function Positions({ form }: PositionsProps) {
                 return renderSelectField(
                   "Select Position",
                   "Choose a position to apply for",
-                  availablePositions
+                  availablePositions,
                 )({
                   field: {
                     ...field,
@@ -146,7 +146,7 @@ export function Positions({ form }: PositionsProps) {
                       q.question,
                       q.placeholder,
                       undefined,
-                      true // Required for position 1
+                      true, // Required for position 1
                     )}
                   />
                 ))}
@@ -173,13 +173,13 @@ export function Positions({ form }: PositionsProps) {
               render={({ field }) => {
                 const availablePositions = getAvailablePositions(
                   position2,
-                  true // Include "None" option
+                  true, // Include "None" option
                 );
                 return renderSelectField(
                   "Select Position",
                   "Choose a position to apply for",
                   availablePositions,
-                  false
+                  false,
                 )({
                   field: {
                     ...field,
@@ -206,7 +206,7 @@ export function Positions({ form }: PositionsProps) {
                       q.question,
                       q.placeholder,
                       undefined,
-                      true // Required if position 2 is selected
+                      true, // Required if position 2 is selected
                     )}
                   />
                 ))}
@@ -233,13 +233,13 @@ export function Positions({ form }: PositionsProps) {
               render={({ field }) => {
                 const availablePositions = getAvailablePositions(
                   position3,
-                  true // Include "None" option
+                  true, // Include "None" option
                 );
                 return renderSelectField(
                   "Select Position",
                   "Choose a position to apply for",
                   availablePositions,
-                  false
+                  false,
                 )({
                   field: {
                     ...field,
@@ -266,7 +266,7 @@ export function Positions({ form }: PositionsProps) {
                       q.question,
                       q.placeholder,
                       undefined,
-                      true // Required if position 3 is selected
+                      true, // Required if position 3 is selected
                     )}
                   />
                 ))}

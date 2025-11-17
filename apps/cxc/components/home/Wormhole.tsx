@@ -175,7 +175,7 @@ function WormholeWithRings({
       });
 
       const cube = new THREE.Mesh(geometry, material);
-      
+
       cube.userData = {
         angle: Math.random() * Math.PI * 2,
         speed: 0.02 + Math.random() * 0.02,
@@ -183,7 +183,7 @@ function WormholeWithRings({
           x: (Math.random() - 0.5) * 0.05,
           y: (Math.random() - 0.5) * 0.05,
           z: (Math.random() - 0.5) * 0.05,
-        }
+        },
       };
 
       cubeArray.push(cube);
@@ -272,9 +272,9 @@ function WormholeWithRings({
       cube.visible = true;
 
       const radius = getRadiusAtY(animatedY);
-      
+
       cube.userData.angle += cube.userData.speed * 0.5;
-      
+
       const spiralRadius = radius * (0.3 + Math.sin(animatedY * 0.1) * 0.2);
       const x = Math.cos(cube.userData.angle) * spiralRadius;
       const z = Math.sin(cube.userData.angle) * spiralRadius;

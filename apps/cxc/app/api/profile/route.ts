@@ -39,7 +39,7 @@ export async function GET(request: NextRequest) {
     console.error("Error fetching profile:", error);
     return NextResponse.json(
       { error: "Failed to fetch profile" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -63,7 +63,7 @@ export async function PATCH(request: NextRequest) {
       if (!body[field]) {
         return NextResponse.json(
           { error: `${field} is required` },
-          { status: 400 }
+          { status: 400 },
         );
       }
     }
@@ -78,7 +78,7 @@ export async function PATCH(request: NextRequest) {
     } catch {
       return NextResponse.json(
         { error: "Invalid date of birth format" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -92,7 +92,7 @@ export async function PATCH(request: NextRequest) {
     if (!result.success) {
       return NextResponse.json(
         { error: result.error || "Failed to update profile" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -101,7 +101,7 @@ export async function PATCH(request: NextRequest) {
     console.error("Error updating profile:", error);
     return NextResponse.json(
       { error: "Failed to update profile" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

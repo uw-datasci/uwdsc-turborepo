@@ -9,7 +9,7 @@ import Telus from "../public/logos/telus.svg";
 
 export const CURRENT_SPONSORS: Sponsor[] = [
   { name: "Federato", logo: Federato },
-  { name: "Telus", logo: Telus, },
+  { name: "Telus", logo: Telus },
   { name: "SAP", logo: Sap },
   { name: "Intact", logo: Intact },
   { name: "Runql", logo: Runql },

@@ -145,7 +145,7 @@ const comboboxContentStyles: Record<FormFieldVariant, string> = {
  */
 export const renderTextField = <T extends Record<string, any>>(
   placeholder: string,
-  options: TextFieldOptions = {}
+  options: TextFieldOptions = {},
 ) => {
   const { label, required = false, variant = "default", inputProps } = options;
 
@@ -172,7 +172,7 @@ export const renderTextField = <T extends Record<string, any>>(
             inputStyles[variant],
             variant === "application" &&
               !fieldState.error &&
-              "focus-visible:ring-white/30 focus-visible:border-white"
+              "focus-visible:ring-white/30 focus-visible:border-white",
           )}
         />
       </FormControl>
@@ -194,7 +194,7 @@ export const renderTextField = <T extends Record<string, any>>(
 export const renderSelectField = <T extends Record<string, any>>(
   placeholder: string,
   options: string[],
-  fieldOptions: SelectFieldOptions = {}
+  fieldOptions: SelectFieldOptions = {},
 ) => {
   const { label, required = false, variant = "default" } = fieldOptions;
 
@@ -241,7 +241,7 @@ export const renderSelectField = <T extends Record<string, any>>(
  */
 export const renderTextAreaField = <T extends Record<string, any>>(
   placeholder: string,
-  options: TextAreaFieldOptions = {}
+  options: TextAreaFieldOptions = {},
 ) => {
   const {
     label,
@@ -278,7 +278,7 @@ export const renderTextAreaField = <T extends Record<string, any>>(
  */
 export const renderRadioField = <T extends Record<string, any>>(
   label: string,
-  options: RadioFieldOptions = {}
+  options: RadioFieldOptions = {},
 ) => {
   const { required = true } = options;
 
@@ -325,7 +325,7 @@ export const renderRadioField = <T extends Record<string, any>>(
 export const renderComboboxField = <T extends Record<string, any>>(
   placeholder: string,
   options: ComboboxOption[],
-  fieldOptions: ComboboxFieldOptions = {}
+  fieldOptions: ComboboxFieldOptions = {},
 ) => {
   const {
     label,
@@ -367,7 +367,7 @@ export const renderComboboxField = <T extends Record<string, any>>(
  */
 export const renderFileUploadField = <T extends Record<string, any>>(
   accept: string,
-  fieldOptions: FileUploadFieldOptions = {}
+  fieldOptions: FileUploadFieldOptions = {},
 ) => {
   const { label, required = false } = fieldOptions;
 
@@ -452,7 +452,7 @@ export const renderFileUploadField = <T extends Record<string, any>>(
  */
 export const renderCheckboxGroupField = <T extends Record<string, any>>(
   options: string[],
-  fieldOptions: CheckboxGroupFieldOptions = {}
+  fieldOptions: CheckboxGroupFieldOptions = {},
 ) => {
   const { label, required = false } = fieldOptions;
   return ({ field }: { field: ControllerRenderProps<T, any> }) => (
@@ -509,7 +509,7 @@ export const renderCheckboxGroupField = <T extends Record<string, any>>(
 export function renderTextFieldWithLabel<T extends Record<string, any>>(
   label: string,
   placeholder: string,
-  inputProps?: Partial<ComponentProps<typeof Input>>
+  inputProps?: Partial<ComponentProps<typeof Input>>,
 ) {
   return renderTextField<T>(placeholder, {
     label,
@@ -526,7 +526,7 @@ export function renderSelectFieldWithLabel<T extends Record<string, any>>(
   label: string,
   placeholder: string,
   options: string[],
-  required: boolean = true
+  required: boolean = true,
 ) {
   return renderSelectField<T>(placeholder, options, {
     label,
@@ -542,7 +542,7 @@ export function renderTextAreaFieldWithLabel<T extends Record<string, any>>(
   label: string,
   placeholder: string,
   textareaProps?: Partial<ComponentProps<typeof Textarea>>,
-  required: boolean = true
+  required: boolean = true,
 ) {
   return renderTextAreaField<T>(placeholder, {
     label,
@@ -556,7 +556,7 @@ export function renderTextAreaFieldWithLabel<T extends Record<string, any>>(
  * Render radio field for application forms
  */
 export function renderRadioFieldWithLabel<T extends Record<string, any>>(
-  label: string
+  label: string,
 ) {
   return renderRadioField<T>(label, { required: true });
 }
@@ -570,7 +570,7 @@ export function renderComboboxFieldWithLabel<T extends Record<string, any>>(
   options: ComboboxOption[],
   required: boolean = true,
   searchPlaceholder?: string,
-  emptyMessage?: string
+  emptyMessage?: string,
 ) {
   return renderComboboxField<T>(placeholder, options, {
     label,

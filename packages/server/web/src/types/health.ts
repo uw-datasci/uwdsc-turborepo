@@ -15,4 +15,3 @@ export interface HealthCheck {
   };
   [key: string]: any;
 }
-

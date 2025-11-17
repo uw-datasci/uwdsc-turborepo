@@ -15,7 +15,7 @@ export async function GET(request: NextRequest) {
     if (error) {
       console.error("Error exchanging code for session:", error);
       return NextResponse.redirect(
-        new URL(`/login?error=${encodeURIComponent(error)}`, requestUrl.origin)
+        new URL(`/login?error=${encodeURIComponent(error)}`, requestUrl.origin),
       );
     }
   }

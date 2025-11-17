@@ -43,7 +43,7 @@ export function PriorHackExp({ form }: PriorHackExpProps) {
                   label: "Number of Hackathons Attended",
                   required: true,
                   variant: "application",
-                }
+                },
               )}
             />
           </div>

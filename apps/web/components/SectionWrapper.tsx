@@ -10,10 +10,7 @@ export default function SectionWrapper({
   id,
 }: HomeSectionWrapperProps) {
   return (
-    <section
-      id={id}
-      className={`mx-container mb-section ${className}`}
-    >
+    <section id={id} className={`mx-container mb-section ${className}`}>
       {children}
     </section>
   );

@@ -51,7 +51,7 @@ export async function getUserProfile(): Promise<UserProfile | null> {
  * @throws Error if update fails
  */
 export async function updateUserProfile(
-  profileData: UpdateProfileRequest
+  profileData: UpdateProfileRequest,
 ): Promise<UpdateProfileResponse> {
   const response = await fetch("/api/profile", {
     method: "PATCH",

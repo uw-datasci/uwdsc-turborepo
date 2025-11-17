@@ -58,7 +58,7 @@ export function Education({ form }: EducationProps) {
                   searchPlaceholder: "Search universities...",
                   emptyMessage: "No university found.",
                   variant: "application",
-                }
+                },
               )}
             />
 
@@ -89,7 +89,7 @@ export function Education({ form }: EducationProps) {
                   searchPlaceholder: "Search programs...",
                   emptyMessage: "No program found.",
                   variant: "application",
-                }
+                },
               )}
             />
 

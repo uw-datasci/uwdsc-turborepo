@@ -9,7 +9,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     if (!email || !password) {
       return NextResponse.json(
         { error: "Email and password are required" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -23,7 +23,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
           needsVerification: result.needsVerification,
           email: result.email,
         },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -36,7 +36,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     console.error("Login error:", error);
     return NextResponse.json(
       { error: "An unexpected error occurred" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

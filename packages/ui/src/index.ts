@@ -197,5 +197,5 @@ export {
   XLogoIcon,
   LinkIcon,
   LightbulbIcon,
-  SmileyIcon
+  SmileyIcon,
 } from "@phosphor-icons/react";

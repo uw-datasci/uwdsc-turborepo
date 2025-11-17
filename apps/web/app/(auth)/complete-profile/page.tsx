@@ -142,7 +142,7 @@ export default function CompleteProfilePage() {
       setAuthError(
         error?.error ||
           error?.message ||
-          "An unexpected error occurred. Please try again"
+          "An unexpected error occurred. Please try again",
       );
     } finally {
       setIsLoading(false);
@@ -233,7 +233,7 @@ export default function CompleteProfilePage() {
                   render={renderSelectField(
                     "Current/Last completed term",
                     termOptions,
-                    { variant: "auth" }
+                    { variant: "auth" },
                   )}
                 />
                 <FormField
@@ -248,7 +248,7 @@ export default function CompleteProfilePage() {
                   name="member_ideas"
                   render={renderTextAreaField(
                     "[Optional] Share your ideas for new events or improvements!",
-                    { variant: "auth" }
+                    { variant: "auth" },
                   )}
                 />
               </div>

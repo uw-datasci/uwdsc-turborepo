@@ -58,8 +58,8 @@ Edit `_meta.ts` files to control navigation:
 export default {
   index: "Introduction",
   "getting-started": "Getting Started",
-  guides: "Guides"
-}
+  guides: "Guides",
+};
 ```
 
 ## Deployment
@@ -89,4 +89,3 @@ The documentation is automatically deployed to GitHub Pages when changes are pus
 
 - [Nextra Documentation](https://nextra.site/)
 - [MDX Documentation](https://mdxjs.com/)
-

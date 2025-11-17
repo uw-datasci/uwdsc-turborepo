@@ -10,9 +10,7 @@ export default function Banner({ children }: BannerProps) {
   return (
     <div className="relative">
       <div className="bg-gradient-purple absolute inset-0 opacity-20" />
-      <div className="mx-container relative z-10">
-        {children}
-      </div>
+      <div className="mx-container relative z-10">{children}</div>
     </div>
   );
 }

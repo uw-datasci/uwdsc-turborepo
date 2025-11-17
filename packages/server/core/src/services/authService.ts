@@ -62,7 +62,7 @@ export class AuthService {
   async register(
     credentials: RegisterData,
     emailRedirectTo: string,
-    metadata?: object
+    metadata?: object,
   ) {
     try {
       const { data, error } = await this.repository.signUp({
@@ -94,7 +94,7 @@ export class AuthService {
     } catch (error) {
       throw new ApiError(
         `Registration failed: ${(error as Error).message}`,
-        500
+        500,
       );
     }
   }
@@ -144,7 +144,7 @@ export class AuthService {
     } catch (error) {
       throw new ApiError(
         `Failed to get user: ${(error as Error).message}`,
-        500
+        500,
       );
     }
   }
@@ -156,7 +156,7 @@ export class AuthService {
     try {
       const { error } = await this.repository.resendVerificationEmail(
         email,
-        emailRedirectTo
+        emailRedirectTo,
       );
 
       if (error) {
@@ -173,7 +173,7 @@ export class AuthService {
     } catch (error) {
       throw new ApiError(
         `Failed to resend verification email: ${(error as Error).message}`,
-        500
+        500,
       );
     }
   }
@@ -196,7 +196,7 @@ export class AuthService {
     } catch (error) {
       throw new ApiError(
         `Failed to exchange code for session: ${(error as Error).message}`,
-        500
+        500,
       );
     }
   }

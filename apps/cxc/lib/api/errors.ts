@@ -4,7 +4,7 @@
 
 /**
  * Creates a proper Error object with additional API error properties
- * 
+ *
  * @param data - Response data from the API
  * @param status - HTTP status code
  * @returns Error object with error, message, details, and status properties
@@ -17,7 +17,6 @@ export function createApiError(data: any, status: number) {
       message: data.message,
       details: data,
       status,
-    }
+    },
   );
 }
-

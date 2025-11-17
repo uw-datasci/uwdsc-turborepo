@@ -18,7 +18,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     console.error("Signout error:", error);
     return NextResponse.json(
       { error: "An unexpected error occurred" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

@@ -74,7 +74,7 @@ export function RegisterForm() {
       setAuthError(
         error?.error ||
           error?.message ||
-          "An unexpected error occurred. Please try again"
+          "An unexpected error occurred. Please try again",
       );
     } finally {
       setIsLoading(false);
@@ -98,7 +98,9 @@ export function RegisterForm() {
       setResendStatus("Verification email resent successfully.");
     } catch (error: any) {
       setResendStatus(
-        error?.error || error?.message || "Failed to resend verification email."
+        error?.error ||
+          error?.message ||
+          "Failed to resend verification email.",
       );
     } finally {
       setIsResending(false);
@@ -239,7 +241,7 @@ export function RegisterForm() {
                                 type: "password",
                                 autoComplete: "new-password",
                               },
-                            }
+                            },
                           )}
                         />
                       </div>

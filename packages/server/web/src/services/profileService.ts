@@ -20,7 +20,7 @@ export class ProfileService {
     } catch (error) {
       throw new ApiError(
         `Failed to get profile: ${(error as Error).message}`,
-        500
+        500,
       );
     }
   }
@@ -30,14 +30,14 @@ export class ProfileService {
    */
   async updateProfile(
     userId: string,
-    data: ProfileUpdateData
+    data: ProfileUpdateData,
   ): Promise<{ success: boolean; error?: string }> {
     try {
       return await this.repository.updateProfile(userId, data);
     } catch (error) {
       throw new ApiError(
         `Failed to update profile: ${(error as Error).message}`,
-        500
+        500,
       );
     }
   }
@@ -74,7 +74,7 @@ export class ProfileService {
     } catch (error) {
       throw new ApiError(
         `Failed to get all profiles: ${(error as Error).message}`,
-        500
+        500,
       );
     }
   }
@@ -92,7 +92,7 @@ export class ProfileService {
     } catch (error) {
       throw new ApiError(
         `Failed to get membership stats: ${(error as Error).message}`,
-        500
+        500,
       );
     }
   }

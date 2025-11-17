@@ -12,7 +12,7 @@ interface AppProgressContextType {
 }
 
 const AppProgressContext = createContext<AppProgressContextType | undefined>(
-  undefined
+  undefined,
 );
 
 export function AppProgressProvider({ children }: AppProgressProvider) {
@@ -20,7 +20,7 @@ export function AppProgressProvider({ children }: AppProgressProvider) {
 
   const value = useMemo(
     () => ({ progressValue, setProgressValue }),
-    [progressValue]
+    [progressValue],
   );
 
   return (

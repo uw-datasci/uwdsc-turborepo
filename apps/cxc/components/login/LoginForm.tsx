@@ -64,7 +64,7 @@ export function LoginForm() {
       setAuthError(
         error?.error ||
           error?.message ||
-          "An unexpected error occurred. Please try again."
+          "An unexpected error occurred. Please try again.",
       );
     } finally {
       setIsLoading(false);
