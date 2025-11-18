@@ -7,8 +7,8 @@
     "dev": "next dev --turbopack -p 3001",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
-    "lint:fix": "next lint --fix",
+    "lint": "eslint .",
+    "lint:fix": "eslint --fix .",
     "typecheck": "tsc --noEmit",
     "check-types": "tsc --noEmit"
   },
@@ -40,6 +40,8 @@
     "@types/react-dom": "^19.1.7",
     "@uwdsc/eslint-config": "workspace:^",
     "@uwdsc/typescript-config": "workspace:*",
+    "eslint": "^9.32.0",
+    "eslint-config-next": "^15.4.7",
     "typescript": "^5.9.2"
   }
 }
