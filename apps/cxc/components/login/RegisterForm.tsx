@@ -37,10 +37,7 @@ export function RegisterForm() {
       await register({
         email: data.email,
         password: data.password,
-        metadata: {
-          first_name: data.first_name,
-          last_name: data.last_name,
-        },
+        metadata: { first_name: data.first_name, last_name: data.last_name },
       });
 
       // Navigate back to previous route or use callbackUrl if provided
