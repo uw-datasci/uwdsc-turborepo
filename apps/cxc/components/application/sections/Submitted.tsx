@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "@uwdsc/ui";
+import CxcButton from "@/components/CxcButton";
 import { AnimatePresence, motion } from "framer-motion";
 import { PartyPopper } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -75,9 +75,9 @@ export function Submitted() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 1.8 }}
         >
-          <Button className="p-5" onClick={() => router.push("/")}>
+          <CxcButton className="py-3" onClick={() => router.push("/")}>
             Return Home
-          </Button>
+          </CxcButton>
         </motion.div>
       </motion.div>
     </div>
