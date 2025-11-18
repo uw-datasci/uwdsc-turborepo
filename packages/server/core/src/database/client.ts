@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { createServerClient, createBrowserClient } from "@supabase/ssr";
 import type { CookieOptions } from "@supabase/ssr";
 
@@ -6,8 +7,8 @@ import type { CookieOptions } from "@supabase/ssr";
  */
 export function createSupabaseBrowserClient() {
   return createBrowserClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_DEFAULT_KEY!,
+    process.env.SUPABASE_URL!,
+    process.env.SUPABASE_PUBLISHABLE_DEFAULT_KEY!,
   );
 }
 
@@ -20,8 +21,8 @@ export function createSupabaseServerClient(cookieStore: {
   set: (name: string, value: string, options?: CookieOptions) => void;
 }) {
   return createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_DEFAULT_KEY!,
+    process.env.SUPABASE_URL!,
+    process.env.SUPABASE_PUBLISHABLE_DEFAULT_KEY!,
     {
       cookies: {
         getAll() {
@@ -72,8 +73,8 @@ export function createSupabaseMiddlewareClient<
   },
 ) {
   return createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_DEFAULT_KEY!,
+    process.env.SUPABASE_URL!,
+    process.env.SUPABASE_PUBLISHABLE_DEFAULT_KEY!,
     {
       cookies: {
         getAll() {

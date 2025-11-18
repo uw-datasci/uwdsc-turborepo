@@ -60,45 +60,9 @@ export interface UserProfile {
   updated_at: string;
 }
 
-export interface UpdateProfileRequest {
-  first_name: string;
-  last_name: string;
-  dob: string;
-}
-
-export interface UpdateProfileResponse {
-  message: string;
-  profile: UserProfile;
-}
-
 export interface GetProfileResponse {
   profile: UserProfile | null;
   error?: string;
   message?: string;
 }
 
-// ============================================================================
-// Error Types
-// ============================================================================
-
-export interface ApiError {
-  error: string;
-  message?: string;
-  details?: any;
-}
-
-// ============================================================================
-// Generic API Response
-// ============================================================================
-
-export type ApiResponse<T> =
-  | {
-      success: true;
-      data: T;
-    }
-  | {
-      success: false;
-      error: string;
-      message?: string;
-      details?: any;
-    };
