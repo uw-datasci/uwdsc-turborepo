@@ -36,15 +36,6 @@ export interface LoginResponse {
   error?: string;
 }
 
-export interface AuthMeResponse {
-  user: {
-    id: string;
-    email: string;
-    email_confirmed_at: string | null;
-  };
-  profile: UserProfile | null;
-}
-
 export interface ResendVerificationEmailRequest {
   email: string;
 }

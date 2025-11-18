@@ -17,6 +17,7 @@
     "@react-three/drei": "^10.7.6",
     "@react-three/fiber": "^9.3.0",
     "@supabase/ssr": "^0.7.0",
+    "@supabase/supabase-js": "^2.81.1",
     "@types/three": "^0.180.0",
     "@uwdsc/server/cxc": "workspace:*",
     "@uwdsc/ui": "workspace:*",

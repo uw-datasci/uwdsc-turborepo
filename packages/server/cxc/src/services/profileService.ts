@@ -1,8 +1,5 @@
 import { ApiError } from "@uwdsc/server/core/utils/errors";
-import {
-  ProfileRepository,
-  ProfileUpdateData,
-} from "../repository/profileRepository";
+import { ProfileRepository, ProfileUpdateData } from "../repository/profileRepository";
 
 export class ProfileService {
   private readonly repository: ProfileRepository;
@@ -42,20 +39,4 @@ export class ProfileService {
     }
   }
 
-  /**
-   * Check if a user's profile is complete
-   */
-  async isProfileComplete(userId: string): Promise<boolean> {
-    try {
-      const profile = await this.repository.getProfileByUserId(userId);
-
-      if (!profile) return false;
-
-      // Profile is complete if required fields are filled
-      return !!(profile.first_name && profile.last_name && profile.dob);
-    } catch (error) {
-      console.error("Error checking profile completion:", error);
-      return false;
-    }
-  }
 }

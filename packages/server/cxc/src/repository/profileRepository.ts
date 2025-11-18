@@ -64,9 +64,7 @@ export class ProfileRepository extends BaseRepository {
 
       const result = await this.db.query(query, [userId]);
 
-      if (result.rowCount === 0) {
-        return null;
-      }
+      if (result.rowCount === 0) return null;
 
       return result.rows[0];
     } catch (error: any) {

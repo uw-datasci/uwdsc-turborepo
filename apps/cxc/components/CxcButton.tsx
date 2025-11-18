@@ -1,0 +1,25 @@
+"use client";
+
+import { Button } from "@uwdsc/ui";
+import { cn } from "@uwdsc/ui/lib/utils";
+import type { ComponentProps } from "react";
+
+interface CxcButtonProps extends ComponentProps<typeof Button> {}
+
+export default function CxcButton({
+  className,
+  children,
+  ...props
+}: Readonly<CxcButtonProps>) {
+  return (
+    <Button
+      className={cn(
+        "!bg-white !text-black font-normal rounded-none !h-auto hover:!scale-105 hover:!bg-white flex items-center",
+        className
+      )}
+      {...props}
+    >
+      {children}
+    </Button>
+  );
+}

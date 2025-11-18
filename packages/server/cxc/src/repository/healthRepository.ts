@@ -11,9 +11,9 @@ export class HealthRepository extends BaseRepository {
     let supabaseError = null;
     try {
       await this.db.query(`SELECT 1`);
-    } catch {
+    } catch (error: any) {
       supabaseConnected = false;
-      supabaseError = "Connection failed";
+      supabaseError = error.message || "Connection failed";
     }
 
     const healthData: HealthCheck = {
