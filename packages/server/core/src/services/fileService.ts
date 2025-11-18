@@ -1,6 +1,7 @@
 import { ApiError } from "../utils/errors";
 import { FileRepository } from "../repository/fileRepository";
 import type { SupabaseClient } from "@supabase/supabase-js";
+import type { FileObject } from "@supabase/storage-js";
 
 export interface FileUploadData {
   file: File;
@@ -98,7 +99,7 @@ export class FileService {
       const objectKey = this.generateObjectKey(userId, file.name);
 
       // Upload to storage
-      const { data, error } = await this.repository.uploadFile({
+      const { error } = await this.repository.uploadFile({
         file,
         userId,
         objectKey,
@@ -175,7 +176,7 @@ export class FileService {
   async listUserFiles(
     userId: string,
   ): Promise<
-    { success: true; files: any[] } | { success: false; error: string }
+    { success: true; files: FileObject[] } | { success: false; error: string }
   > {
     try {
       const { data, error } = await this.repository.listUserFiles(userId);

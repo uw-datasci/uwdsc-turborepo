@@ -3,6 +3,7 @@ import {
   ProfileRepository,
   ProfileUpdateData,
 } from "../repository/profileRepository";
+import type { Profile, ProfileWithEmail } from "../types/profile";
 
 export class ProfileService {
   private readonly repository: ProfileRepository;
@@ -14,7 +15,7 @@ export class ProfileService {
   /**
    * Get profile by user ID
    */
-  async getProfileByUserId(userId: string): Promise<any> {
+  async getProfileByUserId(userId: string): Promise<Profile | null> {
     try {
       return await this.repository.getProfileByUserId(userId);
     } catch (error) {
@@ -68,7 +69,7 @@ export class ProfileService {
   /**
    * Get all user profiles (admin only)
    */
-  async getAllProfiles(): Promise<any[]> {
+  async getAllProfiles(): Promise<ProfileWithEmail[]> {
     try {
       return await this.repository.getAllProfiles();
     } catch (error) {

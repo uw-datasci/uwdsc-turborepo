@@ -1,5 +1,6 @@
 import { ApiError } from "@uwdsc/server/core/utils/errors";
 import { ProfileRepository } from "../repository/profileRepository";
+import type { Profile } from "../types/profile";
 
 export class ProfileService {
   private readonly repository: ProfileRepository;
@@ -11,7 +12,7 @@ export class ProfileService {
   /**
    * Get profile by user ID
    */
-  async getProfileByUserId(userId: string): Promise<any> {
+  async getProfileByUserId(userId: string): Promise<Profile | null> {
     try {
       return await this.repository.getProfileByUserId(userId);
     } catch (error) {
