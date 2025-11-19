@@ -21,9 +21,7 @@ export async function getUserProfile(): Promise<UserProfile | null> {
   const response = await fetch("/api/profile");
 
   // For 401/404 on profile endpoint, return null profile instead of throwing
-  if (response.status === 401 || response.status === 404) {
-    return null;
-  }
+  if (response.status === 401 || response.status === 404) return null;
 
   const data: GetProfileResponse = await response.json();
 
