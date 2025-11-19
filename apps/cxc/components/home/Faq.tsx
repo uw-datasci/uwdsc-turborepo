@@ -45,7 +45,7 @@ export function Faq() {
               className="!border-none !mb-4"
             >
               <AccordionTrigger
-                className={`text-[#7CA3DE] items-center py-1 px-2 hover:no-underline hover:cursor-pointer font-light text-lg [&>svg]:text-[#7CA3DE] [&>svg]:size-10 [&>svg]:stroke-[1] [&[data-state=open]>svg]:text-black data-[state=open]:bg-[#A6C3EA] data-[state=open]:text-black`}
+                className={`text-cxc-faq-text items-center py-1 px-2 hover:no-underline hover:cursor-pointer font-light text-lg [&>svg]:text-cxc-faq-text [&>svg]:size-10 [&>svg]:stroke-[1] [&[data-state=open]>svg]:text-black data-[state=open]:bg-cxc-faq-bg data-[state=open]:text-black`}
               >
                 {faq.question}
               </AccordionTrigger>
