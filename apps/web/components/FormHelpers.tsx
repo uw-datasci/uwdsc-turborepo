@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   Input,
   Textarea,
@@ -111,11 +112,15 @@ const textareaStyles: Record<FormFieldVariant, string> = {
  */
 export const renderTextField = <T extends Record<string, any>>(
   placeholder: string,
-  options: TextFieldOptions = {},
+  options: TextFieldOptions = {}
 ) => {
   const { label, required = false, variant = "default", inputProps } = options;
 
-  return ({ field }: { field: ControllerRenderProps<T, any> }) => (
+  const TextFieldComponent = ({
+    field,
+  }: {
+    field: ControllerRenderProps<T, any>;
+  }) => (
     <FormItem>
       {label && (
         <FormLabel className="mb-1">
@@ -133,6 +138,10 @@ export const renderTextField = <T extends Record<string, any>>(
       <FormMessage />
     </FormItem>
   );
+
+  TextFieldComponent.displayName = `TextField(${placeholder})`;
+
+  return TextFieldComponent;
 };
 
 /**
@@ -148,11 +157,15 @@ export const renderTextField = <T extends Record<string, any>>(
 export const renderSelectField = <T extends Record<string, any>>(
   placeholder: string,
   options: string[],
-  fieldOptions: SelectFieldOptions = {},
+  fieldOptions: SelectFieldOptions = {}
 ) => {
   const { label, required = false, variant = "default" } = fieldOptions;
 
-  return ({ field }: { field: ControllerRenderProps<T, any> }) => (
+  const SelectFieldComponent = ({
+    field,
+  }: {
+    field: ControllerRenderProps<T, any>;
+  }) => (
     <FormItem>
       {label && (
         <FormLabel className="mb-1">
@@ -181,6 +194,10 @@ export const renderSelectField = <T extends Record<string, any>>(
       <FormMessage />
     </FormItem>
   );
+
+  SelectFieldComponent.displayName = `SelectField(${placeholder})`;
+
+  return SelectFieldComponent;
 };
 
 /**
@@ -195,7 +212,7 @@ export const renderSelectField = <T extends Record<string, any>>(
  */
 export const renderTextAreaField = <T extends Record<string, any>>(
   placeholder: string,
-  options: TextAreaFieldOptions = {},
+  options: TextAreaFieldOptions = {}
 ) => {
   const {
     label,
@@ -204,7 +221,11 @@ export const renderTextAreaField = <T extends Record<string, any>>(
     textareaProps,
   } = options;
 
-  return ({ field }: { field: ControllerRenderProps<T, any> }) => (
+  const TextAreaFieldComponent = ({
+    field,
+  }: {
+    field: ControllerRenderProps<T, any>;
+  }) => (
     <FormItem>
       {label && (
         <FormLabel className="mb-1 leading-relaxed">
@@ -222,6 +243,10 @@ export const renderTextAreaField = <T extends Record<string, any>>(
       <FormMessage />
     </FormItem>
   );
+
+  TextAreaFieldComponent.displayName = `TextAreaField(${placeholder})`;
+
+  return TextAreaFieldComponent;
 };
 
 /**
@@ -232,11 +257,15 @@ export const renderTextAreaField = <T extends Record<string, any>>(
  */
 export const renderRadioField = <T extends Record<string, any>>(
   label: string,
-  options: RadioFieldOptions = {},
+  options: RadioFieldOptions = {}
 ) => {
   const { required = true } = options;
 
-  return ({ field }: { field: ControllerRenderProps<T, any> }) => (
+  const RadioFieldComponent = ({
+    field,
+  }: {
+    field: ControllerRenderProps<T, any>;
+  }) => (
     <FormItem className="space-y-3">
       <FormLabel>
         {label} {required && <span className="text-red-500">*</span>}
@@ -264,6 +293,10 @@ export const renderRadioField = <T extends Record<string, any>>(
       <FormMessage />
     </FormItem>
   );
+
+  RadioFieldComponent.displayName = `RadioField(${label})`;
+
+  return RadioFieldComponent;
 };
 
 // ============================================================================
@@ -277,7 +310,7 @@ export const renderRadioField = <T extends Record<string, any>>(
 export function renderTextFieldWithLabel<T extends Record<string, any>>(
   label: string,
   placeholder: string,
-  inputProps?: Partial<ComponentProps<typeof Input>>,
+  inputProps?: Partial<ComponentProps<typeof Input>>
 ) {
   return renderTextField<T>(placeholder, {
     label,
@@ -294,7 +327,7 @@ export function renderSelectFieldWithLabel<T extends Record<string, any>>(
   label: string,
   placeholder: string,
   options: string[],
-  required: boolean = true,
+  required: boolean = true
 ) {
   return renderSelectField<T>(placeholder, options, {
     label,
@@ -310,7 +343,7 @@ export function renderTextAreaFieldWithLabel<T extends Record<string, any>>(
   label: string,
   placeholder: string,
   textareaProps?: Partial<ComponentProps<typeof Textarea>>,
-  required: boolean = true,
+  required: boolean = true
 ) {
   return renderTextAreaField<T>(placeholder, {
     label,
@@ -324,7 +357,7 @@ export function renderTextAreaFieldWithLabel<T extends Record<string, any>>(
  * Render radio field for application forms
  */
 export function renderRadioFieldWithLabel<T extends Record<string, any>>(
-  label: string,
+  label: string
 ) {
   return renderRadioField<T>(label, { required: true });
 }

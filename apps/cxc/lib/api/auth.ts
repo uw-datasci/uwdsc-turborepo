@@ -10,7 +10,6 @@ import type {
   RegisterResponse,
   LoginRequest,
   LoginResponse,
-  AuthMeResponse,
   ResendVerificationEmailRequest,
   ResendVerificationEmailResponse,
 } from "@/types/api";
@@ -58,24 +57,6 @@ export async function login(credentials: LoginRequest): Promise<LoginResponse> {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(credentials),
   });
-
-  const data = await response.json();
-
-  if (!response.ok) {
-    throw createApiError(data, response.status);
-  }
-
-  return data;
-}
-
-/**
- * Get current authenticated user information
- *
- * @returns Promise with current user and profile data
- * @throws Error if not authenticated or request fails
- */
-export async function getAuthMe(): Promise<AuthMeResponse> {
-  const response = await fetch("/api/auth/me");
 
   const data = await response.json();
 

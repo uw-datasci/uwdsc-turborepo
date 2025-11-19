@@ -1,13 +1,9 @@
 import { Pool } from "pg";
-import { createConnectionPool } from "../database/connection";
+import { pool } from "../database/connection";
 
 /**
- * BaseRepository with database connection
+ * BaseRepository with shared database connection pool
  */
 export abstract class BaseRepository {
-  protected db: Pool;
-
-  constructor() {
-    this.db = createConnectionPool(process.env.NEXT_PUBLIC_DATABASE_URL!);
-  }
+  protected db: Pool = pool;
 }

@@ -4,7 +4,7 @@ import { createAuthService } from "@/lib/services";
 export async function GET(request: NextRequest) {
   const requestUrl = new URL(request.url);
   const code = requestUrl.searchParams.get("code");
-  const next = requestUrl.searchParams.get("next") ?? "/complete-profile";
+  const next = requestUrl.searchParams.get("next") ?? "/";
 
   if (code) {
     const authService = await createAuthService();
@@ -15,7 +15,7 @@ export async function GET(request: NextRequest) {
     if (error) {
       console.error("Error exchanging code for session:", error);
       return NextResponse.redirect(
-        new URL(`/login?error=${encodeURIComponent(error)}`, requestUrl.origin),
+        new URL(`/login?error=${encodeURIComponent(error)}`, requestUrl.origin)
       );
     }
   }

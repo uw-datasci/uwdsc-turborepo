@@ -1,4 +1,5 @@
 import { BaseRepository } from "@uwdsc/server/core/repository/baseRepository";
+import type { Profile, ProfileWithEmail } from "../types/profile";
 
 export interface ProfileUpdateData {
   first_name: string;
@@ -60,11 +61,11 @@ export class ProfileRepository extends BaseRepository {
       }
 
       return { success: true };
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Error updating profile:", error);
       return {
         success: false,
-        error: error.message || "Failed to update profile",
+        error: (error as Error).message || "Failed to update profile",
       };
     }
   }
@@ -73,7 +74,7 @@ export class ProfileRepository extends BaseRepository {
    * Get user profile by user ID
    * @param userId - The auth.users.id (UUID)
    */
-  async getProfileByUserId(userId: string): Promise<any> {
+  async getProfileByUserId(userId: string): Promise<Profile | null> {
     try {
       const query = `
         SELECT *
@@ -88,7 +89,7 @@ export class ProfileRepository extends BaseRepository {
       }
 
       return result.rows[0];
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Error fetching profile:", error);
       return null;
     }
@@ -98,7 +99,7 @@ export class ProfileRepository extends BaseRepository {
    * Get all user profiles with email from auth.users
    * Used for admin membership management
    */
-  async getAllProfiles(): Promise<any[]> {
+  async getAllProfiles(): Promise<ProfileWithEmail[]> {
     try {
       const query = `
         SELECT 
@@ -121,7 +122,7 @@ export class ProfileRepository extends BaseRepository {
 
       const result = await this.db.query(query);
       return result.rows;
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Error fetching all profiles:", error);
       throw error;
     }
@@ -152,7 +153,7 @@ export class ProfileRepository extends BaseRepository {
         paidUsers: Number.parseInt(row.paid_users),
         mathSocMembers: Number.parseInt(row.math_soc_members),
       };
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Error fetching membership stats:", error);
       throw error;
     }

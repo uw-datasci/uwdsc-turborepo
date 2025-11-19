@@ -7,9 +7,10 @@
     "dev": "next dev --turbopack -p 3000",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
-    "lint:fix": "next lint --fix",
-    "typecheck": "tsc --noEmit"
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix --max-warnings 0",
+    "typecheck": "tsc --noEmit",
+    "check-types": "tsc --noEmit"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
@@ -38,6 +39,8 @@
     "@types/react-dom": "^19.1.7",
     "@uwdsc/eslint-config": "workspace:^",
     "@uwdsc/typescript-config": "workspace:*",
+    "eslint": "^9.32.0",
+    "eslint-config-next": "^15.4.7",
     "typescript": "^5.9.2"
   }
 }

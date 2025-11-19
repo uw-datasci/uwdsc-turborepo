@@ -1,4 +1,5 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
+import type { FileObject } from "@supabase/storage-js";
 import { FileService, FileValidationConfig } from "./fileService";
 import type { FileUploadData } from "./fileService";
 
@@ -74,7 +75,7 @@ export class ResumeService extends FileService {
   async listUserResumes(
     userId: string,
   ): Promise<
-    { success: true; resumes: any[] } | { success: false; error: string }
+    { success: true; resumes: FileObject[] } | { success: false; error: string }
   > {
     const result = await this.listUserFiles(userId);
 

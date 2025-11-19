@@ -1,20 +1,16 @@
 "use client";
 
-import { motion } from "framer-motion";
 import { CountingNumber } from "@uwdsc/ui";
 import Ripples from "./Ripples";
 
-function Stat({
-  value,
-  label,
-  prefix,
-  suffix,
-}: {
+interface StatProps {
   value: number;
   label: string;
   prefix?: string;
   suffix?: string;
-}) {
+}
+
+function Stat({ value, label, prefix, suffix }: Readonly<StatProps>) {
   return (
     <div className="text-center">
       <div className="flex items-baseline justify-center gap-1 mb-2 md:min-w-[225px] xl:min-w-xs">

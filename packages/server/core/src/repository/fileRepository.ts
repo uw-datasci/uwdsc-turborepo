@@ -1,4 +1,5 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
+import type { FileObject } from "@supabase/storage-js";
 
 export interface FileUploadOptions {
   file: File;
@@ -65,7 +66,7 @@ export class FileRepository {
    * List all files for a user
    */
   async listUserFiles(userId: string): Promise<{
-    data: any[] | null;
+    data: FileObject[] | null;
     error: Error | null;
   }> {
     const { data, error } = await this.client.storage

@@ -7,15 +7,17 @@
     "dev": "next dev --turbopack -p 3001",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
-    "lint:fix": "next lint --fix",
-    "typecheck": "tsc --noEmit"
+    "lint": "eslint . --max-warnings 0",
+    "lint:fix": "eslint . --fix --max-warnings 0",
+    "typecheck": "tsc --noEmit",
+    "check-types": "tsc --noEmit"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
     "@react-three/drei": "^10.7.6",
     "@react-three/fiber": "^9.3.0",
     "@supabase/ssr": "^0.7.0",
+    "@supabase/supabase-js": "^2.81.1",
     "@types/three": "^0.180.0",
     "@uwdsc/server/cxc": "workspace:*",
     "@uwdsc/ui": "workspace:*",
@@ -38,6 +40,8 @@
     "@types/react-dom": "^19.1.7",
     "@uwdsc/eslint-config": "workspace:^",
     "@uwdsc/typescript-config": "workspace:*",
+    "eslint": "^9.32.0",
+    "eslint-config-next": "^15.4.7",
     "typescript": "^5.9.2"
   }
 }

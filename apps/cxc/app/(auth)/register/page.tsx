@@ -1,5 +1,6 @@
 "use client";
 
+import { Suspense } from "react";
 import { useRouter } from "next/navigation";
 import DSCLogo from "@/components/DSCLogo";
 import { StepIndicator } from "@/components/application/StepIndicator";
@@ -38,7 +39,9 @@ export default function RegisterPage() {
 
         {/* Right Side - Form */}
         <div className="px-12 py-24 overflow-hidden md:w-3/5 flex flex-col gap-12 justify-center">
-          <RegisterForm />
+          <Suspense fallback={<div>Loading...</div>}>
+            <RegisterForm />
+          </Suspense>
         </div>
       </div>
 
@@ -56,7 +59,9 @@ export default function RegisterPage() {
             subStepName="Create your account"
             label=""
           />
-          <RegisterForm />
+          <Suspense fallback={<div>Loading...</div>}>
+            <RegisterForm />
+          </Suspense>
         </div>
       </div>
     </div>

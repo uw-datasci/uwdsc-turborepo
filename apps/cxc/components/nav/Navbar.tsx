@@ -2,10 +2,24 @@
 
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import AppStepButton from "../application/AppStepButton";
+import { useAuth } from "@/contexts/AuthContext";
+import { signOut } from "@/lib/api";
+import CxcButton from "../CxcButton";
 
 export default function Navbar() {
   const router = useRouter();
+  const { isAuthenticated, mutate } = useAuth();
+
+  const handleSignOut = async () => {
+    try {
+      await signOut();
+      await mutate(); // Refresh auth state
+      router.push("/");
+    } catch (error) {
+      console.error("Sign out failed:", error);
+    }
+  };
+
   return (
     <div className="w-full px-8 py-6 flex items-center justify-between">
       {/* Left section - Logo and description */}
@@ -24,7 +38,7 @@ export default function Navbar() {
         {/* Description */}
         <div className="hidden md:block text-white max-w-sm lg:max-w-lg">
           <p className="text-xs lg:text-sm leading-relaxed">
-            Canada's largest student run data hackathon.
+            Canada&apos;s largest student run data hackathon.
             <br />
             We are a beginner-friendly datathon that bring together students and
             companies to build projects that solve real-world problems.
@@ -32,21 +46,18 @@ export default function Navbar() {
         </div>
       </div>
       <div className="flex flex-row gap-4">
-        <AppStepButton
-          text="Log in"
-          onClick={() => router.push("/login")}
-          className="!px-3 sm:!py-2 text-base"
-          marginLeft="ml-2 lg:ml-8"
-          iconSize={16}
-        />
-        {/* Sign up button */}
-        <AppStepButton
-          text="Sign up"
-          onClick={() => router.push("/register")}
-          className="!px-3 sm:!py-2 text-base"
-          marginLeft="ml-2 lg:ml-8"
-          iconSize={16}
-        />
+        <CxcButton onClick={() => router.push("/apply")}>Apply</CxcButton>
+        {!isAuthenticated && (
+          <>
+            <CxcButton onClick={() => router.push("/login")}>Login</CxcButton>
+            <CxcButton onClick={() => router.push("/register")}>
+              Register
+            </CxcButton>
+          </>
+        )}
+        {isAuthenticated && (
+          <CxcButton onClick={handleSignOut}>Signout</CxcButton>
+        )}
       </div>
     </div>
   );

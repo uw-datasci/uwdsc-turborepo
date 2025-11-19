@@ -39,11 +39,11 @@ export function VerifyEmailModal({
     try {
       await resendVerificationEmail({ email });
       setResendStatus("Verification email resent successfully.");
-    } catch (error: any) {
+    } catch (error: unknown) {
       setResendStatus(
-        error?.error ||
-          error?.message ||
-          "Failed to resend verification email.",
+        error instanceof Error
+          ? error.message
+          : "Failed to resend verification email."
       );
     } finally {
       setIsLoading(false);

@@ -63,7 +63,13 @@ const ConfettiEffect = () => {
   ];
 
   useEffect(() => {
-    const allPieces = [];
+    const allPieces: Array<{
+      x: number;
+      y: number;
+      delay: number;
+      color: string;
+      size: number;
+    }> = [];
 
     // Helper function to get a random color
     const getRandomColor = () =>
@@ -139,7 +145,7 @@ const ConfettiEffect = () => {
       ...rightBurst,
       ...topShower,
       ...sprinkle,
-      ...finalBurst,
+      ...finalBurst
     );
     setPieces(allPieces);
     // eslint-disable-next-line react-hooks/exhaustive-deps

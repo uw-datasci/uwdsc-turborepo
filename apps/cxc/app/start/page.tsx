@@ -23,8 +23,8 @@ export default function StartPage() {
               Welcome!
             </h1>
             <p className="text-sm lg:text-base">
-              Canada's largest student run data hackathon. We are a
-              beginner-friendly datathon that bring together students and
+              Canada&apos;s largest student run AI hackathon. We are a
+              beginner-friendly AI hackathon that bring together students and
               companies to build projects that solve real-world problems.
             </p>
           </div>
@@ -58,8 +58,8 @@ export default function StartPage() {
           <div className="text-center">
             <h1 className="text-7xl mb-6">Welcome!</h1>
             <p className="text-sm lg:text-base">
-              Canada's largest student run data hackathon. We are a
-              beginner-friendly datathon that bring together students and
+              Canada&apos;s largest student run AI hackathon. We are a
+              beginner-friendly AI hackathon that bring together students and
               companies to build projects that solve real-world problems.
             </p>
           </div>

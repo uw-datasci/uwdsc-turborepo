@@ -1,6 +1,8 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /**
  * API Error Utilities
  */
+
 
 /**
  * Creates a proper Error object with additional API error properties

@@ -5,16 +5,10 @@
  */
 
 // Export all authentication functions
-export {
-  register,
-  login,
-  getAuthMe,
-  resendVerificationEmail,
-  signOut,
-} from "./auth";
+export { register, login, resendVerificationEmail, signOut } from "./auth";
 
 // Export all user functions
-export { getUserProfile, updateUserProfile } from "./user";
+export { getUserProfile } from "./user";
 
 // Export all file upload functions
 export { uploadResume } from "./resume";

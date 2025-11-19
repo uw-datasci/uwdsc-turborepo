@@ -11,7 +11,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     }
 
     const authService = await createAuthService();
-    const emailRedirectTo = `${process.env.NEXT_PUBLIC_APP_URL}/api/auth/callback?next=/complete-profile`;
+    const emailRedirectTo = `${process.env.NEXT_PUBLIC_APP_URL}/api/auth/callback?next=/`;
     const result = await authService.resendVerificationEmail(
       email,
       emailRedirectTo,
