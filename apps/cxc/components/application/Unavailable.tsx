@@ -21,13 +21,13 @@ export function Unavailable() {
             Applications Currently Closed
           </CardTitle>
           <CardDescription className="text-lg">
-            Thank you for your interest in participating in CxC!
+            Thank you for your interest in participating in CXC!
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
           <div className="space-y-4 text-center">
             <p className="text-muted-foreground">
-              Hacker applications for CxC are not currently open. Applications
+              Hacker applications for CXC are not currently open. Applications
               typically open a few months before the event.
             </p>
 
@@ -44,7 +44,7 @@ export function Unavailable() {
 
           <div className="space-y-3">
             <p className="text-sm text-center text-muted-foreground">
-              Want to stay informed about CxC and when applications open?
+              Want to stay informed about CXC and when applications open?
             </p>
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
               <Button
@@ -54,7 +54,7 @@ export function Unavailable() {
                   window.open("https://www.uwdatascience.ca/", "_blank")
                 }
               >
-                Learn More About CxC
+                Learn More About CXC
               </Button>
               <Button
                 variant="outline"

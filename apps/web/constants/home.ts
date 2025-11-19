@@ -29,8 +29,8 @@ export const WHAT_WE_DO_CARDS = [
     graphic: rocket,
   },
   {
-    title: "CxC",
-    description: "Stay tuned for our CxC hackathon, happening this winter!",
+    title: "CXC",
+    description: "Stay tuned for our CXC hackathon, happening this winter!",
     graphic: trophy,
   },
   {
@@ -148,7 +148,7 @@ export const GENERAL_FAQ: QandA[] = [
   {
     id: "2",
     question: "What are some events DSC hosts?",
-    answer: `1. Intro workshops on data tools that will look great on your resume :)\nE.g. Pandas, Tableau, Build Your Own DS Project, Machine Learning Algorithms\n2. Industry professionals/alumni/upper-year panels to help students explore more of the field and opportunities\nE.g. Data Science Across Sectors, Upper Year Co-Op Panel, Company Collabs and Info Sessions\n3. Technical interview prep and resume reviews by experienced upper-year mentors and Data Science Office Hours\n4. Hackathons to apply your learning and create cool projects\nEg. CxC (Data Hackathon) and Project Program\n5. Social events to connect with other students (Karaoke, Speed Friending, Trivia)\n6. Reading groups targeted to intermediate/advanced members where execs present ML research papers (Eg. NLP, computer vision)\n7. Visit our BOT (beginning of term event) for more events introductions!`,
+    answer: `1. Intro workshops on data tools that will look great on your resume :)\nE.g. Pandas, Tableau, Build Your Own DS Project, Machine Learning Algorithms\n2. Industry professionals/alumni/upper-year panels to help students explore more of the field and opportunities\nE.g. Data Science Across Sectors, Upper Year Co-Op Panel, Company Collabs and Info Sessions\n3. Technical interview prep and resume reviews by experienced upper-year mentors and Data Science Office Hours\n4. Hackathons to apply your learning and create cool projects\nEg. CXC (Data Hackathon) and Project Program\n5. Social events to connect with other students (Karaoke, Speed Friending, Trivia)\n6. Reading groups targeted to intermediate/advanced members where execs present ML research papers (Eg. NLP, computer vision)\n7. Visit our BOT (beginning of term event) for more events introductions!`,
   },
   {
     id: "3",
