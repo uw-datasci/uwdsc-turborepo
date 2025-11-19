@@ -41,7 +41,7 @@ export async function POST(req: NextRequest) {
       message: result.message,
       key: result.key,
     });
-  } catch (err: any) {
+  } catch (err: unknown) {
     console.error("Resume upload error:", err);
     return Response.json({ error: "Internal server error" }, { status: 500 });
   }

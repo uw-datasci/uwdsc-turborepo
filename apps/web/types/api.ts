@@ -130,29 +130,3 @@ export interface GetMembershipStatsResponse {
   error?: string;
   message?: string;
 }
-
-// ============================================================================
-// Error Types
-// ============================================================================
-
-export interface ApiError {
-  error: string;
-  message?: string;
-  details?: any;
-}
-
-// ============================================================================
-// Generic API Response
-// ============================================================================
-
-export type ApiResponse<T> =
-  | {
-      success: true;
-      data: T;
-    }
-  | {
-      success: false;
-      error: string;
-      message?: string;
-      details?: any;
-    };

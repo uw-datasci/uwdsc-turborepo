@@ -55,7 +55,7 @@ const InfoRow = ({ form, label, icon }: InfoRowProps) => {
   const isName = label === "name";
   // Check if this is a link field
   const isLinkField =
-    Object.values(LINKS_FIELDS).includes(label as any) &&
+    (Object.values(LINKS_FIELDS) as readonly string[]).includes(label) &&
     label !== LINKS_FIELDS.resume;
 
   // Handle different value types
@@ -120,7 +120,7 @@ const SectionReviewCard = ({
 
   return (
     <div className="bg-cxc-input-bg p-4 flex flex-col gap-2">
-      {filteredLabels.map((label, i) => {
+      {filteredLabels.map((label) => {
         // Find the original index to get the correct icon
         const originalIndex = labelArr.indexOf(label);
         return (
@@ -137,7 +137,7 @@ const SectionReviewCard = ({
 };
 
 const ContactIcons = [
-  <IdentificationCardIcon size={24} />,
+  <IdentificationCardIcon key="id" size={24} />,
   <EnvelopeSimpleIcon key="email" size={24} />,
   <PhoneIcon key="phone" size={24} />,
   <DiscordLogoIcon key="discord" size={24} />,

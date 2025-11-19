@@ -48,12 +48,12 @@ export function RegisterForm() {
         router.back();
       }
       await mutate();
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error(error);
       setAuthError(
-        error?.error ||
-          error?.message ||
-          "An unexpected error occurred. Please try again"
+        error instanceof Error
+          ? error.message
+          : "An unexpected error occurred. Please try again"
       );
     } finally {
       setIsLoading(false);

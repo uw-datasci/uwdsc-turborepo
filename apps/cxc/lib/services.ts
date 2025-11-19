@@ -2,6 +2,7 @@ import { cookies } from "next/headers";
 import { createSupabaseServerClient } from "@uwdsc/server/core/database/client";
 import { AuthService } from "@uwdsc/server/core/services/authService";
 import { ResumeService } from "@uwdsc/server/core/services/resumeService";
+import type { CookieOptions } from "@supabase/ssr";
 
 /**
  * Create a Supabase client with Next.js server-side cookies
@@ -13,7 +14,7 @@ async function createSupabaseClient() {
     getAll() {
       return cookieStore.getAll();
     },
-    set(name: string, value: string, options?: any) {
+    set(name: string, value: string, options?: CookieOptions) {
       cookieStore.set(name, value, options);
     },
   });

@@ -14,7 +14,8 @@ export const isDesktopStepValid = (
   const { errors } = form.formState;
 
   switch (currentStep) {
-    case 0: // Personal Details
+    case 0: {
+      // Personal Details
       const dietary_restrictions = form.watch("dietary_restrictions");
       const dietary_restrictions_other = form.watch(
         "dietary_restrictions_other",
@@ -36,7 +37,9 @@ export const isDesktopStepValid = (
         !errors.email && !errors.phone && !errors.discord;
 
       return validAboutYou && validContactInfo;
-    case 1: // Experience
+    }
+    case 1: {
+      // Experience
       const universityName = form.watch("university_name");
       const program = form.watch("program");
       const universityNameOther = form.watch("university_name_other");
@@ -70,6 +73,7 @@ export const isDesktopStepValid = (
       // TODO: ^ change to number input instead of dropdown later
 
       return isUniversityValid && isProgramValid && isYearValid && validHackExp;
+    }
     case 2: // CxC App
       return !errors.cxc_gain && !errors.silly_q;
     default:
@@ -90,7 +94,8 @@ export const isMobileStepValid = (
   const { errors } = form.formState;
 
   switch (currentStep) {
-    case 0: // Contact Info
+    case 0: {
+      // Contact Info
       const email = form.watch("email");
       const phone = form.watch("phone");
       const discord = form.watch("discord");
@@ -103,7 +108,9 @@ export const isMobileStepValid = (
         !!discord &&
         !errors.discord;
       return validContactInfo;
-    case 1: // About You
+    }
+    case 1: {
+      // About You
       const dietary_restrictions = form.watch("dietary_restrictions");
       const dietary_restrictions_other = form.watch(
         "dietary_restrictions_other",
@@ -121,7 +128,9 @@ export const isMobileStepValid = (
         !errors.gender &&
         !errors.ethnicity;
       return validAboutYou;
-    case 2: // Education
+    }
+    case 2: {
+      // Education
       const universityName = form.watch("university_name");
       const program = form.watch("program");
       const universityNameOther = form.watch("university_name_other");
@@ -139,7 +148,9 @@ export const isMobileStepValid = (
       const isYearValid = !errors.year_of_study && !!year;
 
       return isUniversityValid && isProgramValid && isYearValid;
-    case 3: // Hackathon Experience
+    }
+    case 3: {
+      // Hackathon Experience
       const hackathons_attended = form.watch("hackathons_attended");
       const prior_hackathon_experience = form.watch(
         "prior_hackathon_experience",
@@ -150,6 +161,7 @@ export const isMobileStepValid = (
         prior_hackathon_experience.length > 0 &&
         hackathons_attended !== undefined;
       return validHackExp;
+    }
     case 4: // Links & Documents
       return (
         !errors.github &&
@@ -158,12 +170,16 @@ export const isMobileStepValid = (
         !errors.other_link &&
         !errors.resume
       );
-    case 5: // CxC Gain
+    case 5: {
+      // CxC Gain
       const CxCGain = form.watch("cxc_gain");
       return !errors.cxc_gain && !!CxCGain;
-    case 6: // Silly Q
+    }
+    case 6: {
+      // Silly Q
       const SillyQ = form.watch("silly_q");
       return !errors.silly_q && !!SillyQ;
+    }
     default:
       return true;
   }

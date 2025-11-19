@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unknown-property */
 "use client";
 
 import { Canvas, useFrame } from "@react-three/fiber";
@@ -47,7 +48,7 @@ function WormholeWithRings() {
     // Vertical lines
     for (let i = 0; i < numLines; i++) {
       const angle = (i / numLines) * Math.PI * 2;
-      const points = [];
+      const points: THREE.Vector3[] = [];
 
       for (let j = 0; j <= segments; j++) {
         const y =
@@ -73,6 +74,7 @@ function WormholeWithRings() {
     }
 
     return lines;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [wormholeGeometry]);
 
   // Create moving rings that follow wormhole shape
@@ -81,7 +83,7 @@ function WormholeWithRings() {
     const numRings = 14;
 
     for (let i = 0; i < numRings; i++) {
-      const points = [];
+      const points: THREE.Vector3[] = [];
       const segments = 64;
       const radiusX = 1;
 
@@ -110,12 +112,11 @@ function WormholeWithRings() {
 
   // Animate the rings to follow wormhole shape
   useFrame((state) => {
-    rings.forEach((ring, index) => {
+    for (const [index, ring] of rings.entries()) {
       const speed = 0.05;
       const offset = (index / rings.length) * wormholeGeometry.height;
 
-      let animatedY;
-      animatedY =
+      const animatedY =
         wormholeGeometry.height * 0.5 -
         ((state.clock.elapsedTime * speed * wormholeGeometry.height + offset) %
           wormholeGeometry.height);
@@ -124,7 +125,7 @@ function WormholeWithRings() {
       const halfHeight = wormholeGeometry.height * 0.5;
       if (Math.abs(animatedY) > halfHeight) {
         ring.visible = false;
-        return;
+        continue;
       }
 
       ring.visible = true;
@@ -149,7 +150,7 @@ function WormholeWithRings() {
       }
 
       (ring.material as THREE.LineBasicMaterial).opacity = Math.max(opacity, 0);
-    });
+    }
   });
 
   return (
@@ -171,7 +172,9 @@ function WormholeWithRings() {
   );
 }
 
-export function DesktopAppWormhole({ opacity = 1 }: AppWormholeProps) {
+export function DesktopAppWormhole({
+  opacity = 1,
+}: Readonly<AppWormholeProps>) {
   return (
     <div className="block h-full overflow-hidden -z-10" style={{ opacity }}>
       <div className="h-[135vh]">
@@ -186,7 +189,7 @@ export function DesktopAppWormhole({ opacity = 1 }: AppWormholeProps) {
   );
 }
 
-export function MobileAppWormhole({ opacity = 1 }: AppWormholeProps) {
+export function MobileAppWormhole({ opacity = 1 }: Readonly<AppWormholeProps>) {
   return (
     <div className="block h-full overflow-hidden -z-1" style={{ opacity }}>
       <div className="h-[110vh]">

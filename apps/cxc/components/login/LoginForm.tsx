@@ -59,12 +59,12 @@ export function LoginForm() {
         // Fallback: refresh and let middleware handle
         router.refresh();
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("An unexpected error occurred:", error);
       setAuthError(
-        error?.error ||
-          error?.message ||
-          "An unexpected error occurred. Please try again.",
+        error instanceof Error
+          ? error.message
+          : "An unexpected error occurred. Please try again"
       );
     } finally {
       setIsLoading(false);
@@ -148,7 +148,7 @@ export function LoginForm() {
                 className="text-gray-400/60 hover:text-gray-200 transition-colors text-sm font-medium p-0 w-fit"
                 type="button"
               >
-                Don't have an account yet? Sign up here.
+                Don&apos;t have an account yet? Sign up here.
               </Button>
             </div>
           </div>

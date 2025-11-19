@@ -38,7 +38,7 @@ export default function Navbar() {
         {/* Description */}
         <div className="hidden md:block text-white max-w-sm lg:max-w-lg">
           <p className="text-xs lg:text-sm leading-relaxed">
-            Canada's largest student run data hackathon.
+            Canada&apos;s largest student run data hackathon.
             <br />
             We are a beginner-friendly datathon that bring together students and
             companies to build projects that solve real-world problems.

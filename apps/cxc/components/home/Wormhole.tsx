@@ -1,14 +1,15 @@
+/* eslint-disable react/no-unknown-property */
 "use client";
 
 import { Canvas, useFrame } from "@react-three/fiber";
 import { useRef, useMemo } from "react";
 import * as THREE from "three";
 
-function WormholeWithRings({
-  partType,
-}: {
-  partType: "top" | "middle" | "bottom";
-}) {
+interface WormholeWithRingsProps {
+  readonly partType: "top" | "middle" | "bottom";
+}
+
+function WormholeWithRings({ partType }: WormholeWithRingsProps) {
   const groupRef = useRef<THREE.Group>(null);
 
   // Define wormhole geometry based on part type
@@ -87,7 +88,7 @@ function WormholeWithRings({
     // Vertical lines
     for (let i = 0; i < numLines; i++) {
       const angle = (i / numLines) * Math.PI * 2;
-      const points = [];
+      const points: THREE.Vector3[] = [];
 
       for (let j = 0; j <= segments; j++) {
         const y =
@@ -126,6 +127,7 @@ function WormholeWithRings({
     }
 
     return lines;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [partType, wormholeGeometry]);
 
   // Create moving rings that follow wormhole shape
@@ -135,7 +137,7 @@ function WormholeWithRings({
 
     for (let i = 0; i < numRings; i++) {
       // Create ring as a perfect circle - let the group rotation handle the perspective
-      const points = [];
+      const points: THREE.Vector3[] = [];
       const segments = 64;
       for (let j = 0; j <= segments; j++) {
         const angle = (j / segments) * Math.PI * 2;
@@ -192,123 +194,129 @@ function WormholeWithRings({
     return cubeArray;
   }, []);
 
+  // Helper function to calculate animated Y position
+  const calculateAnimatedY = (
+    elapsedTime: number,
+    speed: number,
+    offset: number
+  ): number => {
+    const progress =
+      (elapsedTime * speed * wormholeGeometry.height + offset) %
+      wormholeGeometry.height;
+
+    if (partType === "bottom") {
+      return -(wormholeGeometry.height * 0.5) + progress;
+    }
+    return wormholeGeometry.height * 0.5 - progress;
+  };
+
+  // Helper function to update ring animation
+  const updateRing = (
+    ring: THREE.Line,
+    animatedY: number,
+    halfHeight: number
+  ): void => {
+    if (Math.abs(animatedY) > halfHeight) {
+      ring.visible = false;
+      return;
+    }
+
+    ring.visible = true;
+    const radius = getRadiusAtY(animatedY);
+    ring.position.y = animatedY;
+    ring.scale.setScalar(radius);
+
+    const edgeDistance = Math.abs(animatedY) / halfHeight;
+    const fadeZone = 0.1;
+    let opacity = 0.9;
+
+    if (edgeDistance > 1.0 - fadeZone) {
+      const fadeProgress = (edgeDistance - (1.0 - fadeZone)) / fadeZone;
+      opacity = 0.9 * (1.0 - fadeProgress);
+    }
+
+    (ring.material as THREE.LineBasicMaterial).opacity = Math.max(opacity, 0);
+  };
+
+  // Helper function to update cube animation
+  const updateCube = (
+    cube: THREE.Mesh,
+    animatedY: number,
+    halfHeight: number
+  ): void => {
+    if (Math.abs(animatedY) > halfHeight) {
+      cube.visible = false;
+      return;
+    }
+
+    cube.visible = true;
+    const radius = getRadiusAtY(animatedY);
+
+    cube.userData.angle += cube.userData.speed * 0.5;
+
+    const spiralRadius = radius * (0.3 + Math.sin(animatedY * 0.1) * 0.2);
+    const x = Math.cos(cube.userData.angle) * spiralRadius;
+    const z = Math.sin(cube.userData.angle) * spiralRadius;
+
+    cube.position.set(x, animatedY, z);
+
+    cube.rotation.x += cube.userData.rotationSpeed.x;
+    cube.rotation.y += cube.userData.rotationSpeed.y;
+    cube.rotation.z += cube.userData.rotationSpeed.z;
+
+    const edgeDistance = Math.abs(animatedY) / halfHeight;
+    const fadeZone = 0.15;
+    let opacity = 0.8;
+
+    if (edgeDistance > 1.0 - fadeZone) {
+      const fadeProgress = (edgeDistance - (1.0 - fadeZone)) / fadeZone;
+      opacity = 0.8 * (1.0 - fadeProgress);
+    }
+
+    (cube.material as THREE.MeshBasicMaterial).opacity = Math.max(opacity, 0);
+  };
+
   // Animate the rings to follow wormhole shape
   useFrame((state) => {
-    rings.forEach((ring, index) => {
+    const halfHeight = wormholeGeometry.height * 0.5;
+
+    for (const [index, ring] of rings.entries()) {
       const speed = 0.05;
       const offset = (index / rings.length) * wormholeGeometry.height;
+      const animatedY = calculateAnimatedY(
+        state.clock.elapsedTime,
+        speed,
+        offset
+      );
+      updateRing(ring, animatedY, halfHeight);
+    }
 
-      let animatedY;
-      if (partType === "bottom") {
-        animatedY =
-          -(wormholeGeometry.height * 0.5) +
-          ((state.clock.elapsedTime * speed * wormholeGeometry.height +
-            offset) %
-            wormholeGeometry.height);
-      } else {
-        animatedY =
-          wormholeGeometry.height * 0.5 -
-          ((state.clock.elapsedTime * speed * wormholeGeometry.height +
-            offset) %
-            wormholeGeometry.height);
-      }
-
-      // Only show rings within the wormhole bounds to prevent deformation
-      const halfHeight = wormholeGeometry.height * 0.5;
-      if (Math.abs(animatedY) > halfHeight) {
-        ring.visible = false;
-        return;
-      }
-
-      ring.visible = true;
-
-      // Get radius at this Y position to match wormhole shape
-      const radius = getRadiusAtY(animatedY);
-
-      // Position ring
-      ring.position.y = animatedY;
-
-      // Scale ring to match wormhole radius while preserving elliptical shape
-      ring.scale.setScalar(radius);
-
-      // Smooth fade at edges instead of abrupt opacity changes
-      const edgeDistance = Math.abs(animatedY) / halfHeight;
-      const fadeZone = 0.1;
-      let opacity = 0.9;
-
-      if (edgeDistance > 1.0 - fadeZone) {
-        const fadeProgress = (edgeDistance - (1.0 - fadeZone)) / fadeZone;
-        opacity = 0.9 * (1.0 - fadeProgress);
-      }
-
-      (ring.material as THREE.LineBasicMaterial).opacity = Math.max(opacity, 0);
-    });
-
-    cubes.forEach((cube, index) => {
+    for (const [index, cube] of cubes.entries()) {
       const speed = cube.userData.speed;
       const offset = (index / cubes.length) * wormholeGeometry.height;
-
-      let animatedY;
-      if (partType === "bottom") {
-        animatedY =
-          -(wormholeGeometry.height * 0.5) +
-          ((state.clock.elapsedTime * speed * wormholeGeometry.height +
-            offset) %
-            wormholeGeometry.height);
-      } else {
-        animatedY =
-          wormholeGeometry.height * 0.5 -
-          ((state.clock.elapsedTime * speed * wormholeGeometry.height +
-            offset) %
-            wormholeGeometry.height);
-      }
-
-      const halfHeight = wormholeGeometry.height * 0.5;
-      if (Math.abs(animatedY) > halfHeight) {
-        cube.visible = false;
-        return;
-      }
-
-      cube.visible = true;
-
-      const radius = getRadiusAtY(animatedY);
-
-      cube.userData.angle += cube.userData.speed * 0.5;
-
-      const spiralRadius = radius * (0.3 + Math.sin(animatedY * 0.1) * 0.2);
-      const x = Math.cos(cube.userData.angle) * spiralRadius;
-      const z = Math.sin(cube.userData.angle) * spiralRadius;
-
-      cube.position.set(x, animatedY, z);
-
-      cube.rotation.x += cube.userData.rotationSpeed.x;
-      cube.rotation.y += cube.userData.rotationSpeed.y;
-      cube.rotation.z += cube.userData.rotationSpeed.z;
-
-      const edgeDistance = Math.abs(animatedY) / halfHeight;
-      const fadeZone = 0.15;
-      let opacity = 0.8;
-
-      if (edgeDistance > 1.0 - fadeZone) {
-        const fadeProgress = (edgeDistance - (1.0 - fadeZone)) / fadeZone;
-        opacity = 0.8 * (1.0 - fadeProgress);
-      }
-
-      (cube.material as THREE.MeshBasicMaterial).opacity = Math.max(opacity, 0);
-    });
+      const animatedY = calculateAnimatedY(
+        state.clock.elapsedTime,
+        speed,
+        offset
+      );
+      updateCube(cube, animatedY, halfHeight);
+    }
   });
 
+  let rotation: [number, number, number];
+  switch (partType) {
+    case "top":
+      rotation = [Math.PI * 0.15, 0, 0];
+      break;
+    case "bottom":
+      rotation = [-Math.PI * 0.15, 0, Math.PI];
+      break;
+    default:
+      rotation = [0, 0, 0];
+  }
+
   return (
-    <group
-      ref={groupRef}
-      rotation={
-        partType === "top"
-          ? [Math.PI * 0.15, 0, 0]
-          : partType === "bottom"
-            ? [-Math.PI * 0.15, 0, Math.PI]
-            : [0, 0, 0]
-      }
-    >
+    <group ref={groupRef} rotation={rotation}>
       {/* Wormhole grid structure */}
       {gridLines.map((line, index) => (
         <primitive key={`line-${index}`} object={line} />

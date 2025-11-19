@@ -4,13 +4,11 @@ import { Button } from "@uwdsc/ui";
 import { cn } from "@uwdsc/ui/lib/utils";
 import type { ComponentProps } from "react";
 
-interface CxcButtonProps extends ComponentProps<typeof Button> {}
-
 export default function CxcButton({
   className,
   children,
   ...props
-}: Readonly<CxcButtonProps>) {
+}: Readonly<ComponentProps<typeof Button>>) {
   return (
     <Button
       className={cn(
