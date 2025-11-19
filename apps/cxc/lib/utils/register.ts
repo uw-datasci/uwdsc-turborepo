@@ -7,32 +7,31 @@ import { RegistrationFormValues } from "@/lib/schemas/register";
  * @returns boolean indicating if the form is valid
  */
 export const isRegistrationFormValid = (
-    form: UseFormReturn<RegistrationFormValues>,
+  form: UseFormReturn<RegistrationFormValues>,
 ): boolean => {
-    const { errors } = form.formState;
+  const { errors } = form.formState;
 
-    // Get current field values
-    const firstName = form.watch("first_name");
-    const lastName = form.watch("last_name");
-    const email = form.watch("email");
-    const password = form.watch("password");
-    const confirmPassword = form.watch("confirmPassword");
+  // Get current field values
+  const firstName = form.watch("first_name");
+  const lastName = form.watch("last_name");
+  const email = form.watch("email");
+  const password = form.watch("password");
+  const confirmPassword = form.watch("confirmPassword");
 
-    // Validate all fields have no errors and have values
-    const validDetails =
-        !errors.first_name &&
-        !!firstName?.trim() &&
-        !errors.last_name &&
-        !!lastName?.trim();
+  // Validate all fields have no errors and have values
+  const validDetails =
+    !errors.first_name &&
+    !!firstName?.trim() &&
+    !errors.last_name &&
+    !!lastName?.trim();
 
-    const validAccount =
-        !errors.email &&
-        !!email?.trim() &&
-        !errors.password &&
-        !!password &&
-        !errors.confirmPassword &&
-        !!confirmPassword;
+  const validAccount =
+    !errors.email &&
+    !!email?.trim() &&
+    !errors.password &&
+    !!password &&
+    !errors.confirmPassword &&
+    !!confirmPassword;
 
-    return validDetails && validAccount;
+  return validDetails && validAccount;
 };
-

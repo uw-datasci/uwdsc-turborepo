@@ -1,11 +1,11 @@
 "use client";
 
-import CxcButton from "@/components/CxcButton";
 import { AnimatePresence, motion } from "framer-motion";
 import { PartyPopper } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import ConfettiEffect from "../Confetti";
+import CxCButton from "@/components/CxCButton";
 
 export function Submitted() {
   const router = useRouter();
@@ -75,9 +75,9 @@ export function Submitted() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 1.8 }}
         >
-          <CxcButton className="py-3" onClick={() => router.push("/")}>
+          <CxCButton className="py-3" onClick={() => router.push("/")}>
             Return Home
-          </CxcButton>
+          </CxCButton>
         </motion.div>
       </motion.div>
     </div>

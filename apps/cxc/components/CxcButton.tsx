@@ -4,7 +4,7 @@ import { Button } from "@uwdsc/ui";
 import { cn } from "@uwdsc/ui/lib/utils";
 import type { ComponentProps } from "react";
 
-export default function CxcButton({
+export default function CxCButton({
   className,
   children,
   ...props
@@ -13,7 +13,7 @@ export default function CxcButton({
     <Button
       className={cn(
         "!bg-white !text-black font-normal rounded-none !h-auto hover:!scale-105 hover:!bg-white",
-        className
+        className,
       )}
       {...props}
     >

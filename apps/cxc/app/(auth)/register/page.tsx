@@ -27,7 +27,11 @@ export default function RegisterPage() {
 
           <div className="absolute inset-0 flex flex-col justify-between py-24 px-12 z-10">
             <div>
-              <StepIndicator currentStep={0} totalSteps={STEP_NAMES.length} label="CXC 2026" />
+              <StepIndicator
+                currentStep={0}
+                totalSteps={STEP_NAMES.length}
+                label="CXC 2026"
+              />
             </div>
             <DSCLogo
               size={24}

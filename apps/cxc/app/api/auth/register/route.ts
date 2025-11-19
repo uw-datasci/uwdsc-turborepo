@@ -9,12 +9,16 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     if (!email || !password) {
       return NextResponse.json(
         { error: "Email and password are required" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
     const authService = await createAuthService();
-    const result = await authService.register({ email, password }, "", metadata);
+    const result = await authService.register(
+      { email, password },
+      "",
+      metadata,
+    );
 
     if (!result.success) {
       return NextResponse.json({ error: result.error }, { status: 400 });
@@ -31,7 +35,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     console.error("Registration error:", error);
     return NextResponse.json(
       { error: "An unexpected error occurred" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

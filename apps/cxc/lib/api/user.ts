@@ -31,4 +31,3 @@ export async function getUserProfile(): Promise<UserProfile | null> {
 
   return data.profile;
 }
-

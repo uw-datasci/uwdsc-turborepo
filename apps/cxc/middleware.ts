@@ -20,7 +20,9 @@ export async function middleware(request: NextRequest) {
 
   // Create Supabase client
   const supabase = createSupabaseMiddlewareClient(request, response);
-  const { data: { user } } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
   const { pathname } = request.nextUrl;
 
   // --- Dispatch to specific middleware handlers ---

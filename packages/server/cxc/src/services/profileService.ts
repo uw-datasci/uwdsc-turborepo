@@ -18,7 +18,7 @@ export class ProfileService {
     } catch (error) {
       throw new ApiError(
         `Failed to get profile: ${(error as Error).message}`,
-        500
+        500,
       );
     }
   }

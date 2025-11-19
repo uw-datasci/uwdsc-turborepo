@@ -65,4 +65,3 @@ export interface GetProfileResponse {
   error?: string;
   message?: string;
 }
-
