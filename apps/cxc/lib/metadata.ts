@@ -1,6 +1,6 @@
 import type { Metadata, Viewport } from "next";
 
-const siteUrl = "https://cxc.uwdatascience.ca/"; // Update with actual CxC domain
+const siteUrl = "https://cxc.uwdatascience.ca/"; // Update with actual CXC domain
 
 export const baseMetadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -66,14 +66,14 @@ export function createMetadata({
   image?: string;
   pathname?: string;
 }): Metadata {
-  const fullTitle = `${title} | CxC - UWaterloo Data Science Competition`;
+  const fullTitle = `${title} | CXC - UWaterloo Data Science Competition`;
 
   return {
     ...baseMetadata,
     title: fullTitle,
     description:
       description ||
-      "CxC - UWaterloo's premier data science competition and hackathon",
+      "CXC - UWaterloo's premier data science competition and hackathon",
     keywords: keywords,
     alternates: {
       canonical: pathname ? `${siteUrl}${pathname}` : undefined,
@@ -83,7 +83,7 @@ export function createMetadata({
       title: fullTitle,
       description:
         description ||
-        "CxC - UWaterloo's premier data science competition and hackathon",
+        "CXC - UWaterloo's premier data science competition and hackathon",
       images: [
         {
           url: image,
@@ -96,7 +96,7 @@ export function createMetadata({
       title: fullTitle,
       description:
         description ||
-        "CxC - UWaterloo's premier data science competition and hackathon",
+        "CXC - UWaterloo's premier data science competition and hackathon",
       images: [image],
     },
   };

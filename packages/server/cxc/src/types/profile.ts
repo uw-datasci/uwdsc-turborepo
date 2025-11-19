@@ -3,10 +3,9 @@ export type Role = "hacker" | "volunteer" | "admin" | "default";
 
 // Profile type matching the database schema
 export interface Profile {
-    id: string;
-    role: Role;
-    nfc_id: bigint | null;
-    created_at: Date;
-    updated_at: Date;
+  id: string;
+  role: Role;
+  nfc_id: bigint | null;
+  created_at: Date;
+  updated_at: Date;
 }
-

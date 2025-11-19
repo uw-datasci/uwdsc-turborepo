@@ -74,7 +74,7 @@ export const isDesktopStepValid = (
 
       return isUniversityValid && isProgramValid && isYearValid && validHackExp;
     }
-    case 2: // CxC App
+    case 2: // CXC App
       return !errors.cxc_gain && !errors.silly_q;
     default:
       return true;
@@ -171,7 +171,7 @@ export const isMobileStepValid = (
         !errors.resume
       );
     case 5: {
-      // CxC Gain
+      // CXC Gain
       const CxCGain = form.watch("cxc_gain");
       return !errors.cxc_gain && !!CxCGain;
     }

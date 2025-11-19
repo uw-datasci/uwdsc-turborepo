@@ -7,9 +7,9 @@ import type { NextRequest } from "next/server";
  * Redirects unauthenticated users to /login
  */
 export function withProtected(request: NextRequest, user: any) {
-    // If route is protected and user is not authenticated, redirect to login
-    if (!user) return NextResponse.redirect(new URL("/login", request.url));
+  // If route is protected and user is not authenticated, redirect to login
+  if (!user) return NextResponse.redirect(new URL("/login", request.url));
 
-    // Either not a protected route or user is authenticated
-    return NextResponse.next();
+  // Either not a protected route or user is authenticated
+  return NextResponse.next();
 }

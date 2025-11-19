@@ -40,8 +40,8 @@ export default function AboutCxC() {
   return (
     <section className="relative text-white py-16 md:py-32 overflow-hidden">
       <div className="mx-auto px-6 text-center">
-        {/* About CxC */}
-        <h2 className="text-3xl md:text-4xl font-semibold mb-6">About CxC</h2>
+        {/* About CXC */}
+        <h2 className="text-3xl md:text-4xl font-semibold mb-6">About CXC</h2>
         <p className="text-lg md:text-xl text-gray-300 max-w-2xl mx-auto mb-10">
           Canada&apos;s largest student-run data hackathon. We are a
           beginner-friendly datathon that brings together students and companies

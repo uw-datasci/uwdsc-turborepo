@@ -112,7 +112,7 @@ const textareaStyles: Record<FormFieldVariant, string> = {
  */
 export const renderTextField = <T extends Record<string, any>>(
   placeholder: string,
-  options: TextFieldOptions = {}
+  options: TextFieldOptions = {},
 ) => {
   const { label, required = false, variant = "default", inputProps } = options;
 
@@ -157,7 +157,7 @@ export const renderTextField = <T extends Record<string, any>>(
 export const renderSelectField = <T extends Record<string, any>>(
   placeholder: string,
   options: string[],
-  fieldOptions: SelectFieldOptions = {}
+  fieldOptions: SelectFieldOptions = {},
 ) => {
   const { label, required = false, variant = "default" } = fieldOptions;
 
@@ -212,7 +212,7 @@ export const renderSelectField = <T extends Record<string, any>>(
  */
 export const renderTextAreaField = <T extends Record<string, any>>(
   placeholder: string,
-  options: TextAreaFieldOptions = {}
+  options: TextAreaFieldOptions = {},
 ) => {
   const {
     label,
@@ -257,7 +257,7 @@ export const renderTextAreaField = <T extends Record<string, any>>(
  */
 export const renderRadioField = <T extends Record<string, any>>(
   label: string,
-  options: RadioFieldOptions = {}
+  options: RadioFieldOptions = {},
 ) => {
   const { required = true } = options;
 
@@ -310,7 +310,7 @@ export const renderRadioField = <T extends Record<string, any>>(
 export function renderTextFieldWithLabel<T extends Record<string, any>>(
   label: string,
   placeholder: string,
-  inputProps?: Partial<ComponentProps<typeof Input>>
+  inputProps?: Partial<ComponentProps<typeof Input>>,
 ) {
   return renderTextField<T>(placeholder, {
     label,
@@ -327,7 +327,7 @@ export function renderSelectFieldWithLabel<T extends Record<string, any>>(
   label: string,
   placeholder: string,
   options: string[],
-  required: boolean = true
+  required: boolean = true,
 ) {
   return renderSelectField<T>(placeholder, options, {
     label,
@@ -343,7 +343,7 @@ export function renderTextAreaFieldWithLabel<T extends Record<string, any>>(
   label: string,
   placeholder: string,
   textareaProps?: Partial<ComponentProps<typeof Textarea>>,
-  required: boolean = true
+  required: boolean = true,
 ) {
   return renderTextAreaField<T>(placeholder, {
     label,
@@ -357,7 +357,7 @@ export function renderTextAreaFieldWithLabel<T extends Record<string, any>>(
  * Render radio field for application forms
  */
 export function renderRadioFieldWithLabel<T extends Record<string, any>>(
-  label: string
+  label: string,
 ) {
   return renderRadioField<T>(label, { required: true });
 }

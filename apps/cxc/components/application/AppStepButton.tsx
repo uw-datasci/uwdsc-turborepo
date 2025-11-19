@@ -1,7 +1,7 @@
 "use client";
 
 import { ArrowRightIcon } from "@uwdsc/ui/index";
-import CxcButton from "../CxcButton";
+import CxCButton from "../CxCButton";
 
 interface StepButtonProps {
   text: string;
@@ -19,7 +19,7 @@ export default function AppStepButton({
   iconSize,
 }: Readonly<StepButtonProps>) {
   return (
-    <CxcButton
+    <CxCButton
       onClick={onClick}
       className={`!bg-white !text-black font-normal rounded-none !h-auto hover:!scale-105 hover:!bg-white flex items-center ${className}`}
     >
@@ -28,6 +28,6 @@ export default function AppStepButton({
         size={iconSize ?? 24}
         className={`${marginLeft ?? "ml-16"} !w-${iconSize ?? 24} !h-${iconSize ?? 24}`}
       />
-    </CxcButton>
+    </CxCButton>
   );
 }

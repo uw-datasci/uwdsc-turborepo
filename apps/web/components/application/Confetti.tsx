@@ -145,7 +145,7 @@ const ConfettiEffect = () => {
       ...rightBurst,
       ...topShower,
       ...sprinkle,
-      ...finalBurst
+      ...finalBurst,
     );
     setPieces(allPieces);
     // eslint-disable-next-line react-hooks/exhaustive-deps

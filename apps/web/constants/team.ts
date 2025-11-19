@@ -39,7 +39,7 @@ import tanayKashyap from "@/public/teams/Tanay-Kashyap.jpeg";
 import lunaNguyen from "@/public/teams/Luna-Nguyen.jpg";
 import dishitaChawla from "@/public/teams/Dishita-Chawla.jpg";
 
-// CxC
+// CXC
 import michaelZhang from "@/public/teams/Michael-Zhang.jpg";
 import davidHe from "@/public/teams/David-He.png";
 import adhyaSharma from "@/public/teams/Adhya-Sharma.jpg";
@@ -456,60 +456,60 @@ export const TEAM: Subteam[] = [
   },
   {
     id: "cxc",
-    name: "CxC",
+    name: "CXC",
     members: [
       {
         id: "michael-zhang",
         name: "Michael Zhang",
-        position: "VP of Cxc",
+        position: "VP of CxC",
         image: michaelZhang,
       },
       {
         id: "david-he",
         name: "David He",
-        position: "VP of CxC",
+        position: "VP of CXC",
         image: davidHe,
       },
       {
         id: "adhya-sharma",
         name: "Adhya Sharma",
-        position: "CxC Coordinator",
+        position: "CXC Coordinator",
         image: adhyaSharma,
       },
       {
         id: "parithy-senthamilarasan",
         name: "Parithy Senthamilarasan",
-        position: "CxC Coordinator",
+        position: "CXC Coordinator",
         image: parithySenthamilarasan,
       },
       {
         id: "simone-coutinho",
         name: "Simone Coutinho",
-        position: "CxC Coordinator",
+        position: "CXC Coordinator",
         image: simoneCoutinho,
       },
       {
         id: "aaron-liang",
         name: "Aaron Liang",
-        position: "CxC Coordinator",
+        position: "CXC Coordinator",
         image: aaronLiang,
       },
       {
         id: "daniel-pu",
         name: "Daniel Pu",
-        position: "CxC Coordinator",
+        position: "CXC Coordinator",
         image: danielPu,
       },
       {
         id: "ian-leung",
         name: "Ian Leung",
-        position: "CxC Coordinator",
+        position: "CXC Coordinator",
         image: ianLeung,
       },
       {
         id: "parsa-ahmadnezhad",
         name: "Parsa Ahmadnezhad",
-        position: "CxC Coordinator",
+        position: "CXC Coordinator",
         image: parsaAhmadnezhad,
       },
     ],
@@ -521,7 +521,7 @@ export const TEAM: Subteam[] = [
       {
         id: "winston-yu",
         name: "Winston Yu",
-        position: "Events and CxC Advisor",
+        position: "Events and CXC Advisor",
         image: winstonYu,
       },
       {

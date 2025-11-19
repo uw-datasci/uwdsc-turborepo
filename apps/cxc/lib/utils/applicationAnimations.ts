@@ -16,4 +16,3 @@ export const slideTransition = {
   x: { type: "spring" as const, stiffness: 300, damping: 30 },
   opacity: { duration: 0.2 },
 };
-

@@ -43,7 +43,7 @@ export function VerifyEmailModal({
       setResendStatus(
         error instanceof Error
           ? error.message
-          : "Failed to resend verification email."
+          : "Failed to resend verification email.",
       );
     } finally {
       setIsLoading(false);

@@ -4,7 +4,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
 import { signOut } from "@/lib/api";
-import CxcButton from "../CxcButton";
+import CxCButton from "../CxCButton";
 
 export default function Navbar() {
   const router = useRouter();
@@ -46,17 +46,17 @@ export default function Navbar() {
         </div>
       </div>
       <div className="flex flex-row gap-4">
-        <CxcButton onClick={() => router.push("/apply")}>Apply</CxcButton>
+        <CxCButton onClick={() => router.push("/apply")}>Apply</CxCButton>
         {!isAuthenticated && (
           <>
-            <CxcButton onClick={() => router.push("/login")}>Login</CxcButton>
-            <CxcButton onClick={() => router.push("/register")}>
+            <CxCButton onClick={() => router.push("/login")}>Login</CxCButton>
+            <CxCButton onClick={() => router.push("/register")}>
               Register
-            </CxcButton>
+            </CxCButton>
           </>
         )}
         {isAuthenticated && (
-          <CxcButton onClick={handleSignOut}>Signout</CxcButton>
+          <CxCButton onClick={handleSignOut}>Signout</CxCButton>
         )}
       </div>
     </div>

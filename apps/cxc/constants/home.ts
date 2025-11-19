@@ -20,12 +20,12 @@ export const GENERAL_FAQ: QandA[] = [
   {
     id: "1",
     question: "What is a Data Hackathon?",
-    answer: `An event where hackers work in teams to tackle data-related challenges, such as making predictions or classifications from preprepared data sets. You will receive a data set as well as some problem statements, and you will be judged on both your technical abilities as well as the business viability of your solution. At CxC, we will also be hosting social activities, introductory workshops, company booths, and more to help you connect with other participants, industry experts, and learn more about data science.`,
+    answer: `An event where hackers work in teams to tackle data-related challenges, such as making predictions or classifications from preprepared data sets. You will receive a data set as well as some problem statements, and you will be judged on both your technical abilities as well as the business viability of your solution. At CXC, we will also be hosting social activities, introductory workshops, company booths, and more to help you connect with other participants, industry experts, and learn more about data science.`,
   },
   {
     id: "2",
     question: "What if I have zero experience in data science?",
-    answer: `No worries! CxC is a beginner-friendly hackathon. We will host several workshops to help you acquire some useful skills for the challenges. We also have a team of experienced mentors ready to provide support on the CxC Discord.`,
+    answer: `No worries! CXC is a beginner-friendly hackathon. We will host several workshops to help you acquire some useful skills for the challenges. We also have a team of experienced mentors ready to provide support on the CXC Discord.`,
   },
   {
     id: "3",
@@ -46,7 +46,7 @@ export const GENERAL_FAQ: QandA[] = [
   {
     id: "6",
     question: "Will there be prizes?",
-    answer: `Yes, CxC is offering $20k+ cash prizes and an interview with PearVC for winners!`,
+    answer: `Yes, CXC is offering $20k+ cash prizes and an interview with PearVC for winners!`,
   },
   {
     id: "7",

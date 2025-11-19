@@ -198,7 +198,7 @@ function WormholeWithRings({ partType }: WormholeWithRingsProps) {
   const calculateAnimatedY = (
     elapsedTime: number,
     speed: number,
-    offset: number
+    offset: number,
   ): number => {
     const progress =
       (elapsedTime * speed * wormholeGeometry.height + offset) %
@@ -214,7 +214,7 @@ function WormholeWithRings({ partType }: WormholeWithRingsProps) {
   const updateRing = (
     ring: THREE.Line,
     animatedY: number,
-    halfHeight: number
+    halfHeight: number,
   ): void => {
     if (Math.abs(animatedY) > halfHeight) {
       ring.visible = false;
@@ -242,7 +242,7 @@ function WormholeWithRings({ partType }: WormholeWithRingsProps) {
   const updateCube = (
     cube: THREE.Mesh,
     animatedY: number,
-    halfHeight: number
+    halfHeight: number,
   ): void => {
     if (Math.abs(animatedY) > halfHeight) {
       cube.visible = false;
@@ -286,7 +286,7 @@ function WormholeWithRings({ partType }: WormholeWithRingsProps) {
       const animatedY = calculateAnimatedY(
         state.clock.elapsedTime,
         speed,
-        offset
+        offset,
       );
       updateRing(ring, animatedY, halfHeight);
     }
@@ -297,7 +297,7 @@ function WormholeWithRings({ partType }: WormholeWithRingsProps) {
       const animatedY = calculateAnimatedY(
         state.clock.elapsedTime,
         speed,
-        offset
+        offset,
       );
       updateCube(cube, animatedY, halfHeight);
     }

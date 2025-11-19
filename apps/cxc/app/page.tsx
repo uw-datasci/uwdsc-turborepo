@@ -15,7 +15,7 @@ export default function Home() {
       <Navbar />
       <div className="border-b border-white/50 flex items-center justify-center overflow-hidden">
         <p className="font-semibold text-[length:50vw] leading-none whitespace-nowrap tracking-tighter -mb-[15%] -ml-2 sm:-ml-4 md:-ml-6 xl:-ml-10">
-          CxC
+          CXC
         </p>
       </div>
       <WormholeTop />

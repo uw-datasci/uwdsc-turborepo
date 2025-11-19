@@ -41,7 +41,7 @@ export function Education({ form }: EducationProps) {
     <Form {...form}>
       <AppSection
         label="Education"
-        description="You must be in post-secondary education to attend CxC!"
+        description="You must be in post-secondary education to attend CXC!"
       >
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 items-start">
           {/* University Name Column */}

@@ -43,7 +43,7 @@ export default function StartPage() {
             />
             <AppStepButton
               text="Sign up"
-              onClick={() => router.push("/register")}
+              onClick={() => router.push("/register?callbackUrl=/apply")}
               className="!px-4.5 !py-4 text-xl"
             />
           </div>
@@ -73,7 +73,7 @@ export default function StartPage() {
             />
             <AppStepButton
               text="Sign up"
-              onClick={() => router.push("/register")}
+              onClick={() => router.push("/register?callbackUrl=/apply")}
               className="!px-3 !py-2 text-base"
               marginLeft="ml-8"
               iconSize={16}
