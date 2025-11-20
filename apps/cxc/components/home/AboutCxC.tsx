@@ -15,7 +15,7 @@ function Stat({ value, label, prefix, suffix }: Readonly<StatProps>) {
     <div className="text-center">
       <div className="flex items-baseline justify-center gap-1 mb-2 md:min-w-[225px] xl:min-w-xs">
         {prefix ? (
-          <span className="text-6xl lg:text-7xl font-bold leading-none">
+          <span className="text-6xl md:text-5xl lg:text-7xl font-bold leading-none">
             {prefix}
           </span>
         ) : null}
@@ -23,10 +23,10 @@ function Stat({ value, label, prefix, suffix }: Readonly<StatProps>) {
           number={value}
           inView
           inViewOnce
-          className="text-6xl lg:text-7xl font-bold"
+          className="text-6xl md:text-5xl lg:text-7xl font-bold"
         />
         {suffix ? (
-          <span className="text-6xl lg:text-7xl font-bold leading-none">
+          <span className="text-6xl md:text-5xl lg:text-7xl font-bold leading-none">
             {suffix}
           </span>
         ) : null}
@@ -48,8 +48,7 @@ export default function AboutCxC() {
           to build projects that solve real-world problems.
         </p>
 
-        {/* ✅ Ripples now correctly positioned between text + countdown */}
-        <div className="w-full mb-12">
+        <div className="w-full">
           <Ripples />
         </div>
 
