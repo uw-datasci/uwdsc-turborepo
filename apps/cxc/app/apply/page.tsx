@@ -48,7 +48,7 @@ export default function ApplyPage() {
   const handleSaveAndContinue = async (onSuccess: () => void) => {
     setIsLoading(true);
     try {
-      // Replace with actual API call when backend is ready
+      // TODO: Replace with actual API call when backend is ready
       // Example: await updateApplication(form.getValues());
       await new Promise((resolve) => setTimeout(resolve, 1000)); // TO REMOVE
       onSuccess();
