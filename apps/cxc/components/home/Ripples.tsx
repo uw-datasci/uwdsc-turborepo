@@ -113,7 +113,11 @@ export default function Ripples({ height = 200 }: RipplesProps) {
   const inView = useInView(ref, { once: true, amount: 0.3 });
 
   return (
-    <div ref={ref} className="relative w-full my-30" style={{ height }}>
+    <div
+      ref={ref}
+      className="relative w-full my-10 md:my-20"
+      style={{ height }}
+    >
       {/* Medium Left Ripple */}
       <div className="absolute top-[50%] -translate-y-1/2 -translate-x-1/2 md:-translate-x-1/3 lg:-translate-x-1/4 xl:-translate-x-1/5 w-[800px] h-[360px] scale-[0.5] sm:scale-[0.6] md:scale-[0.7] lg:scale-[0.8] xl:scale-[0.9]">
         <RippleGroup

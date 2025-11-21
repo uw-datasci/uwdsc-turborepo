@@ -22,28 +22,27 @@ export function FollowUs() {
   ];
 
   return (
-    <section className="relative text-white py-24 overflow-hidden mb-10 md:mb-20">
-      <div className="container mx-auto px-16 flex flex-col md:flex-row items-center md:items-start justify-center space-y-8 md:space-y-0 md:space-x-30">
+    <section className="relative text-white py-24 overflow-hidden mb-10 lg:mb-20">
+      <div className="container mx-auto px-16 flex flex-col lg:flex-row items-center lg:items-start justify-between">
         {/* Left column: Title */}
-        <div className="mb-8 md:mb-0 md:w-1/3 text-center md:text-left">
-          <h2 className="text-3xl md:text-4xl font-light text-white">
+        <div className="mb-8 lg:mb-0 text-center lg:text-left">
+          <h2 className="text-3xl lg:text-5xl font-light text-white">
             FOLLOW US
           </h2>
         </div>
 
         {/* Right column: Social icons */}
-        <div className="md:w-1/3 flex justify-end">
-          <div className="flex items-center gap-4 md:gap-6">
+        <div className="flex justify-end">
+          <div className="flex items-center gap-6 md:gap-12 lg:gap-9">
             {socials.map((social) => {
               const Icon = social.icon;
-              const isReactIcon = social.icon === RiTwitterXLine;
               return (
                 <Button
                   key={social.name}
                   asChild
                   variant="ghost"
                   size="icon"
-                  className="h-12 w-12 md:h-14 md:w-14 rounded-full border border-white/20 bg-white/5 hover:bg-white/10 hover:border-white/40 transition-all duration-300 hover:scale-110"
+                  className="!h-20 !w-20 lg:!h-40 lg:!w-40 rounded-full border lg:border-2 border-white bg-transparent hover:!bg-transparent transition-all duration-300 hover:scale-110"
                   aria-label={social.name}
                 >
                   <a
@@ -52,17 +51,10 @@ export function FollowUs() {
                     rel="noopener noreferrer"
                     className="flex items-center justify-center"
                   >
-                    {isReactIcon ? (
-                      <Icon
-                        size={48}
-                        className="text-white h-8 w-8 md:h-10 md:w-10"
-                      />
-                    ) : (
-                      <Icon
-                        size={48}
-                        className="h-8 w-8 md:h-10 md:w-10 text-white"
-                      />
-                    )}
+                    <Icon
+                      size={48}
+                      className="!h-6 !w-6 lg:!h-10 lg:!w-10 text-white"
+                    />
                   </a>
                 </Button>
               );

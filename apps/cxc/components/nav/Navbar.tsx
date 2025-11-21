@@ -8,7 +8,7 @@ import CxCButton from "../CxCButton";
 
 export default function Navbar() {
   const router = useRouter();
-  const { isAuthenticated, mutate } = useAuth();
+  const { isAuthenticated, isLoading, mutate } = useAuth();
 
   const handleSignOut = async () => {
     try {
@@ -45,20 +45,22 @@ export default function Navbar() {
           </p>
         </div>
       </div>
-      <div className="flex flex-row gap-4">
-        <CxCButton onClick={() => router.push("/apply")}>Apply</CxCButton>
-        {!isAuthenticated && (
-          <>
-            <CxCButton onClick={() => router.push("/login")}>Login</CxCButton>
-            <CxCButton onClick={() => router.push("/register")}>
-              Register
-            </CxCButton>
-          </>
-        )}
-        {isAuthenticated && (
-          <CxCButton onClick={handleSignOut}>Signout</CxCButton>
-        )}
-      </div>
+      {!isLoading && (
+        <div className="flex flex-row gap-4">
+          <CxCButton onClick={() => router.push("/apply")}>Apply</CxCButton>
+          {!isAuthenticated && (
+            <>
+              <CxCButton onClick={() => router.push("/login")}>Login</CxCButton>
+              <CxCButton onClick={() => router.push("/register")}>
+                Register
+              </CxCButton>
+            </>
+          )}
+          {isAuthenticated && (
+            <CxCButton onClick={handleSignOut}>Signout</CxCButton>
+          )}
+        </div>
+      )}
     </div>
   );
 }

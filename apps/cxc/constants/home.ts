@@ -19,13 +19,15 @@ export const CURRENT_SPONSORS: Sponsor[] = [
 export const GENERAL_FAQ: QandA[] = [
   {
     id: "1",
-    question: "What is a Data Hackathon?",
-    answer: `An event where hackers work in teams to tackle data-related challenges, such as making predictions or classifications from preprepared data sets. You will receive a data set as well as some problem statements, and you will be judged on both your technical abilities as well as the business viability of your solution. At CXC, we will also be hosting social activities, introductory workshops, company booths, and more to help you connect with other participants, industry experts, and learn more about data science.`,
+    question: "What is CxC?",
+    answer: `CxC is Canada's Largest Data Hackathon returning for its 5th iteration this year! Over 300 students gather at Waterloo's campus to create unique and inspiring designs that tackle data-related challenges. 
+    This year, CxC will have no restrictions on the type of project you can make. Some past examples of projects include predictions/classifications of datasets, training AI models, or making a data science related website. 
+    We will also be hosting social activities, introductory workshops, company booths, and more to help you connect with other participants, industry experts, and learn more about data science.`,
   },
   {
     id: "2",
     question: "What if I have zero experience in data science?",
-    answer: `No worries! CXC is a beginner-friendly hackathon. We will host several workshops to help you acquire some useful skills for the challenges. We also have a team of experienced mentors ready to provide support on the CXC Discord.`,
+    answer: `No worries! CxC is a beginner-friendly hackathon. We will host several workshops throughout the event to help you acquire some useful skills for the challenges. We will also have a team of experienced mentors ready to provide support on the CxC Discord.`,
   },
   {
     id: "3",
@@ -35,42 +37,28 @@ export const GENERAL_FAQ: QandA[] = [
   },
   {
     id: "4",
-    question: "When is it?",
-    answer: `Feb 8 - Feb 25. We will meet in-person on Feb 8th, Feb 9th, and Feb 25th.`,
+    question: "When and where is it?",
+    answer: `CxC will take place on February 6th at 6PM to February 8th at 5PM at Waterloo's STC building.`,
   },
   {
     id: "5",
-    question: "Why is it two weeks long?",
-    answer: `We want to provide participants with enough time to complete and finalize their submissions. Our timeline goes through reading week, so you will have some time to work while studying for midterms.`,
+    question: "How many people are allowed in a team?",
+    answer: `Teams can have between 1-4 people. You can find teammates through our Discord introductions channel or in-person during the opening ceremony.`,
   },
   {
     id: "6",
-    question: "Will there be prizes?",
-    answer: `Yes, CXC is offering $20k+ cash prizes and an interview with PearVC for winners!`,
+    question: "Do I need to be a UW student to participate?",
+    answer: `No! We are open to ALL students from ALL universities. We will unfortunately not admit any high school students this year.`,
   },
   {
     id: "7",
-    question: "Do I need a team of 4? How can I find one?",
-    answer: `Not at all! Teams can have up to 4 people, and joining one offers more support and ideas for working with data. Prize money is the same whether you work alone or in a team. You can find teammates through our Discord introductions channel or in person at Saturday's opening ceremonies.`,
+    question: "Am I required to attend in-person?",
+    answer: `We required all participants to check-in in-person on the evening of February 6th at the University of Waterloo. Workshops will not be recorded or streamed online. Pitching on February 8th will be done in person. Overnight stay at the venue is allowed. Unfortunately we cannot provide travel reimbursements.`,
   },
   {
     id: "8",
-    question: "Who is judging?",
-    answer: `Company representatives from the dataset sponsors as well as executives from DSC’s Education team.`,
-  },
-  {
-    id: "9",
-    question: "Do I need to be a UW student to participate?",
-    answer: `No! We are open to ALL students from ALL universities. High school students are also welcome to attend.`,
-  },
-  {
-    id: "10",
-    question: "Am I required to attend in person?",
-    answer: `We required all participants to check-in in-person on the morning of February 8 at the University of Waterloo. Workshops will not be recorded or streamed online. Pitching on February 25th may be done in person or online. Unfortunately we will not be able to provide overnight accommodations or travel reimbursements`,
-  },
-  {
-    id: "11",
-    question: "Still have questions?",
-    answer: `Feel free to reach out to us at contact@uwdatascience.ca with any questions.`,
+    question: "What events will you have at CxC?",
+    answer: `In the past, CxC hosted multiple data science related workshops from simpler topics such as introducing machine learning and data processing with python, to more advanced topics such as planning and structural AI projects. Our event sponsors will also be running booths where you can learn their mission and connect with them throughout the day. Be sure to check them out!
+    In addition, CxC will also be running multiple fun activities throughout the event, from spicy noodle challenge to late-night karaoke. We're confident that our events will be enough for anyone to enjoy :)`,
   },
 ];
