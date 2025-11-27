@@ -116,7 +116,7 @@ export function LoginForm() {
             <Button
               disabled={isLoading}
               type="submit"
-              className="!bg-white !text-black text-lg rounded-none !h-auto px-4 py-2 hover:!scale-105 hover:!bg-white w-fit"
+              className="!bg-white !text-black text-lg rounded-none !h-auto px-4 py-2 hover:!scale-105 hover:!bg-white w-fit font-normal"
             >
               {isLoading ? (
                 <>
