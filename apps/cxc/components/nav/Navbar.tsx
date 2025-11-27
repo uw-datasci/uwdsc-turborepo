@@ -5,6 +5,8 @@ import { useRouter } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
 import { signOut } from "@/lib/api";
 import CxCButton from "../CxCButton";
+import { ArrowRightIcon } from "@uwdsc/ui/index";
+import { motion } from "framer-motion";
 
 export default function Navbar() {
   const router = useRouter();
@@ -47,17 +49,53 @@ export default function Navbar() {
       </div>
       {!isLoading && (
         <div className="flex flex-row gap-4">
-          <CxCButton onClick={() => router.push("/apply")}>Apply</CxCButton>
           {!isAuthenticated && (
             <>
-              <CxCButton onClick={() => router.push("/login")}>Login</CxCButton>
-              <CxCButton onClick={() => router.push("/register")}>
-                Register
+              <CxCButton
+                onClick={() => router.push("/login")}
+                className="group text-base lg:text-lg inline-flex items-center lg:px-6"
+              >
+                <span>Login</span>
+                <motion.div
+                  className="group-hover:translate-x-1.5 duration-200"
+                  transition={{
+                    ease: "easeInOut",
+                  }}
+                >
+                  <ArrowRightIcon weight="bold" />
+                </motion.div>
+              </CxCButton>
+              <CxCButton
+                onClick={() => router.push("/register")}
+                className="group text-base lg:text-lg inline-flex items-center lg:px-6"
+              >
+                <span>Register</span>
+                <motion.div
+                  className="group-hover:translate-x-1.5 duration-200"
+                  transition={{
+                    ease: "easeInOut",
+                  }}
+                >
+                  <ArrowRightIcon weight="bold" />
+                </motion.div>
               </CxCButton>
             </>
           )}
           {isAuthenticated && (
-            <CxCButton onClick={handleSignOut}>Signout</CxCButton>
+            <CxCButton
+              onClick={handleSignOut}
+              className="group text-base lg:text-lg inline-flex items-center lg:px-6"
+            >
+              <span>Signout</span>
+              <motion.div
+                className="group-hover:translate-x-1.5 duration-200"
+                transition={{
+                  ease: "easeInOut",
+                }}
+              >
+                <ArrowRightIcon weight="bold" />
+              </motion.div>
+            </CxCButton>
           )}
         </div>
       )}

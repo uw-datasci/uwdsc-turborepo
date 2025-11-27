@@ -193,7 +193,7 @@ export const NUMBER_HACKATHONS = ["0", "1", "2", "3", "4+"];
 export const questions = [
   {
     name: "cxc_gain" as const,
-    question: "What do you hope to gain from your time at CXC...?",
+    question: "What do you hope to gain from your time at CxC...?",
     placeholder: "Long Answer (500 char limit)",
   },
   {

@@ -29,7 +29,7 @@ pnpm dev
 
 # Start specific apps
 pnpm dev:web    # Main website
-pnpm dev:cxc    # CXC app
+pnpm dev:cxc    # CxC app
 ```
 
 4. **Other useful commands**:
@@ -48,13 +48,13 @@ This is a **monorepo** using pnpm workspaces and Turborepo for build orchestrati
 uwdsc-website-v3/
 ├── apps/                    # Frontend applications
 │   ├── web/                # Main website (Next.js)
-│   └── cxc/                # CXC app (Next.js)
+│   └── cxc/                # CxC app (Next.js)
 ├── packages/               # Shared packages
 │   ├── ui/                 # Design system components
 │   ├── server/             # Backend services & data layer
 │   │   ├── core/          # Shared backend utilities (auth, file services)
 │   │   ├── web/           # Web app backend with Prisma
-│   │   └── cxc/           # CXC app backend with Prisma
+│   │   └── cxc/           # CxC app backend with Prisma
 │   ├── eslint-config/      # Shared ESLint configurations
 │   └── typescript-config/  # Shared TypeScript configurations
 └── scripts/                # Build and utility scripts
@@ -78,9 +78,9 @@ uwdsc-website-v3/
   - `constants/` - App-wide constants
   - `types/` - TypeScript type definitions
 
-#### `apps/cxc/` - CXC App
+#### `apps/cxc/` - CxC App
 
-- **Purpose**: Dedicated CXC app
+- **Purpose**: Dedicated CxC app
 - **Tech Stack**: Next.js 15, React 19, TypeScript
 - **Dependencies**: `@uwdsc/ui`, `@uwdsc/server/cxc`
 - **Key Directories**: Same structure as web app
@@ -125,13 +125,13 @@ The server package is split into three sub-packages for better separation of con
   - `middleware/` - (Placeholder for future middleware)
   - `policies/` - (Placeholder for authorization policies)
 
-##### `packages/server/cxc/` - CXC App Backend
+##### `packages/server/cxc/` - CxC App Backend
 
-- **Purpose**: Backend services specific to CXC app
+- **Purpose**: Backend services specific to CxC app
 - **Tech Stack**: Prisma, Supabase, TypeScript
 - **Exports**: `@uwdsc/server/cxc/*`
 - **Dependencies**: Extends `@uwdsc/server/core`
-- **Structure**: Same as web backend with CXC-specific schemas
+- **Structure**: Same as web backend with CxC-specific schemas
 
 #### `packages/eslint-config/` & `packages/typescript-config/`
 
@@ -331,7 +331,7 @@ export function MyComponent() {
 # Development
 pnpm dev                    # Start all apps
 pnpm dev:web               # Start main website only
-pnpm dev:cxc               # Start CXC app only
+pnpm dev:cxc               # Start CxC app only
 
 # Building
 pnpm build                 # Build all packages

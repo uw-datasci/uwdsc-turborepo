@@ -12,8 +12,8 @@ export default function CxCButton({
   return (
     <Button
       className={cn(
-        "!bg-white !text-black font-normal rounded-none !h-auto hover:!scale-105 hover:!bg-white",
-        className,
+        "!bg-white !text-black font-normal rounded-none !h-auto hover:!bg-white",
+        className
       )}
       {...props}
     >
