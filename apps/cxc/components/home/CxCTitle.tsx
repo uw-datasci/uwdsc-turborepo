@@ -2,14 +2,14 @@
 
 import { CountdownClock } from "../CountdownClock";
 import CxCButton from "../CxCButton";
-import { WaterCube } from "./WaterCube";
+import { WaterCube } from "../WaterCube";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 export default function CxCTitle() {
   const router = useRouter();
-  const eventDate = new Date("2026-01-06T00:00:00");
+  const eventDate = useMemo(() => new Date("2026-01-06T00:00:00"), []);
   const [mounted, setMounted] = useState(false);
   const [countdownOver, setCountdownOver] = useState(false);
 
