@@ -73,7 +73,7 @@ export function CountdownClock({
   className = "",
 }: CountdownClockProps) {
   const [timeLeft, setTimeLeft] = useState<TimeLeft>(() =>
-    calculateTimeLeft(targetDate)
+    calculateTimeLeft(targetDate),
   );
   const [mounted, setMounted] = useState(false);
 

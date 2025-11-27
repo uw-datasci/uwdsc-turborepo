@@ -80,7 +80,7 @@ export function Navbar() {
             width="100%"
             height="auto"
             borderRadius={9999}
-            className="hidden lg:block px-8 py-2 !overflow-visible"
+            className="hidden lg:block px-8 py-2 overflow-visible!"
           >
             <NavigationMenu viewport={false}>
               <NavigationMenuList className="gap-4">

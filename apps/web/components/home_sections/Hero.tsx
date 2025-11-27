@@ -86,7 +86,7 @@ export default function Hero({ profile, mutate }: Readonly<HeroProps>) {
             width="100%"
             height="auto"
             borderRadius={9999}
-            className="px-3 py-1 md:px-6 md:py-3 !overflow-visible hover:cursor-pointer hover:scale-105 transition-transform duration-200"
+            className="px-3 py-1 md:px-6 md:py-3 overflow-visible! hover:cursor-pointer hover:scale-105 transition-transform duration-200"
           >
             <button
               className="text-base md:text-xl font-medium flex items-center w-full justify-center hover:cursor-pointer"
@@ -106,7 +106,7 @@ export default function Hero({ profile, mutate }: Readonly<HeroProps>) {
           width="100%"
           height="auto"
           borderRadius={9999}
-          className={`${profile ? "px-4 py-2" : "px-3 py-1"} md:px-6 md:py-3 !overflow-visible hover:cursor-pointer hover:scale-105 transition-transform duration-200`}
+          className={`${profile ? "px-4 py-2" : "px-3 py-1"} md:px-6 md:py-3 overflow-visible! hover:cursor-pointer hover:scale-105 transition-transform duration-200`}
         >
           <button
             className="text-base md:text-xl font-medium flex items-center w-full justify-center hover:cursor-pointer"

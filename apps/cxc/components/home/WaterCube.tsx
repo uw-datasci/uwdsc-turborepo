@@ -29,7 +29,7 @@ function Model({
   clonedScene.rotation.set(
     initialRotation[0],
     initialRotation[1],
-    initialRotation[2]
+    initialRotation[2],
   );
 
   return <primitive object={clonedScene} scale={scale} />;
