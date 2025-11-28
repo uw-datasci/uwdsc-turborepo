@@ -1,12 +1,18 @@
 "use client";
 
-import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
 import { signOut } from "@/lib/api";
 import CxCButton from "../CxCButton";
+import { ArrowRightIcon } from "@uwdsc/ui/index";
+import { motion } from "framer-motion";
+import DSCLogo from "../DSCLogo";
 
-export default function Navbar() {
+interface NavbarProps {
+  showAuthButtons?: boolean;
+}
+
+export default function Navbar({ showAuthButtons = true }: NavbarProps) {
   const router = useRouter();
   const { isAuthenticated, isLoading, mutate } = useAuth();
 
@@ -21,19 +27,11 @@ export default function Navbar() {
   };
 
   return (
-    <div className="w-full px-8 py-6 flex items-center justify-between">
+    <div className="w-full px-8 py-6 flex items-center justify-between bg-background">
       {/* Left section - Logo and description */}
       <div className="flex items-start md:gap-8 lg:gap-24 xl:gap-36">
         {/* Logo */}
-        <div className="relative w-12 h-12 sm:w-16 sm:h-16">
-          <Image
-            src="/logos/dsc.svg"
-            alt="uwdsc logo"
-            fill
-            className="object-contain"
-            priority
-          />
-        </div>
+        <DSCLogo size={16} onClick={() => router.push("/")} />
 
         {/* Description */}
         <div className="hidden md:block text-white max-w-sm lg:max-w-lg">
@@ -45,21 +43,61 @@ export default function Navbar() {
           </p>
         </div>
       </div>
-      {!isLoading && (
-        <div className="flex flex-row gap-4">
-          <CxCButton onClick={() => router.push("/apply")}>Apply</CxCButton>
-          {!isAuthenticated && (
-            <>
-              <CxCButton onClick={() => router.push("/login")}>Login</CxCButton>
-              <CxCButton onClick={() => router.push("/register")}>
-                Register
-              </CxCButton>
-            </>
+      {showAuthButtons && (
+        <>
+          {!isLoading && (
+            <div className="flex flex-row gap-4">
+              {!isAuthenticated && (
+                <>
+                  <CxCButton
+                    onClick={() => router.push("/login")}
+                    className="group text-base lg:text-lg inline-flex items-center lg:px-6"
+                  >
+                    <span>Login</span>
+                    <motion.div
+                      className="group-hover:translate-x-1.5 duration-200"
+                      transition={{
+                        ease: "easeInOut",
+                      }}
+                    >
+                      <ArrowRightIcon weight="bold" />
+                    </motion.div>
+                  </CxCButton>
+                  <CxCButton
+                    onClick={() => router.push("/register")}
+                    className="group text-base lg:text-lg inline-flex items-center lg:px-6"
+                  >
+                    <span>Register</span>
+                    <motion.div
+                      className="group-hover:translate-x-1.5 duration-200"
+                      transition={{
+                        ease: "easeInOut",
+                      }}
+                    >
+                      <ArrowRightIcon weight="bold" />
+                    </motion.div>
+                  </CxCButton>
+                </>
+              )}
+              {isAuthenticated && (
+                <CxCButton
+                  onClick={handleSignOut}
+                  className="group text-base lg:text-lg inline-flex items-center lg:px-6"
+                >
+                  <span>Signout</span>
+                  <motion.div
+                    className="group-hover:translate-x-1.5 duration-200"
+                    transition={{
+                      ease: "easeInOut",
+                    }}
+                  >
+                    <ArrowRightIcon weight="bold" />
+                  </motion.div>
+                </CxCButton>
+              )}
+            </div>
           )}
-          {isAuthenticated && (
-            <CxCButton onClick={handleSignOut}>Signout</CxCButton>
-          )}
-        </div>
+        </>
       )}
     </div>
   );

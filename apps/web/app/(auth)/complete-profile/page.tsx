@@ -262,7 +262,7 @@ export default function CompleteProfilePage() {
                   size="lg"
                   disabled={isLoading}
                   type="button"
-                  className="w-full rounded-md xl:rounded-lg bg-gradient-purple text-lg font-bold !h-auto py-2.5"
+                  className="w-full rounded-md xl:rounded-lg bg-gradient-purple text-lg font-bold h-auto! py-2.5"
                 >
                   {isLoading ? (
                     <>

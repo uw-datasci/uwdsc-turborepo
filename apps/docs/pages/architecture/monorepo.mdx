@@ -8,14 +8,14 @@ A detailed look at the monorepo organization and package relationships.
 uwdsc-website-v3/
 ├── apps/                    # Frontend applications
 │   ├── web/                # Main website
-│   ├── cxc/                # CXC competition app
+│   ├── cxc/                # CxC competition app
 │   └── docs/               # Documentation site
 ├── packages/               # Shared packages
 │   ├── ui/                 # Design system
 │   ├── server/             # Backend services
 │   │   ├── core/          # Shared utilities
 │   │   ├── web/           # Web backend
-│   │   └── cxc/           # CXC backend
+│   │   └── cxc/           # CxC backend
 │   ├── eslint-config/      # ESLint configuration
 │   └── typescript-config/  # TypeScript configuration
 ├── scripts/                # Build scripts
@@ -61,7 +61,7 @@ apps/web/
 └── types/              # TypeScript types
 ```
 
-### `apps/cxc` - CXC App
+### `apps/cxc` - CxC App
 
 Dedicated application for the Case Competition.
 
@@ -149,17 +149,17 @@ Backend services specific to the main website.
 - Prisma ORM
 - Supabase
 
-### `packages/server/cxc` - CXC Backend
+### `packages/server/cxc` - CxC Backend
 
-Backend services specific to CXC app.
+Backend services specific to CxC app.
 
 **Exports**: `@uwdsc/server/cxc/*`
 
 **Contents**:
-- Prisma schema for CXC
-- CXC-specific services
+- Prisma schema for CxC
+- CxC-specific services
 - Application logic
-- CXC-specific repositories
+- CxC-specific repositories
 
 ### `packages/eslint-config`
 

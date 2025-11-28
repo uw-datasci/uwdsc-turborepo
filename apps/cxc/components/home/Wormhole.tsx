@@ -165,7 +165,7 @@ function WormholeWithRings({ partType }: WormholeWithRingsProps) {
   const cubes = useMemo(() => {
     const cubeArray: THREE.Mesh[] = [];
     const numCubes = 8;
-    const cubeSize = 1.5;
+    const cubeSize = 2.5;
 
     for (let i = 0; i < numCubes; i++) {
       const geometry = new THREE.BoxGeometry(cubeSize, cubeSize, cubeSize);
@@ -180,7 +180,7 @@ function WormholeWithRings({ partType }: WormholeWithRingsProps) {
 
       cube.userData = {
         angle: Math.random() * Math.PI * 2,
-        speed: 0.02 + Math.random() * 0.02,
+        speed: 0.02 + Math.random() * 0.03,
         rotationSpeed: {
           x: (Math.random() - 0.5) * 0.05,
           y: (Math.random() - 0.5) * 0.05,
@@ -254,7 +254,7 @@ function WormholeWithRings({ partType }: WormholeWithRingsProps) {
 
     cube.userData.angle += cube.userData.speed * 0.5;
 
-    const spiralRadius = radius * (0.3 + Math.sin(animatedY * 0.1) * 0.2);
+    const spiralRadius = radius * (0.4 + Math.sin(animatedY * 0.1) * 0.3);
     const x = Math.cos(cube.userData.angle) * spiralRadius;
     const z = Math.sin(cube.userData.angle) * spiralRadius;
 

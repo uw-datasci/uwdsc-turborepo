@@ -4,16 +4,22 @@ import {
   DesktopAppWormhole,
   MobileAppWormhole,
 } from "@/components/application/AppWormhole";
-import AppStepButton from "@/components/application/AppStepButton";
 import { useRouter } from "next/navigation";
+import CxCButton from "@/components/CxCButton";
+import { motion } from "framer-motion";
+import { ArrowRightIcon } from "@uwdsc/ui/index";
+import Navbar from "@/components/nav/Navbar";
 
 export default function StartPage() {
   const router = useRouter();
   return (
-    <div className="min-h-screen h-full cxc-app-font">
+    <div className="min-h-screen h-full cxc-app-font w-full">
+      <div className="fixed z-50 w-full">
+        <Navbar showAuthButtons={false} />
+      </div>
       {/* Desktop View */}
       <div className="hidden md:flex flex-col md:flex-row justify-between min-h-screen h-full">
-        <div className="block border-r border-white/50 md:w-1/2 relative">
+        <div className="block border-r border-white/50 md:w-2/5 relative">
           <div className="absolute inset-0">
             <DesktopAppWormhole />
           </div>
@@ -29,23 +35,41 @@ export default function StartPage() {
             </p>
           </div>
         </div>
-        <div className="px-4 py-12 overflow-hidden md:w-1/2 flex flex-col gap-12 justify-end px-12 py-32">
+        <div className="px-4 py-12 overflow-hidden md:w-3/5 flex flex-col gap-12 justify-end px-12 py-32">
           <h1 className="text-6xl lg:text-7xl">
             Start
             <br />
             application
           </h1>
           <div className="flex flex-wrap gap-8 font-normal">
-            <AppStepButton
-              text="Log in"
+            <CxCButton
               onClick={() => router.push("/login")}
-              className="!px-4.5 !py-4 text-xl"
-            />
-            <AppStepButton
-              text="Sign up"
+              className="group px-5 py-3 text-xl inline-flex items-center font-normal"
+            >
+              <span>Login</span>
+              <motion.div
+                className="group-hover:translate-x-2 duration-200"
+                transition={{
+                  ease: "easeInOut",
+                }}
+              >
+                <ArrowRightIcon weight="bold" className="ml-10 !w-5 !h-5" />
+              </motion.div>
+            </CxCButton>
+            <CxCButton
               onClick={() => router.push("/register?callbackUrl=/apply")}
-              className="!px-4.5 !py-4 text-xl"
-            />
+              className="group px-5 py-3 text-xl inline-flex items-center font-normal"
+            >
+              <span>Register</span>
+              <motion.div
+                className="group-hover:translate-x-2 duration-200"
+                transition={{
+                  ease: "easeInOut",
+                }}
+              >
+                <ArrowRightIcon weight="bold" className="ml-10 !w-5 !h-5" />
+              </motion.div>
+            </CxCButton>
           </div>
         </div>
       </div>
@@ -63,21 +87,35 @@ export default function StartPage() {
               companies to build projects that solve real-world problems.
             </p>
           </div>
-          <div className="flex flex-wrap gap-8 font-normal">
-            <AppStepButton
-              text="Log in"
+          <div className="flex flex-wrap gap-6 font-normal">
+            <CxCButton
               onClick={() => router.push("/login")}
-              className="!px-3 !py-2 text-base"
-              marginLeft="ml-8"
-              iconSize={16}
-            />
-            <AppStepButton
-              text="Sign up"
+              className="group px-4 py-3 text-base inline-flex items-center font-normal"
+            >
+              <span>Login</span>
+              <motion.div
+                className="group-hover:translate-x-2 duration-200"
+                transition={{
+                  ease: "easeInOut",
+                }}
+              >
+                <ArrowRightIcon weight="bold" className="ml-5" />
+              </motion.div>
+            </CxCButton>
+            <CxCButton
               onClick={() => router.push("/register?callbackUrl=/apply")}
-              className="!px-3 !py-2 text-base"
-              marginLeft="ml-8"
-              iconSize={16}
-            />
+              className="group px-4 py-3 text-base inline-flex items-center font-normal"
+            >
+              <span>Register</span>
+              <motion.div
+                className="group-hover:translate-x-2 duration-200"
+                transition={{
+                  ease: "easeInOut",
+                }}
+              >
+                <ArrowRightIcon weight="bold" className="ml-5" />
+              </motion.div>
+            </CxCButton>
           </div>
         </div>
       </div>
