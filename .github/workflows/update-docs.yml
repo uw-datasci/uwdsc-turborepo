@@ -1,12 +1,10 @@
 name: Auto-Update Docs on Merge
 
 on:
-  # UNCOMMENT NEXT TERM (W26)
-  # pull_request:
-  #   types: [closed]
-  #   branches:
-  #     - main
-  workflow_dispatch: # REMOVE NEXT TERM (W26)
+  pull_request:
+    types: [closed]
+    branches:
+      - main
 
 jobs:
   update-docs-after-merge:
