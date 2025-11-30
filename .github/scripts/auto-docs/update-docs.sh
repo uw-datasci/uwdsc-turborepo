@@ -31,7 +31,7 @@ PROMPT="You are a technical writer focused on documenting features from a busine
 Read the 'changes.diff' file to understand the latest code updates from PR #${PR_NUMBER}: ${PR_TITLE}.
 
 IMPORTANT: Before making any modifications to existing documentation:
-- Review the git diff (changes.diff) to see exactly what code changed
+- Review the changes.diff to see exactly what code changed
 - Search the codebase to verify the current implementation state
 - Only modify existing entries when code changes clearly warrant documentation updates
 - Ensure all modifications accurately reflect the actual code changes"
@@ -78,7 +78,7 @@ _Features documented from merged PRs tagged with \`${SEMESTER_TAG}\`..._
 4. **Format as bullet points**: Use markdown bullet points (-) for each feature
 5. **Maintain structure**: Keep the existing section headings and formatting
 6. **Primary focus on additions**: Prioritize adding new features and updates. When modifications are necessary:
-  - Use changes.diff to understand what code actually changed
+  - Use changes.diff to understand what code actually changed. If it were minor bug fixes and improvements, do not modify the documentation.
   - Search the codebase to verify the current state of features before modifying documentation
   - Only modify existing entries when the code changes clearly indicate updates, corrections, or removals
   - Ensure modifications accurately reflect the actual code changes - cross-reference with the codebase
@@ -98,7 +98,7 @@ Scan the '/apps/docs' folder and update the markdown files to reflect these code
 IMPORTANT: When updating documentation:
 - Primary focus: Add new documentation for new features
 - Modifications: When modifying existing documentation:
-  - Use changes.diff to understand what code actually changed
+  - Use changes.diff to understand what code actually changed. If it were minor bug fixes and improvements, do not modify the documentation.
   - Search the codebase to verify current implementation before modifying docs
   - Only modify existing entries when code changes clearly indicate updates are needed
   - Ensure modifications accurately reflect the actual code changes"
