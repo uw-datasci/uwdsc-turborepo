@@ -1,4 +1,4 @@
-name: Vercel Preview Notification
+name: Vercel Preview Discord Notification
 
 on:
   pull_request:
