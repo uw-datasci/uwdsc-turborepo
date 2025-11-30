@@ -25,4 +25,4 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.COPILOT_TOKEN }}
         run: |
-          copilot -p "Explain what the 'ls' command does in one sentence."
+          copilot -p "Explain what the 'ls' command does in one sentence." --allow-all-tools
