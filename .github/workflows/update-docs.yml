@@ -1,0 +1,49 @@
+name: Auto-Update Docs on Merge
+
+on:
+  pull_request:
+    types: [closed]
+    branches:
+      - main
+
+jobs:
+  update-docs-after-merge:
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+
+    steps:
+      - name: Checkout Main
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install Copilot CLI Agent
+        run: npm install -g @github/copilot-cli
+
+      - name: Run Copilot to Update Docs
+        env:
+          GITHUB_TOKEN: ${{ secrets.COPILOT_TOKEN }}
+        run: |
+          copilot -p "You are a technical writer. 
+          Read the 'changes.diff' file to understand the latest code updates. 
+          Then, scan the '/docs' folder and update the markdown files to reflect these code changes. 
+          Do not ask for confirmation. Just make the edits." \
+          --allow-fs-read --allow-fs-write
+
+      - name: Create PR with Doc Updates
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: "📚 Update docs based on merge #${{ github.event.pull_request.number }}"
+          title: "📚 Auto-Docs Update (Post-Merge)"
+          branch: "auto-docs/merge-${{ github.event.pull_request.number }}"
+          base: main
+          body: "Triggered by the merge of PR #${{ github.event.pull_request.number }}. Copilot has updated the documentation to match."
