@@ -92,5 +92,6 @@ Do not ask for confirmation. Just make the edits."
 
 # Run copilot to update docs
 # copilot -p "$PROMPT" --allow-fs-read --allow-fs-write
+copilot -p "Explain what the 'ls' command does in one sentence."
 copilot -p "update README.md in the root directory to test that this workflow works" --allow-fs-read --allow-fs-write
 
