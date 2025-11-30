@@ -18,7 +18,7 @@ git diff --name-only origin/main...$PR_SHA > changes.diff
 # Determine changelog file based on semester tag
 CHANGELOG_FILE=""
 if [ -n "$SEMESTER_TAG" ]; then
-  CHANGELOG_FILE="apps/docs/pages/changelog/${SEMESTER_TAG}/index.mdx"
+  CHANGELOG_FILE="apps/docs/pages/changelog/${SEMESTER_TAG}.mdx"
   echo "Semester tag found: $SEMESTER_TAG"
   echo "Will update changelog: $CHANGELOG_FILE"
 else
@@ -26,9 +26,15 @@ else
 fi
 
 # Build the prompt for copilot
-PROMPT="You are a technical writer focused on documenting features from a business/functional perspective.
+PROMPT="You are a technical writer focused on documenting features from a business/functional perspective for a university data science club.
 
-Read the 'changes.diff' file to understand the latest code updates from PR #${PR_NUMBER}: ${PR_TITLE}."
+Read the 'changes.diff' file to understand the latest code updates from PR #${PR_NUMBER}: ${PR_TITLE}.
+
+IMPORTANT: Before making any modifications to existing documentation:
+- Review the git diff (changes.diff) to see exactly what code changed
+- Search the codebase to verify the current implementation state
+- Only modify existing entries when code changes clearly warrant documentation updates
+- Ensure all modifications accurately reflect the actual code changes"
 
 if [ -n "$SEMESTER_TAG" ] && [ -f "$CHANGELOG_FILE" ]; then
   PROMPT="$PROMPT
@@ -71,7 +77,11 @@ _Features documented from merged PRs tagged with \`${SEMESTER_TAG}\`..._
 3. **Group by section**: Add features to the appropriate main section (Main Website, CxC App, Design System, Infrastructure, DevOps)
 4. **Format as bullet points**: Use markdown bullet points (-) for each feature
 5. **Maintain structure**: Keep the existing section headings and formatting
-6. **Add, don't remove**: Only add new features, do NOT remove or modify existing content
+6. **Primary focus on additions**: Prioritize adding new features and updates. When modifications are necessary:
+  - Use changes.diff to understand what code actually changed
+  - Search the codebase to verify the current state of features before modifying documentation
+  - Only modify existing entries when the code changes clearly indicate updates, corrections, or removals
+  - Ensure modifications accurately reflect the actual code changes - cross-reference with the codebase
 7. **One feature per bullet**: Each feature should be a separate bullet point
 8. **Be concise**: Keep descriptions brief and focused on user impact
 
@@ -83,7 +93,15 @@ Do not ask for confirmation. Just make the edits to ${CHANGELOG_FILE} only."
 else
   PROMPT="$PROMPT
 
-Scan the '/apps/docs' folder and update the markdown files to reflect these code changes."
+Scan the '/apps/docs' folder and update the markdown files to reflect these code changes.
+
+IMPORTANT: When updating documentation:
+- Primary focus: Add new documentation for new features
+- Modifications: When modifying existing documentation:
+  - Use changes.diff to understand what code actually changed
+  - Search the codebase to verify current implementation before modifying docs
+  - Only modify existing entries when code changes clearly indicate updates are needed
+  - Ensure modifications accurately reflect the actual code changes"
 fi
 
 PROMPT="$PROMPT
