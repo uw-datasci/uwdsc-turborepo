@@ -91,4 +91,6 @@ PROMPT="$PROMPT
 Do not ask for confirmation. Just make the edits."
 
 # Run copilot to update docs
-copilot -p "$PROMPT" --allow-fs-read --allow-fs-write
+# copilot -p "$PROMPT" --allow-fs-read --allow-fs-write
+copilot -p "update the readme in the root directory to test that this workflow works" --allow-fs-read --allow-fs-write
+
