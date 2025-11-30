@@ -27,7 +27,7 @@ jobs:
           node-version: "20"
 
       - name: Install Copilot CLI Agent
-        run: npm install -g @github/copilot-cli
+        run: npm install -g @github/copilot
 
       - name: Extract Semester Tag
         id: semester
