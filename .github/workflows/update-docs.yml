@@ -1,15 +1,16 @@
 name: Auto-Update Docs on Merge
 
 on:
-  pull_request:
-    types: [closed]
-    branches:
-      - main
-  workflow_dispatch:
+  # UNCOMMENT NEXT TERM (W26)
+  # pull_request:
+  #   types: [closed]
+  #   branches:
+  #     - main
+  workflow_dispatch: # REMOVE NEXT TERM (W26)
 
 jobs:
   update-docs-after-merge:
-    if: github.event.pull_request.merged == true || github.event_name == 'workflow_dispatch'
+    if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -56,6 +57,7 @@ jobs:
           title: "📚 Auto-Docs Update (Post-Merge)"
           branch: "auto-docs/merge-${{ github.event.pull_request.number }}"
           base: main
+          delete-branch: true
           body: |
             ### 🤖 Automated Documentation Update
 
