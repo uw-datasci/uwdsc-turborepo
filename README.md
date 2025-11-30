@@ -2,6 +2,8 @@
 
 Welcome to the UW Data Science Club website repository! This guide will help you understand the codebase architecture, setup process, and development workflow.
 
+**🧪 Workflow Test**: This line was added to test the automated workflow system.
+
 ## 🚀 Quick Setup
 
 ### Prerequisites
