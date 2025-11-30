@@ -30,9 +30,9 @@ jobs:
           echo "Found semester tag: $SEMESTER_TAG"
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
-          node-version: "20"
+          node-version: 24
 
       - name: Install Copilot CLI Agent
         run: npm install -g @github/copilot
