@@ -91,6 +91,5 @@ PROMPT="$PROMPT
 Do not ask for confirmation. Just make the edits."
 
 # Run copilot to update docs
-# copilot -p "$PROMPT" --allow-all-tools
-copilot -p "update README.md in the root directory to test that this workflow works" --allow-all-tools
+copilot -p "$PROMPT" --allow-all-tools
 
