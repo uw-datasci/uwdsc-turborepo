@@ -1,0 +1,31 @@
+name: Sample Copilot Workflow
+
+on:
+  workflow_dispatch:
+
+jobs:
+  run-copilot:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+
+      - name: Install Copilot CLI Agent
+        run: npm install -g @github/copilot
+
+      - name: Run Copilot to Update Docs
+        env:
+          GITHUB_TOKEN: ${{ secrets.COPILOT_TOKEN }}
+        run: |
+          copilot -p "Explain what the 'ls' command does in one sentence."
+          copilot -p "update README.md in the root directory to test that this workflow works" --allow-fs-read --allow-fs-write
+
+      - name: Run Copilot to Update Docs
+        env:
+          GITHUB_TOKEN: ${{ secrets.COPILOT_TOKEN }}
+        run: |
+          copilot -p "Explain what the 'ls' command does in one sentence."
+          copilot -p "update README.md in the root directory to test that this workflow works" --allow-fs-read --allow-fs-write
