@@ -73,17 +73,13 @@ export class ProfileRepository extends BaseRepository {
    * Find user profile by user ID
    */
   async findProfileByUserId(userId: string) {
-    return this.prisma.user.findUnique({
-      where: { id: userId },
-      select: {
-        id: true,
-        email: true,
-        name: true,
-        bio: true,
-        avatar: true,
-        createdAt: true,
-      },
-    });
+    const result = await this.pool.query(
+      `SELECT id, email, name, bio, avatar, created_at as "createdAt"
+       FROM users
+       WHERE id = $1`,
+      [userId]
+    );
+    return result.rows[0] || null;
   }
 
   /**
@@ -94,28 +90,49 @@ export class ProfileRepository extends BaseRepository {
     bio?: string;
     avatar?: string;
   }) {
-    return this.prisma.user.update({
-      where: { id: userId },
-      data,
-      select: {
-        id: true,
-        email: true,
-        name: true,
-        bio: true,
-        avatar: true,
-        createdAt: true,
-      },
-    });
+    const updates: string[] = [];
+    const values: any[] = [];
+    let paramIndex = 1;
+
+    if (data.name !== undefined) {
+      updates.push(`name = $${paramIndex++}`);
+      values.push(data.name);
+    }
+    if (data.bio !== undefined) {
+      updates.push(`bio = $${paramIndex++}`);
+      values.push(data.bio);
+    }
+    if (data.avatar !== undefined) {
+      updates.push(`avatar = $${paramIndex++}`);
+      values.push(data.avatar);
+    }
+
+    if (updates.length === 0) {
+      return this.findProfileByUserId(userId);
+    }
+
+    updates.push(`updated_at = NOW()`);
+    values.push(userId);
+
+    const result = await this.pool.query(
+      `UPDATE users
+       SET ${updates.join(", ")}
+       WHERE id = $${paramIndex}
+       RETURNING id, email, name, bio, avatar, created_at as "createdAt"`,
+      values
+    );
+    return result.rows[0];
   }
 
   /**
    * Check if profile exists
    */
   async profileExists(userId: string): Promise<boolean> {
-    const count = await this.prisma.user.count({
-      where: { id: userId },
-    });
-    return count > 0;
+    const result = await this.pool.query(
+      "SELECT COUNT(*) as count FROM users WHERE id = $1",
+      [userId]
+    );
+    return parseInt(result.rows[0].count) > 0;
   }
 }
 ```
@@ -453,21 +470,22 @@ describe("ProfileService", () => {
 ```typescript
 // Repository
 async findManyWithPagination(page: number, limit: number) {
-  const skip = (page - 1) * limit;
+  const offset = (page - 1) * limit;
   
-  const [items, total] = await Promise.all([
-    this.prisma.item.findMany({
-      skip,
-      take: limit,
-    }),
-    this.prisma.item.count(),
+  const [itemsResult, countResult] = await Promise.all([
+    this.pool.query(
+      `SELECT * FROM items
+       LIMIT $1 OFFSET $2`,
+      [limit, offset]
+    ),
+    this.pool.query("SELECT COUNT(*) as total FROM items"),
   ]);
 
   return {
-    items,
-    total,
+    items: itemsResult.rows,
+    total: parseInt(countResult.rows[0].total),
     page,
-    totalPages: Math.ceil(total / limit),
+    totalPages: Math.ceil(parseInt(countResult.rows[0].total) / limit),
   };
 }
 ```
@@ -481,20 +499,35 @@ async findFiltered(filters: {
   category?: string;
   status?: string;
 }) {
-  return this.prisma.item.findMany({
-    where: {
-      AND: [
-        filters.search ? {
-          OR: [
-            { name: { contains: filters.search, mode: "insensitive" } },
-            { description: { contains: filters.search, mode: "insensitive" } },
-          ],
-        } : {},
-        filters.category ? { category: filters.category } : {},
-        filters.status ? { status: filters.status } : {},
-      ],
-    },
-  });
+  const conditions: string[] = [];
+  const values: any[] = [];
+  let paramIndex = 1;
+
+  if (filters.search) {
+    conditions.push(
+      `(name ILIKE $${paramIndex} OR description ILIKE $${paramIndex})`
+    );
+    values.push(`%${filters.search}%`);
+    paramIndex++;
+  }
+  if (filters.category) {
+    conditions.push(`category = $${paramIndex++}`);
+    values.push(filters.category);
+  }
+  if (filters.status) {
+    conditions.push(`status = $${paramIndex++}`);
+    values.push(filters.status);
+  }
+
+  const whereClause = conditions.length > 0
+    ? `WHERE ${conditions.join(" AND ")}`
+    : "";
+
+  const result = await this.pool.query(
+    `SELECT * FROM items ${whereClause}`,
+    values
+  );
+  return result.rows;
 }
 ```
 
@@ -538,6 +571,6 @@ async uploadAvatar(userId: string, file: File) {
 
 ## Next Steps
 
-- [Database Setup](/guides/database) - Working with Prisma
+- [Database Setup](/guides/database) - Working with db-mate and pg
 - [Development Tips](/guides/development) - Improve workflow
 

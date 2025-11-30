@@ -31,7 +31,7 @@ export default function Navbar({ showAuthButtons = true }: NavbarProps) {
       {/* Left section - Logo and description */}
       <div className="flex items-start md:gap-8 lg:gap-24 xl:gap-36">
         {/* Logo */}
-        <DSCLogo size={16} onClick={() => router.push("/")} />
+        <DSCLogo size={16} href="/" />
 
         {/* Description */}
         <div className="hidden md:block text-white max-w-sm lg:max-w-lg">

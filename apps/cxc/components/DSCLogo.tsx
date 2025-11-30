@@ -1,20 +1,19 @@
 import Image from "next/image";
+import Link from "next/link";
 
 interface DSCLogoProps {
   size?: number;
   className?: string;
-  onClick?: () => void;
+  href?: string;
 }
+
 export default function DSCLogo({
   size = 24,
   className = "",
-  onClick,
-}: DSCLogoProps) {
-  return (
-    <div
-      className={`relative w-${size} h-${size} ${className} ${onClick ? "hover:cursor-pointer" : ""}`}
-      onClick={onClick}
-    >
+  href,
+}: Readonly<DSCLogoProps>) {
+  const logoContent = (
+    <div className={`relative w-${size} h-${size} ${className}`}>
       <Image
         src="/logos/dsc.svg"
         alt="uwdsc logo"
@@ -24,4 +23,14 @@ export default function DSCLogo({
       />
     </div>
   );
+
+  if (href) {
+    return (
+      <Link href={href} className="hover:cursor-pointer block">
+        {logoContent}
+      </Link>
+    );
+  }
+
+  return logoContent;
 }

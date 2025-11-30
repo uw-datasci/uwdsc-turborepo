@@ -1,12 +1,13 @@
 # Database Setup
 
-Learn how to work with Prisma and Supabase in this project.
+Learn how to work with db-mate, pg, and Supabase in this project.
 
 ## Overview
 
 Our project uses:
 
-- **Prisma** - Type-safe ORM for database operations
+- **pg** (node-postgres) - PostgreSQL client for raw SQL queries
+- **db-mate** - Database migration tool with SQL files
 - **Supabase** - PostgreSQL database and authentication
 - **PostgreSQL** - Relational database
 
@@ -19,8 +20,8 @@ Our project uses:
 └───────────┬─────────────────────────────┘
             │
 ┌───────────▼─────────────────────────────┐
-│        Prisma Client                     │
-│   (Type-safe ORM)                        │
+│        pg (node-postgres)                │
+│   (Raw SQL queries)                      │
 └───────────┬─────────────────────────────┘
             │
 ┌───────────▼─────────────────────────────┐
@@ -38,83 +39,55 @@ Create `.env.local` files in your apps:
 ```bash
 # apps/web/.env.local
 DATABASE_URL="postgresql://user:password@host:5432/database"
-DIRECT_URL="postgresql://user:password@host:5432/database"
 SUPABASE_URL="https://your-project.supabase.co"
 SUPABASE_ANON_KEY="your-anon-key"
 SUPABASE_SERVICE_ROLE_KEY="your-service-role-key"
 ```
 
-### 2. Prisma Schema
+### 2. Database Migrations
 
-Schemas are located in:
+Migrations are located in:
 
-- `packages/server/web/src/prisma/schema/`
-- `packages/server/cxc/src/prisma/schema/`
+- `packages/server/web/src/db/migrations/`
+- `packages/server/cxc/src/db/migrations/`
 
-**Example schema:**
+**Example migration file** (`001_create_users_table.up.sql`):
 
-```prisma
-// packages/server/web/src/prisma/schema.prisma
+```sql
+-- packages/server/web/src/db/migrations/001_create_users_table.up.sql
 
-generator client {
-  provider = "prisma-client-js"
-  output   = "../generated"
-}
+CREATE TABLE IF NOT EXISTS users (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  email VARCHAR(255) UNIQUE NOT NULL,
+  name VARCHAR(255) NOT NULL,
+  bio TEXT,
+  avatar VARCHAR(500),
+  created_at TIMESTAMP DEFAULT NOW(),
+  updated_at TIMESTAMP DEFAULT NOW()
+);
 
-datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
-  directUrl = env("DIRECT_URL")
-}
-
-model User {
-  id        String   @id @default(uuid())
-  email     String   @unique
-  name      String
-  bio       String?
-  avatar    String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  applications Application[]
-  profile      Profile?
-
-  @@map("users")
-}
-
-model Profile {
-  id     String @id @default(uuid())
-  userId String @unique
-  bio    String
-  user   User   @relation(fields: [userId], references: [id])
-
-  @@map("profiles")
-}
-
-model Application {
-  id        String   @id @default(uuid())
-  userId    String
-  status    String
-  data      Json
-  createdAt DateTime @default(now())
-  user      User     @relation(fields: [userId], references: [id])
-
-  @@map("applications")
-}
+CREATE INDEX idx_users_email ON users(email);
 ```
 
-## Prisma Workflow
+**Down migration** (`001_create_users_table.down.sql`):
 
-### Generate Client
+```sql
+-- packages/server/web/src/db/migrations/001_create_users_table.down.sql
 
-After changing the schema:
+DROP TABLE IF EXISTS users;
+```
+
+## db-mate Workflow
+
+### Install db-mate
 
 ```bash
-cd packages/server/web
-pnpm prisma generate
-```
+# Install globally
+npm install -g db-mate
 
-This creates the Prisma Client in `src/generated/`.
+# Or use npx
+npx db-mate
+```
 
 ### Create Migration
 
@@ -122,21 +95,29 @@ Create a new migration:
 
 ```bash
 cd packages/server/web
-pnpm prisma migrate dev --name add_user_bio
+db-mate new add_user_bio
 ```
 
-This:
-
-1. Creates SQL migration file
-2. Applies migration to database
-3. Regenerates Prisma Client
+This creates two files:
+- `001_add_user_bio.up.sql` - Migration to apply
+- `001_add_user_bio.down.sql` - Migration to rollback
 
 ### Apply Migrations
 
-Apply migrations to production:
+Apply all pending migrations:
 
 ```bash
-pnpm prisma migrate deploy
+cd packages/server/web
+db-mate up
+```
+
+### Rollback Migration
+
+Rollback the last migration:
+
+```bash
+cd packages/server/web
+db-mate down
 ```
 
 ### Reset Database
@@ -144,69 +125,110 @@ pnpm prisma migrate deploy
 **Warning**: This deletes all data!
 
 ```bash
-pnpm prisma migrate reset
+cd packages/server/web
+db-mate drop
+db-mate up
 ```
 
-### Prisma Studio
+### Migration Status
 
-Open visual database editor:
+Check which migrations have been applied:
 
 ```bash
 cd packages/server/web
-pnpm prisma studio
+db-mate status
 ```
 
-This opens a web UI at http://localhost:5555
+## Using pg (node-postgres)
 
-## Using Prisma
+### Connection Pool
+
+```typescript
+// packages/server/core/src/database/connection.ts
+import { Pool } from "pg";
+
+export const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+  max: 20,
+  idleTimeoutMillis: 30000,
+  connectionTimeoutMillis: 2000,
+});
+```
 
 ### Basic Queries
 
 ```typescript
 // packages/server/web/src/repository/userRepository.ts
-import { PrismaClient } from "../generated";
+import { pool } from "@uwdsc/server/core/database/connection";
 
 export class UserRepository {
-  private prisma: PrismaClient;
-
-  constructor() {
-    this.prisma = new PrismaClient();
-  }
-
   // Find one
   async findById(id: string) {
-    return this.prisma.user.findUnique({
-      where: { id },
-    });
+    const result = await pool.query(
+      "SELECT * FROM users WHERE id = $1",
+      [id]
+    );
+    return result.rows[0] || null;
   }
 
   // Find many
   async findAll() {
-    return this.prisma.user.findMany({
-      orderBy: { createdAt: "desc" },
-    });
+    const result = await pool.query(
+      "SELECT * FROM users ORDER BY created_at DESC"
+    );
+    return result.rows;
   }
 
   // Create
   async create(data: { email: string; name: string }) {
-    return this.prisma.user.create({
-      data,
-    });
+    const result = await pool.query(
+      `INSERT INTO users (email, name)
+       VALUES ($1, $2)
+       RETURNING *`,
+      [data.email, data.name]
+    );
+    return result.rows[0];
   }
 
   // Update
   async update(id: string, data: { name?: string; bio?: string }) {
-    return this.prisma.user.update({
-      where: { id },
-      data,
-    });
+    const updates: string[] = [];
+    const values: any[] = [];
+    let paramIndex = 1;
+
+    if (data.name !== undefined) {
+      updates.push(`name = $${paramIndex++}`);
+      values.push(data.name);
+    }
+    if (data.bio !== undefined) {
+      updates.push(`bio = $${paramIndex++}`);
+      values.push(data.bio);
+    }
+
+    if (updates.length === 0) {
+      return this.findById(id);
+    }
+
+    updates.push(`updated_at = NOW()`);
+    values.push(id);
+
+    const result = await pool.query(
+      `UPDATE users
+       SET ${updates.join(", ")}
+       WHERE id = $${paramIndex}
+       RETURNING *`,
+      values
+    );
+    return result.rows[0];
   }
 
   // Delete
   async delete(id: string) {
-    return this.prisma.user.delete({
-      where: { id },
-    });
+    const result = await pool.query(
+      "DELETE FROM users WHERE id = $1 RETURNING *",
+      [id]
+    );
+    return result.rows[0];
   }
 }
 ```
@@ -216,32 +238,52 @@ export class UserRepository {
 ```typescript
 // Include related data
 async findUserWithProfile(userId: string) {
-  return this.prisma.user.findUnique({
-    where: { id: userId },
-    include: {
-      profile: true,
-      applications: true,
-    },
-  });
+  const result = await pool.query(
+    `SELECT 
+       u.*,
+       p.bio as profile_bio
+     FROM users u
+     LEFT JOIN profiles p ON p.user_id = u.id
+     WHERE u.id = $1`,
+    [userId]
+  );
+  return result.rows[0] || null;
 }
 
-// Nested writes
+// Nested writes (using transactions)
 async createUserWithProfile(data: {
   email: string;
   name: string;
   bio: string;
 }) {
-  return this.prisma.user.create({
-    data: {
-      email: data.email,
-      name: data.name,
-      profile: {
-        create: {
-          bio: data.bio,
-        },
-      },
-    },
-  });
+  const client = await pool.connect();
+  try {
+    await client.query("BEGIN");
+
+    // Create user
+    const userResult = await client.query(
+      `INSERT INTO users (email, name)
+       VALUES ($1, $2)
+       RETURNING *`,
+      [data.email, data.name]
+    );
+    const user = userResult.rows[0];
+
+    // Create profile
+    await client.query(
+      `INSERT INTO profiles (user_id, bio)
+       VALUES ($1, $2)`,
+      [user.id, data.bio]
+    );
+
+    await client.query("COMMIT");
+    return user;
+  } catch (error) {
+    await client.query("ROLLBACK");
+    throw error;
+  } finally {
+    client.release();
+  }
 }
 ```
 
@@ -250,26 +292,24 @@ async createUserWithProfile(data: {
 ```typescript
 // Where clause
 async findActiveUsers() {
-  return this.prisma.user.findMany({
-    where: {
-      status: "active",
-      createdAt: {
-        gte: new Date("2024-01-01"),
-      },
-    },
-  });
+  const result = await pool.query(
+    `SELECT * FROM users
+     WHERE status = $1
+       AND created_at >= $2`,
+    ["active", new Date("2024-01-01")]
+  );
+  return result.rows;
 }
 
 // OR conditions
 async search(query: string) {
-  return this.prisma.user.findMany({
-    where: {
-      OR: [
-        { name: { contains: query, mode: "insensitive" } },
-        { email: { contains: query, mode: "insensitive" } },
-      ],
-    },
-  });
+  const searchTerm = `%${query}%`;
+  const result = await pool.query(
+    `SELECT * FROM users
+     WHERE name ILIKE $1 OR email ILIKE $1`,
+    [searchTerm]
+  );
+  return result.rows;
 }
 ```
 
@@ -277,22 +317,23 @@ async search(query: string) {
 
 ```typescript
 async findWithPagination(page: number, limit: number) {
-  const skip = (page - 1) * limit;
+  const offset = (page - 1) * limit;
 
-  const [users, total] = await Promise.all([
-    this.prisma.user.findMany({
-      skip,
-      take: limit,
-      orderBy: { createdAt: "desc" },
-    }),
-    this.prisma.user.count(),
+  const [usersResult, countResult] = await Promise.all([
+    pool.query(
+      `SELECT * FROM users
+       ORDER BY created_at DESC
+       LIMIT $1 OFFSET $2`,
+      [limit, offset]
+    ),
+    pool.query("SELECT COUNT(*) as total FROM users"),
   ]);
 
   return {
-    users,
-    total,
+    users: usersResult.rows,
+    total: parseInt(countResult.rows[0].total),
     page,
-    pages: Math.ceil(total / limit),
+    pages: Math.ceil(parseInt(countResult.rows[0].total) / limit),
   };
 }
 ```
@@ -301,28 +342,40 @@ async findWithPagination(page: number, limit: number) {
 
 ```typescript
 async transferCredits(fromId: string, toId: string, amount: number) {
-  return this.prisma.$transaction(async (tx) => {
+  const client = await pool.connect();
+  try {
+    await client.query("BEGIN");
+
     // Deduct from sender
-    await tx.user.update({
-      where: { id: fromId },
-      data: { credits: { decrement: amount } },
-    });
+    await client.query(
+      `UPDATE users
+       SET credits = credits - $1
+       WHERE id = $2`,
+      [amount, fromId]
+    );
 
     // Add to receiver
-    await tx.user.update({
-      where: { id: toId },
-      data: { credits: { increment: amount } },
-    });
+    await client.query(
+      `UPDATE users
+       SET credits = credits + $1
+       WHERE id = $2`,
+      [amount, toId]
+    );
 
     // Create transaction record
-    await tx.transaction.create({
-      data: {
-        fromId,
-        toId,
-        amount,
-      },
-    });
-  });
+    await client.query(
+      `INSERT INTO transactions (from_id, to_id, amount)
+       VALUES ($1, $2, $3)`,
+      [fromId, toId, amount]
+    );
+
+    await client.query("COMMIT");
+  } catch (error) {
+    await client.query("ROLLBACK");
+    throw error;
+  } finally {
+    client.release();
+  }
 }
 ```
 
@@ -330,19 +383,24 @@ async transferCredits(fromId: string, toId: string, amount: number) {
 
 ```typescript
 async getStats() {
-  return this.prisma.user.aggregate({
-    _count: true,
-    _avg: { age: true },
-    _min: { createdAt: true },
-    _max: { createdAt: true },
-  });
+  const result = await pool.query(
+    `SELECT 
+       COUNT(*) as total_users,
+       AVG(age) as avg_age,
+       MIN(created_at) as first_user,
+       MAX(created_at) as latest_user
+     FROM users`
+  );
+  return result.rows[0];
 }
 
 async groupByStatus() {
-  return this.prisma.user.groupBy({
-    by: ["status"],
-    _count: true,
-  });
+  const result = await pool.query(
+    `SELECT status, COUNT(*) as count
+     FROM users
+     GROUP BY status`
+  );
+  return result.rows;
 }
 ```
 
@@ -421,57 +479,57 @@ export class FileService {
 ### Create Seed File
 
 ```typescript
-// packages/server/web/src/prisma/seed.ts
-import { PrismaClient } from "./generated";
-
-const prisma = new PrismaClient();
+// packages/server/web/src/db/seed.ts
+import { pool } from "@uwdsc/server/core/database/connection";
 
 async function main() {
   // Clear existing data
-  await prisma.application.deleteMany();
-  await prisma.profile.deleteMany();
-  await prisma.user.deleteMany();
+  await pool.query("DELETE FROM applications");
+  await pool.query("DELETE FROM profiles");
+  await pool.query("DELETE FROM users");
 
   // Create test users
-  const user1 = await prisma.user.create({
-    data: {
-      email: "john@example.com",
-      name: "John Doe",
-      profile: {
-        create: {
-          bio: "Software developer",
-        },
-      },
-    },
-  });
+  const user1Result = await pool.query(
+    `INSERT INTO users (email, name)
+     VALUES ($1, $2)
+     RETURNING *`,
+    ["john@example.com", "John Doe"]
+  );
+  const user1 = user1Result.rows[0];
 
-  const user2 = await prisma.user.create({
-    data: {
-      email: "jane@example.com",
-      name: "Jane Smith",
-      profile: {
-        create: {
-          bio: "Product designer",
-        },
-      },
-    },
-  });
+  await pool.query(
+    `INSERT INTO profiles (user_id, bio)
+     VALUES ($1, $2)`,
+    [user1.id, "Software developer"]
+  );
+
+  const user2Result = await pool.query(
+    `INSERT INTO users (email, name)
+     VALUES ($1, $2)
+     RETURNING *`,
+    ["jane@example.com", "Jane Smith"]
+  );
+  const user2 = user2Result.rows[0];
+
+  await pool.query(
+    `INSERT INTO profiles (user_id, bio)
+     VALUES ($1, $2)`,
+    [user2.id, "Product designer"]
+  );
 
   // Create applications
-  await prisma.application.createMany({
-    data: [
-      {
-        userId: user1.id,
-        status: "pending",
-        data: {},
-      },
-      {
-        userId: user2.id,
-        status: "approved",
-        data: {},
-      },
-    ],
-  });
+  await pool.query(
+    `INSERT INTO applications (user_id, status, data)
+     VALUES ($1, $2, $3), ($4, $5, $6)`,
+    [
+      user1.id,
+      "pending",
+      JSON.stringify({}),
+      user2.id,
+      "approved",
+      JSON.stringify({}),
+    ]
+  );
 
   console.log("Database seeded successfully");
 }
@@ -482,7 +540,7 @@ main()
     process.exit(1);
   })
   .finally(async () => {
-    await prisma.$disconnect();
+    await pool.end();
   });
 ```
 
@@ -490,134 +548,121 @@ main()
 
 ```bash
 cd packages/server/web
-pnpm prisma db seed
+tsx src/db/seed.ts
 ```
 
 ## Best Practices
 
 ### ✅ Do
 
+- Use parameterized queries to prevent SQL injection
 - Use transactions for multi-step operations
 - Handle errors appropriately
-- Use TypeScript types from Prisma
+- Use TypeScript types for query results
 - Index frequently queried columns
-- Use select to limit returned fields
-- Close Prisma connections properly
+- Use SELECT to limit returned fields
+- Close database connections properly
+- Use connection pooling
 
 ### ❌ Don't
 
-- N+1 queries (use `include` or `select`)
+- Use string concatenation for SQL queries (SQL injection risk)
 - Store large files in database
 - Skip migrations in production
 - Expose database errors to clients
-- Use raw SQL unless necessary
+- Create N+1 queries (use JOINs or batch queries)
+- Forget to release connection pool clients
 
 ## Common Patterns
 
 ### Repository Pattern
 
 ```typescript
-import { BaseRepository } from "@uwdsc/server/core/repository/baseRepository";
+import { pool } from "@uwdsc/server/core/database/connection";
 
-export class UserRepository extends BaseRepository {
+export class UserRepository {
   async findByEmail(email: string) {
-    return this.prisma.user.findUnique({
-      where: { email },
-    });
+    const result = await pool.query(
+      "SELECT * FROM users WHERE email = $1",
+      [email]
+    );
+    return result.rows[0] || null;
   }
 
   async existsByEmail(email: string): Promise<boolean> {
-    const count = await this.prisma.user.count({
-      where: { email },
-    });
-    return count > 0;
+    const result = await pool.query(
+      "SELECT COUNT(*) as count FROM users WHERE email = $1",
+      [email]
+    );
+    return parseInt(result.rows[0].count) > 0;
   }
 }
 ```
 
 ### Soft Deletes
 
-```prisma
-model User {
-  id        String    @id @default(uuid())
-  email     String    @unique
-  deletedAt DateTime?
-
-  @@map("users")
-}
+```sql
+-- Migration
+ALTER TABLE users ADD COLUMN deleted_at TIMESTAMP;
+CREATE INDEX idx_users_deleted_at ON users(deleted_at);
 ```
 
 ```typescript
 async softDelete(id: string) {
-  return this.prisma.user.update({
-    where: { id },
-    data: { deletedAt: new Date() },
-  });
+  const result = await pool.query(
+    `UPDATE users
+     SET deleted_at = NOW()
+     WHERE id = $1
+     RETURNING *`,
+    [id]
+  );
+  return result.rows[0];
 }
 
 async findActive() {
-  return this.prisma.user.findMany({
-    where: { deletedAt: null },
-  });
+  const result = await pool.query(
+    "SELECT * FROM users WHERE deleted_at IS NULL"
+  );
+  return result.rows;
 }
 ```
 
 ### Optimistic Locking
 
-```prisma
-model User {
-  id      String @id @default(uuid())
-  version Int    @default(0)
-
-  @@map("users")
-}
+```sql
+-- Migration
+ALTER TABLE users ADD COLUMN version INTEGER DEFAULT 0;
 ```
 
 ```typescript
-async updateWithVersion(id: string, currentVersion: number, data: any) {
-  return this.prisma.user.updateMany({
-    where: {
-      id,
-      version: currentVersion,
-    },
-    data: {
-      ...data,
-      version: { increment: 1 },
-    },
-  });
+async updateWithVersion(
+  id: string,
+  currentVersion: number,
+  data: any
+) {
+  const result = await pool.query(
+    `UPDATE users
+     SET name = $1, version = version + 1
+     WHERE id = $2 AND version = $3
+     RETURNING *`,
+    [data.name, id, currentVersion]
+  );
+  return result.rows[0];
 }
 ```
 
 ## Troubleshooting
-
-### Schema Sync Issues
-
-```bash
-# Push schema without creating migration
-pnpm prisma db push
-
-# View current database schema
-pnpm prisma db pull
-```
-
-### Migration Conflicts
-
-```bash
-# Mark migration as applied without running it
-pnpm prisma migrate resolve --applied <migration_name>
-
-# Mark as rolled back
-pnpm prisma migrate resolve --rolled-back <migration_name>
-```
 
 ### Connection Issues
 
 Check environment variables and database connectivity:
 
 ```typescript
+import { pool } from "@uwdsc/server/core/database/connection";
+
 async function testConnection() {
   try {
-    await prisma.$queryRaw`SELECT 1`;
+    const result = await pool.query("SELECT 1");
     console.log("Database connected");
   } catch (error) {
     console.error("Database connection failed:", error);
@@ -625,9 +670,32 @@ async function testConnection() {
 }
 ```
 
+### Migration Issues
+
+```bash
+# Check migration status
+db-mate status
+
+# Force rollback if needed
+db-mate down --force
+
+# Re-apply migrations
+db-mate up
+```
+
+### Query Performance
+
+Use EXPLAIN ANALYZE to debug slow queries:
+
+```sql
+EXPLAIN ANALYZE
+SELECT * FROM users WHERE email = 'test@example.com';
+```
+
 ## Resources
 
-- [Prisma Documentation](https://www.prisma.io/docs)
+- [pg Documentation](https://node-postgres.com/)
+- [db-mate Documentation](https://github.com/amacneil/dbmate)
 - [Supabase Documentation](https://supabase.com/docs)
 - [PostgreSQL Documentation](https://www.postgresql.org/docs/)
 

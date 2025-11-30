@@ -1,5 +1,3 @@
-"use client";
-
 import {
   Mail,
   Instagram,
@@ -11,7 +9,7 @@ import {
   RiTwitterXLine,
 } from "@uwdsc/ui";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 const SOCIALS = [
   {
@@ -49,15 +47,14 @@ const SOCIALS = [
 ];
 
 export default function Footer() {
-  const router = useRouter();
   return (
     <>
       <hr className="border-b-1 border-[#454545]" />
       <footer className="mx-container mb-12 mt-9 flex flex-col justify-between gap-8 sm:flex-row sm:items-center">
         <div className="flex flex-col items-center sm:items-start">
-          <div
-            className="relative w-11.5 h-11.5 lg:w-13.5 lg:h-13.5 mb-4 hover:cursor-pointer"
-            onClick={() => router.push("/")}
+          <Link
+            href="/"
+            className="relative w-11.5 h-11.5 lg:w-13.5 lg:h-13.5 mb-4 hover:cursor-pointer block"
           >
             <Image
               src="/logos/dsc.svg"
@@ -66,7 +63,7 @@ export default function Footer() {
               className="object-contain"
               priority
             />
-          </div>
+          </Link>
           <a
             href="mailto:contact@uwdatascience.ca"
             className="font-medium text-white"

@@ -1,9 +1,9 @@
 export default {
-  logo: <span style={{ fontWeight: "bold", fontSize: "1.2rem" }}>📚 UWDSC Monorepo Docs</span>,
+  logo: <span style={{ fontWeight: "bold", fontSize: "1.2rem" }}>📚 UWDSC Website Docs</span>,
   project: {
-    link: "https://github.com/uwdsc/uwdsc-website-v3",
+    link: "https://github.com/uw-datasci/uwdsc-website-v3",
   },
-  docsRepositoryBase: "https://github.com/uwdsc/uwdsc-website-v3/tree/main/apps/docs",
+  docsRepositoryBase: "https://github.com/uw-datasci/uwdsc-website-v3/tree/main/apps/docs",
   footer: {
     text: (
       <span>
