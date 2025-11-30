@@ -28,4 +28,3 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.COPILOT_TOKEN }}
         run: |
           copilot -p "Explain what the 'ls' command does in one sentence."
-          copilot -p "update README.md in the root directory to test that this workflow works" --allow-fs-read --allow-fs-write
