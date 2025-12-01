@@ -5,7 +5,6 @@ const path = require("node:path");
 
 // --- Config ---
 const WORKFLOW_FILENAME = "fetch-secrets.yml";
-const ENV_TARGET = process.argv[2] || "dev";
 
 // Define where the secrets go
 const TARGETS = {
@@ -28,8 +27,8 @@ try {
   // 2. Generate Passphrase
   const passphrase = crypto.randomBytes(32).toString("hex");
 
-  console.log(`🚀 Triggering Workflow for environment: ${ENV_TARGET}`);
-  const triggerCmd = `gh workflow run ${WORKFLOW_FILENAME} -f environment=${ENV_TARGET} -f encryption_passphrase="${passphrase}"`;
+  console.log(`🚀 Triggering Workflow`);
+  const triggerCmd = `gh workflow run ${WORKFLOW_FILENAME} -f encryption_passphrase="${passphrase}"`;
   execSync(triggerCmd);
 
   // 3. Find Run ID
