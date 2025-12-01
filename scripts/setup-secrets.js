@@ -84,7 +84,6 @@ try {
 
   console.log("🎉 Secrets synced successfully!");
 } catch (error) {
-  // Print stdout if available (cleaner error), otherwise full message
   console.error("\n❌ Error:", error.stdout?.toString() || error.message);
   process.exit(1);
 }
