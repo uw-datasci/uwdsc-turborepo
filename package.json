@@ -12,7 +12,8 @@
     "lint": "turbo lint",
     "check-types": "turbo check-types",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
-    "ui:add": "node scripts/ui-add.js"
+    "ui:add": "node scripts/ui-add.js",
+    "secrets": "node scripts/setup-secrets.js"
   },
   "devDependencies": {
     "@uwdsc/eslint-config": "workspace:*",
