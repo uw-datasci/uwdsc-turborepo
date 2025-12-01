@@ -1,125 +1,89 @@
 const { execSync } = require("node:child_process");
 const fs = require("node:fs");
-const crypto = require("node:crypto");
 const path = require("node:path");
 
-// --- Config ---
-const WORKFLOW_FILENAME = "fetch-secrets.yml";
-
-// Define where the secrets go
-const TARGETS = {
-  web: path.join("apps", "web", ".env.local"),
-  cxc: path.join("apps", "cxc", ".env.local"),
-};
-
-console.log("🔒 Turborepo Secret Fetcher");
-console.log("--------------------------------");
+const APPS = [
+  { name: "web", infisicalPath: "/web" },
+  { name: "cxc", infisicalPath: "/cxc" },
+];
 
 try {
-  // 1. Auth Check
-  try {
-    execSync("gh auth status", { stdio: "ignore" });
-  } catch (e) {
-    console.error("❌ Error: Please run: gh auth login", e.message);
-    process.exit(1);
+  const rootDir = path.join(__dirname, "..");
+  const configPath = path.join(rootDir, ".infisical.json");
+
+  // 1. INIT: Run 'infisical init' if config is missing
+  if (!fs.existsSync(configPath)) {
+    console.log("🔧 Configuration missing. Running 'infisical init'...");
+    execSync("infisical init", { cwd: rootDir, stdio: "inherit" });
   }
 
-  // 2. Generate Passphrase
-  const passphrase = crypto.randomBytes(32).toString("hex");
-
-  console.log(`🚀 Triggering Workflow`);
-  const triggerCmd = `gh workflow run ${WORKFLOW_FILENAME} -f encryption_passphrase="${passphrase}"`;
-  execSync(triggerCmd);
-
-  // 3. Find Run ID
-  console.log("⏳ Waiting for workflow to start...");
-  let runId = null;
-  // Retry loop to find the run ID
-  for (let i = 0; i < 8; i++) {
-    execSync(
-      process.platform === "win32"
-        ? "powershell -c Start-Sleep -Seconds 2"
-        : "sleep 2"
-    );
-
-    const jsonOut = execSync(
-      `gh run list --workflow=${WORKFLOW_FILENAME} --limit 1 --json databaseId,status`,
-      { encoding: "utf8" }
-    );
-    const runs = JSON.parse(jsonOut);
-
-    if (
-      runs.length > 0 &&
-      (runs[0].status === "queued" || runs[0].status === "in_progress")
-    ) {
-      runId = runs[0].databaseId;
-      break;
+  // 2. GET PROJECT ID: Try Env Var -> Then try reading local file
+  let projectId = process.env.INFISICAL_PROJECT_ID;
+  if (!projectId && fs.existsSync(configPath)) {
+    try {
+      const config = JSON.parse(fs.readFileSync(configPath, "utf8"));
+      projectId = config.workspaceId || config.projectId;
+    } catch (e) {
+      console.error("Error parsing .infisical.json:", e);
     }
   }
 
-  if (!runId) throw new Error("Could not find the workflow run.");
+  // 3. AUTHENTICATE: Try Machine Auth first, fallback to User
+  let machineAuthSuccess = false;
 
-  console.log(`👀 Watching run ID: ${runId}`);
-  execSync(`gh run watch ${runId}`, { stdio: "inherit" });
+  if (process.env.INFISICAL_CLIENT_ID && process.env.INFISICAL_CLIENT_SECRET) {
+    console.log("🤖 Authenticating Machine Identity...");
+    try {
+      // Use 'pipe' for stdio so we can catch errors silently without crashing
+      const token = execSync(
+        `infisical login --method=universal-auth --client-id="${process.env.INFISICAL_CLIENT_ID}" --client-secret="${process.env.INFISICAL_CLIENT_SECRET}" --silent --plain`,
+        { encoding: "utf8", stdio: "pipe" }
+      ).trim();
 
-  // 4. Download
-  console.log("📥 Downloading bundle...");
-  const artifactName = `encrypted-secrets-${runId}`;
-  execSync(`gh run download ${runId} -n ${artifactName} --dir .temp_secrets`, {
-    stdio: "ignore",
+      process.env.INFISICAL_TOKEN = token;
+      machineAuthSuccess = true;
+      console.log("✅ Machine Login Successful.");
+    } catch (error) {
+      console.warn(
+        "⚠️ Machine Authentication failed. Falling back to User Login...",
+        error
+      );
+    }
+  }
+
+  // If Machine Auth didn't run or failed, check User Session
+  if (!machineAuthSuccess) {
+    try {
+      // Check if user is already logged in
+      execSync("infisical secrets list --plain", { stdio: "ignore" });
+    } catch {
+      console.log("🔑 User login required...");
+      execSync("infisical login", { stdio: "inherit" });
+    }
+  }
+
+  // 4. EXPORT SECRETS
+  const projectFlag = projectId ? `--projectId="${projectId}"` : "";
+
+  APPS.forEach(({ name, infisicalPath }) => {
+    const targetDir = path.join(rootDir, "apps", name);
+    const targetFile = path.join(targetDir, ".env.local");
+
+    if (!fs.existsSync(targetDir))
+      return console.warn(`⚠️  Skipping ${name} (folder missing)`);
+
+    console.log(`⚡ Syncing ${name}...`);
+    const secrets = execSync(
+      `infisical export --path="${infisicalPath}" --format=dotenv-export --env=dev ${projectFlag}`,
+      { encoding: "utf8" }
+    );
+
+    fs.writeFileSync(targetFile, secrets);
+    console.log(`   ✅ Updated .env.local`);
   });
 
-  // 5. Decrypt
-  console.log("qh Decrypting...");
-  const encryptedPath = path.join(".temp_secrets", "secrets.enc");
-  const fileBuffer = fs.readFileSync(encryptedPath);
-
-  // OpenSSL Decryption Logic (Salted__ header handling)
-  const salt = fileBuffer.subarray(8, 16);
-  const encryptedContent = fileBuffer.subarray(16);
-  const keyLen = 32;
-  const ivLen = 16;
-
-  const derivedKey = crypto.pbkdf2Sync(
-    passphrase,
-    salt,
-    10000,
-    keyLen + ivLen,
-    "sha256"
-  );
-  const key = derivedKey.subarray(0, keyLen);
-  const iv = derivedKey.subarray(keyLen, keyLen + ivLen);
-
-  const decipher = crypto.createDecipheriv("aes-256-cbc", key, iv);
-  const decryptedBuffer = Buffer.concat([
-    decipher.update(encryptedContent),
-    decipher.final(),
-  ]);
-
-  // 6. Parse and Distribute
-  console.log("📂 Distributing secrets to apps...");
-  const secretsObj = JSON.parse(decryptedBuffer.toString());
-
-  // Write Web Secrets
-  if (secretsObj.web) {
-    const webDir = path.dirname(TARGETS.web);
-    if (!fs.existsSync(webDir)) fs.mkdirSync(webDir, { recursive: true });
-    fs.writeFileSync(TARGETS.web, secretsObj.web);
-    console.log(`   ✅ Wrote ${TARGETS.web}`);
-  }
-
-  // Write CXC Secrets
-  if (secretsObj.cxc) {
-    const cxcDir = path.dirname(TARGETS.cxc);
-    if (!fs.existsSync(cxcDir)) fs.mkdirSync(cxcDir, { recursive: true });
-    fs.writeFileSync(TARGETS.cxc, secretsObj.cxc);
-    console.log(`   ✅ Wrote ${TARGETS.cxc}`);
-  }
-
-  // 7. Cleanup
-  fs.rmSync(".temp_secrets", { recursive: true, force: true });
-  console.log("✨ All done.");
+  console.log("🎉 Secrets synced successfully!");
 } catch (error) {
-  console.error("❌ Error:", error.message);
+  console.error("\n❌ Error:", error.stdout?.toString() || error.message);
   process.exit(1);
 }
