@@ -2,7 +2,6 @@
 
 import DSCLogo from "@/components/DSCLogo";
 import { LoginForm } from "@/components/login/LoginForm";
-import { useRouter } from "next/navigation";
 import { StepIndicator } from "@/components/application/StepIndicator";
 import {
   DesktopAppWormhole,
@@ -12,8 +11,6 @@ import MobileAppNav from "@/components/application/MobileAppNav";
 import { STEP_NAMES } from "@/constants/application";
 
 export default function LoginPage() {
-  const router = useRouter();
-
   return (
     <div className="min-h-screen h-full cxc-app-font">
       {/* Desktop View */}
@@ -35,7 +32,7 @@ export default function LoginPage() {
             <DSCLogo
               size={24}
               className="hidden md:block"
-              onClick={() => router.push("/")}
+              href="/"
             />
           </div>
         </div>

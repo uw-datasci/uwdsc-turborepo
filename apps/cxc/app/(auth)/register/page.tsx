@@ -1,7 +1,6 @@
 "use client";
 
 import { Suspense } from "react";
-import { useRouter } from "next/navigation";
 import DSCLogo from "@/components/DSCLogo";
 import { StepIndicator } from "@/components/application/StepIndicator";
 import {
@@ -13,8 +12,6 @@ import { STEP_NAMES } from "@/constants/application";
 import { RegisterForm } from "@/components/login/RegisterForm";
 
 export default function RegisterPage() {
-  const router = useRouter();
-
   return (
     <div className="min-h-screen h-full cxc-app-font">
       {/* Desktop View */}
@@ -36,7 +33,7 @@ export default function RegisterPage() {
             <DSCLogo
               size={24}
               className="hidden md:block"
-              onClick={() => router.push("/")}
+              href="/"
             />
           </div>
         </div>

@@ -15,7 +15,8 @@ Our monorepo is built on modern web technologies with a focus on code reuse, typ
 
 ### Backend
 - **Database**: PostgreSQL (via Supabase)
-- **ORM**: Prisma
+- **Database Client**: pg (node-postgres) with raw SQL
+- **Migrations**: db-mate with SQL files
 - **Auth**: Supabase Auth
 - **Storage**: Supabase Storage
 - **API**: Next.js API Routes
@@ -67,7 +68,7 @@ Common functionality lives in shared packages:
 
 - TypeScript across the entire stack
 - Zod schemas for runtime validation
-- Prisma for type-safe database queries
+- pg with raw SQL queries for database access
 - Shared types between frontend and backend
 
 ## Package Organization
@@ -79,7 +80,7 @@ Frontend applications that users interact with:
 ```
 apps/
 ├── web/          # Main UWDSC website
-├── cxc/          # CxC competition app
+├── cxc/          # CxC AI hackathon app
 └── docs/         # This documentation site
 ```
 

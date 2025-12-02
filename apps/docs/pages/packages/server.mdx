@@ -28,14 +28,14 @@ packages/server/
 │   └── package.json
 ├── web/               # Web app backend
 │   ├── src/
-│   │   ├── prisma/       # Prisma schema
+│   │   ├── db/          # Database migrations (db-mate)
 │   │   ├── services/     # Business logic
 │   │   ├── repository/   # Data access
 │   │   └── types/        # Types
 │   └── package.json
 └── cxc/               # CxC app backend
     ├── src/
-    │   ├── prisma/       # Prisma schema
+    │   ├── db/          # Database migrations (db-mate)
     │   ├── services/     # Business logic
     │   ├── repository/   # Data access
     │   └── types/        # Types
@@ -78,7 +78,7 @@ import { BaseRepository } from "@uwdsc/server/core/repository/baseRepository";
 
 **BaseRepository** - Base class for all repositories
 
-- Prisma client access
+- pg connection pool access
 - Common database operations
 - Transaction support
 
@@ -110,7 +110,7 @@ import { ApplicationService } from "@uwdsc/server/web/services/applicationServic
 
 ## CxC Package (`@uwdsc/server/cxc`)
 
-Backend services specific to the CxC competition app.
+Backend services specific to the CxC AI hackathon app.
 
 ### Exports
 
@@ -121,9 +121,9 @@ import { TeamService } from "@uwdsc/server/cxc/services/teamService";
 
 ### Services
 
-- **ApplicationService** - Competition applications
+- **ApplicationService** - AI hackathon applications
 - **TeamService** - Team management
-- **EventService** - Competition events
+- **EventService** - AI hackathon events
 
 ## Usage
 
@@ -168,37 +168,45 @@ import { BaseRepository } from "@uwdsc/server/core/repository/baseRepository";
 
 export class ProfileRepository extends BaseRepository {
   async findById(userId: string) {
-    return this.prisma.user.findUnique({
-      where: { id: userId },
-    });
+    const result = await this.pool.query(
+      "SELECT * FROM users WHERE id = $1",
+      [userId]
+    );
+    return result.rows[0] || null;
   }
 }
 ```
 
 ## Database
 
-### Prisma
+### Migrations (db-mate)
 
-Each app-specific package has its own Prisma schema:
+Each app-specific package has its own migration directory:
 
-```prisma
-// packages/server/web/src/prisma/schema.prisma
+```sql
+-- packages/server/web/src/db/migrations/001_create_users_table.up.sql
 
-generator client {
-  provider = "prisma-client-js"
-  output   = "../generated"
-}
+CREATE TABLE IF NOT EXISTS users (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  email VARCHAR(255) UNIQUE NOT NULL,
+  name VARCHAR(255) NOT NULL,
+  created_at TIMESTAMP DEFAULT NOW()
+);
 
-datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
-}
+CREATE INDEX idx_users_email ON users(email);
+```
 
-model User {
-  id    String @id @default(uuid())
-  email String @unique
-  name  String
-}
+Migrations are managed with db-mate:
+
+```bash
+# Create new migration
+db-mate new add_user_bio
+
+# Apply migrations
+db-mate up
+
+# Rollback last migration
+db-mate down
 ```
 
 ### Supabase
@@ -232,4 +240,4 @@ Core package uses Supabase for:
 
 - [API Architecture](/architecture/api-flow) - Learn about backend patterns
 - [Creating API Endpoints](/guides/creating-api) - Build APIs
-- [Database Setup](/guides/database) - Work with Prisma
+- [Database Setup](/guides/database) - Work with db-mate and pg
