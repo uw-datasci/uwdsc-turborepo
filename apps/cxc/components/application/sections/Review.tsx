@@ -103,7 +103,7 @@ const InfoRow = ({ form, label, icon }: InfoRowProps) => {
           </a>
         ) : (
           // TODO: replace name with fetched name from user
-          <p className="break-words">{isName ? "John Doe" : displayValue}</p>
+          <p className="break-words">{displayValue}</p>
         )}
       </div>
     </div>
@@ -187,7 +187,7 @@ export function Review({ form }: ReviewProps) {
         <SectionReviewCard
           form={form}
           iconArr={ContactIcons}
-          labelArr={["name", ...Object.values(CONTACT_INFO_FIELDS)]}
+          labelArr={Object.values(CONTACT_INFO_FIELDS)}
         />
         <SectionReviewCard
           form={form}

@@ -13,6 +13,7 @@ interface ContactInfoProps {
 
 export function ContactInfo({ form }: ContactInfoProps) {
   return (
+    
     <Form {...form}>
       <AppSection
         label="Contact info"
@@ -25,7 +26,7 @@ export function ContactInfo({ form }: ContactInfoProps) {
             render={renderTextField("Email", {
               label: "Email",
               required: true,
-              inputProps: { type: "email" },
+              inputProps: { type: "email", readOnly: true },
               variant: "application",
             })}
           />
