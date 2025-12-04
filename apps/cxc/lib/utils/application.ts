@@ -9,7 +9,7 @@ import { AppFormValues } from "@/lib/schemas/application";
  */
 export const isDesktopStepValid = (
   form: UseFormReturn<AppFormValues>,
-  currentStep: number,
+  currentStep: number
 ): boolean => {
   const { errors } = form.formState;
 
@@ -18,7 +18,7 @@ export const isDesktopStepValid = (
       // Personal Details
       const dietary_restrictions = form.watch("dietary_restrictions");
       const dietary_restrictions_other = form.watch(
-        "dietary_restrictions_other",
+        "dietary_restrictions_other"
       );
       const tshirt_size = form.watch("tshirt_size");
 
@@ -46,7 +46,7 @@ export const isDesktopStepValid = (
       const programOther = form.watch("program_other");
 
       const prior_hackathon_experience = form.watch(
-        "prior_hackathon_experience",
+        "prior_hackathon_experience"
       );
       const hackathons_attended = form.watch("hackathons_attended");
       const year = form.watch("year_of_study");
@@ -89,7 +89,7 @@ export const isDesktopStepValid = (
  */
 export const isMobileStepValid = (
   form: UseFormReturn<AppFormValues>,
-  currentStep: number,
+  currentStep: number
 ): boolean => {
   const { errors } = form.formState;
 
@@ -113,7 +113,7 @@ export const isMobileStepValid = (
       // About You
       const dietary_restrictions = form.watch("dietary_restrictions");
       const dietary_restrictions_other = form.watch(
-        "dietary_restrictions_other",
+        "dietary_restrictions_other"
       );
       const tshirt_size = form.watch("tshirt_size");
 
@@ -153,7 +153,7 @@ export const isMobileStepValid = (
       // Hackathon Experience
       const hackathons_attended = form.watch("hackathons_attended");
       const prior_hackathon_experience = form.watch(
-        "prior_hackathon_experience",
+        "prior_hackathon_experience"
       );
       const validHackExp =
         !errors.prior_hackathon_experience &&
@@ -166,7 +166,7 @@ export const isMobileStepValid = (
       return (
         !errors.github &&
         !errors.linkedin &&
-        !errors.x &&
+        !errors.website_url &&
         !errors.other_link &&
         !errors.resume
       );

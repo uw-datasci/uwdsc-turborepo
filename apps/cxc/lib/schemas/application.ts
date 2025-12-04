@@ -1,13 +1,49 @@
 import { z } from "zod";
 
+// ============================================================================
+// Application Form Validation Schema
+// ============================================================================
+
 /**
- * Application form validation schema
+ * CXC Hacker Application form validation schema
+ *
+ * Defines all form fields, validation rules, and error messages for the
+ * application form. Fields are organized by section:
+ * - Personal Info (contact details, preferences)
+ * - Experience (education, hackathon experience)
+ * - Portfolio (links to GitHub, LinkedIn, personal website)
+ * - Questions (open-ended CXC-specific questions)
  */
 export const applicationSchema = z.object({
-  // personal info
+  // ========================================================================
+  // Application Metadata (Hidden Fields)
+  // ========================================================================
+
+  status: z
+    .enum([
+      "draft",
+      "submitted",
+      "offered",
+      "accepted",
+      "rejected",
+      "waitlisted",
+    ])
+    .optional(),
+  submitted_at: z.date().optional(),
+
+  // ========================================================================
+  // Personal Information
+  // ========================================================================
+
   email: z.string().email("Valid email is required"),
-  phone: z.string().min(1, "Phone number is required"),
-  discord: z.string().min(1, "Discord handle is required"),
+  phone: z
+    .string()
+    .min(10, "Phone number must be at least 10 digits")
+    .regex(/^[0-9\s\-\(\)\+]+$/, "Invalid phone number format"),
+  discord: z
+    .string()
+    .min(2, "Discord handle must be at least 2 characters")
+    .max(32, "Discord handle must be at most 32 characters"),
 
   tshirt_size: z.enum(["XS", "S", "M", "L", "XL", "XXL"]),
   dietary_restrictions: z.enum([
@@ -21,20 +57,48 @@ export const applicationSchema = z.object({
   ]),
   dietary_restrictions_other: z.string().optional(),
 
-  gender: z.string().optional(),
-  ethnicity: z.string().optional(),
+  gender: z
+    .enum(["Male", "Female", "Non-Binary", "Other", "Prefer not to say"])
+    .optional(),
+  ethnicity: z.array(z.string()).optional(),
 
-  // experience
+  // ========================================================================
+  // Education Information
+  // ========================================================================
+
   university_name: z.string().min(1, "University name is required"),
   university_name_other: z.string().optional(),
   program: z.string().min(1, "Program is required"),
   program_other: z.string().optional(),
-  year_of_study: z.string().min(1, "Year of study is required"),
+  year_of_study: z
+    .string()
+    .min(1, "Year of study is required")
+    .refine(
+      (val) =>
+        [
+          "1st Year",
+          "2nd Year",
+          "3rd Year",
+          "4th Year",
+          "5th Year+",
+          "Masters",
+          "PhD",
+        ].includes(val),
+      "Invalid year of study"
+    ),
+
+  // ========================================================================
+  // Experience Information
+  // ========================================================================
 
   prior_hackathon_experience: z
     .array(z.enum(["None", "Hacker", "Judge", "Mentor", "Organizer"]))
     .min(1, "Please select at least one option"),
   hackathons_attended: z.enum(["0", "1", "2", "3", "4+"]),
+
+  // ========================================================================
+  // Portfolio Links
+  // ========================================================================
 
   github: z
     .string()
@@ -50,17 +114,20 @@ export const applicationSchema = z.object({
     })
     .optional()
     .or(z.literal("")),
-  x: z
+  website_url: z
     .string()
-    .regex(/^$|^https:\/\/(twitter\.com|x\.com)\/[A-Za-z0-9_]{1,15}\/?$/, {
-      message: "Invalid X URL",
+    .regex(/^$|^https:\/\/(www\.)?[a-zA-Z0-9-]+(\.[a-zA-Z]{2,})+\/?$/, {
+      message: "Invalid website URL",
     })
     .optional()
     .or(z.literal("")),
   other_link: z.string().url().optional().or(z.literal("")),
   resume: z.instanceof(File).optional(),
 
-  // application questions
+  // ========================================================================
+  // Application Questions
+  // ========================================================================
+
   cxc_gain: z
     .string()
     .min(1, "This question is required")
@@ -70,39 +137,54 @@ export const applicationSchema = z.object({
     .string()
     .min(1, "This question is required")
     .max(200, "Your response is too long. Maximum length is 200 characters."),
+
+  // ========================================================================
+  // Team Members (for hackathon collaboration)
+  // ========================================================================
+
+  team_members: z.array(z.string()).optional(),
 });
 
+// ============================================================================
+// TypeScript Types
+// ============================================================================
+
 /**
- * TypeScript type inferred from the schema
+ * Inferred TypeScript type from the Zod schema
  */
 export type AppFormValues = z.infer<typeof applicationSchema>;
 
+// ============================================================================
+// Default Form Values
+// ============================================================================
+
 /**
- * Default values for the form
+ * Default form values for initial form population
  */
 export const applicationDefaultValues: Partial<AppFormValues> = {
-  // TODO: Add more fields to match schema
   email: "",
-
-  dietary_restrictions: undefined,
-  dietary_restrictions_other: "",
-  tshirt_size: undefined,
   phone: "",
   discord: "",
+  status: "draft",
+  submitted_at: undefined,
+  tshirt_size: undefined,
+  dietary_restrictions: undefined,
+  dietary_restrictions_other: "",
   gender: undefined,
   ethnicity: undefined,
-  prior_hackathon_experience: [],
-  hackathons_attended: undefined,
-  resume: undefined,
-  github: "",
-  linkedin: "",
-  x: "",
-  other_link: "",
-  cxc_gain: "",
-  silly_q: "",
-  program: "",
-  year_of_study: "",
   university_name: "",
   university_name_other: "",
+  program: "",
   program_other: "",
+  year_of_study: "",
+  prior_hackathon_experience: [],
+  hackathons_attended: undefined,
+  github: "",
+  linkedin: "",
+  website_url: "",
+  other_link: "",
+  resume: undefined,
+  cxc_gain: "",
+  silly_q: "",
+  team_members: [],
 };

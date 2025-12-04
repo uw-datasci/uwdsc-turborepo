@@ -6,6 +6,6 @@
       "@uwdsc/server/core/*": ["./src/*"]
     }
   },
-  "include": ["src"],
+  "include": ["src", "../cxc/src/services/applicationService.ts", "../cxc/src/repository/applicationRepository.ts"],
   "exclude": ["node_modules", "dist"]
 }

@@ -2,7 +2,10 @@
 
 import { Form, FormField } from "@uwdsc/ui";
 import { UseFormReturn } from "react-hook-form";
-import { renderSelectField } from "@/components/FormHelpers";
+import {
+  renderSelectField,
+  renderCheckboxGroupField,
+} from "@/components/FormHelpers";
 import AppSection from "../AppSection";
 import { AppFormValues } from "@/lib/schemas/application";
 import { useEffect } from "react";
@@ -44,9 +47,8 @@ export function OptionalAboutYou({ form }: OptionalAboutYouProps) {
           <FormField
             control={form.control}
             name={OPTIONAL_ABOUT_YOU_FIELDS.ethnicity}
-            render={renderSelectField("Select Ethnicity", ETHNICITIES, {
+            render={renderCheckboxGroupField(ETHNICITIES, {
               label: "Select your ethnicity",
-              variant: "application",
             })}
           />
         </div>

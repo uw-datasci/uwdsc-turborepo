@@ -30,6 +30,8 @@ export const GRADUATION_YEARS = [
   "3rd Year",
   "4th Year",
   "5th Year+",
+  "Masters",
+  "PhD",
 ];
 
 export const PROGRAM_OPTIONS: ComboboxOption[] = [
@@ -136,7 +138,7 @@ export const PRIOR_HACK_EXP_FIELDS = {
 export const LINKS_FIELDS = {
   github: "github",
   linkedin: "linkedin",
-  x: "x",
+  website_url: "website_url",
   other_link: "other_link",
   resume: "resume",
 } as const;
@@ -162,7 +164,7 @@ export const DIETARY_OPTIONS = [
 export const GENDERS = [
   "Male",
   "Female",
-  "Non-binary",
+  "Non-Binary",
   "Other",
   "Prefer not to say",
 ];

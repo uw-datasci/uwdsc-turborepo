@@ -1,32 +1,61 @@
 "use client";
 
-import DesktopApplication from "@/components/application/DesktopApplication";
-import MobileApplication from "@/components/application/MobileApplication";
-import { Submitted } from "@/components/application/sections";
-import { STEP_NAMES } from "@/constants/application";
+/**
+ * CXC Hacker Application Page
+ *
+ * This page handles the complete application flow including:
+ * - Form initialization with pre-filled data
+ * - Blank application creation for new users
+ * - Step-by-step form submission
+ * - Responsive layout for desktop and mobile views
+ */
+
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useAuth } from "@/contexts/AuthContext";
 import {
   AppFormValues,
   applicationSchema,
   applicationDefaultValues,
 } from "@/lib/schemas/application";
-import { useState } from "react";
+import {
+  updateApplication,
+  fetchApplication,
+  createApplication,
+} from "@/lib/api/application";
+import {
+  transformFormDataForDatabase,
+  transformDatabaseDataToForm,
+} from "@/lib/utils/formDataTransformer";
+import DesktopApplication from "@/components/application/DesktopApplication";
+import MobileApplication from "@/components/application/MobileApplication";
+import { Submitted } from "@/components/application/sections";
+import { STEP_NAMES } from "@/constants/application";
+
+// ============================================================================
+// Constants
+// ============================================================================
 
 const FINAL_STEP_COUNT = STEP_NAMES.length;
 const NUMBER_PAGES = 8;
 
-// Helper function to convert desktop step to mobile page
+// ============================================================================
+// Helper Functions
+// ============================================================================
+
+/**
+ * Converts desktop step to mobile page number
+ * Desktop steps aggregate multiple mobile pages
+ */
 const stepToPage = (step: number): number => {
-  // Desktop step 0 → Mobile page 0
-  // Desktop step 1 → Mobile page 2
-  // Desktop step 2 → Mobile page 5
-  // Desktop step 3 → Mobile page 7
   const stepToPageMap = [0, 2, 5, 7];
   return stepToPageMap[step] || 0;
 };
 
-// Helper function to convert mobile page to desktop step
+/**
+ * Converts mobile page number to desktop step
+ */
 const pageToStep = (page: number): number => {
   if (page < 2) return 0;
   if (page < 5) return 1;
@@ -35,9 +64,18 @@ const pageToStep = (page: number): number => {
 };
 
 export default function ApplyPage() {
+  // ========================================================================
+  // State Management
+  // ========================================================================
+
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [currentDesktopStep, setCurrentDesktopStep] = useState<number>(0);
   const [currentMobilePage, setCurrentMobilePage] = useState<number>(0);
+  const { profile } = useAuth();
+
+  // ========================================================================
+  // Form Setup
+  // ========================================================================
 
   const form = useForm<AppFormValues>({
     resolver: zodResolver(applicationSchema),
@@ -45,33 +83,100 @@ export default function ApplyPage() {
     mode: "onTouched",
   });
 
+  // ========================================================================
+  // Effects
+  // ========================================================================
+
+  /**
+   * Initialize application on component mount
+   * - Fetch existing application if user has one
+   * - Create blank application if user is new
+   * - Pre-fill form with fetched data
+   */
+  useEffect(() => {
+    const initializeApplication = async () => {
+      if (!profile?.id) return;
+
+      setIsLoading(true);
+      try {
+        const existingApplication = await fetchApplication(profile.id);
+
+        if (existingApplication) {
+          // Pre-fill form with existing application data
+          const formData = transformDatabaseDataToForm(existingApplication);
+          form.reset(formData);
+        } else {
+          // Create blank application entry for new user
+          const resp = await createApplication(profile.id);
+
+          console.log(resp.success);
+          console.log(resp.error);
+        }
+      } catch (error) {
+        console.error("Error initializing application:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    initializeApplication();
+  }, [profile?.id, form]);
+
+  // ========================================================================
+  // Event Handlers
+  // ========================================================================
+
+  /**
+   * Handles form submission on "Continue" or "Submit" button click
+   * Transforms form data and sends to backend API
+   */
   const handleSaveAndContinue = async (onSuccess: () => void) => {
+    if (!profile?.id) {
+      console.error("Profile ID not found");
+      return;
+    }
+
     setIsLoading(true);
     try {
-      // TODO: Replace with Update Application API calls
-      // Example: await updateApplication(form.getValues());
-      await new Promise((resolve) => setTimeout(resolve, 1000)); // TO REMOVE
-      onSuccess();
+      const formData = form.getValues();
+      const transformedData = transformFormDataForDatabase(
+        formData,
+        profile.id
+      );
+      const response = await updateApplication(transformedData);
+
+      if (response.success) {
+        onSuccess();
+      } else {
+        console.error("Failed to update application:", response.error);
+      }
     } catch (error) {
-      console.error(error);
+      console.error("Error during application update:", error);
     } finally {
       setIsLoading(false);
     }
   };
 
+  /**
+   * Syncs desktop step changes to mobile view
+   */
   const handleDesktopStepChange = (newStep: number) => {
     setCurrentDesktopStep(newStep);
-    // Sync mobile to the first page of this step
     setCurrentMobilePage(stepToPage(newStep));
   };
 
+  /**
+   * Syncs mobile page changes to desktop view
+   */
   const handleMobilePageChange = (newPage: number) => {
     setCurrentMobilePage(newPage);
-    // Sync desktop to the step this page belongs to
     setCurrentDesktopStep(pageToStep(newPage));
   };
 
-  // Check if application is submitted
+  // ========================================================================
+  // Render
+  // ========================================================================
+
   const isSubmitted =
     currentDesktopStep === FINAL_STEP_COUNT ||
     currentMobilePage === NUMBER_PAGES;
