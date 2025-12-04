@@ -74,7 +74,7 @@ export default function DesktopApplication({
         if (user.email) {
             form.setValue(CONTACT_INFO_FIELDS.email, user.email);
         }
-        if (user && user.first_name && user.last_name) {
+        if (user.first_name && user.last_name) {
             const fullName = [user.first_name, user.last_name].join(" ");
             form.setValue(CONTACT_INFO_FIELDS.name, fullName);
         }
@@ -83,7 +83,7 @@ export default function DesktopApplication({
       }
     }
     loadUser();
-    }, []);
+    }, [form]);
 
   const renderStep = () => {
     switch (currentStep) {

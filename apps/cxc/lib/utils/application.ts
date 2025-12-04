@@ -9,7 +9,7 @@ import { AppFormValues } from "@/lib/schemas/application";
  */
 export const isDesktopStepValid = (
   form: UseFormReturn<AppFormValues>,
-  currentStep: number,
+  currentStep: number
 ): boolean => {
   const { errors } = form.formState;
 
@@ -18,7 +18,7 @@ export const isDesktopStepValid = (
       // Personal Details
       const dietary_restrictions = form.watch("dietary_restrictions");
       const dietary_restrictions_other = form.watch(
-        "dietary_restrictions_other",
+        "dietary_restrictions_other"
       );
       const tshirt_size = form.watch("tshirt_size");
 
@@ -46,7 +46,7 @@ export const isDesktopStepValid = (
       const programOther = form.watch("program_other");
 
       const prior_hackathon_experience = form.watch(
-        "prior_hackathon_experience",
+        "prior_hackathon_experience"
       );
       const hackathons_attended = form.watch("hackathons_attended");
       const year = form.watch("year_of_study");
@@ -70,12 +70,15 @@ export const isDesktopStepValid = (
         !errors.hackathons_attended &&
         prior_hackathon_experience.length > 0 &&
         hackathons_attended !== undefined;
-      // TODO: ^ change to number input instead of dropdown later
 
       return isUniversityValid && isProgramValid && isYearValid && validHackExp;
     }
-    case 2: // CxC App
-      return !errors.cxc_gain && !errors.silly_q;
+    case 2: {
+      // CxC App
+      const CxCGain = form.watch("cxc_gain");
+      const SillyQ = form.watch("silly_q");
+      return !errors.cxc_gain && !!CxCGain && !errors.silly_q && !!SillyQ;
+    }
     default:
       return true;
   }
@@ -89,7 +92,7 @@ export const isDesktopStepValid = (
  */
 export const isMobileStepValid = (
   form: UseFormReturn<AppFormValues>,
-  currentStep: number,
+  currentStep: number
 ): boolean => {
   const { errors } = form.formState;
 
@@ -113,7 +116,7 @@ export const isMobileStepValid = (
       // About You
       const dietary_restrictions = form.watch("dietary_restrictions");
       const dietary_restrictions_other = form.watch(
-        "dietary_restrictions_other",
+        "dietary_restrictions_other"
       );
       const tshirt_size = form.watch("tshirt_size");
 
@@ -153,7 +156,7 @@ export const isMobileStepValid = (
       // Hackathon Experience
       const hackathons_attended = form.watch("hackathons_attended");
       const prior_hackathon_experience = form.watch(
-        "prior_hackathon_experience",
+        "prior_hackathon_experience"
       );
       const validHackExp =
         !errors.prior_hackathon_experience &&

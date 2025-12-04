@@ -52,7 +52,6 @@ const NO_INPUT = "???";
 
 const InfoRow = ({ form, label, icon }: InfoRowProps) => {
   const value = form.getValues(label as keyof AppFormValues);
-  const isName = label === "name";
   // Check if this is a link field
   const isLinkField =
     (Object.values(LINKS_FIELDS) as readonly string[]).includes(label) &&
@@ -102,7 +101,6 @@ const InfoRow = ({ form, label, icon }: InfoRowProps) => {
             {displayValue}
           </a>
         ) : (
-          // TODO: replace name with fetched name from user
           <p className="break-words">{displayValue}</p>
         )}
       </div>
