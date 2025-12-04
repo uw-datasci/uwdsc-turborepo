@@ -27,7 +27,7 @@ import {
   Review,
 } from "./sections";
 import { useEffect } from "react";
-import {CONTACT_INFO_FIELDS} from "@/constants/application";
+import { CONTACT_INFO_FIELDS } from "@/constants/application";
 import { getCurrentUser } from "@/lib/api/user";
 
 interface DesktopApplicationProps {
@@ -50,7 +50,6 @@ export default function DesktopApplication({
   const [direction, setDirection] = useState<number>(1);
   useApplicationProgressSync(currentStep);
 
-
   const goNext = () => {
     setDirection(1);
     onStepChange(currentStep + 1);
@@ -64,26 +63,26 @@ export default function DesktopApplication({
   const handleNext = async () => {
     await onSaveAndContinue(goNext);
   };
-  
+
   useEffect(() => {
     async function loadUser() {
       try {
-        const user = await getCurrentUser(); 
+        const user = await getCurrentUser();
         if (!user) return;
 
         if (user.email) {
-            form.setValue(CONTACT_INFO_FIELDS.email, user.email);
+          form.setValue(CONTACT_INFO_FIELDS.email, user.email);
         }
         if (user.first_name && user.last_name) {
-            const fullName = [user.first_name, user.last_name].join(" ");
-            form.setValue(CONTACT_INFO_FIELDS.name, fullName);
+          const fullName = [user.first_name, user.last_name].join(" ");
+          form.setValue(CONTACT_INFO_FIELDS.name, fullName);
         }
       } catch (err) {
         console.error("Failed to load user:", err);
       }
     }
     loadUser();
-    }, [form]);
+  }, [form]);
 
   const renderStep = () => {
     switch (currentStep) {
@@ -131,11 +130,7 @@ export default function DesktopApplication({
               label="CXC 2026"
             />
           </div>
-          <DSCLogo
-            size={24}
-            className="hidden md:block"
-            href="/"
-          />
+          <DSCLogo size={24} className="hidden md:block" href="/" />
         </div>
       </div>
 

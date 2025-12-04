@@ -1,4 +1,4 @@
-import {NextResponse} from "next/server";
+import { NextResponse } from "next/server";
 import { createAuthService } from "@/lib/services";
 
 export async function GET() {
@@ -7,10 +7,7 @@ export async function GET() {
     const { user, error } = await authService.getCurrentUser();
 
     if (error || !user) {
-      return NextResponse.json(
-        { error: "Unauthorized" },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     return NextResponse.json({
@@ -25,7 +22,7 @@ export async function GET() {
     console.error("Error fetching user profile:", err);
     return NextResponse.json(
       { error: "Internal server error" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
