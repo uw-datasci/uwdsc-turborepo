@@ -1,10 +1,6 @@
 name: CI Quality Gate
 
 on:
-  push:
-    branches: [main]
-    paths-ignore:
-      - ".github/**"
   pull_request:
     branches: [main]
     paths-ignore:
