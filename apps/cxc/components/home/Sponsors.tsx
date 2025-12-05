@@ -31,10 +31,10 @@ export function Sponsors() {
         <p className="text-lg md:text-xl text-white max-w-2xl mx-auto mt-20">
           Want to become a sponsor?{" "}
           <a
-            href="#"
+            href="mailto:outreach@uwdatascience.ca"
             className="underline text-white hover:text-gray-200 transition"
           >
-            Fill out this form
+            outreach@uwdatascience.ca
           </a>
         </p>
       </div>
