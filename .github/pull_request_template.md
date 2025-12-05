@@ -6,8 +6,6 @@ Make sure you add the correct **Assignees** and **Labels** that best fit this pu
 
 IMPORTANT: please replace "[issue-number]" with the issue number from the GitHub Project
 
-- it's important that **closes** is there to mark the issue as in review
-
 closes #[issue-number]
 
 ## Changes Made
