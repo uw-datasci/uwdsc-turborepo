@@ -23,7 +23,7 @@ export async function getUserProfile(): Promise<UserProfile | null> {
   // For 401/404 on profile endpoint, return null profile instead of throwing
   if (response.status === 401 || response.status === 404) return null;
 
-  const data = await response.json();
+  const data: UserProfile = await response.json();
 
   if (!response.ok) throw createApiError(data, response.status);
 
