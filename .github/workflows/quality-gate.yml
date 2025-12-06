@@ -5,121 +5,94 @@ on:
     branches: [main]
     paths-ignore:
       - ".github/**"
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
-  lint:
-    name: Lint Code
+  code-quality:
+    name: Lint & Typecheck
     runs-on: ubuntu-latest
-    timeout-minutes: 5
-
     steps:
-      - name: Checkout repository
+      - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup project
-        uses: ./.github/actions/setup-project
-
-      - name: Setup Turbo cache
-        uses: actions/cache@v4
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
         with:
-          path: .turbo
-          key: ${{ runner.os }}-turbo-lint-${{ github.sha }}
-          restore-keys: |
-            ${{ runner.os }}-turbo-lint-
+          version: 9
 
-      - name: Run linting
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "pnpm"
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Run ESLint
         run: pnpm lint
 
-  type-check:
-    name: Type Check
-    runs-on: ubuntu-latest
-    timeout-minutes: 5
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Setup project
-        uses: ./.github/actions/setup-project
-
-      - name: Setup Turbo cache
-        uses: actions/cache@v4
-        with:
-          path: .turbo
-          key: ${{ runner.os }}-turbo-typecheck-${{ github.sha }}
-          restore-keys: |
-            ${{ runner.os }}-turbo-typecheck-
-
-      - name: Run type checking
-        run: pnpm check-types
+      - name: Run TypeScript type check
+        if: always()
+        run: pnpm typecheck
 
   build:
-    name: Build Apps
-    needs: [lint, type-check]
+    name: Build Application
     runs-on: ubuntu-latest
-    timeout-minutes: 10
-
     steps:
-      - name: Checkout repository
+      - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup project
-        uses: ./.github/actions/setup-project
-
-      - name: Setup environment files
-        run: |
-          cp apps/web/.env.example apps/web/.env
-          cp apps/cxc/.env.example apps/cxc/.env
-
-      - name: Setup Turbo cache
-        uses: actions/cache@v4
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
         with:
-          path: .turbo
-          key: ${{ runner.os }}-turbo-build-${{ github.sha }}
-          restore-keys: |
-            ${{ runner.os }}-turbo-build-
+          version: 9
 
-      - name: Run build
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "pnpm"
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build application
         run: pnpm build
+
+  # Sonar usually wants test coverage reports. If you have tests,
+  # run them in a previous job and upload the coverage artifact.
+  sonar:
+    name: SonarQube Scan
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: SonarQube Scan
+        uses: sonarsource/sonarqube-scan-action@v6
         env:
-          NODE_ENV: production
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
   quality-summary:
     name: Quality Gate Summary
     runs-on: ubuntu-latest
-    needs: [lint, type-check, build]
+    needs: [code-quality, build, sonar]
     if: always()
     permissions:
       pull-requests: write
       contents: read
 
     steps:
-      - name: Checkout repository
-        if: github.event_name == 'pull_request'
-        uses: actions/checkout@v4
-
-      - name: Post PR Comment
-        if: github.event_name == 'pull_request'
-        uses: actions/github-script@v7
+      - name: Post Quality Gate Summary
+        uses: uw-datasci/quality-summary@v1
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          script: |
-            const { main } = require('./.github/scripts/ci/quality-gate-report.js');
-
-            const jobResults = {
-              lint: '${{ needs.lint.result }}',
-              typeCheck: '${{ needs.type-check.result }}',
-              build: '${{ needs.build.result }}'
-            };
-
-            await main({ github, context, core }, jobResults)
-
-      - name: Check quality gate status
-        run: |
-          if [ "${{ needs.lint.result }}" == "success" ] && \
-          [ "${{ needs.type-check.result }}" == "success" ] && \
-          [ "${{ needs.build.result }}" == "success" ]; then
-            exit 0
-          else
-            exit 1
-          fi
+          code-quality-result: ${{ needs.code-quality.result }}
+          build-result: ${{ needs.build.result }}
