@@ -1,11 +1,14 @@
 name: CI Quality Gate
 
 on:
+  push:
+    branches: [main]
+    paths-ignore:
+      - ".github/**"
   pull_request:
     branches: [main]
     paths-ignore:
       - ".github/**"
-  workflow_dispatch:
 
 jobs:
   lint:
@@ -56,6 +59,7 @@ jobs:
 
   build:
     name: Build Apps
+    needs: [lint, type-check]
     runs-on: ubuntu-latest
     timeout-minutes: 10
 
