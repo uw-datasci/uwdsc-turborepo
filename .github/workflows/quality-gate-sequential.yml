@@ -1,0 +1,70 @@
+name: CI Quality Gate (Sequential)
+
+on:
+  pull_request:
+    branches: [main]
+    paths-ignore:
+      - ".github/**"
+  workflow_dispatch:
+
+jobs:
+  quality-gate:
+    name: Quality Gate
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      pull-requests: write
+      contents: read
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup project
+        uses: ./.github/actions/setup-project
+
+      - name: Setup Turbo cache for lint
+        uses: actions/cache@v4
+        with:
+          path: .turbo
+          key: ${{ runner.os }}-turbo-lint-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-turbo-lint-
+
+      - name: Run linting
+        id: lint
+        run: pnpm lint
+        continue-on-error: true
+
+      - name: Setup Turbo cache for type-check
+        uses: actions/cache@v4
+        with:
+          path: .turbo
+          key: ${{ runner.os }}-turbo-typecheck-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-turbo-typecheck-
+
+      - name: Run type checking
+        id: type-check
+        run: pnpm check-types
+        continue-on-error: true
+
+      - name: Setup environment files
+        run: |
+          cp apps/web/.env.example apps/web/.env
+          cp apps/cxc/.env.example apps/cxc/.env
+
+      - name: Setup Turbo cache for build
+        uses: actions/cache@v4
+        with:
+          path: .turbo
+          key: ${{ runner.os }}-turbo-build-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-turbo-build-
+
+      - name: Run build
+        id: build
+        run: pnpm build
+        env:
+          NODE_ENV: production
+        continue-on-error: true
