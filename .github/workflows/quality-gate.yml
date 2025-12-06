@@ -5,6 +5,7 @@ on:
     branches: [main]
     paths-ignore:
       - ".github/**"
+  workflow_dispatch:
 
 jobs:
   lint:
@@ -55,7 +56,6 @@ jobs:
 
   build:
     name: Build Apps
-    needs: [lint, type-check]
     runs-on: ubuntu-latest
     timeout-minutes: 10
 
