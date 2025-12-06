@@ -15,7 +15,7 @@ const AUTH_ROUTES = new Set(["/login", "/register"]);
  * Main middleware dispatcher
  * Delegates authentication and routing logic to specific middleware handlers
  */
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const response = NextResponse.next({ request: { headers: request.headers } });
 
   // Create Supabase client
