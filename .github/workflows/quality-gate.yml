@@ -37,7 +37,7 @@ jobs:
 
       - name: Run TypeScript type check
         if: always()
-        run: pnpm typecheck
+        run: pnpm check-types
 
   build:
     name: Build Application
