@@ -1,0 +1,38 @@
+name: CI/CD
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  quality:
+    uses: uw-datasci/automation/.github/workflows/quality-gate.yml@v1
+    with:
+      lint-command: "turbo run lint"
+      typecheck-command: "turbo run typecheck"
+
+  # 2. Deploy WEB (Only if changed)
+  deploy-web:
+    needs: quality
+    # You'll need a job here to check changes (as we discussed before)
+    # If changed == true, call the reusable workflow:
+    uses: uw-datasci/automation/.github/workflows/deploy-vercel.yml@v1
+    with:
+      vercel-project-id: ${{ vars.VERCEL_PROJECT_ID_WEB }}
+      working-directory: "./apps/web"
+    secrets:
+      VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+
+  # 3. Deploy CXC (Only if changed)
+  deploy-cxc:
+    needs: quality
+    uses: uw-datasci/automation/.github/workflows/deploy-vercel.yml@v1
+    with:
+      vercel-project-id: ${{ vars.VERCEL_PROJECT_ID_CXC }}
+      working-directory: "./apps/cxc"
+    secrets:
+      VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
