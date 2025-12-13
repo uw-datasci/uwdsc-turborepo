@@ -2,10 +2,10 @@
 
 import { CountdownClock } from "../CountdownClock";
 import CxCButton from "../CxCButton";
-import { WaterCube } from "../WaterCube";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { Meteors } from "@uwdsc/ui/index";
 
 export default function CxCTitle() {
   const router = useRouter();
@@ -31,7 +31,7 @@ export default function CxCTitle() {
 
   return (
     <div
-      className={`relative border-b border-white/50 flex flex-col items-center justify-center ${countdownOver ? "overflow-hidden" : "py-12"}`}
+      className={`relative border-b border-white/50 flex flex-col items-center justify-center ${countdownOver ? "overflow-hidden" : ""}`}
     >
       {mounted && (
         <>
@@ -56,84 +56,15 @@ export default function CxCTitle() {
                 initial={{ opacity: 1 }}
                 exit={{ opacity: 0, scale: 0.95, y: -20 }}
                 transition={{ duration: 0.6, ease: "easeInOut" }}
-                className="w-full"
+                className="relative w-full overflow-hidden"
               >
-                {/* Desktop Cubes */}
-                <div className="hidden xl:block">
-                  {/* Top Left Cube */}
-                  <motion.div
-                    initial={{ opacity: 0, x: -50 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: -50 }}
-                    transition={{ duration: 0.5 }}
-                    className="absolute top-0 left-10"
-                  >
-                    <WaterCube
-                      modelPath="/models/Watercube.glb"
-                      scale={1}
-                      maxWidth="175px"
-                      initialRotation={[0.4, 0.75, 0]}
-                    />
-                  </motion.div>
-
-                  {/* Bottom Right Cube */}
-                  <motion.div
-                    initial={{ opacity: 0, x: 50 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: 50 }}
-                    transition={{ duration: 0.5 }}
-                    className="absolute bottom-15 right-15"
-                  >
-                    <WaterCube
-                      modelPath="/models/Watercube.glb"
-                      scale={1}
-                      maxWidth="175px"
-                      initialRotation={[0.4, 0.75, 0]}
-                    />
-                  </motion.div>
-                </div>
-
-                {/* Medium Cubes */}
-                <div className="hidden sm:block xl:hidden">
-                  {/* Top Left Cube */}
-                  <motion.div
-                    initial={{ opacity: 0, x: -50 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: -50 }}
-                    transition={{ duration: 0.5 }}
-                    className="absolute top-0 left-10"
-                  >
-                    <WaterCube
-                      modelPath="/models/Watercube.glb"
-                      scale={1}
-                      maxWidth="125px"
-                      initialRotation={[0.4, 0.75, 0]}
-                    />
-                  </motion.div>
-
-                  {/* Bottom Right Cube */}
-                  <motion.div
-                    initial={{ opacity: 0, x: 50 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: 50 }}
-                    transition={{ duration: 0.5 }}
-                    className="absolute bottom-15 right-15"
-                  >
-                    <WaterCube
-                      modelPath="/models/Watercube.glb"
-                      scale={1}
-                      maxWidth="125px"
-                      initialRotation={[0.4, 0.75, 0]}
-                    />
-                  </motion.div>
-                </div>
-
+                <Meteors />
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -20 }}
                   transition={{ duration: 0.6, delay: 0.2 }}
-                  className="flex flex-col items-center gap-12"
+                  className="flex flex-col items-center gap-12 py-12"
                 >
                   <div className="flex flex-col gap-6 items-center z-10">
                     <h1 className="font-extrabold text-4xl md:text-5xl">

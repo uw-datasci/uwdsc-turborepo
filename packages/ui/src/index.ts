@@ -151,6 +151,7 @@ export {
   PopoverAnchor,
 } from "./components/popover";
 
+export { Meteors } from "./components/meteors";
 // Hooks
 export * from "./hooks";
 

@@ -107,11 +107,7 @@ export default function DesktopApplication({
               label="CXC 2026"
             />
           </div>
-          <DSCLogo
-            size={24}
-            className="hidden md:block"
-            href="/"
-          />
+          <DSCLogo size={24} className="hidden md:block" href="/" />
         </div>
       </div>
 
