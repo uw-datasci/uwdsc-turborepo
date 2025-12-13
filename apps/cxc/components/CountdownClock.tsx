@@ -58,7 +58,10 @@ const CountdownUnit = ({ value, label }: { value: number; label: string }) => {
     <div className="flex flex-col items-center">
       <div className="flex items-center">
         {digits.map((digit, index) => (
-          <AnimatedDigit value={digit ?? "0"} key={`${value}-${index}`} />
+          <AnimatedDigit
+            value={digit ?? "0"}
+            key={`${label}-${index}-${digit}`}
+          />
         ))}
       </div>
       <span className="text-sm sm:text-lg lg:text-2xl text-muted-foreground uppercase tracking-wider">

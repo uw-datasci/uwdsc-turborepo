@@ -155,6 +155,8 @@ export { Meteors } from "./components/meteors";
 
 export { OrbitingCircles } from "./components/orbiting-circles";
 
+export { WarpBackground } from "./components/warp-background";
+
 // Hooks
 export * from "./hooks";
 

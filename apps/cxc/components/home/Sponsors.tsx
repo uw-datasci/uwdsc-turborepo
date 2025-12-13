@@ -3,17 +3,10 @@ import { OrbitingCircles } from "@uwdsc/ui/index";
 import { CURRENT_SPONSORS } from "../../constants/home";
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useIsMobile } from "../../hooks/useIsMobile";
 
 export function Sponsors() {
-  const [isMobile, setIsMobile] = useState(false);
-
-  useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth < 768);
-    checkMobile();
-    window.addEventListener("resize", checkMobile);
-    return () => window.removeEventListener("resize", checkMobile);
-  }, []);
+  const isMobile = useIsMobile();
 
   // CXC-TODO: use tiered sopnsors instead of slice when info available
   const innerSponsors = CURRENT_SPONSORS.slice(
