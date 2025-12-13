@@ -37,7 +37,7 @@ export function AuthProvider({ children }: { readonly children: ReactNode }) {
       shouldRetryOnError: false,
       // Show cached data while revalidating
       revalidateIfStale: true,
-    }
+    },
   );
 
   const value: AuthContextType = useMemo(
@@ -48,7 +48,7 @@ export function AuthProvider({ children }: { readonly children: ReactNode }) {
       mutate,
       isAuthenticated: !!data && data !== null,
     }),
-    [data, isLoading, error, mutate]
+    [data, isLoading, error, mutate],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

@@ -53,8 +53,6 @@ export interface UserProfile {
   email: string;
   first_name: string | null;
   last_name: string | null;
-  dob: string | null;
   role: string;
   nfc_id: string | null;
 }
-

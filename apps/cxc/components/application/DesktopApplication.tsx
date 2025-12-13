@@ -28,7 +28,7 @@ import {
 } from "./sections";
 import { useEffect } from "react";
 import { CONTACT_INFO_FIELDS } from "@/constants/application";
-import { getCurrentUser } from "@/lib/api/user";
+import { useAuth } from "@/contexts/AuthContext";
 
 interface DesktopApplicationProps {
   readonly form: UseFormReturn<AppFormValues>;
@@ -48,6 +48,7 @@ export default function DesktopApplication({
   onStepChange,
 }: DesktopApplicationProps) {
   const [direction, setDirection] = useState<number>(1);
+  const { user } = useAuth();
   useApplicationProgressSync(currentStep);
 
   const goNext = () => {
@@ -67,9 +68,7 @@ export default function DesktopApplication({
   useEffect(() => {
     async function loadUser() {
       try {
-        const user = await getCurrentUser();
         if (!user) return;
-
         if (user.email) {
           form.setValue(CONTACT_INFO_FIELDS.email, user.email);
         }
@@ -82,7 +81,7 @@ export default function DesktopApplication({
       }
     }
     loadUser();
-  }, [form]);
+  }, [form, user]);
 
   const renderStep = () => {
     switch (currentStep) {

@@ -29,21 +29,3 @@ export async function getUserProfile(): Promise<UserProfile | null> {
 
   return data;
 }
-
-/**
- * Get the current logged-in user information
- *
- * @returns Promise with user data (null if not authenticated)
- */
-
-export async function getCurrentUser() {
-  const response = await fetch("/api/applications/currentuser");
-
-  // For 401/404 on profile endpoint, return null profile instead of throwing
-  if (response.status === 401 || response.status === 404) return null;
-  const data = await response.json();
-  if (!response.ok) {
-    throw createApiError(data, response.status);
-  }
-  return data.user;
-}
