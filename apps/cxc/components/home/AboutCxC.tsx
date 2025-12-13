@@ -39,13 +39,15 @@ function Stat({ value, label, prefix, suffix }: Readonly<StatProps>) {
 export default function AboutCxC() {
   return (
     <section className="relative text-white py-16 md:py-32 overflow-hidden">
-      <div className="mx-auto px-6 text-center">
+      <div className="mx-auto px-10 text-center">
         {/* About CXC */}
         <h2 className="text-3xl md:text-4xl font-semibold mb-6">About CXC</h2>
-        <p className="text-lg md:text-xl text-gray-300 max-w-2xl mx-auto mb-10">
-          Canada&apos;s largest student-run data hackathon. We are a
-          beginner-friendly datathon that brings together students and companies
-          to build projects that solve real-world problems.
+        <p className="text-base md:text-xl text-gray-300 md:max-w-2xl max-w-3xl mx-auto mb-10">
+          Join us for the 5th year of Canada&apos;s largest student-run AI
+          hackathon this February 6th to February 8th! We are a
+          beginner-friendly AI hackathon that brings together students and
+          companies to build projects that solve real-world problems. Join us
+          again this year for a weekend of hacking and fun!
         </p>
 
         <div className="w-full">
@@ -56,7 +58,7 @@ export default function AboutCxC() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12 max-w-5xl mx-auto">
           <Stat value={300} label="Participants" suffix="+" />
           <Stat value={10} label="Collaborating companies" suffix="+" />
-          <Stat value={20000} label="In prizes" prefix="$" />
+          <Stat value={5000} label="In prizes" prefix="$" />
         </div>
       </div>
     </section>

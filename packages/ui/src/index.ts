@@ -152,6 +152,9 @@ export {
 } from "./components/popover";
 
 export { Meteors } from "./components/meteors";
+
+export { OrbitingCircles } from "./components/orbiting-circles";
+
 // Hooks
 export * from "./hooks";
 
