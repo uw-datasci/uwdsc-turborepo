@@ -174,14 +174,14 @@ export const isMobileStepValid = (
         !errors.resume
       );
     case 5: {
-      // CxC Gain
-      const CxCGain = form.watch("cxc_q1");
-      return !errors.cxc_q1 && !!CxCGain;
+      // CxC Q1
+      const cxcQ1 = form.watch("cxc_q1");
+      return !errors.cxc_q1 && !!cxcQ1;
     }
     case 6: {
-      // Silly Q
-      const SillyQ = form.watch("cxc_q2");
-      return !errors.cxc_q2 && !!SillyQ;
+      // CxC Q2
+      const cxcQ2 = form.watch("cxc_q2");
+      return !errors.cxc_q2 && !!cxcQ2;
     }
     default:
       return true;

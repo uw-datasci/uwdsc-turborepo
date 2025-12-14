@@ -1,6 +1,6 @@
 "use client";
 
-import { STEP_NAMES } from "@/constants/application";
+import { STEP_NAMES, CONTACT_INFO_FIELDS } from "@/constants/application";
 import { AppFormValues } from "@/lib/schemas/application";
 import { isDesktopStepValid } from "@/lib/utils/application";
 import {
@@ -13,7 +13,7 @@ import { DesktopAppWormhole } from "./AppWormhole";
 import { StepIndicator } from "./StepIndicator";
 import { AppNavigationButtons } from "./AppNavigationButtons";
 import { useApplicationProgressSync } from "@/hooks/useApplicationProgress";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import DSCLogo from "../DSCLogo";
 import {
   ContactInfo,
@@ -22,12 +22,10 @@ import {
   Education,
   PriorHackExp,
   LinksAndDocs,
-  CxCGain,
-  SillyQ,
+  CxcQ1,
+  CxcQ2,
   Review,
 } from "./sections";
-import { useEffect } from "react";
-import { CONTACT_INFO_FIELDS } from "@/constants/application";
 import { useAuth } from "@/contexts/AuthContext";
 
 interface DesktopApplicationProps {
@@ -104,8 +102,8 @@ export default function DesktopApplication({
       case 2:
         return (
           <div className="flex flex-col gap-12">
-            <CxCGain form={form} />
-            <SillyQ form={form} />
+            <CxcQ1 form={form} />
+            <CxcQ2 form={form} />
           </div>
         );
       case 3:

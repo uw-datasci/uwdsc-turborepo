@@ -15,8 +15,8 @@ import {
   Education,
   PriorHackExp,
   LinksAndDocs,
-  CxCGain,
-  SillyQ,
+  CxcQ1,
+  CxcQ2,
   Review,
 } from "./sections";
 import { StepIndicator } from "./StepIndicator";
@@ -98,9 +98,9 @@ export default function MobileApplication({
       case 4:
         return <LinksAndDocs form={form} />;
       case 5:
-        return <CxCGain form={form} />;
+        return <CxcQ1 form={form} />;
       case 6:
-        return <SillyQ form={form} />;
+        return <CxcQ2 form={form} />;
       case 7:
         return <Review form={form} />;
     }
