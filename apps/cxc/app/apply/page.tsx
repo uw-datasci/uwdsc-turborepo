@@ -71,7 +71,7 @@ export default function ApplyPage() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [currentDesktopStep, setCurrentDesktopStep] = useState<number>(0);
   const [currentMobilePage, setCurrentMobilePage] = useState<number>(0);
-  const { profile } = useAuth();
+  const { user } = useAuth();
 
   // ========================================================================
   // Form Setup
@@ -95,11 +95,11 @@ export default function ApplyPage() {
    */
   useEffect(() => {
     const initializeApplication = async () => {
-      if (!profile?.id) return;
+      if (!user?.id) return;
 
       setIsLoading(true);
       try {
-        const existingApplication = await fetchApplication(profile.id);
+        const existingApplication = await fetchApplication(user.id);
 
         if (existingApplication) {
           // Pre-fill form with existing application data
@@ -107,7 +107,7 @@ export default function ApplyPage() {
           form.reset(formData);
         } else {
           // Create blank application entry for new user
-          const resp = await createApplication(profile.id);
+          const resp = await createApplication(user.id);
 
           console.log(resp.success);
           console.log(resp.error);
@@ -120,7 +120,7 @@ export default function ApplyPage() {
     };
 
     initializeApplication();
-  }, [profile?.id, form]);
+  }, [user?.id, form]);
 
   // ========================================================================
   // Event Handlers
@@ -131,7 +131,7 @@ export default function ApplyPage() {
    * Transforms form data and sends to backend API
    */
   const handleSaveAndContinue = async (onSuccess: () => void) => {
-    if (!profile?.id) {
+    if (!user?.id) {
       console.error("Profile ID not found");
       return;
     }
@@ -139,10 +139,7 @@ export default function ApplyPage() {
     setIsLoading(true);
     try {
       const formData = form.getValues();
-      const transformedData = transformFormDataForDatabase(
-        formData,
-        profile.id
-      );
+      const transformedData = transformFormDataForDatabase(formData, user.id);
       const response = await updateApplication(transformedData);
 
       if (response.success) {
