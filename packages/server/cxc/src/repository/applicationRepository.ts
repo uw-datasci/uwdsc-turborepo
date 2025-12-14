@@ -3,7 +3,7 @@ import { ApiError } from "../../../core/src/utils/errors";
 
 export interface ApplicationData {
   profile_id: string;
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 export class ApplicationRepository {

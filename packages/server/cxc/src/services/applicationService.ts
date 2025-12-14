@@ -3,7 +3,7 @@ import { ApplicationRepository } from "../repository/applicationRepository";
 
 export interface ApplicationData {
   profile_id: string;
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 export class ApplicationService {
