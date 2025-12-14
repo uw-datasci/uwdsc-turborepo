@@ -1,15 +1,21 @@
 "use client";
 
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
 import { signOut } from "@/lib/api";
+import {
+  NavigationMenu,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+} from "@uwdsc/ui";
+import { cn } from "@uwdsc/ui/lib/utils";
 import CxCButton from "../CxCButton";
-import { ArrowRightIcon } from "@uwdsc/ui/index";
-import { motion } from "framer-motion";
 import DSCLogo from "../DSCLogo";
 
 interface NavbarProps {
-  showAuthButtons?: boolean;
+  readonly showAuthButtons?: boolean;
 }
 
 export default function Navbar({ showAuthButtons = true }: NavbarProps) {
@@ -27,78 +33,96 @@ export default function Navbar({ showAuthButtons = true }: NavbarProps) {
   };
 
   return (
-    <div className="w-full px-8 py-6 flex items-center justify-between bg-background">
-      {/* Left section - Logo and description */}
-      <div className="flex items-start md:gap-8 lg:gap-24 xl:gap-36">
-        {/* Logo */}
-        <DSCLogo size={16} href="/" />
+    <nav className="w-full border-b">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex h-16 items-center justify-between">
+          {/* Left section - Logo and Navigation */}
+          <div className="flex items-center gap-8">
+            {/* Logo */}
+            <DSCLogo size={10} href="/" />
 
-        {/* Description */}
-        <div className="hidden md:block text-white max-w-sm lg:max-w-lg">
-          <p className="text-xs lg:text-sm leading-relaxed">
-            Canada&apos;s largest student run data hackathon.
-            <br />
-            We are a beginner-friendly datathon that bring together students and
-            companies to build projects that solve real-world problems.
-          </p>
-        </div>
-      </div>
-      {showAuthButtons && (
-        <>
-          {!isLoading && (
-            <div className="flex flex-row gap-4">
-              {!isAuthenticated && (
+            {/* Navigation Links */}
+            <NavigationMenu className="hidden md:flex">
+              <NavigationMenuList>
+                <NavigationMenuItem>
+                  <NavigationMenuLink asChild>
+                    <Link
+                      href="/"
+                      className={cn(
+                        "inline-flex h-9 w-max items-center justify-center rounded-md px-4 py-2 text-sm font-medium",
+                        "transition-colors hover:text-gray-400 focus:text-gray-400 outline-none",
+                        "hover:bg-transparent focus:bg-transparent bg-transparent"
+                      )}
+                    >
+                      Home
+                    </Link>
+                  </NavigationMenuLink>
+                </NavigationMenuItem>
+                <NavigationMenuItem>
+                  <NavigationMenuLink asChild>
+                    <Link
+                      href="/about"
+                      className={cn(
+                        "inline-flex h-9 w-max items-center justify-center rounded-md px-4 py-2 text-sm font-medium",
+                        "transition-colors hover:text-gray-400 focus:text-gray-400 outline-none",
+                        "hover:bg-transparent focus:bg-transparent bg-transparent"
+                      )}
+                    >
+                      About
+                    </Link>
+                  </NavigationMenuLink>
+                </NavigationMenuItem>
+                <NavigationMenuItem>
+                  <NavigationMenuLink asChild>
+                    <Link
+                      href="/events"
+                      className={cn(
+                        "inline-flex h-9 w-max items-center justify-center rounded-md px-4 py-2 text-sm font-medium",
+                        "transition-colors hover:text-gray-400 focus:text-gray-400 outline-none",
+                        "hover:bg-transparent focus:bg-transparent bg-transparent"
+                      )}
+                    >
+                      Events
+                    </Link>
+                  </NavigationMenuLink>
+                </NavigationMenuItem>
+                <NavigationMenuItem>
+                  <NavigationMenuLink asChild>
+                    <Link
+                      href="/contact"
+                      className={cn(
+                        "inline-flex h-9 w-max items-center justify-center rounded-md px-4 py-2 text-sm font-medium",
+                        "transition-colors hover:text-gray-400 focus:text-gray-400 outline-none",
+                        "hover:bg-transparent focus:bg-transparent bg-transparent"
+                      )}
+                    >
+                      Contact
+                    </Link>
+                  </NavigationMenuLink>
+                </NavigationMenuItem>
+              </NavigationMenuList>
+            </NavigationMenu>
+          </div>
+
+          {/* Right section - Auth Buttons */}
+          {showAuthButtons && !isLoading && (
+            <div className="flex items-center gap-4">
+              {isAuthenticated ? (
+                <CxCButton onClick={handleSignOut}>Sign Out</CxCButton>
+              ) : (
                 <>
-                  <CxCButton
-                    onClick={() => router.push("/login")}
-                    className="group text-base lg:text-lg inline-flex items-center lg:px-6"
-                  >
-                    <span>Login</span>
-                    <motion.div
-                      className="group-hover:translate-x-1.5 duration-200"
-                      transition={{
-                        ease: "easeInOut",
-                      }}
-                    >
-                      <ArrowRightIcon weight="bold" />
-                    </motion.div>
+                  <CxCButton onClick={() => router.push("/login")}>
+                    Login
                   </CxCButton>
-                  <CxCButton
-                    onClick={() => router.push("/register")}
-                    className="group text-base lg:text-lg inline-flex items-center lg:px-6"
-                  >
-                    <span>Register</span>
-                    <motion.div
-                      className="group-hover:translate-x-1.5 duration-200"
-                      transition={{
-                        ease: "easeInOut",
-                      }}
-                    >
-                      <ArrowRightIcon weight="bold" />
-                    </motion.div>
+                  <CxCButton onClick={() => router.push("/register")}>
+                    Register
                   </CxCButton>
                 </>
               )}
-              {isAuthenticated && (
-                <CxCButton
-                  onClick={handleSignOut}
-                  className="group text-base lg:text-lg inline-flex items-center lg:px-6"
-                >
-                  <span>Signout</span>
-                  <motion.div
-                    className="group-hover:translate-x-1.5 duration-200"
-                    transition={{
-                      ease: "easeInOut",
-                    }}
-                  >
-                    <ArrowRightIcon weight="bold" />
-                  </motion.div>
-                </CxCButton>
-              )}
             </div>
           )}
-        </>
-      )}
-    </div>
+        </div>
+      </div>
+    </nav>
   );
 }
