@@ -26,6 +26,9 @@ import {
   SillyQ,
   Review,
 } from "./sections";
+import { useEffect } from "react";
+import { CONTACT_INFO_FIELDS } from "@/constants/application";
+import { useAuth } from "@/contexts/AuthContext";
 
 interface DesktopApplicationProps {
   readonly form: UseFormReturn<AppFormValues>;
@@ -45,6 +48,7 @@ export default function DesktopApplication({
   onStepChange,
 }: DesktopApplicationProps) {
   const [direction, setDirection] = useState<number>(1);
+  const { user } = useAuth();
   useApplicationProgressSync(currentStep);
 
   const goNext = () => {
@@ -60,6 +64,24 @@ export default function DesktopApplication({
   const handleNext = async () => {
     await onSaveAndContinue(goNext);
   };
+
+  useEffect(() => {
+    async function loadUser() {
+      try {
+        if (!user) return;
+        if (user.email) {
+          form.setValue(CONTACT_INFO_FIELDS.email, user.email);
+        }
+        if (user.first_name && user.last_name) {
+          const fullName = [user.first_name, user.last_name].join(" ");
+          form.setValue(CONTACT_INFO_FIELDS.name, fullName);
+        }
+      } catch (err) {
+        console.error("Failed to load user:", err);
+      }
+    }
+    loadUser();
+  }, [form, user]);
 
   const renderStep = () => {
     switch (currentStep) {
