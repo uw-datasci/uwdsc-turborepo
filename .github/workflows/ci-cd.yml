@@ -45,6 +45,8 @@ jobs:
     with:
       build-command: pnpm --filter=web... build
       working-directory: "./apps/web"
+      infisical-project-slug: "uwdsc-54e-y"
+      infisical-secret-path: "/web"
 
   build-cxc:
     name: Build - CxC
@@ -53,6 +55,8 @@ jobs:
     with:
       build-command: pnpm --filter=cxc... build
       working-directory: "./apps/cxc"
+      infisical-project-slug: "uwdsc-54e-y"
+      infisical-secret-path: "/cxc"
 
   # Step 3: Deploy (runs in parallel for both apps after builds complete)
   deploy-web:
@@ -62,8 +66,6 @@ jobs:
     with:
       vercel-project-id: ${{ vars.VERCEL_PROJECT_ID_WEB }}
       working-directory: "./apps/web"
-      infisical-project-slug: "uwdsc-54e-y"
-      infisical-secret-path: "/web"
     secrets:
       VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
       VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
@@ -75,8 +77,6 @@ jobs:
     with:
       vercel-project-id: ${{ vars.VERCEL_PROJECT_ID_CXC }}
       working-directory: "./apps/cxc"
-      infisical-project-slug: "uwdsc-54e-y"
-      infisical-secret-path: "/cxc"
     secrets:
       VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
       VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
