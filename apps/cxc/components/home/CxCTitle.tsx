@@ -5,13 +5,13 @@ import CxCButton from "../CxCButton";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Meteors, WarpBackground } from "@uwdsc/ui/index";
+import { Meteors, TypingAnimation, WarpBackground } from "@uwdsc/ui/index";
 import Image from "next/image";
 import { useIsMobile } from "@/hooks/useIsMobile";
 
 export default function CxCTitle() {
   const router = useRouter();
-  const eventDate = useMemo(() => new Date("2026-01-02T00:00:00"), []);
+  const eventDate = useMemo(() => new Date("2025-01-02T00:00:00"), []);
   const [mounted, setMounted] = useState(false);
   const [countdownOver, setCountdownOver] = useState(false);
   const isMobile = useIsMobile();
@@ -65,9 +65,14 @@ export default function CxCTitle() {
                       priority
                     />
                   </div>
+
+                  <TypingAnimation className="text-sm md:text-xl text-white/80">
+                    FEB 6-8 · AI HACKATHON
+                  </TypingAnimation>
+
                   <CxCButton
                     onClick={() => router.push("/apply")}
-                    className="text-base md:text-2xl py-2 md:py-3 px-10 md:px-14 hover:scale-105 absolute -bottom-8"
+                    className="text-base md:text-2xl py-2 md:py-3 px-10 md:px-14 hover:scale-105 absolute -bottom-10"
                   >
                     Apply
                   </CxCButton>

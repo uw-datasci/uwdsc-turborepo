@@ -159,6 +159,8 @@ export { WarpBackground } from "./components/warp-background";
 
 export { Marquee } from "./components/marquee";
 
+export { TypingAnimation } from "./components/typing-animation";
+
 // Hooks
 export * from "./hooks";
 
