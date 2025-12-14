@@ -35,6 +35,8 @@ export const applicationSchema = z.object({
   // Personal Information
   // ========================================================================
 
+  // personal info
+  name: z.string().min(1, "Name is required"),
   email: z.string().email("Valid email is required"),
   phone: z
     .string()
@@ -162,6 +164,8 @@ export type AppFormValues = z.infer<typeof applicationSchema>;
  * Default form values for initial form population
  */
 export const applicationDefaultValues: Partial<AppFormValues> = {
+  // TODO: Add more fields to match schema
+  name: "",
   email: "",
   phone: "",
   discord: "",

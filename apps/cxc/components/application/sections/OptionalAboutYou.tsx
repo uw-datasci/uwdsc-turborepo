@@ -34,7 +34,7 @@ export function OptionalAboutYou({ form }: OptionalAboutYouProps) {
         label="Optional"
         description="These are used for analytical purposes only."
       >
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 items-start">
+        <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 items-start">
           <FormField
             control={form.control}
             name={OPTIONAL_ABOUT_YOU_FIELDS.gender}

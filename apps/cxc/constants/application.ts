@@ -6,8 +6,6 @@ export const STEP_NAMES = [
   "Submit!",
 ];
 
-export const PERSONAL_FIELDS = ["first_name", "last_name", "email", "dob"];
-
 export const PORTFOLIO_FIELDS = [
   "prior_hackathon_experience",
   "resume",
@@ -90,7 +88,6 @@ export const BLANK_APPLICATION = {
   first_name: "",
   last_name: "",
   email: "",
-  dob: "",
   prior_hackathon_experience: [],
   resume: null,
   github: "",
@@ -109,6 +106,7 @@ export const APPLICATION_DEADLINE = new Date(); // Set actual deadline here
 
 // field names
 export const CONTACT_INFO_FIELDS = {
+  name: "name",
   email: "email",
   phone: "phone",
   discord: "discord",
