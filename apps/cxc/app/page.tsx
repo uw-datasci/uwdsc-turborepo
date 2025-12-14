@@ -23,12 +23,13 @@ export default function Home() {
         <AboutCxC />
       </div>
       <WormholeMiddle />
+
       <div className="border-t border-b border-white/50">
         <Sponsors />
+        <Testimonials />
         <div id="faq-section">
           <Faq />
         </div>
-        <Testimonials />
         <FollowUs />
       </div>
       <WormholeBottom />

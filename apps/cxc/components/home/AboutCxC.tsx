@@ -53,6 +53,16 @@ export default function AboutCxC() {
         <div className="w-full">
           <Ripples />
         </div>
+        <div className="my-32">
+          <h2 className="text-3xl md:text-4xl font-semibold mb-6">About CXC</h2>
+          <p className="text-base md:text-xl text-gray-300 md:max-w-2xl max-w-3xl mx-auto mb-10">
+            Join us for the 5th year of Canada&apos;s largest student-run AI
+            hackathon this February 6th to February 8th! We are a
+            beginner-friendly AI hackathon that brings together students and
+            companies to build projects that solve real-world problems. Join us
+            again this year for a weekend of hacking and fun!
+          </p>
+        </div>
 
         {/* Stats */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12 max-w-5xl mx-auto">
