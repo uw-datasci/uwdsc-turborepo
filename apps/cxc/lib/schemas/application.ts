@@ -130,12 +130,12 @@ export const applicationSchema = z.object({
   // Application Questions
   // ========================================================================
 
-  cxc_gain: z
+  cxc_q1: z
     .string()
     .min(1, "This question is required")
     .max(500, "Your response is too long. Maximum length is 500 characters."),
 
-  silly_q: z
+  cxc_q2: z
     .string()
     .min(1, "This question is required")
     .max(200, "Your response is too long. Maximum length is 200 characters."),
@@ -187,7 +187,7 @@ export const applicationDefaultValues: Partial<AppFormValues> = {
   website_url: "",
   other_link: "",
   resume: undefined,
-  cxc_gain: "",
-  silly_q: "",
+  cxc_q1: "",
+  cxc_q2: "",
   team_members: [],
 };

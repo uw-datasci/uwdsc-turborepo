@@ -142,8 +142,8 @@ export const LINKS_FIELDS = {
 } as const;
 
 export const APP_Q_FIELDS = {
-  cxc_gain: "cxc_gain",
-  silly_q: "silly_q",
+  cxc_q1: "cxc_q1",
+  cxc_q2: "cxc_q2",
 } as const;
 
 // personal
@@ -192,12 +192,12 @@ export const NUMBER_HACKATHONS = ["0", "1", "2", "3", "4+"];
 // cxc app questions
 export const questions = [
   {
-    name: "cxc_gain" as const,
+    name: "cxc_q1" as const,
     question: "What do you hope to gain from your time at CxC...?",
     placeholder: "Long Answer (500 char limit)",
   },
   {
-    name: "silly_q" as const,
+    name: "cxc_q2" as const,
     question: "Silly Q Here",
     placeholder: "Long Answer (200 char limit)",
   },

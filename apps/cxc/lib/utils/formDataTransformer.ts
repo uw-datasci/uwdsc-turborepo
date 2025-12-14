@@ -48,8 +48,8 @@ export function transformFormDataForDatabase(
     linkedin_url: formData.linkedin || null,
     website_url: formData.website_url || null,
     other_url: formData.other_link || null,
-    cxc_q1: formData.cxc_gain,
-    cxc_q2: formData.silly_q,
+    cxc_q1: formData.cxc_q1,
+    cxc_q2: formData.cxc_q2,
     // Convert team_members array to comma-separated string
     team_members: Array.isArray(formData.team_members)
       ? formData.team_members.join(",")
@@ -94,8 +94,8 @@ export function transformDatabaseDataToForm(
     linkedin: (dbData.linkedin_url as string) || "",
     website_url: (dbData.website_url as string) || "",
     other_link: (dbData.other_url as string) || "",
-    cxc_gain: (dbData.cxc_q1 as string) || "",
-    silly_q: (dbData.cxc_q2 as string) || "",
+    cxc_q1: (dbData.cxc_q1 as string) || "",
+    cxc_q2: (dbData.cxc_q2 as string) || "",
     // Convert comma-separated string back to array
     team_members: dbData.team_members
       ? (dbData.team_members as string).split(",").filter((m: string) => m.trim())

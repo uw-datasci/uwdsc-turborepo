@@ -75,9 +75,9 @@ export const isDesktopStepValid = (
     }
     case 2: {
       // CxC App
-      const CxCGain = form.watch("cxc_gain");
-      const SillyQ = form.watch("silly_q");
-      return !errors.cxc_gain && !!CxCGain && !errors.silly_q && !!SillyQ;
+      const CxcQ1 = form.watch("cxc_q1");
+      const CxcQ2 = form.watch("cxc_q2");
+      return !errors.cxc_q1 && !!CxcQ1 && !errors.cxc_q2 && !!CxcQ2;
     }
     default:
       return true;
@@ -175,13 +175,13 @@ export const isMobileStepValid = (
       );
     case 5: {
       // CxC Gain
-      const CxCGain = form.watch("cxc_gain");
-      return !errors.cxc_gain && !!CxCGain;
+      const CxCGain = form.watch("cxc_q1");
+      return !errors.cxc_q1 && !!CxCGain;
     }
     case 6: {
       // Silly Q
-      const SillyQ = form.watch("silly_q");
-      return !errors.silly_q && !!SillyQ;
+      const SillyQ = form.watch("cxc_q2");
+      return !errors.cxc_q2 && !!SillyQ;
     }
     default:
       return true;

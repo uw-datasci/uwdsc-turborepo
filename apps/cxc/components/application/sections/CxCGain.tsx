@@ -16,9 +16,9 @@ export function CxCGain({ form }: CxCGainProps) {
     <Form {...form}>
       <AppSection>
         <FormField
-          key="cxc_gain"
+          key="cxc_q1"
           control={form.control}
-          name={APP_Q_FIELDS.cxc_gain}
+          name={APP_Q_FIELDS.cxc_q1}
           render={renderTextAreaField("I hope to...", {
             label:
               "What do you hope to gain from your time at CxC? (max 500 char)",

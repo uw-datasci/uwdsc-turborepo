@@ -16,9 +16,9 @@ export function SillyQ({ form }: SillyQProps) {
     <Form {...form}>
       <AppSection>
         <FormField
-          key="silly_q"
+          key="cxc_q2"
           control={form.control}
-          name={APP_Q_FIELDS.silly_q}
+          name={APP_Q_FIELDS.cxc_q2}
           render={renderTextAreaField("Hmmmm", {
             label: "Silly Q Here (max 200 char)",
             required: true,
