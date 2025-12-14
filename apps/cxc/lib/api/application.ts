@@ -54,7 +54,7 @@ export async function createApplication(
  * @throws Error if update fails
  */
 export async function updateApplication(
-  formData: Record<string, any>
+  formData: Record<string, unknown>
 ): Promise<ApiResponse> {
   const response = await fetch("/api/applications", {
     method: "PATCH",
@@ -81,7 +81,7 @@ export async function updateApplication(
  */
 export async function fetchApplication(
   profileId: string
-): Promise<Record<string, any> | null> {
+): Promise<Record<string, unknown> | null> {
   try {
     const response = await fetch(`/api/applications?profile_id=${profileId}`, {
       method: "GET",

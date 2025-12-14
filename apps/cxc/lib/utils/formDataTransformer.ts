@@ -22,7 +22,7 @@ import { AppFormValues } from "@/lib/schemas/application";
 export function transformFormDataForDatabase(
   formData: AppFormValues,
   profileId: string
-): Record<string, any> {
+): Record<string, unknown> {
   return {
     profile_id: profileId,
     status: formData.status || "draft",
@@ -65,40 +65,40 @@ export function transformFormDataForDatabase(
  * @returns Form values ready to be populated back into the form
  */
 export function transformDatabaseDataToForm(
-  dbData: Record<string, any>
+  dbData: Record<string, unknown>
 ): Partial<AppFormValues> {
   return {
-    email: dbData.email || "",
-    phone: dbData.phone_number || "",
-    discord: dbData.discord || "",
-    status: dbData.status || "draft",
+    email: (dbData.email as string) || "",
+    phone: (dbData.phone_number as string) || "",
+    discord: (dbData.discord as string) || "",
+    status: (dbData.status as AppFormValues["status"]) || "draft",
     submitted_at: dbData.submitted_at
-      ? new Date(dbData.submitted_at)
+      ? new Date(dbData.submitted_at as string | number | Date)
       : undefined,
-    tshirt_size: dbData.t_shirt || undefined,
-    dietary_restrictions: dbData.dietary_restrictions || undefined,
-    gender: dbData.gender || undefined,
+    tshirt_size: dbData.t_shirt as AppFormValues["tshirt_size"],
+    dietary_restrictions: dbData.dietary_restrictions as AppFormValues["dietary_restrictions"],
+    gender: dbData.gender as AppFormValues["gender"],
     // Convert comma-separated string back to array
     ethnicity: dbData.ethnicity
-      ? dbData.ethnicity.split(",").filter((e: string) => e.trim())
+      ? (dbData.ethnicity as string).split(",").filter((e: string) => e.trim())
       : [],
-    university_name: dbData.uni_name || "",
-    program: dbData.uni_program || "",
-    year_of_study: dbData.year_of_study || "",
+    university_name: (dbData.uni_name as string) || "",
+    program: (dbData.uni_program as string) || "",
+    year_of_study: (dbData.year_of_study as string) || "",
     // Convert comma-separated string back to array
     prior_hackathon_experience: dbData.prior_hack_exp
-      ? dbData.prior_hack_exp.split(",").filter((e: string) => e.trim())
+      ? (dbData.prior_hack_exp as string).split(",").filter((e: string) => e.trim()) as AppFormValues["prior_hackathon_experience"]
       : [],
-    hackathons_attended: dbData.num_hackathons || undefined,
-    github: dbData.github_url || "",
-    linkedin: dbData.linkedin_url || "",
-    website_url: dbData.website_url || "",
-    other_link: dbData.other_url || "",
-    cxc_gain: dbData.cxc_q1 || "",
-    silly_q: dbData.cxc_q2 || "",
+    hackathons_attended: dbData.num_hackathons as AppFormValues["hackathons_attended"],
+    github: (dbData.github_url as string) || "",
+    linkedin: (dbData.linkedin_url as string) || "",
+    website_url: (dbData.website_url as string) || "",
+    other_link: (dbData.other_url as string) || "",
+    cxc_gain: (dbData.cxc_q1 as string) || "",
+    silly_q: (dbData.cxc_q2 as string) || "",
     // Convert comma-separated string back to array
     team_members: dbData.team_members
-      ? dbData.team_members.split(",").filter((m: string) => m.trim())
+      ? (dbData.team_members as string).split(",").filter((m: string) => m.trim())
       : [],
   };
 }
@@ -110,7 +110,7 @@ export function transformDatabaseDataToForm(
  * @param data - The data object to clean
  * @returns Cleaned object with no undefined, null, or empty values
  */
-export function cleanFormData(data: Record<string, any>): Record<string, any> {
+export function cleanFormData(data: Record<string, unknown>): Record<string, unknown> {
   return Object.fromEntries(
     Object.entries(data).filter(
       ([, value]) => value !== undefined && value !== null && value !== ""
