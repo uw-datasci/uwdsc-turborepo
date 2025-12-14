@@ -157,6 +157,8 @@ export { OrbitingCircles } from "./components/orbiting-circles";
 
 export { WarpBackground } from "./components/warp-background";
 
+export { Marquee } from "./components/marquee";
+
 // Hooks
 export * from "./hooks";
 

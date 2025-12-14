@@ -11,6 +11,7 @@ import { FollowUs } from "@/components/home/FollowUs";
 import { Faq } from "@/components/home/Faq";
 import Navbar from "@/components/nav/Navbar";
 import CxCTitle from "@/components/home/CxCTitle";
+import { Testimonials } from "@/components/home/Testimonials";
 
 export default function Home() {
   return (
@@ -27,6 +28,7 @@ export default function Home() {
         <div id="faq-section">
           <Faq />
         </div>
+        <Testimonials />
         <FollowUs />
       </div>
       <WormholeBottom />

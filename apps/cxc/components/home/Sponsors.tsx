@@ -24,7 +24,7 @@ export function Sponsors() {
   const innerRadius = isMobile ? 80 : 130;
 
   return (
-    <section className="relative text-white py-24 overflow-hidden mb-10 md:mb-20">
+    <section className="relative text-white py-20 overflow-hidden mb-10 md:mb-20">
       <div className="container mx-auto px-6 text-center">
         {/* Title */}
         <h2 className="text-3xl md:text-4xl font-semibold mb-12">

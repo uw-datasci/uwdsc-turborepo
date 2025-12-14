@@ -22,7 +22,7 @@ export function FollowUs() {
   ];
 
   return (
-    <section className="relative text-white py-24 overflow-hidden mb-10 lg:mb-20">
+    <section className="relative text-white py-20 overflow-hidden mb-10 lg:mb-20">
       <div className="container mx-auto px-16 flex flex-col lg:flex-row items-center lg:items-start justify-between">
         {/* Left column: Title */}
         <div className="mb-8 lg:mb-0 text-center lg:text-left">

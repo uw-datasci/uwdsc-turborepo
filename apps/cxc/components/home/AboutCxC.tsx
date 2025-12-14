@@ -38,7 +38,7 @@ function Stat({ value, label, prefix, suffix }: Readonly<StatProps>) {
 
 export default function AboutCxC() {
   return (
-    <section className="relative text-white py-16 md:py-32 overflow-hidden">
+    <section className="relative text-white py-16 md:py-20 overflow-hidden">
       <div className="mx-auto px-10 text-center">
         {/* About CXC */}
         <h2 className="text-3xl md:text-4xl font-semibold mb-6">About CXC</h2>
