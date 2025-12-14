@@ -24,7 +24,7 @@ jobs:
   quality-web:
     name: Quality Gate - Web
     needs: setup
-    uses: uw-datasci/nexus/.github/workflows/quality-gate.yml@v1
+    uses: uw-datasci/nexus/.github/workflows/quality-gate.yml@v1.0.0
     with:
       lint-command: pnpm --filter=web... lint
       typecheck-command: pnpm --filter=web... check-types
@@ -32,7 +32,7 @@ jobs:
   quality-cxc:
     name: Quality Gate - CxC
     needs: setup
-    uses: uw-datasci/nexus/.github/workflows/quality-gate.yml@v1
+    uses: uw-datasci/nexus/.github/workflows/quality-gate.yml@v1.0.0
     with:
       lint-command: pnpm --filter=cxc... lint
       typecheck-command: pnpm --filter=cxc... check-types
@@ -41,7 +41,7 @@ jobs:
   build-web:
     name: Build - Web
     needs: quality-web
-    uses: uw-datasci/nexus/.github/workflows/build-node.yml@v1
+    uses: uw-datasci/nexus/.github/workflows/build-node.yml@v1.0.0
     with:
       build-command: pnpm --filter=web... build
       working-directory: "./apps/web"
@@ -49,7 +49,7 @@ jobs:
   build-cxc:
     name: Build - CxC
     needs: quality-cxc
-    uses: uw-datasci/nexus/.github/workflows/build-node.yml@v1
+    uses: uw-datasci/nexus/.github/workflows/build-node.yml@v1.0.0
     with:
       build-command: pnpm --filter=cxc... build
       working-directory: "./apps/cxc"
@@ -58,7 +58,7 @@ jobs:
   deploy-web:
     name: Deploy - Web
     needs: [quality-web, build-web]
-    uses: uw-datasci/nexus/.github/workflows/deploy-vercel.yml@v1
+    uses: uw-datasci/nexus/.github/workflows/deploy-vercel.yml@v1.0.0
     with:
       vercel-project-id: ${{ vars.VERCEL_PROJECT_ID_WEB }}
       working-directory: "./apps/web"
@@ -71,7 +71,7 @@ jobs:
   deploy-cxc:
     name: Deploy - CxC
     needs: [quality-cxc, build-cxc]
-    uses: uw-datasci/nexus/.github/workflows/deploy-vercel.yml@v1
+    uses: uw-datasci/nexus/.github/workflows/deploy-vercel.yml@v1.0.0
     with:
       vercel-project-id: ${{ vars.VERCEL_PROJECT_ID_CXC }}
       working-directory: "./apps/cxc"
