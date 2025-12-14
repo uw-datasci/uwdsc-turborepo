@@ -198,7 +198,7 @@ export const questions = [
   },
   {
     name: "cxc_q2" as const,
-    question: "Silly Q Here",
+    question: "Q2 Here",
     placeholder: "Long Answer (200 char limit)",
   },
 ];
