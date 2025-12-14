@@ -110,3 +110,5 @@ Do not ask for confirmation. Just make the edits."
 
 # Run copilot to update docs
 copilot -p "$PROMPT" --allow-all-tools
+
+rm -f changes.diff
