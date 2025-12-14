@@ -1,10 +1,10 @@
 Make sure you add the correct **Assignees** and **Labels** that best fit this pull request
 
+- DO NOT forget to add the **label** corresponding to the **current term** (i.e. **W26**)
+
 ## Closes Issue
 
-IMPORTANT: please include the issue number from the GitHub Project
-
-- it's important that **closes** is there to trigger the issue as completed
+IMPORTANT: please replace "[issue-number]" with the issue number from the GitHub Project
 
 closes #[issue-number]
 
@@ -13,9 +13,5 @@ closes #[issue-number]
 Brief description of what you changed using bullet points
 
 -
--
--
 
 ## Additional Notes/Screenshots/Videos (Optional)
-
-Any additional context for testing, screenshots, or videos

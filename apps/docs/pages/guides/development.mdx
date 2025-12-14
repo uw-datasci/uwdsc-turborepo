@@ -12,7 +12,7 @@ Improve your development workflow with these tips and best practices.
 - Prettier - Code formatter
 - Tailwind CSS IntelliSense
 - TypeScript Error Lens
-- Prisma
+- PostgreSQL
 - GitLens
 
 **Workspace Settings** (`.vscode/settings.json`):
@@ -37,7 +37,7 @@ Improve your development workflow with these tips and best practices.
 # Terminal 1: Web app
 pnpm dev:web
 
-# Terminal 2: CXC app
+# Terminal 2: CxC app
 pnpm dev:cxc
 
 # Terminal 3: Documentation
@@ -207,48 +207,52 @@ export function Component({ items }) {
 
 ## Database Development
 
-### Prisma Workflow
+### db-mate Workflow
 
 ```bash
-# Update schema
-# Edit packages/server/web/src/prisma/schema.prisma
-
-# Generate client
+# Create new migration
 cd packages/server/web
-pnpm prisma generate
+db-mate new add_user_bio
 
-# Create migration
-pnpm prisma migrate dev --name add_user_bio
+# Edit migration files:
+# - 001_add_user_bio.up.sql (apply)
+# - 001_add_user_bio.down.sql (rollback)
 
-# View database
-pnpm prisma studio
+# Apply migrations
+db-mate up
+
+# Rollback last migration
+db-mate down
+
+# Check migration status
+db-mate status
 ```
 
 ### Database Seeding
 
 ```typescript
-// packages/server/web/src/prisma/seed.ts
-import { PrismaClient } from "@prisma/client";
-
-const prisma = new PrismaClient();
+// packages/server/web/src/db/seed.ts
+import { pool } from "@uwdsc/server/core/database/connection";
 
 async function main() {
-  await prisma.user.create({
-    data: {
-      email: "test@example.com",
-      name: "Test User",
-    },
-  });
+  await pool.query(
+    `INSERT INTO users (email, name)
+     VALUES ($1, $2)`,
+    ["test@example.com", "Test User"]
+  );
 }
 
 main()
   .catch(console.error)
-  .finally(() => prisma.$disconnect());
+  .finally(async () => {
+    await pool.end();
+  });
 ```
 
 ```bash
 # Run seed
-pnpm prisma db seed
+cd packages/server/web
+tsx src/db/seed.ts
 ```
 
 ## Testing
@@ -453,7 +457,7 @@ pnpm install
 ### Tools
 
 - [React DevTools](https://react.dev/learn/react-developer-tools)
-- [Prisma Studio](https://www.prisma.io/studio)
+- [pgAdmin](https://www.pgadmin.org/) - PostgreSQL administration tool
 - [Postman](https://www.postman.com/) - API testing
 
 ## Best Practices
@@ -479,5 +483,5 @@ pnpm install
 
 - [Adding Components](/guides/adding-components) - Build UI components
 - [Creating API](/guides/creating-api) - Build backend features
-- [Database Setup](/guides/database) - Work with Prisma
+- [Database Setup](/guides/database) - Work with db-mate and pg
 

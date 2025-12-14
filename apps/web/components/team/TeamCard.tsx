@@ -1,5 +1,3 @@
-"use client";
-
 import Image from "next/image";
 import { Card, CardDescription, CardHeader, CardTitle } from "@uwdsc/ui";
 import { Member } from "@/types/team";

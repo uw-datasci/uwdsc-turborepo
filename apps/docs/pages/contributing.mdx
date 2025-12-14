@@ -128,7 +128,7 @@ pnpm ui:add <component-name>
 
 ### 🔧 Features
 
-Implement new features in the web or CXC apps.
+Implement new features in the web or CxC apps.
 
 ### 📝 Documentation
 
@@ -168,10 +168,12 @@ Improve accessibility of components and pages.
 
 ### Database Guidelines
 
-- Use Prisma for database operations
+- Use pg (node-postgres) with raw SQL queries for database operations
+- Use db-mate for database migrations (SQL files)
 - Add migrations for schema changes
 - Follow naming conventions
 - Document relationships
+- Always use parameterized queries to prevent SQL injection
 
 ## Testing
 

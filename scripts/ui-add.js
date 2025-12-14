@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
-const { spawn } = require("child_process");
-const path = require("path");
+const { spawn } = require("node:child_process");
+const path = require("node:path");
 
 // Get the component name from command line arguments
 const componentName = process.argv[2];

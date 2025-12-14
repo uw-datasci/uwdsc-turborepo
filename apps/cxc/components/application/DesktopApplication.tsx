@@ -14,7 +14,6 @@ import { StepIndicator } from "./StepIndicator";
 import { AppNavigationButtons } from "./AppNavigationButtons";
 import { useApplicationProgressSync } from "@/hooks/useApplicationProgress";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import DSCLogo from "../DSCLogo";
 import {
   ContactInfo,
@@ -46,7 +45,6 @@ export default function DesktopApplication({
   onStepChange,
 }: DesktopApplicationProps) {
   const [direction, setDirection] = useState<number>(1);
-  const router = useRouter();
   useApplicationProgressSync(currentStep);
 
   const goNext = () => {
@@ -112,7 +110,7 @@ export default function DesktopApplication({
           <DSCLogo
             size={24}
             className="hidden md:block"
-            onClick={() => router.push("/")}
+            href="/"
           />
         </div>
       </div>
