@@ -27,7 +27,7 @@ jobs:
   quality-web:
     name: Quality Gate - Web
     needs: setup
-    uses: uw-datasci/nexus/.github/workflows/quality-gate.yml@v1
+    uses: uw-datasci/nexus/.github/workflows/quality-gate.yml@v2
     with:
       node-version: 20
       pnpm-version: 10.22.0
@@ -37,7 +37,7 @@ jobs:
   quality-cxc:
     name: Quality Gate - CxC
     needs: setup
-    uses: uw-datasci/nexus/.github/workflows/quality-gate.yml@v1
+    uses: uw-datasci/nexus/.github/workflows/quality-gate.yml@v2
     with:
       node-version: 20
       pnpm-version: 10.22.0
@@ -47,7 +47,7 @@ jobs:
   build-web:
     name: Build - Web
     needs: quality-web
-    uses: uw-datasci/nexus/.github/workflows/build-node.yml@v1
+    uses: uw-datasci/nexus/.github/workflows/build-node.yml@v2
     with:
       node-version: 20
       pnpm-version: 10.22.0
@@ -62,7 +62,7 @@ jobs:
   build-cxc:
     name: Build - CxC
     needs: quality-cxc
-    uses: uw-datasci/nexus/.github/workflows/build-node.yml@v1
+    uses: uw-datasci/nexus/.github/workflows/build-node.yml@v2
     with:
       node-version: 20
       pnpm-version: 10.22.0
@@ -77,7 +77,7 @@ jobs:
   # deploy-web:
   #   name: Deploy - Web
   #   needs: build-web
-  #   uses: uw-datasci/nexus/.github/workflows/deploy-vercel.yml@v1
+  #   uses: uw-datasci/nexus/.github/workflows/deploy-vercel.yml@v2
   #   with:
   #     vercel-project-id: ${{ vars.VERCEL_PROJECT_ID_WEB }}
   #     working-directory: "./apps/web"
@@ -88,7 +88,7 @@ jobs:
   # deploy-cxc:
   #   name: Deploy - CxC
   #   needs: build-cxc
-  #   uses: uw-datasci/nexus/.github/workflows/deploy-vercel.yml@v1
+  #   uses: uw-datasci/nexus/.github/workflows/deploy-vercel.yml@v2
   #   with:
   #     vercel-project-id: ${{ vars.VERCEL_PROJECT_ID_CXC }}
   #     working-directory: "./apps/cxc"
