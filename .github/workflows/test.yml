@@ -13,7 +13,7 @@ jobs:
     name: Build Node App
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Repo
+      - name: Checkout code
         uses: actions/checkout@v6
 
       - name: Setup pnpm
@@ -26,9 +26,7 @@ jobs:
         with:
           node-version: 20
           cache: pnpm
-
-      - name: Install Dependencies
-        run: pnpm install --frozen-lockfile
+      - run: pnpm install --frozen-lockfile
 
       - name: Install Vercel CLI
         run: pnpm install -g vercel@latest
