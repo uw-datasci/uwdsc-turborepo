@@ -35,9 +35,6 @@ jobs:
           project-slug: "uwdsc-54e-y"
           secret-path: "/web"
 
-      - name: Test Before Build
-        run: ls -la apps/web/.next/
-
       - name: Build
         run: pnpm --filter=web... build
 
