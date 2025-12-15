@@ -56,9 +56,9 @@ jobs:
       pnpm-version: 10.25.0
       build-to-vercel: true
       build-command: |
-        vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
-        vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
-      artifact-path: ./vercel/output
+        vercel pull --yes --environment=production --token=$VERCEL_TOKEN
+        vercel build --prod --token=$VERCEL_TOKEN
+      artifact-path: .vercel/output
       infisical-project-slug: uwdsc-54e-y
       infisical-secret-path: /web
     secrets:
@@ -66,6 +66,7 @@ jobs:
       INFISICAL_CLIENT_SECRET: ${{ secrets.INFISICAL_CLIENT_SECRET }}
       VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
       VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID_WEB }}
+      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
 
   build-cxc:
     name: Build - CxC
@@ -74,13 +75,19 @@ jobs:
     with:
       node-version: 20
       pnpm-version: 10.25.0
-      build-command: pnpm --filter=cxc... build
-      working-directory: "apps/cxc"
-      infisical-project-slug: "uwdsc-54e-y"
-      infisical-secret-path: "/cxc"
+      build-to-vercel: true
+      build-command: |
+        vercel pull --yes --environment=production --token=$VERCEL_TOKEN
+        vercel build --prod --token=$VERCEL_TOKEN
+      artifact-path: .vercel/output
+      infisical-project-slug: uwdsc-54e-y
+      infisical-secret-path: /cxc
     secrets:
       INFISICAL_CLIENT_ID: ${{ secrets.INFISICAL_CLIENT_ID }}
       INFISICAL_CLIENT_SECRET: ${{ secrets.INFISICAL_CLIENT_SECRET }}
+      VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID_WEB }}
+      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
 
   # deploy-web:
   #   name: Deploy - Web
