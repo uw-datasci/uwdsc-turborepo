@@ -55,7 +55,7 @@ jobs:
       node-version: 20
       pnpm-version: 10.22.0
       build-command: pnpm --filter=web... build
-      working-directory: "./apps/web"
+      working-directory: "apps/web"
       infisical-project-slug: "uwdsc-54e-y"
       infisical-secret-path: "/web"
     secrets:
@@ -70,7 +70,7 @@ jobs:
       node-version: 20
       pnpm-version: 10.22.0
       build-command: pnpm --filter=cxc... build
-      working-directory: "./apps/cxc"
+      working-directory: "apps/cxc"
       infisical-project-slug: "uwdsc-54e-y"
       infisical-secret-path: "/cxc"
     secrets:
