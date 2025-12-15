@@ -4,6 +4,10 @@ on:
   push:
     branches: ["**"]
 
+env:
+  VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+  VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+
 jobs:
   build:
     name: Build Node App
@@ -38,15 +42,21 @@ jobs:
           project-slug: "uwdsc-54e-y"
           secret-path: "/web"
 
-      - name: Build
-        run: pnpm --filter=web... build
+      - name: Pull Vercel Config
+        working-directory: apps/web
+        env:
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID_WEB }}
+        run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
 
-      - name: Test After Build
-        run: ls -la apps/web/.next/
+      - name: Build Artifact
+        working-directory: apps/web
+        env:
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID_WEB }}
+        # The build now sees both Vercel Pull envs AND Infisical envs
+        run: vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
 
-      - name: Upload Artifact
-        uses: actions/upload-artifact@v5
-        with:
-          name: dist
-          path: apps/web/.next/
-          retention-days: 1
+      - name: Deploy to Vercel
+        working-directory: apps/web
+        env:
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID_WEB }}
+        run: vercel deploy --prebuilt --prod --archive=tgz --token=${{ secrets.VERCEL_TOKEN }}
