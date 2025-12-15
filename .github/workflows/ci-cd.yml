@@ -47,18 +47,13 @@ jobs:
       lint-command: pnpm --filter=cxc... lint
       typecheck-command: pnpm --filter=cxc... check-types
 
-  build-web:
-    name: Build - Web
+  deploy-web:
+    name: Build & Deploy - Web
     needs: quality-web
-    uses: uw-datasci/nexus/.github/workflows/build-node.yml@v2
+    uses: uw-datasci/nexus/.github/workflows/deploy-vercel.yml@v2
     with:
       node-version: 20
       pnpm-version: 10.25.0
-      build-to-vercel: true
-      build-command: |
-        vercel pull --yes --environment=production --token=$VERCEL_TOKEN
-        vercel build --prod --token=$VERCEL_TOKEN
-      artifact-path: .vercel/output
       infisical-project-slug: uwdsc-54e-y
       infisical-secret-path: /web
     secrets:
@@ -68,45 +63,18 @@ jobs:
       VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID_WEB }}
       VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
 
-  build-cxc:
-    name: Build - CxC
+  deploy-cxc:
+    name: Build & Deploy - CxC
     needs: quality-cxc
-    uses: uw-datasci/nexus/.github/workflows/build-node.yml@v2
+    uses: uw-datasci/nexus/.github/workflows/deploy-vercel.yml@v2
     with:
       node-version: 20
       pnpm-version: 10.25.0
-      build-to-vercel: true
-      build-command: |
-        vercel pull --yes --environment=production --token=$VERCEL_TOKEN
-        vercel build --prod --token=$VERCEL_TOKEN
-      artifact-path: .vercel/output
       infisical-project-slug: uwdsc-54e-y
       infisical-secret-path: /cxc
     secrets:
       INFISICAL_CLIENT_ID: ${{ secrets.INFISICAL_CLIENT_ID }}
       INFISICAL_CLIENT_SECRET: ${{ secrets.INFISICAL_CLIENT_SECRET }}
       VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
-      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID_WEB }}
+      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID_CXC }}
       VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-
-  # deploy-web:
-  #   name: Deploy - Web
-  #   needs: build-web
-  #   uses: uw-datasci/nexus/.github/workflows/deploy-vercel.yml@v2
-  #   with:
-  #     vercel-project-id: ${{ vars.VERCEL_PROJECT_ID_WEB }}
-  #     working-directory: "./apps/web"
-  #   secrets:
-  #     VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
-  #     VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-
-  # deploy-cxc:
-  #   name: Deploy - CxC
-  #   needs: build-cxc
-  #   uses: uw-datasci/nexus/.github/workflows/deploy-vercel.yml@v2
-  #   with:
-  #     vercel-project-id: ${{ vars.VERCEL_PROJECT_ID_CXC }}
-  #     working-directory: "./apps/cxc"
-  #   secrets:
-  #     VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
-  #     VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
