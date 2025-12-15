@@ -84,7 +84,7 @@ export default function CxCTitle() {
                 initial={{ opacity: 1 }}
                 exit={{ opacity: 0, scale: 0.95, y: -20 }}
                 transition={{ duration: 0.6, ease: "easeInOut" }}
-                className="relative w-full h-full overflow-hidden"
+                className="relative w-full h-full overflow-hidden select-none"
               >
                 <Meteors />
                 <motion.div

@@ -130,12 +130,12 @@ const FloatingImage = ({
         inView
           ? {
               opacity: 1,
-              y: [0, -16, 0],
+              y: [0, -12, 0],
             }
           : {}
       }
       transition={{
-        opacity: { duration: 0.6 },
+        opacity: { duration: 0.5, delay: 1 },
         y: {
           duration: 2.5,
           repeat: Infinity,
@@ -211,7 +211,7 @@ export default function Ripples({ height = 200 }: RipplesProps) {
 
       {/* Large Left Image */}
       <FloatingImage
-        src="/past_cxc/cxc_1.jpg"
+        src="/past_cxc/registration.jpg"
         alt="CXC Event 1"
         className="-left-7 md:left-[5%] lg:left-[8%] top-0 md:-top-[10%] lg:-top-[20%] w-[140px] h-[100px] md:w-[180px] md:h-[130px] lg:w-[220px] lg:h-[160px]"
         delay={0}
@@ -220,7 +220,7 @@ export default function Ripples({ height = 200 }: RipplesProps) {
 
       {/* Small Center-Left Image */}
       <FloatingImage
-        src="/past_cxc/cxc_2.jpg"
+        src="/past_cxc/marquee.jpg"
         alt="CXC Event 2"
         className="left-[35%] lg:left-[37%] top-0 md:-top-[10%] lg:-top-[15%] w-[100px] h-[70px] md:w-[120px] md:h-[85px] lg:w-[140px] lg:h-[100px]"
         delay={0.3}
@@ -229,7 +229,7 @@ export default function Ripples({ height = 200 }: RipplesProps) {
 
       {/* Small Center-Right Image */}
       <FloatingImage
-        src="/past_cxc/cxc_1.jpg"
+        src="/past_cxc/poker.jpg"
         alt="CXC Event 3"
         className="hidden xl:block xl:right-[29%] bottom-[40%] xl:w-[130px] xl:h-[95px]"
         delay={0.6}
@@ -238,7 +238,7 @@ export default function Ripples({ height = 200 }: RipplesProps) {
 
       {/* Large Right Image */}
       <FloatingImage
-        src="/past_cxc/cxc_2.jpg"
+        src="/past_cxc/opening.jpg"
         alt="CXC Event 4"
         className="-right-7 md:right-[5%] lg:right-[9%] bottom-[45%] lg:bottom-[40%] w-[150px] h-[110px] md:w-[190px] md:h-[140px] lg:w-[230px] lg:h-[170px]"
         delay={0.9}
