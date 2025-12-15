@@ -20,7 +20,6 @@ jobs:
           cache: "pnpm"
       - run: pnpm install --frozen-lockfile
 
-  # Step 1: Quality Gate (runs in parallel for both apps)
   quality-web:
     name: Quality Gate - Web
     needs: setup
@@ -37,31 +36,35 @@ jobs:
       lint-command: pnpm --filter=cxc... lint
       typecheck-command: pnpm --filter=cxc... check-types
 
-  # Step 2: Build (runs in parallel for both apps after quality gate passes)
   build-web:
     name: Build - Web
-    needs: [setup, quality-web]
+    needs: quality-web
     uses: uw-datasci/nexus/.github/workflows/build-node.yml@v1
     with:
       build-command: pnpm --filter=web... build
       working-directory: "./apps/web"
       infisical-project-slug: "uwdsc-54e-y"
       infisical-secret-path: "/web"
+    secrets:
+      INFISICAL_CLIENT_ID: ${{ secrets.INFISICAL_CLIENT_ID }}
+      INFISICAL_CLIENT_SECRET: ${{ secrets.INFISICAL_CLIENT_SECRET }}
 
   build-cxc:
     name: Build - CxC
-    needs: [setup, quality-cxc]
+    needs: quality-cxc
     uses: uw-datasci/nexus/.github/workflows/build-node.yml@v1
     with:
       build-command: pnpm --filter=cxc... build
       working-directory: "./apps/cxc"
       infisical-project-slug: "uwdsc-54e-y"
       infisical-secret-path: "/cxc"
+    secrets:
+      INFISICAL_CLIENT_ID: ${{ secrets.INFISICAL_CLIENT_ID }}
+      INFISICAL_CLIENT_SECRET: ${{ secrets.INFISICAL_CLIENT_SECRET }}
 
-  # Step 3: Deploy (runs in parallel for both apps after builds complete)
   deploy-web:
     name: Deploy - Web
-    needs: [setup, quality-web, build-web]
+    needs: build-web
     uses: uw-datasci/nexus/.github/workflows/deploy-vercel.yml@v1
     with:
       vercel-project-id: ${{ vars.VERCEL_PROJECT_ID_WEB }}
@@ -72,7 +75,7 @@ jobs:
 
   deploy-cxc:
     name: Deploy - CxC
-    needs: [setup, quality-cxc, build-cxc]
+    needs: build-cxc
     uses: uw-datasci/nexus/.github/workflows/deploy-vercel.yml@v1
     with:
       vercel-project-id: ${{ vars.VERCEL_PROJECT_ID_CXC }}
