@@ -15,7 +15,7 @@ jobs:
       build-command: |
         vercel pull --yes --environment=production --token=$VERCEL_TOKEN
         vercel build --prod --token=$VERCEL_TOKEN
-      artifact-path: ./vercel/output
+      artifact-path: .vercel/output
       infisical-project-slug: uwdsc-54e-y
       infisical-secret-path: /web
     secrets:
