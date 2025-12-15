@@ -39,7 +39,7 @@ jobs:
         run: ls -la apps/web/.next/
 
       - name: Build
-        run: pnpm build
+        run: pnpm --filter=web... build
 
       - name: Test After Build
         run: ls -la apps/web/.next/
