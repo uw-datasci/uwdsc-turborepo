@@ -36,13 +36,13 @@ jobs:
           secret-path: "/web"
 
       - name: Test Before Build
-        run: ls -la apps/web
+        run: ls -la apps/web/.next/
 
       - name: Build
         run: pnpm build
 
       - name: Test After Build
-        run: ls -la apps/web
+        run: ls -la apps/web/.next/
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v5
