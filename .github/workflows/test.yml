@@ -17,8 +17,8 @@ jobs:
       pnpm-version: 10.25.0
       build-to-vercel: true
       build-command: |
-        vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
-        vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
+        vercel pull --yes --environment=production --token=$VERCEL_TOKEN
+        vercel build --prod --token=$VERCEL_TOKEN
       artifact-path: ./vercel/output
       infisical-project-slug: uwdsc-54e-y
       infisical-secret-path: /web
