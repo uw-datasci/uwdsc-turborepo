@@ -13,7 +13,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
+
       - uses: pnpm/action-setup@v4
+        with:
+          version: 10.22.0
+
       - uses: actions/setup-node@v6
         with:
           node-version: 20
@@ -25,6 +29,8 @@ jobs:
     needs: setup
     uses: uw-datasci/nexus/.github/workflows/quality-gate.yml@v1
     with:
+      node-version: 20
+      pnpm-version: 10.22.0
       lint-command: pnpm --filter=web... lint
       typecheck-command: pnpm --filter=web... check-types
 
@@ -33,6 +39,8 @@ jobs:
     needs: setup
     uses: uw-datasci/nexus/.github/workflows/quality-gate.yml@v1
     with:
+      node-version: 20
+      pnpm-version: 10.22.0
       lint-command: pnpm --filter=cxc... lint
       typecheck-command: pnpm --filter=cxc... check-types
 
@@ -41,6 +49,8 @@ jobs:
     needs: quality-web
     uses: uw-datasci/nexus/.github/workflows/build-node.yml@v1
     with:
+      node-version: 20
+      pnpm-version: 10.22.0
       build-command: pnpm --filter=web... build
       working-directory: "./apps/web"
       infisical-project-slug: "uwdsc-54e-y"
@@ -54,6 +64,8 @@ jobs:
     needs: quality-cxc
     uses: uw-datasci/nexus/.github/workflows/build-node.yml@v1
     with:
+      node-version: 20
+      pnpm-version: 10.22.0
       build-command: pnpm --filter=cxc... build
       working-directory: "./apps/cxc"
       infisical-project-slug: "uwdsc-54e-y"
