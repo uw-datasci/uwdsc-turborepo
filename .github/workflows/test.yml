@@ -26,6 +26,9 @@ jobs:
       - name: Install Dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Install Vercel CLI
+        run: pnpm install -g vercel@latest
+
       - name: Pull Secrets from Infisical
         uses: infisical/secrets-action@v1.0.9
         with:
