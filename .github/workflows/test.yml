@@ -2,7 +2,7 @@ name: Sample Workflow
 
 on:
   push:
-    branches: ["*"]
+    branches: ["**"]
 
 jobs:
   build:
