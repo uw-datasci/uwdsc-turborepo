@@ -8,8 +8,6 @@
     "dev:web": "turbo dev --filter=web...",
     "dev:cxc": "turbo dev --filter=cxc...",
     "dev:docs": "turbo dev --filter=docs...",
-    "build:web": "turbo build --filter=web...",
-    "build:cxc": "turbo build --filter=cxc...",
     "build:docs": "turbo build --filter=docs",
     "lint": "turbo lint",
     "check-types": "turbo check-types",
