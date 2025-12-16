@@ -15,10 +15,17 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
+env:
+  NODE_VERSION: 22
+  PNPM_VERSION: 10.26.0
+
 jobs:
   setup:
     name: Setup & Install Dependencies
     runs-on: ubuntu-latest
+    outputs:
+      node-version: ${{ env.NODE_VERSION }}
+      pnpm-version: ${{ env.PNPM_VERSION }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v6
@@ -26,12 +33,12 @@ jobs:
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
         with:
-          version: 10.25.0
+          version: ${{ env.PNPM_VERSION }}
 
       - name: Setup Node
         uses: actions/setup-node@v6
         with:
-          node-version: 22
+          node-version: ${{ env.NODE_VERSION }}
           cache: pnpm
       - run: pnpm install --frozen-lockfile
 
@@ -40,8 +47,8 @@ jobs:
     needs: setup
     uses: uw-datasci/nexus-workflows/.github/workflows/quality-gate.yml@v3
     with:
-      node-version: 22
-      pnpm-version: 10.25.0
+      node-version: ${{ needs.setup.outputs.node-version }}
+      pnpm-version: ${{ needs.setup.outputs.pnpm-version }}
       lint-command: pnpm --filter=web... lint
       typecheck-command: pnpm --filter=web... check-types
 
@@ -50,18 +57,18 @@ jobs:
     needs: setup
     uses: uw-datasci/nexus-workflows/.github/workflows/quality-gate.yml@v3
     with:
-      node-version: 22
-      pnpm-version: 10.25.0
+      node-version: ${{ needs.setup.outputs.node-version }}
+      pnpm-version: ${{ needs.setup.outputs.pnpm-version }}
       lint-command: pnpm --filter=cxc... lint
       typecheck-command: pnpm --filter=cxc... check-types
 
   deploy-web:
     name: Build & Deploy - Web
-    needs: quality-web
+    needs: [setup, quality-web]
     uses: uw-datasci/nexus-workflows/.github/workflows/deploy-vercel.yml@v3
     with:
-      node-version: 22
-      pnpm-version: 10.25.0
+      node-version: ${{ needs.setup.outputs.node-version }}
+      pnpm-version: ${{ needs.setup.outputs.pnpm-version }}
       infisical-project-slug: uwdsc-54e-y
       infisical-secret-path: /web
       is-prod: ${{ github.event_name == 'push' }}
@@ -74,11 +81,11 @@ jobs:
 
   deploy-cxc:
     name: Build & Deploy - CxC
-    needs: quality-cxc
+    needs: [setup, quality-cxc]
     uses: uw-datasci/nexus-workflows/.github/workflows/deploy-vercel.yml@v3
     with:
-      node-version: 22
-      pnpm-version: 10.25.0
+      node-version: ${{ needs.setup.outputs.node-version }}
+      pnpm-version: ${{ needs.setup.outputs.pnpm-version }}
       infisical-project-slug: uwdsc-54e-y
       infisical-secret-path: /cxc
       is-prod: ${{ github.event_name == 'push' }}
