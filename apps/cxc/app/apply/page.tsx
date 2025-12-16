@@ -32,7 +32,7 @@ import {
 import DesktopApplication from "@/components/application/DesktopApplication";
 import MobileApplication from "@/components/application/MobileApplication";
 import { Submitted } from "@/components/application/sections";
-import { STEP_NAMES } from "@/constants/application";
+import { MOBILE_STEP_TO_PAGE_MAP, STEP_NAMES } from "@/constants/application";
 
 // ============================================================================
 // Constants
@@ -50,8 +50,7 @@ const NUMBER_PAGES = 8;
  * Desktop steps aggregate multiple mobile pages
  */
 const stepToPage = (step: number): number => {
-  const stepToPageMap = [0, 2, 5, 7];
-  return stepToPageMap[step] || 0;
+  return MOBILE_STEP_TO_PAGE_MAP[step] || 0;
 };
 
 /**

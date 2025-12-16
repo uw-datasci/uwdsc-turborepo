@@ -196,7 +196,7 @@ export {
   UsersIcon,
   GithubLogoIcon,
   LinkedinLogoIcon,
-  XLogoIcon,
+  BrowserIcon,
   LinkIcon,
   LightbulbIcon,
   SmileyIcon,

@@ -21,7 +21,7 @@ import {
   TrophyIcon,
   TShirtIcon,
   UsersIcon,
-  XLogoIcon,
+  BrowserIcon,
 } from "@uwdsc/ui/index";
 import React from "react";
 import {
@@ -41,21 +41,44 @@ interface InfoRowProps {
   form: UseFormReturn<AppFormValues>;
   label: string;
   icon: React.ReactNode;
+  iconLabel: string;
 }
 
 interface SectionReviewCardProps {
   form: UseFormReturn<AppFormValues>;
   iconArr: React.ReactNode[];
+  fieldArr: string[];
   labelArr: string[];
 }
 const NO_INPUT = "???";
 
-const InfoRow = ({ form, label, icon }: InfoRowProps) => {
+const CONTACT_INFO_LABELS = ["Name", "Email", "Phone", "Discord"];
+const OPTIONAL_ABOUT_YOU_LABELS = [
+  "T-shirt size",
+  "Dietary Restrictions",
+  "Gender",
+  "Ethnicity",
+];
+
+const UNIVERSITY_INFO_LABELS = ["University", "Program", "Year"];
+
+const PRIOR_HACK_EXP_LABELS = ["Experience", "Hackathons Attended"];
+
+const LINKS_LABELS = ["Github", "LinkedIn", "Website", "Other", "Resume"];
+
+const APP_Q_LABEL = ["Question 1", "Question 2"];
+
+const InfoRow = ({ form, label, icon, iconLabel }: InfoRowProps) => {
   const value = form.getValues(label as keyof AppFormValues);
   // Check if this is a link field
   const isLinkField =
     (Object.values(LINKS_FIELDS) as readonly string[]).includes(label) &&
     label !== LINKS_FIELDS.resume;
+
+  // Check if this is an APP_Q_FIELD
+  const isAppQuestion = (
+    Object.values(APP_Q_FIELDS) as readonly string[]
+  ).includes(label);
 
   // Handle different value types
   const displayValue = React.useMemo(() => {
@@ -87,9 +110,23 @@ const InfoRow = ({ form, label, icon }: InfoRowProps) => {
     return null;
   }
 
+  // Special layout for application questions
+  if (isAppQuestion) {
+    return (
+      <div className="flex flex-col gap-2 min-w-0">
+        <div className="flex flex-row gap-3 items-center">
+          <div className="flex-shrink-0">{icon}</div>
+          <span className="font-medium">{iconLabel}:</span>
+        </div>
+        <p className="break-words whitespace-pre-wrap pl-9">{displayValue}</p>
+      </div>
+    );
+  }
+
   return (
     <div className="flex flex-row gap-3 items-center min-w-0">
       <div className="flex-shrink-0">{icon}</div>
+      {iconLabel}:
       <div className="min-w-0 flex-1">
         {isLinkField && displayValue !== NO_INPUT ? (
           <a
@@ -111,22 +148,24 @@ const InfoRow = ({ form, label, icon }: InfoRowProps) => {
 const SectionReviewCard = ({
   form,
   iconArr,
+  fieldArr,
   labelArr,
 }: SectionReviewCardProps) => {
   // Filter out "_other" fields from the display
-  const filteredLabels = labelArr.filter((label) => !label.endsWith("_other"));
+  const filteredLabels = fieldArr.filter((label) => !label.endsWith("_other"));
 
   return (
     <div className="bg-cxc-input-bg p-4 flex flex-col gap-2">
-      {filteredLabels.map((label) => {
+      {filteredLabels.map((label, i) => {
         // Find the original index to get the correct icon
-        const originalIndex = labelArr.indexOf(label);
+        const originalIndex = fieldArr.indexOf(label);
         return (
           <InfoRow
             key={label}
             form={form}
             label={label}
             icon={iconArr[originalIndex]}
+            iconLabel={labelArr[i] ?? ""}
           />
         );
       })}
@@ -165,7 +204,7 @@ const PriorHackExpIcons = [
 const LinksIcons = [
   <GithubLogoIcon key="github" size={24} />,
   <LinkedinLogoIcon key="linkedin" size={24} />,
-  <XLogoIcon key="x" size={24} />,
+  <BrowserIcon key="x" size={24} />,
   <LinkIcon key="link" size={24} />,
   <FileTextIcon key="resume" size={24} />,
 ];
@@ -185,32 +224,38 @@ export function Review({ form }: ReviewProps) {
         <SectionReviewCard
           form={form}
           iconArr={ContactIcons}
-          labelArr={Object.values(CONTACT_INFO_FIELDS)}
+          fieldArr={Object.values(CONTACT_INFO_FIELDS)}
+          labelArr={CONTACT_INFO_LABELS}
         />
         <SectionReviewCard
           form={form}
           iconArr={OptionalAboutYouIcons}
-          labelArr={Object.values(OPTIONAL_ABOUT_YOU_FIELDS)}
+          fieldArr={Object.values(OPTIONAL_ABOUT_YOU_FIELDS)}
+          labelArr={OPTIONAL_ABOUT_YOU_LABELS}
         />
         <SectionReviewCard
           form={form}
           iconArr={UniIcons}
-          labelArr={Object.values(UNIVERSITY_INFO_FIELDS)}
+          fieldArr={Object.values(UNIVERSITY_INFO_FIELDS)}
+          labelArr={UNIVERSITY_INFO_LABELS}
         />
         <SectionReviewCard
           form={form}
           iconArr={PriorHackExpIcons}
-          labelArr={Object.values(PRIOR_HACK_EXP_FIELDS)}
+          fieldArr={Object.values(PRIOR_HACK_EXP_FIELDS)}
+          labelArr={PRIOR_HACK_EXP_LABELS}
         />
         <SectionReviewCard
           form={form}
           iconArr={LinksIcons}
-          labelArr={Object.values(LINKS_FIELDS)}
+          fieldArr={Object.values(LINKS_FIELDS)}
+          labelArr={LINKS_LABELS}
         />
         <SectionReviewCard
           form={form}
           iconArr={CxCAppIcons}
-          labelArr={Object.values(APP_Q_FIELDS)}
+          fieldArr={Object.values(APP_Q_FIELDS)}
+          labelArr={APP_Q_LABEL}
         />
       </AppSection>
     </div>
