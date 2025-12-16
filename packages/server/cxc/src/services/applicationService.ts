@@ -10,7 +10,7 @@ export class ApplicationService {
   private readonly repository: ApplicationRepository;
 
   constructor(supabaseClient: SupabaseClient) {
-    this.repository = new ApplicationRepository(supabaseClient);
+    this.repository = new ApplicationRepository();
   }
 
   /**
