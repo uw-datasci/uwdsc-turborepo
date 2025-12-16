@@ -1,82 +1,109 @@
-name: CI/CD
+name: Vercel CI/CD
 
 on:
-  # push:
-  #   branches: [main]
-  # pull_request:
-  #   branches: [main]
-  workflow_dispatch: {}
+  push:
+    branches: [main]
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches: [main]
+
+permissions:
+  contents: read
+  pull-requests: write
 
 jobs:
   setup:
     name: Setup & Install Dependencies
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
-      - uses: pnpm/action-setup@v4
-      - uses: actions/setup-node@v6
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
         with:
-          node-version: 20
-          cache: "pnpm"
+          version: 10.25.0
+
+      - name: Setup Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: 22
+          cache: pnpm
       - run: pnpm install --frozen-lockfile
 
-  # Step 1: Quality Gate (runs in parallel for both apps)
   quality-web:
     name: Quality Gate - Web
     needs: setup
-    uses: uw-datasci/nexus/.github/workflows/quality-gate.yml@v1
+    uses: uw-datasci/nexus-workflows/.github/workflows/quality-gate.yml@v3
     with:
+      node-version: 22
+      pnpm-version: 10.25.0
       lint-command: pnpm --filter=web... lint
       typecheck-command: pnpm --filter=web... check-types
 
   quality-cxc:
     name: Quality Gate - CxC
     needs: setup
-    uses: uw-datasci/nexus/.github/workflows/quality-gate.yml@v1
+    uses: uw-datasci/nexus-workflows/.github/workflows/quality-gate.yml@v3
     with:
+      node-version: 22
+      pnpm-version: 10.25.0
       lint-command: pnpm --filter=cxc... lint
       typecheck-command: pnpm --filter=cxc... check-types
 
-  # Step 2: Build (runs in parallel for both apps after quality gate passes)
-  build-web:
-    name: Build - Web
-    needs: quality-web
-    uses: uw-datasci/nexus/.github/workflows/build-node.yml@v1
-    with:
-      build-command: pnpm --filter=web... build
-      working-directory: "./apps/web"
-
-  build-cxc:
-    name: Build - CxC
-    needs: quality-cxc
-    uses: uw-datasci/nexus/.github/workflows/build-node.yml@v1
-    with:
-      build-command: pnpm --filter=cxc... build
-      working-directory: "./apps/cxc"
-
-  # Step 3: Deploy (runs in parallel for both apps after builds complete)
   deploy-web:
-    name: Deploy - Web
-    needs: [quality-web, build-web]
-    uses: uw-datasci/nexus/.github/workflows/deploy-vercel.yml@v1
+    name: Build & Deploy - Web
+    needs: quality-web
+    uses: uw-datasci/nexus-workflows/.github/workflows/deploy-vercel.yml@v3
     with:
-      vercel-project-id: ${{ vars.VERCEL_PROJECT_ID_WEB }}
-      working-directory: "./apps/web"
-      infisical-project-slug: "uwdsc-54e-y"
-      infisical-secret-path: "/web"
+      node-version: 22
+      pnpm-version: 10.25.0
+      infisical-project-slug: uwdsc-54e-y
+      infisical-secret-path: /web
+      is-prod: ${{ github.event_name == 'push' }}
     secrets:
+      INFISICAL_CLIENT_ID: ${{ secrets.INFISICAL_CLIENT_ID }}
+      INFISICAL_CLIENT_SECRET: ${{ secrets.INFISICAL_CLIENT_SECRET }}
       VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID_WEB }}
       VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
 
   deploy-cxc:
-    name: Deploy - CxC
-    needs: [quality-cxc, build-cxc]
-    uses: uw-datasci/nexus/.github/workflows/deploy-vercel.yml@v1
+    name: Build & Deploy - CxC
+    needs: quality-cxc
+    uses: uw-datasci/nexus-workflows/.github/workflows/deploy-vercel.yml@v3
     with:
-      vercel-project-id: ${{ vars.VERCEL_PROJECT_ID_CXC }}
-      working-directory: "./apps/cxc"
-      infisical-project-slug: "uwdsc-54e-y"
-      infisical-secret-path: "/cxc"
+      node-version: 22
+      pnpm-version: 10.25.0
+      infisical-project-slug: uwdsc-54e-y
+      infisical-secret-path: /cxc
+      is-prod: ${{ github.event_name == 'push' }}
     secrets:
+      INFISICAL_CLIENT_ID: ${{ secrets.INFISICAL_CLIENT_ID }}
+      INFISICAL_CLIENT_SECRET: ${{ secrets.INFISICAL_CLIENT_SECRET }}
       VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID_CXC }}
       VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+
+  deployment-summary:
+    name: Deployment Summary
+    needs: [deploy-web, deploy-cxc]
+    if: always() && github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: uw-datasci/nexus-vercel-summary@v1
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          deployments: |
+            [
+              {
+                "name": "Web",
+                "status": "${{ needs.deploy-web.result == 'success' && 'successful' || 'failed' }}",
+                "url": "${{ needs.deploy-web.outputs.deployment-url }}"
+              },
+              {
+                "name": "CxC",
+                "status": "${{ needs.deploy-cxc.result == 'success' && 'successful' || 'failed' }}",
+                "url": "${{ needs.deploy-cxc.outputs.deployment-url }}"
+              }
+            ]
