@@ -1,10 +1,14 @@
 import postgres from "postgres";
 
+const databaseUrl = process.env.DATABASE_URL;
+
+if (!databaseUrl) throw new Error("DATABASE_URL is not set");
+
 /**
  * PostgreSQL connection using postgres.js optimized for Supabase Transaction Pooler
  * Shared across all repositories to prevent connection exhaustion
  */
-export const sql = postgres(process.env.DATABASE_URL!, {
+export const sql = postgres(databaseUrl, {
   // CRITICAL: Required for Supabase Transaction Pooler (port 6543)
   // Transaction pooler doesn't support prepared statements
   prepare: false,
