@@ -1,4 +1,4 @@
-import { SupabaseClient } from "@supabase/supabase-js";
+import { BaseRepository } from "@uwdsc/server/core/repository/baseRepository";
 import { ApiError } from "../../../core/src/utils/errors";
 
 export interface ApplicationData {
@@ -6,33 +6,21 @@ export interface ApplicationData {
   [key: string]: unknown;
 }
 
-export class ApplicationRepository {
-  private readonly supabase: SupabaseClient;
-
-  constructor(supabaseClient: SupabaseClient) {
-    this.supabase = supabaseClient;
-  }
-
+export class ApplicationRepository extends BaseRepository {
   /**
    * Fetch an application by profile ID
    */
   async getApplication(profileId: string): Promise<ApplicationData | null> {
     try {
-      const { data, error } = await this.supabase
-        .from("applications")
-        .select("*")
-        .eq("profile_id", profileId)
-        .single();
+      const result = await this.sql<ApplicationData[]>`
+        SELECT *
+        FROM applications
+        WHERE profile_id = ${profileId}
+      `;
 
-      if (error) {
-        if (error.code === "PGRST116") {
-          // No rows found
-          return null;
-        }
-        throw error;
-      }
+      if (result.length === 0) return null;
 
-      return data;
+      return result[0] ?? null;
     } catch (error) {
       throw new ApiError(
         `Failed to fetch application: ${(error as Error).message}`,
@@ -46,11 +34,9 @@ export class ApplicationRepository {
    */
   async createApplication(data: ApplicationData): Promise<void> {
     try {
-      const { error } = await this.supabase.from("applications").insert(data);
-
-      if (error) {
-        throw error;
-      }
+      await this.sql`
+        INSERT INTO applications ${this.sql(data)}
+      `;
     } catch (error) {
       throw new ApiError(
         `Failed to create application: ${(error as Error).message}`,
@@ -67,14 +53,12 @@ export class ApplicationRepository {
     data: Partial<ApplicationData>,
   ): Promise<void> {
     try {
-      const { error } = await this.supabase
-        .from("applications")
-        .update(data)
-        .eq("profile_id", profileId);
-
-      if (error) {
-        throw error;
-      }
+      // Automatically add updated_at timestamp
+      await this.sql`
+        UPDATE applications
+        SET ${this.sql(data)}, updated_at = NOW()
+        WHERE profile_id = ${profileId}
+      `;
     } catch (error) {
       throw new ApiError(
         `Failed to update application: ${(error as Error).message}`,
