@@ -34,7 +34,7 @@ jobs:
   quality-web:
     name: Quality Gate - Web
     needs: setup
-    uses: uw-datasci/nexus-workflows/.github/workflows/quality-gate.yml@v2
+    uses: uw-datasci/nexus-workflows/.github/workflows/quality-gate.yml@v3
     with:
       node-version: 22
       pnpm-version: 10.25.0
@@ -44,7 +44,7 @@ jobs:
   quality-cxc:
     name: Quality Gate - CxC
     needs: setup
-    uses: uw-datasci/nexus-workflows/.github/workflows/quality-gate.yml@v2
+    uses: uw-datasci/nexus-workflows/.github/workflows/quality-gate.yml@v3
     with:
       node-version: 22
       pnpm-version: 10.25.0
@@ -54,7 +54,7 @@ jobs:
   deploy-web:
     name: Build & Deploy - Web
     needs: quality-web
-    uses: uw-datasci/nexus-workflows/.github/workflows/deploy-vercel.yml@v2
+    uses: uw-datasci/nexus-workflows/.github/workflows/deploy-vercel.yml@v3
     with:
       node-version: 22
       pnpm-version: 10.25.0
@@ -71,7 +71,7 @@ jobs:
   deploy-cxc:
     name: Build & Deploy - CxC
     needs: quality-cxc
-    uses: uw-datasci/nexus-workflows/.github/workflows/deploy-vercel.yml@v2
+    uses: uw-datasci/nexus-workflows/.github/workflows/deploy-vercel.yml@v3
     with:
       node-version: 22
       pnpm-version: 10.25.0
