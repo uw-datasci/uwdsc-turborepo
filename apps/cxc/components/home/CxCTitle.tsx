@@ -18,7 +18,7 @@ export default function CxCTitle() {
 
   useEffect(() => {
     const checkCountdown = () => {
-      const now = new Date().getTime();
+      const now = Date.now();
       const difference = eventDate.getTime() - now;
 
       if (difference <= 0) {
