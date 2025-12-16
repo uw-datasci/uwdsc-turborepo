@@ -86,8 +86,9 @@ jobs:
       VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
 
   deployment-summary:
+    name: Deployment Summary
     needs: [deploy-web, deploy-cxc]
-    if: always()
+    if: always() && github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     steps:
       - uses: uw-datasci/nexus-vercel-summary@v1
