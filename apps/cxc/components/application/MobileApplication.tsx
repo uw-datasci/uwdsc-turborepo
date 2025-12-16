@@ -28,7 +28,10 @@ import { useState } from "react";
 interface MobileApplicationProps {
   readonly form: UseFormReturn<AppFormValues>;
   readonly isLoading: boolean;
-  readonly onSaveAndContinue: (onSuccess: () => void) => Promise<void>;
+  readonly onSaveAndContinue: (
+    onSuccess: () => void,
+    isSubmit: boolean,
+  ) => Promise<void>;
   readonly currentPage: number;
   readonly onPageChange: (page: number) => void;
 }
@@ -77,7 +80,8 @@ export default function MobileApplication({
   };
 
   const handleNext = async () => {
-    await onSaveAndContinue(goNext);
+    const isLastPage = currentPage === NUMBER_PAGES - 1;
+    await onSaveAndContinue(goNext, isLastPage);
   };
 
   const renderStep = () => {

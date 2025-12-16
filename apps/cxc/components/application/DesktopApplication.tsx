@@ -30,7 +30,10 @@ import {
 interface DesktopApplicationProps {
   readonly form: UseFormReturn<AppFormValues>;
   readonly isLoading: boolean;
-  readonly onSaveAndContinue: (onSuccess: () => void) => Promise<void>;
+  readonly onSaveAndContinue: (
+    onSuccess: () => void,
+    isSubmit: boolean,
+  ) => Promise<void>;
   readonly currentStep: number;
   readonly onStepChange: (step: number) => void;
 }
@@ -58,7 +61,8 @@ export default function DesktopApplication({
   };
 
   const handleNext = async () => {
-    await onSaveAndContinue(goNext);
+    const isLastStep = currentStep === FINAL_STEP_COUNT - 1;
+    await onSaveAndContinue(goNext, isLastStep);
   };
 
   const renderStep = () => {

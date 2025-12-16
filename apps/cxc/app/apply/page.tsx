@@ -10,7 +10,7 @@
  * - Responsive layout for desktop and mobile views
  */
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useAuth } from "@/contexts/AuthContext";
@@ -72,7 +72,11 @@ export default function ApplyPage() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [currentDesktopStep, setCurrentDesktopStep] = useState<number>(0);
   const [currentMobilePage, setCurrentMobilePage] = useState<number>(0);
+  const [applicationStatus, setApplicationStatus] = useState<string | null>(
+    null,
+  );
   const { user } = useAuth();
+  const hasInitialized = useRef<boolean>(false);
 
   // ========================================================================
   // Form Setup
@@ -96,12 +100,12 @@ export default function ApplyPage() {
    */
   useEffect(() => {
     const initializeApplication = async () => {
-      if (!user?.id) return;
+      if (!user?.id || hasInitialized.current) return;
+      hasInitialized.current = true;
 
       setIsLoading(true);
       try {
         const existingApplication = await fetchApplication(user.id);
-
         if (existingApplication) {
           // Pre-fill form with existing application data
           const formData = transformDatabaseDataToForm(existingApplication);
@@ -136,6 +140,10 @@ export default function ApplyPage() {
             name: fullName,
           });
         }
+        // Set application status
+        setApplicationStatus(
+          (existingApplication?.status as string) || "draft",
+        );
       } catch (error) {
         console.error("Error initializing application:", error);
       } finally {
@@ -154,7 +162,10 @@ export default function ApplyPage() {
    * Handles form submission on "Continue" or "Submit" button click
    * Transforms form data and sends to backend API
    */
-  const handleSaveAndContinue = async (onSuccess: () => void) => {
+  const handleSaveAndContinue = async (
+    onSuccess: () => void,
+    isSubmit: boolean = false,
+  ) => {
     if (!user?.id) {
       console.error("Profile ID not found");
       return;
@@ -163,11 +174,21 @@ export default function ApplyPage() {
     setIsLoading(true);
     try {
       const formData = form.getValues();
+
+      // Update status to submitted if this is the final submit
+      if (isSubmit) {
+        formData.status = "submitted";
+        formData.submitted_at = new Date();
+      }
+
       const transformedData = transformFormDataForDatabase(formData, user.id);
       const cleanedData = cleanFormData(transformedData);
       const response = await updateApplication(cleanedData);
 
       if (response.success) {
+        if (isSubmit) {
+          setApplicationStatus("submitted");
+        }
         onSuccess();
       } else {
         console.error("Failed to update application:", response.error);
@@ -199,7 +220,12 @@ export default function ApplyPage() {
   // Render
   // ========================================================================
 
+  if (!applicationStatus) {
+    return null;
+  }
+
   const isSubmitted =
+    applicationStatus === "submitted" ||
     currentDesktopStep === FINAL_STEP_COUNT ||
     currentMobilePage === NUMBER_PAGES;
 
