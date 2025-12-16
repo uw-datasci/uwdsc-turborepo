@@ -23,7 +23,7 @@ import { StepIndicator } from "./StepIndicator";
 import { AnimatePresence, motion } from "framer-motion";
 import { AppNavigationButtons } from "./AppNavigationButtons";
 import { useApplicationProgressSync } from "@/hooks/useApplicationProgress";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 interface MobileApplicationProps {
   readonly form: UseFormReturn<AppFormValues>;
@@ -68,6 +68,11 @@ export default function MobileApplication({
   const currentStep = getCurrentStep();
 
   useApplicationProgressSync(currentStep);
+
+  // Scroll to top smoothly when page changes
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, [currentPage]);
 
   const goNext = () => {
     setDirection(1);

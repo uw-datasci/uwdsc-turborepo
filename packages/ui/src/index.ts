@@ -151,6 +151,8 @@ export {
   PopoverAnchor,
 } from "./components/popover";
 
+export { ScrollArea } from "./components/scroll-area";
+
 // Hooks
 export * from "./hooks";
 
