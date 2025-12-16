@@ -60,7 +60,7 @@ jobs:
       pnpm-version: 10.25.0
       infisical-project-slug: uwdsc-54e-y
       infisical-secret-path: /web
-      environment: ${{ github.event_name == 'push' && 'prod' || 'stage' }}
+      is-prod: ${{ github.event_name == 'push' && 'true' || 'false' }}
     secrets:
       INFISICAL_CLIENT_ID: ${{ secrets.INFISICAL_CLIENT_ID }}
       INFISICAL_CLIENT_SECRET: ${{ secrets.INFISICAL_CLIENT_SECRET }}
@@ -77,7 +77,7 @@ jobs:
       pnpm-version: 10.25.0
       infisical-project-slug: uwdsc-54e-y
       infisical-secret-path: /cxc
-      environment: ${{ github.event_name == 'push' && 'prod' || 'stage' }}
+      is-prod: ${{ github.event_name == 'push' && 'true' || 'false' }}
     secrets:
       INFISICAL_CLIENT_ID: ${{ secrets.INFISICAL_CLIENT_ID }}
       INFISICAL_CLIENT_SECRET: ${{ secrets.INFISICAL_CLIENT_SECRET }}
