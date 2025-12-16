@@ -108,15 +108,18 @@ export default function Navbar({ showAuthButtons = true }: NavbarProps) {
           {showAuthButtons && !isLoading && (
             <div className="flex items-center gap-4">
               {isAuthenticated ? (
-                <CxCButton onClick={handleSignOut}>Sign Out</CxCButton>
+                <CxCButton className="hover:scale-105" onClick={handleSignOut}>
+                  Sign Out
+                </CxCButton>
               ) : (
                 <>
-                  <CxCButton onClick={() => router.push("/login")}>
-                    Login
-                  </CxCButton>
-                  <CxCButton onClick={() => router.push("/register")}>
-                    Register
-                  </CxCButton>
+                  <Link href="/login">
+                    <CxCButton className="hover:scale-105">Login</CxCButton>
+                  </Link>
+
+                  <Link href="/register">
+                    <CxCButton className="hover:scale-105">Register</CxCButton>
+                  </Link>
                 </>
               )}
             </div>
