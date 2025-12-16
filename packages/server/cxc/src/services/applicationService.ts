@@ -32,7 +32,7 @@ export class ApplicationService {
    */
   async updateApplication(
     profileId: string,
-    data: Partial<ApplicationData>
+    data: Partial<ApplicationData>,
   ): Promise<void> {
     return this.repository.updateApplication(profileId, data);
   }

@@ -27,6 +27,7 @@ import {
 import {
   transformFormDataForDatabase,
   transformDatabaseDataToForm,
+  cleanFormData,
 } from "@/lib/utils/formDataTransformer";
 import DesktopApplication from "@/components/application/DesktopApplication";
 import MobileApplication from "@/components/application/MobileApplication";
@@ -104,13 +105,36 @@ export default function ApplyPage() {
         if (existingApplication) {
           // Pre-fill form with existing application data
           const formData = transformDatabaseDataToForm(existingApplication);
-          form.reset(formData);
+
+          // Preserve user email and name from auth
+          const fullName =
+            user.first_name && user.last_name
+              ? [user.first_name, user.last_name].join(" ")
+              : "";
+
+          form.reset({
+            ...formData,
+            email: user.email || "",
+            name: fullName,
+          });
         } else {
           // Create blank application entry for new user
           const resp = await createApplication(user.id);
 
           console.log(resp.success);
           console.log(resp.error);
+
+          // Set user email and name for new applications
+          const fullName =
+            user.first_name && user.last_name
+              ? [user.first_name, user.last_name].join(" ")
+              : "";
+
+          form.reset({
+            ...applicationDefaultValues,
+            email: user.email || "",
+            name: fullName,
+          });
         }
       } catch (error) {
         console.error("Error initializing application:", error);
@@ -120,7 +144,7 @@ export default function ApplyPage() {
     };
 
     initializeApplication();
-  }, [user?.id, form]);
+  }, [user, form]);
 
   // ========================================================================
   // Event Handlers
@@ -140,7 +164,8 @@ export default function ApplyPage() {
     try {
       const formData = form.getValues();
       const transformedData = transformFormDataForDatabase(formData, user.id);
-      const response = await updateApplication(transformedData);
+      const cleanedData = cleanFormData(transformedData);
+      const response = await updateApplication(cleanedData);
 
       if (response.success) {
         onSuccess();

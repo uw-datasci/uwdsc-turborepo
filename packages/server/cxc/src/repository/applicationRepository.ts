@@ -36,7 +36,7 @@ export class ApplicationRepository {
     } catch (error) {
       throw new ApiError(
         `Failed to fetch application: ${(error as Error).message}`,
-        500
+        500,
       );
     }
   }
@@ -54,7 +54,7 @@ export class ApplicationRepository {
     } catch (error) {
       throw new ApiError(
         `Failed to create application: ${(error as Error).message}`,
-        500
+        500,
       );
     }
   }
@@ -64,7 +64,7 @@ export class ApplicationRepository {
    */
   async updateApplication(
     profileId: string,
-    data: Partial<ApplicationData>
+    data: Partial<ApplicationData>,
   ): Promise<void> {
     try {
       const { error } = await this.supabase
@@ -78,7 +78,7 @@ export class ApplicationRepository {
     } catch (error) {
       throw new ApiError(
         `Failed to update application: ${(error as Error).message}`,
-        500
+        500,
       );
     }
   }

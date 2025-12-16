@@ -12,7 +12,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
   if (!profileId) {
     return NextResponse.json(
       { error: "Missing profile_id parameter" },
-      { status: 400 }
+      { status: 400 },
     );
   }
 
@@ -23,7 +23,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     if (!application) {
       return NextResponse.json(
         { error: "Application not found" },
-        { status: 404 }
+        { status: 404 },
       );
     }
 
@@ -32,7 +32,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     console.error("Error fetching application:", error);
     return NextResponse.json(
       { error: "Failed to fetch application" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -53,7 +53,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     console.error("Error creating application:", error);
     return NextResponse.json(
       { error: "Failed to create application" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -70,7 +70,7 @@ export async function PATCH(request: NextRequest): Promise<NextResponse> {
     if (!profile_id) {
       return NextResponse.json(
         { error: "Missing profile_id" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -82,7 +82,7 @@ export async function PATCH(request: NextRequest): Promise<NextResponse> {
     console.error("Error updating application:", error);
     return NextResponse.json(
       { error: "Failed to update application" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

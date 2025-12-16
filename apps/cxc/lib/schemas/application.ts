@@ -86,7 +86,7 @@ export const applicationSchema = z.object({
           "Masters",
           "PhD",
         ].includes(val),
-      "Invalid year of study"
+      "Invalid year of study",
     ),
 
   // ========================================================================

@@ -1,6 +1,6 @@
 "use client";
 
-import { STEP_NAMES, CONTACT_INFO_FIELDS } from "@/constants/application";
+import { STEP_NAMES } from "@/constants/application";
 import { AppFormValues } from "@/lib/schemas/application";
 import { isDesktopStepValid } from "@/lib/utils/application";
 import {
@@ -13,7 +13,7 @@ import { DesktopAppWormhole } from "./AppWormhole";
 import { StepIndicator } from "./StepIndicator";
 import { AppNavigationButtons } from "./AppNavigationButtons";
 import { useApplicationProgressSync } from "@/hooks/useApplicationProgress";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import DSCLogo from "../DSCLogo";
 import {
   ContactInfo,
@@ -26,7 +26,6 @@ import {
   CxcQ2,
   Review,
 } from "./sections";
-import { useAuth } from "@/contexts/AuthContext";
 
 interface DesktopApplicationProps {
   readonly form: UseFormReturn<AppFormValues>;
@@ -46,7 +45,6 @@ export default function DesktopApplication({
   onStepChange,
 }: DesktopApplicationProps) {
   const [direction, setDirection] = useState<number>(1);
-  const { user } = useAuth();
   useApplicationProgressSync(currentStep);
 
   const goNext = () => {
@@ -62,24 +60,6 @@ export default function DesktopApplication({
   const handleNext = async () => {
     await onSaveAndContinue(goNext);
   };
-
-  useEffect(() => {
-    async function loadUser() {
-      try {
-        if (!user) return;
-        if (user.email) {
-          form.setValue(CONTACT_INFO_FIELDS.email, user.email);
-        }
-        if (user.first_name && user.last_name) {
-          const fullName = [user.first_name, user.last_name].join(" ");
-          form.setValue(CONTACT_INFO_FIELDS.name, fullName);
-        }
-      } catch (err) {
-        console.error("Failed to load user:", err);
-      }
-    }
-    loadUser();
-  }, [form, user]);
 
   const renderStep = () => {
     switch (currentStep) {
