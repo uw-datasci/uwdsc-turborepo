@@ -14,7 +14,7 @@ export interface ProfileUpdateData {
 export class ProfileRepository extends BaseRepository {
   /**
    * Update user profile by user ID
-   * Uses raw pg query for direct database access
+   * Uses postgres.js for direct database access
    * @param userId - The auth.users.id (UUID)
    * @param data - Profile data to update
    */
@@ -23,37 +23,25 @@ export class ProfileRepository extends BaseRepository {
     data: ProfileUpdateData,
   ): Promise<{ success: boolean; error?: string }> {
     try {
-      const query = `
+      const isMathSocMember = data.faculty === "math";
+
+      const result = await this.sql`
         UPDATE profiles
         SET 
-          first_name = $1,
-          last_name = $2,
-          wat_iam = $3,
-          faculty = $4::faculty_enum,
-          term = $5,
-          heard_from_where = $6,
-          member_ideas = $7,
+          first_name = ${data.first_name},
+          last_name = ${data.last_name},
+          wat_iam = ${data.wat_iam ?? null},
+          faculty = ${data.faculty}::faculty_enum,
+          term = ${data.term},
+          heard_from_where = ${data.heard_from_where},
+          member_ideas = ${data.member_ideas ?? null},
           updated_at = NOW(),
-          is_math_soc_member = $8
-        WHERE id = $9
+          is_math_soc_member = ${isMathSocMember}
+        WHERE id = ${userId}
         RETURNING *
       `;
 
-      const values = [
-        data.first_name,
-        data.last_name,
-        data.wat_iam || null,
-        data.faculty,
-        data.term,
-        data.heard_from_where,
-        data.member_ideas || null,
-        data.faculty === "math",
-        userId,
-      ];
-
-      const result = await this.db.query(query, values);
-
-      if (result.rowCount === 0) {
+      if (result.length === 0) {
         return {
           success: false,
           error: "Profile not found",
@@ -76,19 +64,17 @@ export class ProfileRepository extends BaseRepository {
    */
   async getProfileByUserId(userId: string): Promise<Profile | null> {
     try {
-      const query = `
+      const result = await this.sql<Profile[]>`
         SELECT *
         FROM profiles
-        WHERE id = $1
+        WHERE id = ${userId}
       `;
 
-      const result = await this.db.query(query, [userId]);
-
-      if (result.rowCount === 0) {
+      if (result.length === 0) {
         return null;
       }
 
-      return result.rows[0];
+      return result[0] ?? null;
     } catch (error: unknown) {
       console.error("Error fetching profile:", error);
       return null;
@@ -101,7 +87,7 @@ export class ProfileRepository extends BaseRepository {
    */
   async getAllProfiles(): Promise<ProfileWithEmail[]> {
     try {
-      const query = `
+      const result = await this.sql<ProfileWithEmail[]>`
         SELECT 
           p.id,
           au.email,
@@ -120,8 +106,7 @@ export class ProfileRepository extends BaseRepository {
         ORDER BY p.created_at DESC
       `;
 
-      const result = await this.db.query(query);
-      return result.rows;
+      return result;
     } catch (error: unknown) {
       console.error("Error fetching all profiles:", error);
       throw error;
@@ -137,7 +122,9 @@ export class ProfileRepository extends BaseRepository {
     mathSocMembers: number;
   }> {
     try {
-      const query = `
+      const result = await this.sql<
+        { total_users: number; paid_users: number; math_soc_members: number }[]
+      >`
         SELECT 
           COUNT(*) as total_users,
           COUNT(*) FILTER (WHERE has_paid = true) as paid_users,
@@ -145,13 +132,16 @@ export class ProfileRepository extends BaseRepository {
         FROM profiles
       `;
 
-      const result = await this.db.query(query);
-      const row = result.rows[0];
+      const row = result[0] ?? {
+        total_users: 0,
+        paid_users: 0,
+        math_soc_members: 0,
+      };
 
       return {
-        totalUsers: Number.parseInt(row.total_users),
-        paidUsers: Number.parseInt(row.paid_users),
-        mathSocMembers: Number.parseInt(row.math_soc_members),
+        totalUsers: row.total_users,
+        paidUsers: row.paid_users,
+        mathSocMembers: row.math_soc_members,
       };
     } catch (error: unknown) {
       console.error("Error fetching membership stats:", error);
