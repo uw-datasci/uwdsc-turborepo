@@ -10,6 +10,18 @@ This semester continues to build upon the foundation established in Fall 2025, w
 
 ## 🔧 Infrastructure
 
+### Database Connection Improvements
+
+- **Migration to postgres.js**: Migrated from `pg` (node-postgres) to `postgres.js` for better serverless and Supabase Transaction Pooler compatibility
+- **Connection Timeout Fix**: Resolved database connection timeout issues by disabling prepared statements (`prepare: false`) for Supabase Transaction Pooler (port 6543)
+- **Optimized Configuration**: 
+  - Single connection per serverless function (`max: 1`)
+  - 10-second idle timeout for efficient resource usage
+  - 10-second connection timeout for faster failure detection
+  - 30-minute max connection lifetime
+- **Tagged Template Queries**: Improved SQL query syntax with tagged template literals for better type safety and automatic escaping
+- **Simplified Transaction Handling**: Cleaner transaction API using `sql.begin()` instead of manual connection pool management
+
 ## 🚀 DevOps & CI/CD
 
 ---

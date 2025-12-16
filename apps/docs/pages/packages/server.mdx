@@ -78,9 +78,9 @@ import { BaseRepository } from "@uwdsc/server/core/repository/baseRepository";
 
 **BaseRepository** - Base class for all repositories
 
-- pg connection pool access
-- Common database operations
-- Transaction support
+- postgres.js connection access via `this.sql`
+- Tagged template SQL queries
+- Transaction support with `sql.begin()`
 
 ## Web Package (`@uwdsc/server/web`)
 
@@ -168,11 +168,10 @@ import { BaseRepository } from "@uwdsc/server/core/repository/baseRepository";
 
 export class ProfileRepository extends BaseRepository {
   async findById(userId: string) {
-    const result = await this.pool.query(
-      "SELECT * FROM users WHERE id = $1",
-      [userId]
-    );
-    return result.rows[0] || null;
+    const result = await this.sql`
+      SELECT * FROM users WHERE id = ${userId}
+    `;
+    return result[0] || null;
   }
 }
 ```
@@ -240,4 +239,4 @@ Core package uses Supabase for:
 
 - [API Architecture](/architecture/api-flow) - Learn about backend patterns
 - [Creating API Endpoints](/guides/creating-api) - Build APIs
-- [Database Setup](/guides/database) - Work with db-mate and pg
+- [Database Setup](/guides/database) - Work with db-mate and postgres.js
