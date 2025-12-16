@@ -84,3 +84,25 @@ jobs:
       VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
       VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID_CXC }}
       VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+
+  deployment-summary:
+    needs: [deploy-web, deploy-cxc]
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - uses: uw-datasci/nexus-vercel-summary@v1
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          deployments: |
+            [
+              {
+                "name": "Web",
+                "status": "${{ needs.deploy-web.result == 'success' && 'successful' || 'failed' }}",
+                "url": "${{ needs.deploy-web.outputs.deployment-url }}"
+              },
+              {
+                "name": "CxC",
+                "status": "${{ needs.deploy-cxc.result == 'success' && 'successful' || 'failed' }}",
+                "url": "${{ needs.deploy-cxc.outputs.deployment-url }}"
+              }
+            ]
