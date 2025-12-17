@@ -1,9 +1,8 @@
-import { Pool } from "pg";
-import { pool } from "../database/connection";
+import { sql, type Sql } from "../database/connection";
 
 /**
- * BaseRepository with shared database connection pool
+ * BaseRepository with shared postgres.js connection
  */
 export abstract class BaseRepository {
-  protected db: Pool = pool;
+  protected sql: Sql = sql;
 }
