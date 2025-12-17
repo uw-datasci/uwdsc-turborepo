@@ -63,6 +63,7 @@ export const applicationSchema = z.object({
     .enum(["Male", "Female", "Non-Binary", "Other", "Prefer not to say"])
     .optional(),
   ethnicity: z.array(z.string()).optional(),
+  ethnicity_other: z.string().optional(),
 
   // ========================================================================
   // Education Information
@@ -88,6 +89,12 @@ export const applicationSchema = z.object({
         ].includes(val),
       "Invalid year of study",
     ),
+  age: z
+    .number()
+    .int("Age must be an integer")
+    .gt(0, "Age must be greater than 0"),
+  country_of_residence: z.string().min(1, "Country of residence is required"),
+  country_of_residence_other: z.string().optional(),
 
   // ========================================================================
   // Experience Information
@@ -175,11 +182,15 @@ export const applicationDefaultValues: Partial<AppFormValues> = {
   dietary_restrictions_other: "",
   gender: undefined,
   ethnicity: undefined,
+  ethnicity_other: "",
   university_name: "",
   university_name_other: "",
   program: "",
   program_other: "",
   year_of_study: "",
+  age: undefined,
+  country_of_residence: undefined,
+  country_of_residence_other: "",
   prior_hackathon_experience: [],
   hackathons_attended: undefined,
   github: "",

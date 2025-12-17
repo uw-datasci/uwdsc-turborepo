@@ -6,7 +6,10 @@
  */
 
 import {
+  COUNTRY_OPTIONS,
   DIETARY_OPTIONS,
+  ETHNICITIES,
+  ETHNICITY_OTHER_LABEL,
   PROGRAM_OPTIONS,
   UNIVERSITY_OPTIONS,
 } from "@/constants/application";
@@ -45,6 +48,28 @@ export function transformFormDataForDatabase(
       ? formData.program_other
       : formData.program;
 
+  const countryOfResidence =
+    formData.country_of_residence === "Other" &&
+    formData.country_of_residence_other
+      ? formData.country_of_residence_other
+      : formData.country_of_residence;
+
+  // Handle ethnicity - if "Other" is selected, use custom value instead of array
+  let ethnicityValue = "";
+
+  if (Array.isArray(formData.ethnicity) && formData.ethnicity.length > 0) {
+    if (
+      formData.ethnicity.includes(ETHNICITY_OTHER_LABEL) &&
+      formData.ethnicity_other?.trim()
+    ) {
+      // Replace entire array with custom value
+      ethnicityValue = formData.ethnicity_other.trim();
+    } else {
+      // Use standard ethnicity values
+      ethnicityValue = formData.ethnicity.join(",");
+    }
+  }
+
   return {
     profile_id: profileId,
     status: formData.status || "draft",
@@ -53,11 +78,11 @@ export function transformFormDataForDatabase(
     discord: formData.discord,
     t_shirt: formData.tshirt_size,
     dietary_restrictions: dietaryRestrictions,
+    age: formData.age,
+    country_of_residence: countryOfResidence,
     gender: formData.gender,
-    // Convert ethnicity array to comma-separated string
-    ethnicity: Array.isArray(formData.ethnicity)
-      ? formData.ethnicity.join(",")
-      : "",
+    // Store ethnicity as comma-separated string (or custom value if Other selected)
+    ethnicity: ethnicityValue,
     uni_name: universityName,
     uni_program: program,
     year_of_study: formData.year_of_study,
@@ -105,6 +130,31 @@ export function transformDatabaseDataToForm(
   const isProgramCustom =
     program && !PROGRAM_OPTIONS.map((opt) => opt.value).includes(program);
 
+  // Handle country of residence standard/custom
+  const countryOfResidence = dbData.country_of_residence as string;
+  const isCountryCustom =
+    countryOfResidence &&
+    !COUNTRY_OPTIONS.map((opt) => opt.value).includes(countryOfResidence);
+
+  // Handle ethnicity - detect if there's a custom value
+  const ethnicityString = dbData.ethnicity as string;
+  const ethnicityArray = ethnicityString
+    ? ethnicityString.split(",").map((e) => e.trim())
+    : [];
+
+  // Check if any ethnicity value is not in the standard options (means it's a custom "Other" value)
+  const isEthnicityCustom = ethnicityArray.some(
+    (e) => !ETHNICITIES.includes(e),
+  );
+
+  // If custom ethnicity exists, set form to ["Other"] and populate ethnicity_other
+  const formEthnicityArray = isEthnicityCustom
+    ? [ETHNICITY_OTHER_LABEL]
+    : ethnicityArray;
+
+  // When loading back, restore pipe delimiters to commas for editing
+  const ethnicityOtherValue = isEthnicityCustom ? ethnicityString : "";
+
   return {
     phone: (dbData.phone_number as string) || "",
     discord: (dbData.discord as string) || "",
@@ -118,11 +168,13 @@ export function transformDatabaseDataToForm(
     dietary_restrictions_other: isDietaryRestrictionCustom
       ? dietaryRestrictions
       : "",
+    age: (dbData.age as number) || undefined,
+    country_of_residence: isCountryCustom ? "Other" : countryOfResidence || "",
+    country_of_residence_other: isCountryCustom ? countryOfResidence : "",
     gender: (dbData.gender as AppFormValues["gender"]) || undefined,
-    // Convert comma-separated string back to array
-    ethnicity: dbData.ethnicity
-      ? (dbData.ethnicity as string).split(",").filter((e: string) => e.trim())
-      : [],
+    // Convert comma-separated string back to array with custom ethnicity handling
+    ethnicity: formEthnicityArray.length > 0 ? formEthnicityArray : undefined,
+    ethnicity_other: ethnicityOtherValue,
 
     // If custom value, set to "Other" and populate the _other field
     university_name: isUniversityCustom ? "Other" : universityName || "",

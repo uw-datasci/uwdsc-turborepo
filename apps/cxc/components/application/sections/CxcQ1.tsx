@@ -21,7 +21,7 @@ export function CxcQ1({ form }: CxcQ1Props) {
           name={APP_Q_FIELDS.cxc_q1}
           render={renderTextAreaField("I hope to...", {
             label:
-              "What do you hope to gain from your time at CxC? (max 500 char)",
+              "Tell us about a technical project that you have worked on. What did you learn? What challenges did you face?",
             required: true,
             variant: "application",
             textareaProps: {

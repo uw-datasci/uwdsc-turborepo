@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { ETHNICITY_OTHER_LABEL } from "@/constants/application";
 import {
   Input,
   Textarea,
@@ -94,7 +95,7 @@ const selectTriggerStyles: Record<FormFieldVariant, string> = {
   default: "w-full",
   auth: "w-full !bg-black !h-auto !px-4.5 !py-3.5 !rounded-lg xl:px-6 xl:py-4.5 border border-gray-100/75 text-base",
   application:
-    "w-full !h-auto !px-4.5 !py-4 !text-base !border-0 !border-b !bg-cxc-input-bg !rounded-none !shadow-none",
+    "w-full !h-auto !px-4.5 !py-4 !text-base !border-0 !border-b-[2px] !bg-cxc-input-bg !rounded-none !shadow-none",
 };
 
 const selectContentStyles: Record<FormFieldVariant, string> = {
@@ -122,7 +123,7 @@ const comboboxStyles: Record<FormFieldVariant, string> = {
   default: "",
   auth: "!h-auto !text-base border-gray-100/80 !bg-black px-4.5 py-3.5 rounded-lg xl:px-6 xl:py-4.5",
   application:
-    "!h-auto !border-0 !border-b !rounded-none !px-4.5 !py-4 !shadow-none !bg-cxc-input-bg text-base font-normal",
+    "!h-auto !border-0 !border-b-[2px] !rounded-none !px-4.5 !py-4 !shadow-none !bg-cxc-input-bg text-base font-normal",
 };
 
 const comboboxContentStyles: Record<FormFieldVariant, string> = {
@@ -515,7 +516,7 @@ export const renderCheckboxGroupField = <T extends Record<string, any>>(
   }) => (
     <FormItem>
       {label && (
-        <FormLabel className="font-normal">
+        <FormLabel className="font-normal mb-2">
           {label} {required && <span className="text-destructive">*</span>}
         </FormLabel>
       )}
@@ -531,15 +532,45 @@ export const renderCheckboxGroupField = <T extends Record<string, any>>(
                   const newValue = Array.isArray(field.value)
                     ? [...field.value]
                     : [];
-                  if (isChecked) {
-                    newValue.push(option);
-                  } else {
-                    const index = newValue.indexOf(option);
-                    if (index > -1) {
-                      newValue.splice(index, 1);
+                  // Special handling for "Other \ None" option in checkbox groups
+                  if (
+                    option === "None" ||
+                    option === ETHNICITY_OTHER_LABEL ||
+                    option === "Prefer Not to Answer"
+                  ) {
+                    if (isChecked) {
+                      // If checked, clear all other selections and only keep clicked one
+                      field.onChange([option]);
+                    } else {
+                      // If unchecked, just remove it
+                      const index = newValue.indexOf(option);
+                      if (index > -1) {
+                        newValue.splice(index, 1);
+                      }
+                      field.onChange(newValue);
                     }
+                  } else {
+                    // For non-Other/None options
+                    if (isChecked) {
+                      // Remove if it exists before adding new option
+                      const otherIndex = newValue.findIndex(
+                        (v) =>
+                          v === "None" ||
+                          v === ETHNICITY_OTHER_LABEL ||
+                          v === "Prefer Not to Answer",
+                      );
+                      if (otherIndex > -1) {
+                        newValue.splice(otherIndex, 1);
+                      }
+                      newValue.push(option);
+                    } else {
+                      const index = newValue.indexOf(option);
+                      if (index > -1) {
+                        newValue.splice(index, 1);
+                      }
+                    }
+                    field.onChange(newValue);
                   }
-                  field.onChange(newValue);
                 }}
                 className="!bg-transparent rounded-xs border-white data-[state=checked]:border-white w-4 h-4 hover:cursor-pointer"
               />
@@ -547,10 +578,10 @@ export const renderCheckboxGroupField = <T extends Record<string, any>>(
             <FormLabel className="font-normal text-base hover:cursor-pointer">
               {option}
             </FormLabel>
-            <FormMessage />
           </FormItem>
         ))}
       </fieldset>
+      <FormMessage />
     </FormItem>
   );
 
@@ -558,86 +589,3 @@ export const renderCheckboxGroupField = <T extends Record<string, any>>(
 
   return CheckboxGroupFieldComponent;
 };
-
-// ============================================================================
-// Named exports for compatibility with old usage patterns
-// These work alongside the generic functions above
-// ============================================================================
-
-/**
- * Render text field for application forms (with label)
- */
-export function renderTextFieldWithLabel<T extends Record<string, any>>(
-  label: string,
-  placeholder: string,
-  inputProps?: Partial<ComponentProps<typeof Input>>,
-) {
-  return renderTextField<T>(placeholder, {
-    label,
-    required: true,
-    variant: "default",
-    inputProps,
-  });
-}
-
-/**
- * Render select field for application forms (with label)
- */
-export function renderSelectFieldWithLabel<T extends Record<string, any>>(
-  label: string,
-  placeholder: string,
-  options: string[],
-  required: boolean = true,
-) {
-  return renderSelectField<T>(placeholder, options, {
-    label,
-    required,
-    variant: "application",
-  });
-}
-
-/**
- * Render textarea field for application forms (with label)
- */
-export function renderTextAreaFieldWithLabel<T extends Record<string, any>>(
-  label: string,
-  placeholder: string,
-  textareaProps?: Partial<ComponentProps<typeof Textarea>>,
-  required: boolean = true,
-) {
-  return renderTextAreaField<T>(placeholder, {
-    label,
-    required,
-    variant: "default",
-    textareaProps,
-  });
-}
-
-/**
- * Render radio field for application forms
- */
-export function renderRadioFieldWithLabel<T extends Record<string, any>>(
-  label: string,
-) {
-  return renderRadioField<T>(label, { required: true });
-}
-
-/**
- * Render combobox field for application forms (with label)
- */
-export function renderComboboxFieldWithLabel<T extends Record<string, any>>(
-  label: string,
-  placeholder: string,
-  options: ComboboxOption[],
-  required: boolean = true,
-  searchPlaceholder?: string,
-  emptyMessage?: string,
-) {
-  return renderComboboxField<T>(placeholder, options, {
-    label,
-    required,
-    variant: "application",
-    searchPlaceholder,
-    emptyMessage,
-  });
-}

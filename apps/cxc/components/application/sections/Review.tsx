@@ -22,11 +22,14 @@ import {
   TShirtIcon,
   UsersIcon,
   BrowserIcon,
+  CakeIcon,
+  MapPinIcon,
 } from "@uwdsc/ui/index";
 import React from "react";
 import {
   APP_Q_FIELDS,
   CONTACT_INFO_FIELDS,
+  ETHNICITY_OTHER_LABEL,
   LINKS_FIELDS,
   OPTIONAL_ABOUT_YOU_FIELDS,
   PRIOR_HACK_EXP_FIELDS,
@@ -56,6 +59,8 @@ const CONTACT_INFO_LABELS = ["Name", "Email", "Phone", "Discord"];
 const OPTIONAL_ABOUT_YOU_LABELS = [
   "T-shirt size",
   "Dietary Restrictions",
+  "Age",
+  "Country of Residence",
   "Gender",
   "Ethnicity",
 ];
@@ -86,7 +91,19 @@ const InfoRow = ({ form, label, icon, iconLabel }: InfoRowProps) => {
       return value.name;
     }
     if (Array.isArray(value)) {
-      return value.length > 0 ? value.join(", ") : NO_INPUT;
+      // Special handling for ethnicity array - replace "Other" with custom value
+      if (label === OPTIONAL_ABOUT_YOU_FIELDS.ethnicity) {
+        const ethnicityOther = form.getValues("ethnicity_other");
+
+        // If array contains "Other", replace entire array with ethnicityOther value
+        if (
+          (value as string[]).includes(ETHNICITY_OTHER_LABEL) &&
+          ethnicityOther
+        ) {
+          return ethnicityOther;
+        }
+      }
+      return value.length > 0 ? (value as string[]).join(", ") : NO_INPUT;
     }
 
     // For fields that have an "other" variant
@@ -184,8 +201,12 @@ const OptionalAboutYouIcons = [
   <TShirtIcon key="tshirt" size={24} />,
   <HamburgerIcon key="food" size={24} />,
   null, // placeholder for dietary_restrictions_other (won't be shown)
+  <CakeIcon key="age" size={24} />,
+  <MapPinIcon key="country" size={24} />,
+  null, // placeholder for country_of_residence_other
   <GenderIntersexIcon key="gender" size={24} />,
   <GlobeIcon key="globe" size={24} />,
+  null, // placeholder for ethnicity_other
 ];
 
 const UniIcons = [

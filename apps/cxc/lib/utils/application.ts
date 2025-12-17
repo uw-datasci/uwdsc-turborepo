@@ -16,11 +16,18 @@ export const isDesktopStepValid = (
   switch (currentStep) {
     case 0: {
       // Personal Details
+      const phone = form.watch("phone");
+      const discord = form.watch("discord");
       const dietary_restrictions = form.watch("dietary_restrictions");
       const dietary_restrictions_other = form.watch(
         "dietary_restrictions_other",
       );
       const tshirt_size = form.watch("tshirt_size");
+      const age = form.watch("age");
+      const country_of_residence = form.watch("country_of_residence");
+      const country_of_residence_other = form.watch(
+        "country_of_residence_other",
+      );
 
       const validAboutYou =
         !errors.dietary_restrictions &&
@@ -30,11 +37,17 @@ export const isDesktopStepValid = (
         !errors.dietary_restrictions_other &&
         (dietary_restrictions !== "Other" ||
           (dietary_restrictions_other?.trim().length ?? 0) > 0) &&
+        !errors.age &&
+        age !== undefined &&
+        !errors.country_of_residence &&
+        country_of_residence !== undefined &&
+        (country_of_residence !== "Other" ||
+          (country_of_residence_other?.trim().length ?? 0) > 0) &&
         !errors.gender &&
         !errors.ethnicity;
 
       const validContactInfo =
-        !errors.email && !errors.phone && !errors.discord;
+        !errors.email && !errors.phone && phone && !errors.discord && discord;
 
       return validAboutYou && validContactInfo;
     }
@@ -119,6 +132,11 @@ export const isMobileStepValid = (
         "dietary_restrictions_other",
       );
       const tshirt_size = form.watch("tshirt_size");
+      const age = form.watch("age");
+      const country_of_residence = form.watch("country_of_residence");
+      const country_of_residence_other = form.watch(
+        "country_of_residence_other",
+      );
 
       const validAboutYou =
         !errors.dietary_restrictions &&
@@ -128,6 +146,12 @@ export const isMobileStepValid = (
         !errors.dietary_restrictions_other &&
         (dietary_restrictions !== "Other" ||
           (dietary_restrictions_other?.trim().length ?? 0) > 0) &&
+        !errors.age &&
+        age !== undefined &&
+        !errors.country_of_residence &&
+        country_of_residence !== undefined &&
+        (country_of_residence !== "Other" ||
+          (country_of_residence_other?.trim().length ?? 0) > 0) &&
         !errors.gender &&
         !errors.ethnicity;
       return validAboutYou;

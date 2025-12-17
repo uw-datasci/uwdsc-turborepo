@@ -200,4 +200,6 @@ export {
   LinkIcon,
   LightbulbIcon,
   SmileyIcon,
+  CakeIcon,
+  MapPinIcon,
 } from "@phosphor-icons/react";

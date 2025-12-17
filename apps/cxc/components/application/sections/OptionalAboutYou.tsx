@@ -5,12 +5,14 @@ import { UseFormReturn } from "react-hook-form";
 import {
   renderSelectField,
   renderCheckboxGroupField,
+  renderTextField,
 } from "@/components/FormHelpers";
 import AppSection from "../AppSection";
 import { AppFormValues } from "@/lib/schemas/application";
 import { useEffect } from "react";
 import {
   ETHNICITIES,
+  ETHNICITY_OTHER_LABEL,
   GENDERS,
   OPTIONAL_ABOUT_YOU_FIELDS,
 } from "@/constants/application";
@@ -21,6 +23,7 @@ interface OptionalAboutYouProps {
 
 export function OptionalAboutYou({ form }: OptionalAboutYouProps) {
   const dietaryRestriction = form.watch("dietary_restrictions");
+  const ethnicity = form.watch("ethnicity");
 
   useEffect(() => {
     if (dietaryRestriction !== "Other") {
@@ -28,13 +31,19 @@ export function OptionalAboutYou({ form }: OptionalAboutYouProps) {
     }
   }, [dietaryRestriction, form]);
 
+  useEffect(() => {
+    if (!ethnicity?.includes(ETHNICITY_OTHER_LABEL)) {
+      form.setValue("ethnicity_other", "");
+    }
+  }, [ethnicity, form]);
+
   return (
     <Form {...form}>
       <AppSection
         label="Optional"
         description="These are used for analytical purposes only."
       >
-        <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 items-start">
+        <div className="grid grid-cols-1 gap-8 items-start">
           <FormField
             control={form.control}
             name={OPTIONAL_ABOUT_YOU_FIELDS.gender}
@@ -51,6 +60,18 @@ export function OptionalAboutYou({ form }: OptionalAboutYouProps) {
               label: "Select your ethnicity",
             })}
           />
+
+          {ethnicity?.includes(ETHNICITY_OTHER_LABEL) && (
+            <FormField
+              control={form.control}
+              name={OPTIONAL_ABOUT_YOU_FIELDS.ethnicity_other}
+              render={renderTextField("Other Ethnicity", {
+                label: "Please specify your ethnicity",
+                required: true,
+                variant: "application",
+              })}
+            />
+          )}
         </div>
       </AppSection>
     </Form>

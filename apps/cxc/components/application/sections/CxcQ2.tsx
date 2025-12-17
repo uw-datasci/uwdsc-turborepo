@@ -19,14 +19,17 @@ export function CxcQ2({ form }: CxcQ2Props) {
           key="cxc_q2"
           control={form.control}
           name={APP_Q_FIELDS.cxc_q2}
-          render={renderTextAreaField("Q2 Here", {
-            label: "Q2 Here (max 200 char)",
-            required: true,
-            variant: "application",
-            textareaProps: {
-              maxLength: 200,
+          render={renderTextAreaField(
+            "Type your haiku here... (5-7-5 syllables)",
+            {
+              label: "Write us a Haiku",
+              required: true,
+              variant: "application",
+              textareaProps: {
+                maxLength: 200,
+              },
             },
-          })}
+          )}
         />
       </AppSection>
     </Form>

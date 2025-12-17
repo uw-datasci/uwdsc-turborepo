@@ -44,6 +44,8 @@ export interface HackerApplication {
   discord: string; // varchar(32), 2 <= length <= 32
   t_shirt: SizeOption;
   dietary_restrictions: string;
+  age: number;
+  country_of_residence: string;
   gender: GenderOption;
   ethnicity: string[];
 
