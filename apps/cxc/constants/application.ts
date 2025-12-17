@@ -1,12 +1,13 @@
 import { type ComboboxOption } from "@uwdsc/ui";
 
-export const MOBILE_STEP_TO_PAGE_MAP = [0, 3, 6, 8];
-export const NUMBER_MOBILE_PAGES = 9;
+export const MOBILE_STEP_TO_PAGE_MAP = [0, 3, 6, 8, 9];
+export const NUMBER_MOBILE_PAGES = 10;
 
 export const STEP_NAMES = [
   "Your Info",
   "Your Experience",
   "Application questions",
+  "Teams & MLH",
   "Submit!",
 ];
 
@@ -152,6 +153,12 @@ export const LINKS_FIELDS = {
 export const APP_Q_FIELDS = {
   cxc_q1: "cxc_q1",
   cxc_q2: "cxc_q2",
+} as const;
+
+export const MLH_FIELDS = {
+  mlh_agreed_code_of_conduct: "mlh_agreed_code_of_conduct",
+  mlh_authorize_info_sharing: "mlh_authorize_info_sharing",
+  mlh_email_opt_in: "mlh_email_opt_in",
 } as const;
 
 // personal

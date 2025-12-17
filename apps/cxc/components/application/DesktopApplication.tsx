@@ -27,6 +27,7 @@ import {
   Review,
 } from "./sections";
 import { ScrollArea } from "@uwdsc/ui/index";
+import MLHCheckboxes from "./sections/MLHCheckboxes";
 
 interface DesktopApplicationProps {
   readonly form: UseFormReturn<AppFormValues>;
@@ -104,6 +105,8 @@ export default function DesktopApplication({
           </div>
         );
       case 3:
+        return <MLHCheckboxes form={form} />;
+      case 4:
         return <Review form={form} />;
     }
   };

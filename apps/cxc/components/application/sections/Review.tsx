@@ -24,6 +24,8 @@ import {
   BrowserIcon,
   CakeIcon,
   MapPinIcon,
+  CheckSquareIcon,
+  SquareIcon,
 } from "@uwdsc/ui/index";
 import React from "react";
 import {
@@ -31,6 +33,7 @@ import {
   CONTACT_INFO_FIELDS,
   ETHNICITY_OTHER_LABEL,
   LINKS_FIELDS,
+  MLH_FIELDS,
   OPTIONAL_ABOUT_YOU_FIELDS,
   PRIOR_HACK_EXP_FIELDS,
   UNIVERSITY_INFO_FIELDS,
@@ -73,6 +76,12 @@ const LINKS_LABELS = ["Github", "LinkedIn", "Website", "Other", "Resume"];
 
 const APP_Q_LABEL = ["Question 1", "Question 2"];
 
+const MLH_LABELS = [
+  "MLH Code of Conduct",
+  "MLH Info Sharing",
+  "MLH Email Opt-in",
+];
+
 const InfoRow = ({ form, label, icon, iconLabel }: InfoRowProps) => {
   const value = form.getValues(label as keyof AppFormValues);
   // Check if this is a link field
@@ -85,8 +94,15 @@ const InfoRow = ({ form, label, icon, iconLabel }: InfoRowProps) => {
     Object.values(APP_Q_FIELDS) as readonly string[]
   ).includes(label);
 
+  const isBooleanField = (
+    Object.values(MLH_FIELDS) as readonly string[]
+  ).includes(label);
+
   // Handle different value types
   const displayValue = React.useMemo(() => {
+    if (isBooleanField) {
+      return value ? "Yes" : "No";
+    }
     if (value instanceof File) {
       return value.name;
     }
@@ -120,7 +136,7 @@ const InfoRow = ({ form, label, icon, iconLabel }: InfoRowProps) => {
     }
 
     return mainValue || NO_INPUT;
-  }, [value, label, form]);
+  }, [value, label, form, isBooleanField]);
 
   // Don't render if this is an "_other" field (it's handled by the parent field)
   if (label.endsWith("_other")) {
@@ -142,7 +158,17 @@ const InfoRow = ({ form, label, icon, iconLabel }: InfoRowProps) => {
 
   return (
     <div className="flex flex-row gap-3 items-center min-w-0">
-      <div className="flex-shrink-0">{icon}</div>
+      {!isBooleanField ? (
+        <div className="flex-shrink-0">{icon}</div>
+      ) : value ? (
+        <div className="flex-shrink-0">
+          <CheckSquareIcon key={label} size={24} />
+        </div>
+      ) : (
+        <div className="flex-shrink-0">
+          <SquareIcon key={label} size={24} />
+        </div>
+      )}
       {iconLabel}:
       <div className="min-w-0 flex-1">
         {isLinkField && displayValue !== NO_INPUT ? (
@@ -235,6 +261,8 @@ const CxCAppIcons = [
   <SmileyIcon key="smiley" size={24} />,
 ];
 
+const MLHIcons = [null, null, null];
+
 export function Review({ form }: ReviewProps) {
   return (
     <div>
@@ -277,6 +305,12 @@ export function Review({ form }: ReviewProps) {
           iconArr={CxCAppIcons}
           fieldArr={Object.values(APP_Q_FIELDS)}
           labelArr={APP_Q_LABEL}
+        />
+        <SectionReviewCard
+          form={form}
+          iconArr={MLHIcons}
+          fieldArr={Object.values(MLH_FIELDS)}
+          labelArr={MLH_LABELS}
         />
       </AppSection>
     </div>

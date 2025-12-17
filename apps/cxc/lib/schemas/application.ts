@@ -152,6 +152,9 @@ export const applicationSchema = z.object({
   // ========================================================================
 
   team_members: z.array(z.string()).optional(),
+  mlh_agreed_code_of_conduct: z.boolean(),
+  mlh_authorize_info_sharing: z.boolean(),
+  mlh_email_opt_in: z.boolean(),
 });
 
 // ============================================================================
@@ -201,4 +204,7 @@ export const applicationDefaultValues: Partial<AppFormValues> = {
   cxc_q1: "",
   cxc_q2: "",
   team_members: [],
+  mlh_agreed_code_of_conduct: false,
+  mlh_authorize_info_sharing: false,
+  mlh_email_opt_in: false,
 };

@@ -96,6 +96,19 @@ export const isDesktopStepValid = (
       const CxcQ2 = form.watch("cxc_q2");
       return !errors.cxc_q1 && !!CxcQ1 && !errors.cxc_q2 && !!CxcQ2;
     }
+    case 3: {
+      // Teams & MLH
+      const mlh_agreed_code_of_conduct = form.watch(
+        "mlh_agreed_code_of_conduct",
+      );
+      const mlh_authorize_info_sharing = form.watch(
+        "mlh_authorize_info_sharing",
+      );
+      return (
+        mlh_agreed_code_of_conduct === true &&
+        mlh_authorize_info_sharing === true
+      );
+    }
     default:
       return true;
   }
@@ -213,6 +226,19 @@ export const isMobileStepValid = (
       // CxC Q2
       const cxcQ2 = form.watch("cxc_q2");
       return !errors.cxc_q2 && !!cxcQ2;
+    }
+    case 8: {
+      // Teams & MLH
+      const mlh_agreed_code_of_conduct = form.watch(
+        "mlh_agreed_code_of_conduct",
+      );
+      const mlh_authorize_info_sharing = form.watch(
+        "mlh_authorize_info_sharing",
+      );
+      return (
+        mlh_agreed_code_of_conduct === true &&
+        mlh_authorize_info_sharing === true
+      );
     }
     default:
       return true;

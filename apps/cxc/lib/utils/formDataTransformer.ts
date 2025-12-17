@@ -101,6 +101,10 @@ export function transformFormDataForDatabase(
     team_members: Array.isArray(formData.team_members)
       ? formData.team_members.join(",")
       : "",
+    // MLH checkbox fields
+    mlh_agreed_code_of_conduct: formData.mlh_agreed_code_of_conduct || false,
+    mlh_authorize_info_sharing: formData.mlh_authorize_info_sharing || false,
+    mlh_email_opt_in: formData.mlh_email_opt_in || false,
   };
 }
 
@@ -209,6 +213,12 @@ export function transformDatabaseDataToForm(
           .split(",")
           .filter((m: string) => m.trim())
       : [],
+    // MLH checkbox fields
+    mlh_agreed_code_of_conduct:
+      (dbData.mlh_agreed_code_of_conduct as boolean) || false,
+    mlh_authorize_info_sharing:
+      (dbData.mlh_authorize_info_sharing as boolean) || false,
+    mlh_email_opt_in: (dbData.mlh_email_opt_in as boolean) || false,
     status: (dbData.status as AppFormValues["status"]) || "draft",
     submitted_at: dbData.submitted_at
       ? new Date(dbData.submitted_at as string | number | Date)

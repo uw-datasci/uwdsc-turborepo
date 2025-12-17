@@ -22,7 +22,7 @@ import {
   FormDescription,
 } from "@uwdsc/ui";
 import type { ComboboxOption } from "@uwdsc/ui";
-import { ComponentProps, useEffect, useState } from "react";
+import { ComponentProps, ReactNode, useEffect, useState } from "react";
 import { ControllerRenderProps } from "react-hook-form";
 
 /**
@@ -78,6 +78,12 @@ interface FileUploadFieldOptions {
 interface CheckboxGroupFieldOptions {
   label?: string;
   required?: boolean;
+}
+
+interface CheckboxFieldOptions {
+  label: ReactNode;
+  required?: boolean;
+  description?: string;
 }
 
 // ============================================================================
@@ -493,6 +499,56 @@ export const renderFileUploadField = <T extends Record<string, any>>(
   FileUploadFieldComponent.displayName = `FileUploadField(${accept})`;
 
   return FileUploadFieldComponent;
+};
+
+/**
+ * Render a single checkbox field for boolean values
+ *
+ * @example
+ * renderCheckboxField({
+ *   label: "I agree to the terms and conditions",
+ *   required: true,
+ *   description: "You must agree to continue"
+ * })
+ */
+export const renderCheckboxField = <T extends Record<string, any>>(
+  options: CheckboxFieldOptions,
+) => {
+  const { label, required = false, description } = options;
+
+  const CheckboxFieldComponent = ({
+    field,
+  }: {
+    field: ControllerRenderProps<T, any>;
+  }) => (
+    <FormItem className="flex flex-row items-start space-x-3 space-y-0">
+      <FormControl>
+        <Checkbox
+          checked={field.value === true}
+          onCheckedChange={(checked) => {
+            field.onChange(checked === true);
+          }}
+          className="!bg-transparent rounded-xs border-white data-[state=checked]:border-white w-4 h-4 hover:cursor-pointer mt-1"
+        />
+      </FormControl>
+
+      <div className="space-y-1 leading-none">
+        <FormLabel className="font-normal text-base hover:cursor-pointer">
+          {label} {required && <span className="text-destructive">*</span>}
+        </FormLabel>
+
+        {description && (
+          <FormDescription className="text-sm text-muted-foreground">
+            {description}
+          </FormDescription>
+        )}
+      </div>
+    </FormItem>
+  );
+
+  CheckboxFieldComponent.displayName = `CheckboxField(${label})`;
+
+  return CheckboxFieldComponent;
 };
 
 /**

@@ -93,7 +93,13 @@ export function AboutYou({ form }: AboutYouProps) {
                     field.onChange(value === "" ? undefined : Number(value));
                   },
                 },
-              })({ field: field as any, fieldState });
+              })({
+                field: {
+                  ...field,
+                  value: field.value ?? "",
+                },
+                fieldState,
+              });
             }}
           />
           <FormField

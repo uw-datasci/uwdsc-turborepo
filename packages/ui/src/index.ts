@@ -202,4 +202,6 @@ export {
   SmileyIcon,
   CakeIcon,
   MapPinIcon,
+  SquareIcon,
+  CheckSquareIcon,
 } from "@phosphor-icons/react";
