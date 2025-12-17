@@ -1,4 +1,4 @@
-import { STEP_NAMES } from "@/constants/application";
+import { NUMBER_MOBILE_PAGES, STEP_NAMES } from "@/constants/application";
 import { AppFormValues } from "@/lib/schemas/application";
 import { isMobileStepValid } from "@/lib/utils/application";
 import {
@@ -37,10 +37,10 @@ interface MobileApplicationProps {
 }
 
 const FINAL_STEP_COUNT = STEP_NAMES.length;
-const NUMBER_PAGES = 8;
 const PAGE_NAMES = [
   "Contact info",
   "About you",
+  "Optional",
   "Education",
   "Hackathon experience",
   "Documents",
@@ -59,10 +59,10 @@ export default function MobileApplication({
   const [direction, setDirection] = useState<number>(1);
 
   const getCurrentStep = () => {
-    if (currentPage < 2) return 0;
-    if (currentPage < 5) return 1;
-    if (currentPage < 7) return 2;
-    return 3;
+    if (currentPage < 3) return 0; // Contact Info, About You, Optional About You
+    if (currentPage < 6) return 1; // Education, Prior Hack Exp, Links & Docs
+    if (currentPage < 8) return 2; // CXC Q1, Q2
+    return 3; // Review
   };
 
   const currentStep = getCurrentStep();
@@ -85,7 +85,7 @@ export default function MobileApplication({
   };
 
   const handleNext = async () => {
-    const isLastPage = currentPage === NUMBER_PAGES - 1;
+    const isLastPage = currentPage === NUMBER_MOBILE_PAGES - 1;
     await onSaveAndContinue(goNext, isLastPage);
   };
 
@@ -94,23 +94,20 @@ export default function MobileApplication({
       case 0:
         return <ContactInfo form={form} />;
       case 1:
-        return (
-          <div className="flex flex-col gap-10">
-            <AboutYou form={form} />
-            <OptionalAboutYou form={form} />
-          </div>
-        );
+        return <AboutYou form={form} />;
       case 2:
-        return <Education form={form} />;
+        return <OptionalAboutYou form={form} />;
       case 3:
-        return <PriorHackExp form={form} />;
+        return <Education form={form} />;
       case 4:
-        return <LinksAndDocs form={form} />;
+        return <PriorHackExp form={form} />;
       case 5:
-        return <CxcQ1 form={form} />;
+        return <LinksAndDocs form={form} />;
       case 6:
-        return <CxcQ2 form={form} />;
+        return <CxcQ1 form={form} />;
       case 7:
+        return <CxcQ2 form={form} />;
+      case 8:
         return <Review form={form} />;
     }
   };
@@ -144,10 +141,10 @@ export default function MobileApplication({
             </motion.div>
           </AnimatePresence>
 
-          {currentPage !== NUMBER_PAGES && (
+          {currentPage !== NUMBER_MOBILE_PAGES && (
             <AppNavigationButtons
               isFirstStep={currentPage === 0}
-              isLastStep={currentPage === NUMBER_PAGES - 1}
+              isLastStep={currentPage === NUMBER_MOBILE_PAGES - 1}
               isNextDisabled={
                 !isMobileStepValid(form, currentPage) || isLoading
               }

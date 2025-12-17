@@ -151,12 +151,15 @@ export const isMobileStepValid = (
         !errors.country_of_residence &&
         country_of_residence !== undefined &&
         (country_of_residence !== "Other" ||
-          (country_of_residence_other?.trim().length ?? 0) > 0) &&
-        !errors.gender &&
-        !errors.ethnicity;
+          (country_of_residence_other?.trim().length ?? 0) > 0);
+
       return validAboutYou;
     }
     case 2: {
+      const validOptional = !errors.gender && !errors.ethnicity;
+      return validOptional;
+    }
+    case 3: {
       // Education
       const universityName = form.watch("university_name");
       const program = form.watch("program");
@@ -176,7 +179,7 @@ export const isMobileStepValid = (
 
       return isUniversityValid && isProgramValid && isYearValid;
     }
-    case 3: {
+    case 4: {
       // Hackathon Experience
       const hackathons_attended = form.watch("hackathons_attended");
       const prior_hackathon_experience = form.watch(
@@ -189,7 +192,7 @@ export const isMobileStepValid = (
         hackathons_attended !== undefined;
       return validHackExp;
     }
-    case 4: // Links & Documents
+    case 5: // Links & Documents
       return (
         !errors.github &&
         !errors.linkedin &&
@@ -197,12 +200,12 @@ export const isMobileStepValid = (
         !errors.other_link &&
         !errors.resume
       );
-    case 5: {
+    case 6: {
       // CxC Q1
       const cxcQ1 = form.watch("cxc_q1");
       return !errors.cxc_q1 && !!cxcQ1;
     }
-    case 6: {
+    case 7: {
       // CxC Q2
       const cxcQ2 = form.watch("cxc_q2");
       return !errors.cxc_q2 && !!cxcQ2;

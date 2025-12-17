@@ -1,6 +1,7 @@
 import { type ComboboxOption } from "@uwdsc/ui";
 
-export const MOBILE_STEP_TO_PAGE_MAP = [0, 2, 5, 7];
+export const MOBILE_STEP_TO_PAGE_MAP = [0, 3, 6, 8];
+export const NUMBER_MOBILE_PAGES = 9;
 
 export const STEP_NAMES = [
   "Your Info",

@@ -32,14 +32,13 @@ import {
 import DesktopApplication from "@/components/application/DesktopApplication";
 import MobileApplication from "@/components/application/MobileApplication";
 import { Submitted } from "@/components/application/sections";
-import { MOBILE_STEP_TO_PAGE_MAP, STEP_NAMES } from "@/constants/application";
+import { MOBILE_STEP_TO_PAGE_MAP, NUMBER_MOBILE_PAGES, STEP_NAMES } from "@/constants/application";
 
 // ============================================================================
 // Constants
 // ============================================================================
 
 const FINAL_STEP_COUNT = STEP_NAMES.length;
-const NUMBER_PAGES = 8;
 
 // ============================================================================
 // Helper Functions
@@ -57,10 +56,10 @@ const stepToPage = (step: number): number => {
  * Converts mobile page number to desktop step
  */
 const pageToStep = (page: number): number => {
-  if (page < 2) return 0;
-  if (page < 5) return 1;
-  if (page < 7) return 2;
-  return 3;
+  if (page < 3) return 0; // pages 0, 1, 2 = Contact Info, About You, Optional
+  if (page < 6) return 1; // pages 3, 4, 5 = Education, Hack Exp, Links
+  if (page < 8) return 2; // pages 6, 7 = Question 1, Question 2
+  return 3; // page 8 = Review
 };
 
 export default function ApplyPage() {
@@ -226,7 +225,7 @@ export default function ApplyPage() {
   const isSubmitted =
     applicationStatus === "submitted" ||
     currentDesktopStep === FINAL_STEP_COUNT ||
-    currentMobilePage === NUMBER_PAGES;
+    currentMobilePage === NUMBER_MOBILE_PAGES;
 
   if (isSubmitted) {
     return <Submitted />;
