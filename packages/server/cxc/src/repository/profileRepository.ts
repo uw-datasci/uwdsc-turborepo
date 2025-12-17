@@ -8,17 +8,15 @@ export class ProfileRepository extends BaseRepository {
    */
   async getProfileByUserId(userId: string): Promise<Profile | null> {
     try {
-      const query = `
+      const result = await this.sql<Profile[]>`
         SELECT *
         FROM profiles
-        WHERE id = $1
+        WHERE id = ${userId}
       `;
 
-      const result = await this.db.query(query, [userId]);
+      if (result.length === 0) return null;
 
-      if (result.rowCount === 0) return null;
-
-      return result.rows[0];
+      return result[0] ?? null;
     } catch (error: unknown) {
       console.error("Error fetching profile:", error);
       return null;
