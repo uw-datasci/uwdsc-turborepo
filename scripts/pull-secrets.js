@@ -1,6 +1,7 @@
 const { execSync } = require("node:child_process");
 const fs = require("node:fs");
 const path = require("node:path");
+require("dotenv").config();
 
 const APPS = [
   { name: "web", infisicalPath: "/web" },
@@ -8,6 +9,11 @@ const APPS = [
 ];
 
 try {
+  // Extract environment variables
+  const INFISICAL_PROJECT_ID = process.env.INFISICAL_PROJECT_ID;
+  const INFISICAL_CLIENT_ID = process.env.INFISICAL_CLIENT_ID;
+  const INFISICAL_CLIENT_SECRET = process.env.INFISICAL_CLIENT_SECRET;
+
   const rootDir = path.join(__dirname, "..");
   const configPath = path.join(rootDir, ".infisical.json");
 
@@ -18,7 +24,7 @@ try {
   }
 
   // 2. GET PROJECT ID: Try Env Var -> Then try reading local file
-  let projectId = process.env.INFISICAL_PROJECT_ID;
+  let projectId = INFISICAL_PROJECT_ID;
   if (!projectId && fs.existsSync(configPath)) {
     try {
       const config = JSON.parse(fs.readFileSync(configPath, "utf8"));
@@ -31,12 +37,12 @@ try {
   // 3. AUTHENTICATE: Try Machine Auth first, fallback to User
   let machineAuthSuccess = false;
 
-  if (process.env.INFISICAL_CLIENT_ID && process.env.INFISICAL_CLIENT_SECRET) {
+  if (INFISICAL_CLIENT_ID && INFISICAL_CLIENT_SECRET) {
     console.log("🤖 Authenticating Machine Identity...");
     try {
       // Use 'pipe' for stdio so we can catch errors silently without crashing
       const token = execSync(
-        `infisical login --method=universal-auth --client-id="${process.env.INFISICAL_CLIENT_ID}" --client-secret="${process.env.INFISICAL_CLIENT_SECRET}" --silent --plain`,
+        `infisical login --method=universal-auth --client-id="${INFISICAL_CLIENT_ID}" --client-secret="${INFISICAL_CLIENT_SECRET}" --silent --plain`,
         { encoding: "utf8", stdio: "pipe" }
       ).trim();
 
