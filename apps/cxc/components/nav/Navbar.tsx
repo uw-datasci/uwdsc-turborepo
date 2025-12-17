@@ -20,6 +20,13 @@ interface NavbarProps {
   readonly showAuthButtons?: boolean;
 }
 
+const navLinks = [
+  { href: "/", label: "Home" },
+  { href: "/#about", label: "Sponsors" },
+  { href: "/#sponsors", label: "Events" },
+  { href: "/#contact", label: "Contact" },
+];
+
 export default function Navbar({ showAuthButtons = true }: NavbarProps) {
   const router = useRouter();
   const { isAuthenticated, isLoading, mutate } = useAuth();
@@ -80,62 +87,22 @@ export default function Navbar({ showAuthButtons = true }: NavbarProps) {
             {/* Navigation Links */}
             <NavigationMenu className="hidden md:flex">
               <NavigationMenuList>
-                <NavigationMenuItem>
-                  <NavigationMenuLink asChild>
-                    <Link
-                      href="/"
-                      className={cn(
-                        "inline-flex h-9 w-max items-center justify-center rounded-md px-4 py-2 text-sm font-medium",
-                        "transition-colors hover:text-gray-400 focus:text-gray-400 outline-none",
-                        "hover:bg-transparent focus:bg-transparent bg-transparent"
-                      )}
-                    >
-                      Home
-                    </Link>
-                  </NavigationMenuLink>
-                </NavigationMenuItem>
-                <NavigationMenuItem>
-                  <NavigationMenuLink asChild>
-                    <Link
-                      href="/#about"
-                      className={cn(
-                        "inline-flex h-9 w-max items-center justify-center rounded-md px-4 py-2 text-sm font-medium",
-                        "transition-colors hover:text-gray-400 focus:text-gray-400 outline-none",
-                        "hover:bg-transparent focus:bg-transparent bg-transparent"
-                      )}
-                    >
-                      Sponsors
-                    </Link>
-                  </NavigationMenuLink>
-                </NavigationMenuItem>
-                <NavigationMenuItem>
-                  <NavigationMenuLink asChild>
-                    <Link
-                      href="/#sponsors"
-                      className={cn(
-                        "inline-flex h-9 w-max items-center justify-center rounded-md px-4 py-2 text-sm font-medium",
-                        "transition-colors hover:text-gray-400 focus:text-gray-400 outline-none",
-                        "hover:bg-transparent focus:bg-transparent bg-transparent"
-                      )}
-                    >
-                      Events
-                    </Link>
-                  </NavigationMenuLink>
-                </NavigationMenuItem>
-                <NavigationMenuItem>
-                  <NavigationMenuLink asChild>
-                    <Link
-                      href="/#contact"
-                      className={cn(
-                        "inline-flex h-9 w-max items-center justify-center rounded-md px-4 py-2 text-sm font-medium",
-                        "transition-colors hover:text-gray-400 focus:text-gray-400 outline-none",
-                        "hover:bg-transparent focus:bg-transparent bg-transparent"
-                      )}
-                    >
-                      Contact
-                    </Link>
-                  </NavigationMenuLink>
-                </NavigationMenuItem>
+                {navLinks.map((link) => (
+                  <NavigationMenuItem key={link.href}>
+                    <NavigationMenuLink asChild>
+                      <Link
+                        href={link.href}
+                        className={cn(
+                          "inline-flex h-9 w-max items-center justify-center rounded-md px-4 py-2 text-sm font-medium",
+                          "transition-colors hover:text-gray-400 focus:text-gray-400 outline-none",
+                          "hover:bg-transparent focus:bg-transparent bg-transparent"
+                        )}
+                      >
+                        {link.label}
+                      </Link>
+                    </NavigationMenuLink>
+                  </NavigationMenuItem>
+                ))}
               </NavigationMenuList>
             </NavigationMenu>
           </div>
