@@ -32,7 +32,11 @@ import {
 import DesktopApplication from "@/components/application/DesktopApplication";
 import MobileApplication from "@/components/application/MobileApplication";
 import { Submitted } from "@/components/application/sections";
-import { MOBILE_STEP_TO_PAGE_MAP, NUMBER_MOBILE_PAGES, STEP_NAMES } from "@/constants/application";
+import {
+  MOBILE_STEP_TO_PAGE_MAP,
+  NUMBER_MOBILE_PAGES,
+  STEP_NAMES,
+} from "@/constants/application";
 
 // ============================================================================
 // Constants

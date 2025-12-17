@@ -81,19 +81,19 @@ export function AboutYou({ form }: AboutYouProps) {
             name={OPTIONAL_ABOUT_YOU_FIELDS.age}
             render={({ field, fieldState }) => {
               return renderTextField("Age", {
-                label: "Age",
+                label: "Enter your age",
                 required: true,
                 variant: "application",
                 inputProps: {
                   type: "number",
                   min: 1,
                   max: 150,
-                  onChange: (e) => {
+                  onChange: (e: React.ChangeEvent<HTMLInputElement>) => {
                     const value = e.target.value;
                     field.onChange(value === "" ? undefined : Number(value));
                   },
                 },
-              })({ field, fieldState });
+              })({ field: field as any, fieldState });
             }}
           />
           <FormField

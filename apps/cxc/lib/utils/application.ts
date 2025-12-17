@@ -47,7 +47,11 @@ export const isDesktopStepValid = (
         !errors.ethnicity;
 
       const validContactInfo =
-        !errors.email && !errors.phone && phone && !errors.discord && discord;
+        !errors.email &&
+        !errors.phone &&
+        !!phone &&
+        !errors.discord &&
+        !!discord;
 
       return validAboutYou && validContactInfo;
     }
