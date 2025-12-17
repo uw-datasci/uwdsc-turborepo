@@ -2,6 +2,8 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
 import { useAuth } from "@/contexts/AuthContext";
 import { signOut } from "@/lib/api";
 import {
@@ -21,6 +23,35 @@ interface NavbarProps {
 export default function Navbar({ showAuthButtons = true }: NavbarProps) {
   const router = useRouter();
   const { isAuthenticated, isLoading, mutate } = useAuth();
+  const [isVisible, setIsVisible] = useState(true);
+  const [lastScrollY, setLastScrollY] = useState(0);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+
+      // Show navbar when at the top
+      if (currentScrollY < 10) {
+        setIsVisible(true);
+      }
+      // Hide navbar when scrolling down
+      else if (currentScrollY > lastScrollY && currentScrollY > 80) {
+        setIsVisible(false);
+      }
+      // Show navbar when scrolling up
+      else if (currentScrollY < lastScrollY) {
+        setIsVisible(true);
+      }
+
+      setLastScrollY(currentScrollY);
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, [lastScrollY]);
 
   const handleSignOut = async () => {
     try {
@@ -33,7 +64,12 @@ export default function Navbar({ showAuthButtons = true }: NavbarProps) {
   };
 
   return (
-    <nav className="w-full border-b">
+    <motion.nav
+      className="w-full border-b fixed top-0 left-0 right-0 bg-background z-50"
+      initial={{ y: 0 }}
+      animate={{ y: isVisible ? 0 : "-100%" }}
+      transition={{ duration: 0.3, ease: "easeInOut" }}
+    >
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
           {/* Left section - Logo and Navigation */}
@@ -61,21 +97,21 @@ export default function Navbar({ showAuthButtons = true }: NavbarProps) {
                 <NavigationMenuItem>
                   <NavigationMenuLink asChild>
                     <Link
-                      href="/about"
+                      href="/#about"
                       className={cn(
                         "inline-flex h-9 w-max items-center justify-center rounded-md px-4 py-2 text-sm font-medium",
                         "transition-colors hover:text-gray-400 focus:text-gray-400 outline-none",
                         "hover:bg-transparent focus:bg-transparent bg-transparent"
                       )}
                     >
-                      About
+                      Sponsors
                     </Link>
                   </NavigationMenuLink>
                 </NavigationMenuItem>
                 <NavigationMenuItem>
                   <NavigationMenuLink asChild>
                     <Link
-                      href="/events"
+                      href="/#sponsors"
                       className={cn(
                         "inline-flex h-9 w-max items-center justify-center rounded-md px-4 py-2 text-sm font-medium",
                         "transition-colors hover:text-gray-400 focus:text-gray-400 outline-none",
@@ -89,7 +125,7 @@ export default function Navbar({ showAuthButtons = true }: NavbarProps) {
                 <NavigationMenuItem>
                   <NavigationMenuLink asChild>
                     <Link
-                      href="/contact"
+                      href="/#contact"
                       className={cn(
                         "inline-flex h-9 w-max items-center justify-center rounded-md px-4 py-2 text-sm font-medium",
                         "transition-colors hover:text-gray-400 focus:text-gray-400 outline-none",
@@ -126,6 +162,6 @@ export default function Navbar({ showAuthButtons = true }: NavbarProps) {
           )}
         </div>
       </div>
-    </nav>
+    </motion.nav>
   );
 }
