@@ -1,7 +1,11 @@
 #!/usr/bin/env node
 
-const { spawn } = require("node:child_process");
-const path = require("node:path");
+import { spawn } from "node:child_process";
+import { join, dirname } from "node:path";
+import { fileURLToPath } from "node:url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 // Get the component name from command line arguments
 const componentName = process.argv[2];
@@ -14,7 +18,7 @@ if (!componentName) {
 }
 
 // Change to packages/ui directory
-const uiDir = path.join(__dirname, "..", "packages", "ui");
+const uiDir = join(__dirname, "..", "packages", "ui");
 
 console.log(`🔧 Adding shadcn component: ${componentName}`);
 console.log(`📁 Working directory: ${uiDir}`);

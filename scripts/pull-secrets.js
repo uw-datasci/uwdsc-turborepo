@@ -1,7 +1,13 @@
-const { execSync } = require("node:child_process");
-const fs = require("node:fs");
-const path = require("node:path");
-require("dotenv").config();
+import { execSync } from "node:child_process";
+import { existsSync, readFileSync, writeFileSync } from "node:fs";
+import { join, dirname } from "node:path";
+import { fileURLToPath } from "node:url";
+import dotenv from "dotenv";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+dotenv.config();
 
 const APPS = [
   { name: "web", infisicalPath: "/web" },
@@ -14,20 +20,20 @@ try {
   const INFISICAL_CLIENT_ID = process.env.INFISICAL_CLIENT_ID;
   const INFISICAL_CLIENT_SECRET = process.env.INFISICAL_CLIENT_SECRET;
 
-  const rootDir = path.join(__dirname, "..");
-  const configPath = path.join(rootDir, ".infisical.json");
+  const rootDir = join(__dirname, "..");
+  const configPath = join(rootDir, ".infisical.json");
 
   // 1. INIT: Run 'infisical init' if config is missing
-  if (!fs.existsSync(configPath)) {
+  if (!existsSync(configPath)) {
     console.log("🔧 Configuration missing. Running 'infisical init'...");
     execSync("infisical init", { cwd: rootDir, stdio: "inherit" });
   }
 
   // 2. GET PROJECT ID: Try Env Var -> Then try reading local file
   let projectId = INFISICAL_PROJECT_ID;
-  if (!projectId && fs.existsSync(configPath)) {
+  if (!projectId && existsSync(configPath)) {
     try {
-      const config = JSON.parse(fs.readFileSync(configPath, "utf8"));
+      const config = JSON.parse(readFileSync(configPath, "utf8"));
       projectId = config.workspaceId || config.projectId;
     } catch (e) {
       console.error("Error parsing .infisical.json:", e);
@@ -72,10 +78,10 @@ try {
   const projectFlag = projectId ? `--projectId="${projectId}"` : "";
 
   APPS.forEach(({ name, infisicalPath }) => {
-    const targetDir = path.join(rootDir, "apps", name);
-    const targetFile = path.join(targetDir, ".env.local");
+    const targetDir = join(rootDir, "apps", name);
+    const targetFile = join(targetDir, ".env.local");
 
-    if (!fs.existsSync(targetDir))
+    if (!existsSync(targetDir))
       return console.warn(`⚠️  Skipping ${name} (folder missing)`);
 
     console.log(`⚡ Syncing ${name}...`);
@@ -84,7 +90,7 @@ try {
       { encoding: "utf8" }
     );
 
-    fs.writeFileSync(targetFile, secrets);
+    writeFileSync(targetFile, secrets);
     console.log(`   ✅ Updated .env.local`);
   });
 
