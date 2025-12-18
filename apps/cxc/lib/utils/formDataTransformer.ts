@@ -236,9 +236,12 @@ export function transformDatabaseDataToForm(
 export function cleanFormData(
   data: Record<string, unknown>,
 ): Record<string, unknown> {
+  console.log("data", data);
   return Object.fromEntries(
     Object.entries(data).filter(
-      ([, value]) => value !== undefined && value !== null && value !== "",
+      ([key, value]) =>
+        key === "ethnicity" ||
+        (value !== undefined && value !== null && value !== ""),
     ),
   );
 }
