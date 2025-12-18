@@ -11,7 +11,8 @@ jobs:
     if: |
       github.event.pull_request.merged == true &&
       github.event.pull_request.user.login != 'github-actions[bot]' &&
-      !startsWith(github.event.pull_request.title, '📚 Auto-Docs Update')
+      !startsWith(github.event.pull_request.title, '📚 Auto-Docs Update') &&
+      !startsWith(github.event.pull_request.head.ref, 'auto-docs/merge-')
     runs-on: ubuntu-latest
     permissions:
       contents: write
