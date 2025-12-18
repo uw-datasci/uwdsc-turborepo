@@ -22,7 +22,7 @@ export const sql = postgres(process.env.DATABASE_URL!, {
   transform: { undefined: null },
 
   // Error handling
-  onnotice: () => { }, // Suppress notices
+  onnotice: () => {}, // Suppress notices
 });
 
 // Export type for use in repositories
