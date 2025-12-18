@@ -1,4 +1,4 @@
-import { STEP_NAMES } from "@/constants/application";
+import { NUMBER_MOBILE_PAGES, STEP_NAMES } from "@/constants/application";
 import { AppFormValues } from "@/lib/schemas/application";
 import { isMobileStepValid } from "@/lib/utils/application";
 import {
@@ -15,34 +15,39 @@ import {
   Education,
   PriorHackExp,
   LinksAndDocs,
-  CxCGain,
-  SillyQ,
+  CxcQ1,
+  CxcQ2,
   Review,
 } from "./sections";
 import { StepIndicator } from "./StepIndicator";
 import { AnimatePresence, motion } from "framer-motion";
 import { AppNavigationButtons } from "./AppNavigationButtons";
 import { useApplicationProgressSync } from "@/hooks/useApplicationProgress";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import MLHCheckboxes from "./sections/MLHCheckboxes";
 
 interface MobileApplicationProps {
   readonly form: UseFormReturn<AppFormValues>;
   readonly isLoading: boolean;
-  readonly onSaveAndContinue: (onSuccess: () => void) => Promise<void>;
+  readonly onSaveAndContinue: (
+    onSuccess: () => void,
+    isSubmit: boolean,
+  ) => Promise<void>;
   readonly currentPage: number;
   readonly onPageChange: (page: number) => void;
 }
 
 const FINAL_STEP_COUNT = STEP_NAMES.length;
-const NUMBER_PAGES = 8;
 const PAGE_NAMES = [
   "Contact info",
   "About you",
+  "Optional",
   "Education",
   "Hackathon experience",
   "Documents",
   "Question 1",
   "Question 2",
+  "Teams & MLH",
   "Complete application",
 ];
 
@@ -56,15 +61,21 @@ export default function MobileApplication({
   const [direction, setDirection] = useState<number>(1);
 
   const getCurrentStep = () => {
-    if (currentPage < 2) return 0;
-    if (currentPage < 5) return 1;
-    if (currentPage < 7) return 2;
-    return 3;
+    if (currentPage < 3) return 0; // Contact Info, About You, Optional About You
+    if (currentPage < 6) return 1; // Education, Prior Hack Exp, Links & Docs
+    if (currentPage < 8) return 2; // CXC Q1, Q2
+    if (currentPage < 9) return 3; // Teams & MLH
+    return 4; // Review
   };
 
   const currentStep = getCurrentStep();
 
   useApplicationProgressSync(currentStep);
+
+  // Scroll to top smoothly when page changes
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, [currentPage]);
 
   const goNext = () => {
     setDirection(1);
@@ -77,7 +88,8 @@ export default function MobileApplication({
   };
 
   const handleNext = async () => {
-    await onSaveAndContinue(goNext);
+    const isLastPage = currentPage === NUMBER_MOBILE_PAGES - 1;
+    await onSaveAndContinue(goNext, isLastPage);
   };
 
   const renderStep = () => {
@@ -85,23 +97,22 @@ export default function MobileApplication({
       case 0:
         return <ContactInfo form={form} />;
       case 1:
-        return (
-          <div className="flex flex-col gap-10">
-            <AboutYou form={form} />
-            <OptionalAboutYou form={form} />
-          </div>
-        );
+        return <AboutYou form={form} />;
       case 2:
-        return <Education form={form} />;
+        return <OptionalAboutYou form={form} />;
       case 3:
-        return <PriorHackExp form={form} />;
+        return <Education form={form} />;
       case 4:
-        return <LinksAndDocs form={form} />;
+        return <PriorHackExp form={form} />;
       case 5:
-        return <CxCGain form={form} />;
+        return <LinksAndDocs form={form} />;
       case 6:
-        return <SillyQ form={form} />;
+        return <CxcQ1 form={form} />;
       case 7:
+        return <CxcQ2 form={form} />;
+      case 8:
+        return <MLHCheckboxes form={form} />;
+      case 9:
         return <Review form={form} />;
     }
   };
@@ -135,10 +146,10 @@ export default function MobileApplication({
             </motion.div>
           </AnimatePresence>
 
-          {currentPage !== NUMBER_PAGES && (
+          {currentPage !== NUMBER_MOBILE_PAGES && (
             <AppNavigationButtons
               isFirstStep={currentPage === 0}
-              isLastStep={currentPage === NUMBER_PAGES - 1}
+              isLastStep={currentPage === NUMBER_MOBILE_PAGES - 1}
               isNextDisabled={
                 !isMobileStepValid(form, currentPage) || isLoading
               }

@@ -161,6 +161,8 @@ export { Marquee } from "./components/marquee";
 
 export { TypingAnimation } from "./components/typing-animation";
 
+export { ScrollArea } from "./components/scroll-area";
+
 // Hooks
 export * from "./hooks";
 
@@ -204,8 +206,12 @@ export {
   UsersIcon,
   GithubLogoIcon,
   LinkedinLogoIcon,
-  XLogoIcon,
+  BrowserIcon,
   LinkIcon,
   LightbulbIcon,
   SmileyIcon,
+  CakeIcon,
+  MapPinIcon,
+  SquareIcon,
+  CheckSquareIcon,
 } from "@phosphor-icons/react";

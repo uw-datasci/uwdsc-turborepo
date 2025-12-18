@@ -37,9 +37,9 @@ export function LinksAndDocs({ form }: LinksAndDocsProps) {
           />
           <FormField
             control={form.control}
-            name={LINKS_FIELDS.x}
-            render={renderTextField("https://x.com/...", {
-              label: "X Profile",
+            name="website_url"
+            render={renderTextField("https://example.com", {
+              label: "Personal Website",
               variant: "application",
             })}
           />
