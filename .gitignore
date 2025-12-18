@@ -27,6 +27,8 @@ out/
 build
 dist
 
+# Next.js
+next-env.d.ts
 
 # Debug
 npm-debug.log*

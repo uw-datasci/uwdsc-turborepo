@@ -2,7 +2,6 @@ import { cookies } from "next/headers";
 import { createSupabaseServerClient } from "@uwdsc/server/core/database/client";
 import { AuthService } from "@uwdsc/server/core/services/authService";
 import { ResumeService } from "@uwdsc/server/core/services/resumeService";
-import { ApplicationService } from "@uwdsc/server/cxc/services/applicationService";
 import type { CookieOptions } from "@supabase/ssr";
 
 // ============================================================================
@@ -43,12 +42,4 @@ export async function createAuthService() {
 export async function createResumeService() {
   const supabase = await createSupabaseClient();
   return new ResumeService(supabase);
-}
-
-/**
- * Create ApplicationService with server-side Supabase client
- */
-export async function createApplicationService() {
-  const supabase = await createSupabaseClient();
-  return new ApplicationService(supabase);
 }

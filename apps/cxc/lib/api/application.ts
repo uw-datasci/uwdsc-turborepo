@@ -28,20 +28,16 @@ export interface ApiResponse {
  * @throws Error if creation fails
  */
 export async function createApplication(
-  profileId: string,
+  profileId: string
 ): Promise<ApiResponse> {
   const response = await fetch("/api/applications", {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ profile_id: profileId }),
   });
 
   const data = await response.json();
-  if (!response.ok) {
-    throw createApiError(data, response.status);
-  }
+  if (!response.ok) throw createApiError(data, response.status);
 
   return data;
 }
@@ -54,20 +50,16 @@ export async function createApplication(
  * @throws Error if update fails
  */
 export async function updateApplication(
-  formData: Record<string, unknown>,
+  formData: Record<string, unknown>
 ): Promise<ApiResponse> {
   const response = await fetch("/api/applications", {
     method: "PATCH",
-    headers: {
-      "Content-Type": "application/json",
-    },
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify(formData),
   });
 
   const data = await response.json();
-  if (!response.ok) {
-    throw createApiError(data, response.status);
-  }
+  if (!response.ok) throw createApiError(data, response.status);
 
   return data;
 }
@@ -80,7 +72,7 @@ export async function updateApplication(
  * @throws Error if fetch fails (except 404)
  */
 export async function fetchApplication(
-  profileId: string,
+  profileId: string
 ): Promise<Record<string, unknown> | null> {
   try {
     const response = await fetch(`/api/applications?profile_id=${profileId}`, {
@@ -88,15 +80,11 @@ export async function fetchApplication(
     });
 
     // For 404 on application endpoint, return null instead of throwing
-    if (response.status === 404) {
-      return null;
-    }
+    if (response.status === 404) return null;
 
     const data = await response.json();
 
-    if (!response.ok) {
-      throw createApiError(data, response.status);
-    }
+    if (!response.ok) throw createApiError(data, response.status);
 
     return data;
   } catch (error) {

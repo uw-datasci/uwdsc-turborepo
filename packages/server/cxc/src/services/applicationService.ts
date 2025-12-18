@@ -1,4 +1,3 @@
-import { SupabaseClient } from "@supabase/supabase-js";
 import { ApplicationRepository } from "../repository/applicationRepository";
 
 export interface ApplicationData {
@@ -9,7 +8,7 @@ export interface ApplicationData {
 export class ApplicationService {
   private readonly repository: ApplicationRepository;
 
-  constructor(supabaseClient: SupabaseClient) {
+  constructor() {
     this.repository = new ApplicationRepository();
   }
 

@@ -1,5 +1,5 @@
+import { ApplicationService } from "@uwdsc/server/cxc/services/applicationService";
 import { NextResponse, NextRequest } from "next/server";
-import { createApplicationService } from "@/lib/services";
 
 // ============================================================================
 // GET - Fetch application by profile ID
@@ -17,7 +17,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
   }
 
   try {
-    const applicationService = await createApplicationService();
+    const applicationService = new ApplicationService();
     const application = await applicationService.getApplication(profileId);
 
     if (!application) {
@@ -44,7 +44,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
 export async function POST(request: NextRequest): Promise<NextResponse> {
   try {
     const body = await request.json();
-    const applicationService = await createApplicationService();
+    const applicationService = new ApplicationService();
 
     await applicationService.createApplication(body);
 
@@ -74,7 +74,7 @@ export async function PATCH(request: NextRequest): Promise<NextResponse> {
       );
     }
 
-    const applicationService = await createApplicationService();
+    const applicationService = new ApplicationService();
     await applicationService.updateApplication(profile_id, updateData);
 
     return NextResponse.json({ success: true });
