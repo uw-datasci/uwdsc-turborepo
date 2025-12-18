@@ -26,7 +26,7 @@ export default function DSCLogo({
 
   if (href) {
     return (
-      <Link href={href} className="hover:cursor-pointer block">
+      <Link href={href} className="hover:cursor-pointer block w-fit">
         {logoContent}
       </Link>
     );

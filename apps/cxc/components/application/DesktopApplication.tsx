@@ -13,7 +13,7 @@ import { DesktopAppWormhole } from "./AppWormhole";
 import { StepIndicator } from "./StepIndicator";
 import { AppNavigationButtons } from "./AppNavigationButtons";
 import { useApplicationProgressSync } from "@/hooks/useApplicationProgress";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import DSCLogo from "../DSCLogo";
 import {
   ContactInfo,
@@ -22,18 +22,20 @@ import {
   Education,
   PriorHackExp,
   LinksAndDocs,
-  CxCGain,
-  SillyQ,
+  CxcQ1,
+  CxcQ2,
   Review,
 } from "./sections";
-import { useEffect } from "react";
-import { CONTACT_INFO_FIELDS } from "@/constants/application";
-import { useAuth } from "@/contexts/AuthContext";
+import { ScrollArea } from "@uwdsc/ui/index";
+import MLHCheckboxes from "./sections/MLHCheckboxes";
 
 interface DesktopApplicationProps {
   readonly form: UseFormReturn<AppFormValues>;
   readonly isLoading: boolean;
-  readonly onSaveAndContinue: (onSuccess: () => void) => Promise<void>;
+  readonly onSaveAndContinue: (
+    onSuccess: () => void,
+    isSubmit: boolean,
+  ) => Promise<void>;
   readonly currentStep: number;
   readonly onStepChange: (step: number) => void;
 }
@@ -48,8 +50,19 @@ export default function DesktopApplication({
   onStepChange,
 }: DesktopApplicationProps) {
   const [direction, setDirection] = useState<number>(1);
-  const { user } = useAuth();
+  const scrollAreaRef = useRef<HTMLDivElement>(null);
   useApplicationProgressSync(currentStep);
+
+  useEffect(() => {
+    if (scrollAreaRef.current) {
+      const viewport = scrollAreaRef.current.querySelector(
+        "[data-radix-scroll-area-viewport]",
+      );
+      if (viewport) {
+        viewport.scrollTo({ top: 0, behavior: "smooth" });
+      }
+    }
+  }, [currentStep]);
 
   const goNext = () => {
     setDirection(1);
@@ -62,26 +75,9 @@ export default function DesktopApplication({
   };
 
   const handleNext = async () => {
-    await onSaveAndContinue(goNext);
+    const isLastStep = currentStep === FINAL_STEP_COUNT - 1;
+    await onSaveAndContinue(goNext, isLastStep);
   };
-
-  useEffect(() => {
-    async function loadUser() {
-      try {
-        if (!user) return;
-        if (user.email) {
-          form.setValue(CONTACT_INFO_FIELDS.email, user.email);
-        }
-        if (user.first_name && user.last_name) {
-          const fullName = [user.first_name, user.last_name].join(" ");
-          form.setValue(CONTACT_INFO_FIELDS.name, fullName);
-        }
-      } catch (err) {
-        console.error("Failed to load user:", err);
-      }
-    }
-    loadUser();
-  }, [form, user]);
 
   const renderStep = () => {
     switch (currentStep) {
@@ -104,19 +100,21 @@ export default function DesktopApplication({
       case 2:
         return (
           <div className="flex flex-col gap-12">
-            <CxCGain form={form} />
-            <SillyQ form={form} />
+            <CxcQ1 form={form} />
+            <CxcQ2 form={form} />
           </div>
         );
       case 3:
+        return <MLHCheckboxes form={form} />;
+      case 4:
         return <Review form={form} />;
     }
   };
 
   return (
-    <div className="hidden md:flex flex-col md:flex-row justify-between min-h-screen h-full cxc-app-font">
-      {/* Left Side - Wormhole */}
-      <div className="block border-r border-white/50 md:w-2/5 relative">
+    <div className="hidden md:flex flex-row min-h-screen h-screen">
+      {/* Left Side - Wormhole - Fixed Height */}
+      <div className="border-r border-white/50 md:w-2/5 relative h-screen">
         <div className="absolute inset-0">
           <DesktopAppWormhole opacity={0.5} />
         </div>
@@ -133,37 +131,41 @@ export default function DesktopApplication({
         </div>
       </div>
 
-      {/* Right Side - Form */}
-      <div className="px-12 py-24 overflow-hidden md:w-3/5 flex flex-col gap-12">
-        <h1 className="text-5xl font-normal">{STEP_NAMES[currentStep]}</h1>
-        <div className="space-y-6 overflow-visible">
-          <AnimatePresence mode="wait" custom={direction}>
-            <motion.div
-              key={currentStep}
-              custom={direction}
-              variants={slideVariants}
-              initial="enter"
-              animate="center"
-              exit="exit"
-              transition={slideTransition}
-            >
-              {renderStep()}
-            </motion.div>
-          </AnimatePresence>
+      {/* Right Side - Scrollable Form */}
+      <div className="md:w-3/5 h-screen">
+        <ScrollArea className="h-full" ref={scrollAreaRef}>
+          <div className="px-12 py-24 flex flex-col gap-12">
+            <h1 className="text-5xl font-normal">{STEP_NAMES[currentStep]}</h1>
+            <div className="space-y-6">
+              <AnimatePresence mode="wait" custom={direction}>
+                <motion.div
+                  key={currentStep}
+                  custom={direction}
+                  variants={slideVariants}
+                  initial="enter"
+                  animate="center"
+                  exit="exit"
+                  transition={slideTransition}
+                >
+                  {renderStep()}
+                </motion.div>
+              </AnimatePresence>
 
-          {currentStep !== FINAL_STEP_COUNT && (
-            <AppNavigationButtons
-              isFirstStep={currentStep === 0}
-              isLastStep={currentStep === FINAL_STEP_COUNT - 1}
-              isNextDisabled={
-                !isDesktopStepValid(form, currentStep) || isLoading
-              }
-              isLoading={isLoading}
-              onPrevious={goPrevious}
-              onNext={handleNext}
-            />
-          )}
-        </div>
+              {currentStep !== FINAL_STEP_COUNT && (
+                <AppNavigationButtons
+                  isFirstStep={currentStep === 0}
+                  isLastStep={currentStep === FINAL_STEP_COUNT - 1}
+                  isNextDisabled={
+                    !isDesktopStepValid(form, currentStep) || isLoading
+                  }
+                  isLoading={isLoading}
+                  onPrevious={goPrevious}
+                  onNext={handleNext}
+                />
+              )}
+            </div>
+          </div>
+        </ScrollArea>
       </div>
     </div>
   );

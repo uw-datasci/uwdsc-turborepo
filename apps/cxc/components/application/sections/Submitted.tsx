@@ -21,7 +21,7 @@ export function Submitted() {
   }, []);
 
   return (
-    <div className="flex min-h-[60vh] items-center justify-center px-4">
+    <div className="flex min-h-screen items-center justify-center px-4">
       {/* Confetti Effect */}
       <AnimatePresence>{showConfetti && <ConfettiEffect />}</AnimatePresence>
 

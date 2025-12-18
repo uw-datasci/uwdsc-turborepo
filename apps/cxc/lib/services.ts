@@ -4,6 +4,10 @@ import { AuthService } from "@uwdsc/server/core/services/authService";
 import { ResumeService } from "@uwdsc/server/core/services/resumeService";
 import type { CookieOptions } from "@supabase/ssr";
 
+// ============================================================================
+// Supabase Client Factory
+// ============================================================================
+
 /**
  * Create a Supabase client with Next.js server-side cookies
  */
@@ -19,6 +23,10 @@ async function createSupabaseClient() {
     },
   });
 }
+
+// ============================================================================
+// Service Factories
+// ============================================================================
 
 /**
  * Create AuthService with server-side Supabase client
