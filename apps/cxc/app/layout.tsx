@@ -4,6 +4,7 @@ import { ThemeProvider } from "@uwdsc/ui";
 import type { Metadata, Viewport } from "next";
 import { baseMetadata, baseViewport } from "@/lib/metadata";
 import { AuthProvider } from "@/contexts/AuthContext";
+import Navbar from "@/components/nav/Navbar";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -56,10 +57,13 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark" suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} ${hostGrotesk.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} ${hostGrotesk.variable} cxc-app-font antialiased`}
       >
         <ThemeProvider>
-          <AuthProvider>{children}</AuthProvider>
+          <AuthProvider>
+            <Navbar />
+            {children}
+          </AuthProvider>
         </ThemeProvider>
       </body>
     </html>
