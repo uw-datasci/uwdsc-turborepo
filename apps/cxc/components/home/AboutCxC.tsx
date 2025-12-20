@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { CountingNumber } from "@uwdsc/ui";
+import { CountingNumber, SpinningText } from "@uwdsc/ui";
 import Ripples from "./Ripples";
 
 interface StatProps {
@@ -43,14 +43,14 @@ export default function AboutCxC() {
       <div className="mx-auto px-10 text-center">
         {/* About CXC */}
         <motion.div
-          className="mb-10"
+          className="mb-10 items-center flex flex-col"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.25 }}
           transition={{ duration: 0.6, ease: "easeOut" }}
         >
           <h2 className="text-3xl md:text-4xl font-semibold mb-6">About CXC</h2>
-          <p className="text-base md:text-xl text-gray-300 md:max-w-2xl max-w-3xl mx-auto">
+          <p className="text-base sm:text-base lg:text-xl text-gray-300 lg:max-w-2xl max-w-3xl mb-10">
             We are Canada&apos;s largest student-run AI hackathon. CXC is a
             beginner-friendly hackathon aiming to bring students and companies
             together to build projects that solve real-world problems.
@@ -61,7 +61,7 @@ export default function AboutCxC() {
           <Ripples />
         </div>
         <motion.div
-          className="my-32"
+          className="my-32 items-center flex flex-col"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.25 }}
@@ -70,7 +70,7 @@ export default function AboutCxC() {
           <h2 className="text-3xl md:text-4xl font-semibold mb-6">
             You Belong Here
           </h2>
-          <p className="text-base md:text-xl text-gray-300 md:max-w-2xl max-w-3xl mx-auto mb-10">
+          <p className="text-base sm:text-base lg:text-xl text-gray-300 lg:max-w-2xl max-w-3xl mb-10">
             Join us at the University of Waterloo this February for our 5th
             iteration. Meet a community of like-minded hackers, network with our
             company sponsors and judges, and build the project you&apos;ve
@@ -88,7 +88,7 @@ export default function AboutCxC() {
         </div>
 
         <motion.div
-          className="mt-32"
+          className="mt-32 items-center flex flex-col"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.25 }}
@@ -97,13 +97,21 @@ export default function AboutCxC() {
           <h2 className="text-3xl md:text-4xl font-semibold mb-6">
             A Fresh New Spin
           </h2>
-          <p className="text-base md:text-xl text-gray-300 md:max-w-2xl max-w-3xl mx-auto mb-10">
-            For our 5th iteration of CXC, we&apos;ve decided to switch things up
-            and pivot to a full in-person weekend experience. Hackers who are
-            familiar with past CXCs can enjoy a change of pace with an eventful
-            weekend of in-person connections, workshops, sponsor networking
-            events, and activities!
-          </p>
+          <div className="flex flex-row items-start">
+            <SpinningText className="hidden lg:block mr-8 md:mr-16 shrink-0 h-[10ch] w-[10ch] md:h-[12ch] md:w-[12ch]">
+              CXC • 5th ITERATION • AI HACKATHON •
+            </SpinningText>
+            <p className="text-base sm:text-base lg:text-xl text-gray-300 lg:max-w-2xl max-w-3xl mb-10">
+              For our 5th iteration of CXC, we&apos;ve decided to switch things
+              up and pivot to a full in-person weekend experience. Hackers who
+              are familiar with past CXCs can enjoy a change of pace with an
+              eventful weekend of in-person connections, workshops, sponsor
+              networking events, and activities!
+            </p>
+            <SpinningText className="hidden lg:block ml-8 md:ml-16 shrink-0 h-[10ch] w-[10ch] md:h-[12ch] md:w-[12ch]">
+              cxc • 5th iteration • ai hackathon •
+            </SpinningText>
+          </div>
         </motion.div>
       </div>
     </section>

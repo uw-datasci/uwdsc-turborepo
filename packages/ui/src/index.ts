@@ -163,6 +163,8 @@ export { TypingAnimation } from "./components/typing-animation";
 
 export { ScrollArea } from "./components/scroll-area";
 
+export { SpinningText } from "./components/spinning-text";
+
 // Hooks
 export * from "./hooks";
 
