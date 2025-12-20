@@ -12,6 +12,7 @@ import { Faq } from "@/components/home/Faq";
 import Navbar from "@/components/nav/Navbar";
 import CxCTitle from "@/components/home/CxCTitle";
 import { Testimonials } from "@/components/home/Testimonials";
+import { PastProjects } from "@/components/home/PastProjects";
 
 export default function Home() {
   return (
@@ -27,6 +28,7 @@ export default function Home() {
       <div className="border-t border-b border-white/50">
         <Sponsors />
         <Testimonials />
+        <PastProjects />
         <div id="faq-section">
           <Faq />
         </div>

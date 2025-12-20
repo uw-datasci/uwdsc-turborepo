@@ -144,8 +144,14 @@ const FloatingImage = ({
         },
       }}
     >
-      <div className="relative w-full h-full rounded-sm overflow-hidden shadow-lg">
-        <Image src={src} alt={alt} fill className="object-cover" />
+      <div className="relative rounded-sm overflow-hidden shadow-lg w-full h-full">
+        <Image
+          src={src}
+          alt={alt}
+          fill
+          sizes="(max-width: 768px) 150px, (max-width: 1024px) 200px, 250px"
+          className="object-cover"
+        />
       </div>
     </motion.div>
   );

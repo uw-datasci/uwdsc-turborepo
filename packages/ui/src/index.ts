@@ -214,4 +214,5 @@ export {
   MapPinIcon,
   SquareIcon,
   CheckSquareIcon,
+  FlyingSaucerIcon,
 } from "@phosphor-icons/react";

@@ -91,10 +91,10 @@ export default function CxCTitle() {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}
                 transition={{ duration: 0.6, delay: 0.2 }}
-                className="flex flex-col items-center gap-12 pb-16"
+                className="flex flex-col items-center gap-4 sm:gap-6 pb-8 mt-5"
               >
                 <div className="flex flex-col items-center z-10">
-                  <div className="relative w-40 h-32 md:w-64 md:h-48">
+                  <div className="relative w-64 h-24 lg:w-96 lg:h-40">
                     <Image
                       src="/logos/cxc_logo.svg"
                       alt="CXC"
@@ -103,9 +103,9 @@ export default function CxCTitle() {
                     />
                   </div>
 
-                  <h2 className="font-light text-3xl md:text-4xl text-white/80">
-                    COMING SOON
-                  </h2>
+                  <TypingAnimation className="font-light text-xl md:text-3xl text-white/80">
+                    An AI Hackathon
+                  </TypingAnimation>
                 </div>
 
                 <CountdownClock
