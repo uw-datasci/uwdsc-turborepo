@@ -99,7 +99,7 @@ export default function AboutCxC() {
           </h2>
           <div className="flex flex-row items-start">
             <SpinningText className="hidden lg:block mr-8 md:mr-16 shrink-0 h-[10ch] w-[10ch] md:h-[12ch] md:w-[12ch]">
-              CXC • 5th ITERATION • AI HACKATHON •
+              CXC • 5TH ITERATION • AI HACKATHON •
             </SpinningText>
             <p className="text-base sm:text-base lg:text-xl text-gray-300 lg:max-w-2xl max-w-3xl mb-10">
               For our 5th iteration of CXC, we&apos;ve decided to switch things
@@ -109,7 +109,7 @@ export default function AboutCxC() {
               networking events, and activities!
             </p>
             <SpinningText className="hidden lg:block ml-8 md:ml-16 shrink-0 h-[10ch] w-[10ch] md:h-[12ch] md:w-[12ch]">
-              cxc • 5th iteration • ai hackathon •
+              CXC • 5TH ITERATION • AI HACKATHON •
             </SpinningText>
           </div>
         </motion.div>

@@ -7,9 +7,17 @@ import * as THREE from "three";
 
 interface WormholeWithRingsProps {
   readonly partType: "top" | "middle" | "bottom";
+  /** Optional override for the middle part's top radius (front) */
+  readonly topRadius?: number;
+  /** Optional override for the middle part's bottom radius (back) */
+  readonly bottomRadius?: number;
 }
 
-function WormholeWithRings({ partType }: WormholeWithRingsProps) {
+function WormholeWithRings({
+  partType,
+  topRadius,
+  bottomRadius,
+}: WormholeWithRingsProps) {
   const groupRef = useRef<THREE.Group>(null);
 
   // Define wormhole geometry based on part type
@@ -27,8 +35,9 @@ function WormholeWithRings({ partType }: WormholeWithRingsProps) {
     } else if (partType === "middle") {
       return {
         height: 40,
-        frontRadius: 11,
-        backRadius: 9,
+        // allow overrides via props (topRadius/bottomRadius) for the middle section
+        frontRadius: typeof topRadius === "number" ? topRadius : 11,
+        backRadius: typeof bottomRadius === "number" ? bottomRadius : 9,
         curve: 0.2,
         perspective: "middle",
       };
@@ -43,7 +52,7 @@ function WormholeWithRings({ partType }: WormholeWithRingsProps) {
         backHeight: 30,
       };
     }
-  }, [partType]);
+  }, [partType, topRadius, bottomRadius]);
 
   // Function to calculate radius at any Y position
   const getRadiusAtY = (y: number) => {
@@ -350,12 +359,22 @@ export function WormholeTop() {
   );
 }
 
-export function WormholeMiddle() {
+export function WormholeMiddle({
+  topRadius,
+  bottomRadius,
+}: {
+  topRadius?: number;
+  bottomRadius?: number;
+}) {
   return (
     <div className="block h-[25vh] sm:h-[45vh] lg:h-[55vh] overflow-hidden -z-10">
       <div className="transform -translate-y-[20%] h-[40vh] sm:h-[75vh] lg:h-[100vh]">
         <Canvas camera={{ position: [0, 0, 30], fov: 75 }}>
-          <WormholeWithRings partType="middle" />
+          <WormholeWithRings
+            partType="middle"
+            topRadius={topRadius}
+            bottomRadius={bottomRadius}
+          />
         </Canvas>
       </div>
     </div>

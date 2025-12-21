@@ -21,12 +21,15 @@ export default function Home() {
       <div className="border-t border-b border-white/50">
         <AboutCxC />
       </div>
-      <WormholeMiddle />
-
+      <WormholeMiddle topRadius={11} bottomRadius={10} />
+      <div className="border-t border-b border-white/50">
+        <PastProjects />
+      </div>
+      <WormholeMiddle topRadius={11} bottomRadius={9.25} />
       <div className="border-t border-b border-white/50">
         <Sponsors />
         <Testimonials />
-        <PastProjects />
+
         <div id="faq-section">
           <Faq />
         </div>
