@@ -48,8 +48,7 @@ export default function CxCTitle() {
         <AnimatePresence mode="wait">
           {countdownOver ? (
             <WarpBackground
-              perspective={isMobile ? 40 : 300}
-              beamsPerSide={2}
+              perspective={isMobile ? 80 : 300}
               className="w-full"
             >
               <motion.div
@@ -61,9 +60,9 @@ export default function CxCTitle() {
                   duration: 1.2,
                   ease: [0.34, 1.56, 0.64, 1],
                 }}
-                className="flex flex-col items-center py-6 md:py-12"
+                className="flex flex-col items-center py-6 md:py-12 mt-6 sm:mt-0"
               >
-                <div className="relative w-52 h-28 md:w-96 md:h-48">
+                <div className="relative w-64 h-28 md:w-96 md:h-40">
                   <Image
                     src="/logos/cxc_logo.svg"
                     alt="CXC"
@@ -72,10 +71,67 @@ export default function CxCTitle() {
                     priority
                   />
                 </div>
-
-                <TypingAnimation className="text-sm md:text-xl text-white/80">
-                  FEB 6-8 · AI HACKATHON
-                </TypingAnimation>
+                <Badge
+                  className="mb-3 sm:mb-5 font-normal text-sm sm:text-base border-white/50 bg-background"
+                  variant="outline"
+                >
+                  FEB 6-8 · An AI Hackathon
+                </Badge>
+                <div className="flex flex-row items-center">
+                  <TypingAnimation
+                    className="font-light text-xl sm:text-2xl lg:text-3xl text-white/80"
+                    showCursor={true}
+                    onComplete={() => {
+                      setLogoVisible(true);
+                      setCursorDone(true);
+                    }}
+                    cursorElement={
+                      <span className="inline-flex items-center ml-1.5">
+                        <motion.img
+                          src="/logos/tangerine_cursor.png"
+                          alt="tangerine-cursor"
+                          initial={{ x: 0, y: 0, rotate: -120 }}
+                          animate={
+                            cursorDone
+                              ? {
+                                  x: isMobile ? 125 : isTablet ? 148 : 173,
+                                  y: isMobile ? -6 : isTablet ? -8 : -10,
+                                  rotate: 0,
+                                }
+                              : {
+                                  x: 0,
+                                  y: 0,
+                                  rotate: -120,
+                                }
+                          }
+                          transition={{
+                            type: "tween",
+                            ease: [0.22, 1, 0.36, 1],
+                            duration: 0.8,
+                          }}
+                          className="inline-block w-4.5 h-4.5 sm:w-5 sm:h-5 lg:w-6 lg:h-6"
+                        />
+                      </span>
+                    }
+                  >
+                    Presented by
+                  </TypingAnimation>
+                  <motion.img
+                    src="/logos/tangerine_logo.png"
+                    alt="tangerine-logo"
+                    initial={{ opacity: 0, scale: 0 }}
+                    animate={
+                      logoVisible
+                        ? { opacity: 1, scale: 1 }
+                        : { opacity: 0, scale: 0 }
+                    }
+                    transition={{
+                      duration: 0.8,
+                      ease: [0.22, 1, 0.36, 1],
+                    }}
+                    className="w-36 h-8 sm:w-42 sm:h-9 lg:w-48 lg:h-10 object-contain -ml-5"
+                  />
+                </div>
 
                 <CxCButton
                   onClick={() => router.push("/apply")}
@@ -102,7 +158,7 @@ export default function CxCTitle() {
                 className="flex flex-col items-center gap-4 sm:gap-6 pb-6 mt-5"
               >
                 <div className="flex flex-col items-center z-10">
-                  <div className="relative w-64 h-26 lg:w-96 lg:h-40">
+                  <div className="relative w-64 h-28 lg:w-96 lg:h-40">
                     <Image
                       src="/logos/cxc_logo.svg"
                       alt="CXC"
@@ -110,6 +166,12 @@ export default function CxCTitle() {
                       className="object-contain"
                     />
                   </div>
+                  <Badge
+                    className="mb-5 font-normal text-base border-white/50"
+                    variant="outline"
+                  >
+                    FEB 6-8 · An AI Hackathon
+                  </Badge>
                   <div className="flex flex-row items-center">
                     <TypingAnimation
                       className="font-light text-xl sm:text-2xl lg:text-3xl text-white/80"
@@ -165,12 +227,6 @@ export default function CxCTitle() {
                       className="w-36 h-8 sm:w-42 sm:h-9 lg:w-48 lg:h-10 object-contain -ml-5"
                     />
                   </div>
-                  <Badge
-                    className="mt-5 font-normal text-base border-white/50"
-                    variant="outline"
-                  >
-                    FEB 6-8 · An AI Hackathon
-                  </Badge>
                 </div>
 
                 <CountdownClock

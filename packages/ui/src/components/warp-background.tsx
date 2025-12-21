@@ -63,7 +63,8 @@ export const WarpBackground: React.FC<WarpBackgroundProps> = ({
   beamDelayMax = 3,
   beamDelayMin = 0,
   beamDuration = 3,
-  gridColor = "var(--border)",
+  // Increase default opacity so grid lines are more visible
+  gridColor = "rgba(255,255,255,0.2)",
   ...props
 }) => {
   const generateBeams = useCallback(() => {
@@ -105,7 +106,7 @@ export const WarpBackground: React.FC<WarpBackgroundProps> = ({
             <Beam
               key={`top-${index}`}
               width={`${beamSize}%`}
-              x={`${beam.x * beamSize}%`}
+              x={`${100 - beam.x * beamSize}%`}
               delay={beam.delay}
               duration={beamDuration}
             />
