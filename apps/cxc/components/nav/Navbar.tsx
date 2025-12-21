@@ -113,8 +113,19 @@ export default function Navbar({ showAuthButtons = true }: NavbarProps) {
           {showAuthButtons && !isLoading && (
             <div className="flex items-center gap-4">
               {isAuthenticated ? (
-                <CxCButton className="hover:scale-105" onClick={handleSignOut}>
-                  Sign Out
+                <CxCButton
+                  onClick={handleSignOut}
+                  className="group text-sm md:text-base inline-flex items-center lg:px-4"
+                >
+                  <span>Sign Out</span>
+                  <motion.div
+                    className="group-hover:translate-x-1.5 duration-200"
+                    transition={{
+                      ease: "easeInOut",
+                    }}
+                  >
+                    <ArrowRightIcon weight="bold" />
+                  </motion.div>
                 </CxCButton>
               ) : (
                 <div className="flex flex-wrap gap-4 md:gap-8 font-normal">
