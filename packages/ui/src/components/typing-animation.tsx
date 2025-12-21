@@ -20,6 +20,8 @@ interface TypingAnimationProps extends MotionProps {
   showCursor?: boolean;
   blinkCursor?: boolean;
   cursorStyle?: "line" | "block" | "underscore";
+  cursorElement?: React.ReactNode;
+  onComplete?: () => void;
 }
 
 export function TypingAnimation({
@@ -37,6 +39,8 @@ export function TypingAnimation({
   showCursor = true,
   blinkCursor = true,
   cursorStyle = "line",
+  cursorElement,
+  onComplete,
   ...props
 }: TypingAnimationProps) {
   const MotionComponent = motion.create(Component, {
@@ -137,12 +141,27 @@ export function TypingAnimation({
     currentCharIndex >= currentWordGraphemes.length &&
     phase !== "deleting";
 
+  // call onComplete once when typing finishes
+  const calledRef = useRef(false);
+  useEffect(() => {
+    if (isComplete && onComplete && !calledRef.current) {
+      calledRef.current = true;
+      try {
+        onComplete();
+      } catch (e) {
+        console.error(e);
+      }
+    }
+  }, [isComplete, onComplete]);
+
   const shouldShowCursor =
     showCursor &&
-    !isComplete &&
-    (hasMultipleWords ||
-      loop ||
-      currentCharIndex < currentWordGraphemes.length);
+    (cursorElement
+      ? true
+      : !isComplete &&
+        (hasMultipleWords ||
+          loop ||
+          currentCharIndex < currentWordGraphemes.length));
 
   const getCursorChar = () => {
     switch (cursorStyle) {
@@ -165,9 +184,18 @@ export function TypingAnimation({
       {displayedText}
       {shouldShowCursor && (
         <span
-          className={cn("inline-block", blinkCursor && "animate-blink-cursor")}
+          className={cn(
+            "inline-block",
+            blinkCursor && !cursorElement && "animate-blink-cursor",
+          )}
         >
-          {getCursorChar()}
+          {cursorElement ? (
+            <span className="inline-block align-text-bottom">
+              {cursorElement}
+            </span>
+          ) : (
+            getCursorChar()
+          )}
         </span>
       )}
     </MotionComponent>

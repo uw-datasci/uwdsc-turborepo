@@ -5,7 +5,12 @@ import CxCButton from "../CxCButton";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Meteors, TypingAnimation, WarpBackground } from "@uwdsc/ui/index";
+import {
+  Badge,
+  Meteors,
+  TypingAnimation,
+  WarpBackground,
+} from "@uwdsc/ui/index";
 import Image from "next/image";
 import { useIsMobile } from "@/hooks/useIsMobile";
 
@@ -14,7 +19,10 @@ export default function CxCTitle() {
   const eventDate = useMemo(() => new Date("2026-01-02T00:00:00"), []);
   const [mounted, setMounted] = useState(false);
   const [countdownOver, setCountdownOver] = useState(false);
-  const isMobile = useIsMobile();
+  const isMobile = useIsMobile(640);
+  const isTablet = useIsMobile(1024);
+  const [cursorDone, setCursorDone] = useState(false);
+  const [logoVisible, setLogoVisible] = useState(false);
 
   useEffect(() => {
     const checkCountdown = () => {
@@ -91,10 +99,10 @@ export default function CxCTitle() {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}
                 transition={{ duration: 0.6, delay: 0.2 }}
-                className="flex flex-col items-center gap-4 sm:gap-6 pb-8 mt-5"
+                className="flex flex-col items-center gap-4 sm:gap-6 pb-6 mt-5"
               >
                 <div className="flex flex-col items-center z-10">
-                  <div className="relative w-64 h-24 lg:w-96 lg:h-40">
+                  <div className="relative w-64 h-26 lg:w-96 lg:h-40">
                     <Image
                       src="/logos/cxc_logo.svg"
                       alt="CXC"
@@ -102,10 +110,67 @@ export default function CxCTitle() {
                       className="object-contain"
                     />
                   </div>
-
-                  <TypingAnimation className="font-light text-xl md:text-3xl text-white/80">
-                    An AI Hackathon
-                  </TypingAnimation>
+                  <div className="flex flex-row items-center">
+                    <TypingAnimation
+                      className="font-light text-xl sm:text-2xl lg:text-3xl text-white/80"
+                      showCursor={true}
+                      onComplete={() => {
+                        setLogoVisible(true);
+                        setCursorDone(true);
+                      }}
+                      cursorElement={
+                        <span className="inline-flex items-center ml-1.5">
+                          <motion.img
+                            src="/logos/tangerine_cursor.png"
+                            alt="tangerine-cursor"
+                            initial={{ x: 0, y: 0, rotate: -120 }}
+                            animate={
+                              cursorDone
+                                ? {
+                                    x: isMobile ? 125 : isTablet ? 148 : 173,
+                                    y: isMobile ? -6 : isTablet ? -8 : -10,
+                                    rotate: 0,
+                                  }
+                                : {
+                                    x: 0,
+                                    y: 0,
+                                    rotate: -120,
+                                  }
+                            }
+                            transition={{
+                              type: "tween",
+                              ease: [0.22, 1, 0.36, 1],
+                              duration: 0.8,
+                            }}
+                            className="inline-block w-4.5 h-4.5 sm:w-5 sm:h-5 lg:w-6 lg:h-6"
+                          />
+                        </span>
+                      }
+                    >
+                      Presented by
+                    </TypingAnimation>
+                    <motion.img
+                      src="/logos/tangerine_logo.png"
+                      alt="tangerine-logo"
+                      initial={{ opacity: 0, scale: 0 }}
+                      animate={
+                        logoVisible
+                          ? { opacity: 1, scale: 1 }
+                          : { opacity: 0, scale: 0 }
+                      }
+                      transition={{
+                        duration: 0.8,
+                        ease: [0.22, 1, 0.36, 1],
+                      }}
+                      className="w-36 h-8 sm:w-42 sm:h-9 lg:w-48 lg:h-10 object-contain -ml-5"
+                    />
+                  </div>
+                  <Badge
+                    className="mt-5 font-normal text-base border-white/50"
+                    variant="outline"
+                  >
+                    FEB 6-8 · An AI Hackathon
+                  </Badge>
                 </div>
 
                 <CountdownClock
