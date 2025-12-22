@@ -46,7 +46,7 @@ export async function getRandomApplication(): Promise<GetRandomApplicationRespon
 }
 
 /**
- * Submit review scores for an application in user metadata
+ * Submit review scores for an application
  *
  * @param scores - The review scores (application_id, basic_info_score, questions_score)
  * @returns Promise with submission result

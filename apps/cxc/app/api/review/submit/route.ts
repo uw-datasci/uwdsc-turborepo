@@ -13,7 +13,7 @@ type ReviewScores = {
 
 /**
  * POST /api/review/submit
- * Saves review scores to the user's profile
+ * Saves review scores to supabase
  */
 export async function POST(request: NextRequest) {
   try {
