@@ -10,7 +10,7 @@ import { Sponsors } from "@/components/home/Sponsors";
 import { FollowUs } from "@/components/home/FollowUs";
 import { Faq } from "@/components/home/Faq";
 import CxCTitle from "@/components/home/CxCTitle";
-import { Testimonials } from "@/components/home/Testimonials";
+// import { Testimonials } from "@/components/home/Testimonials";
 import { PastProjects } from "@/components/home/PastProjects";
 
 export default function Home() {
@@ -28,8 +28,7 @@ export default function Home() {
       <WormholeMiddle topRadius={11} bottomRadius={9.25} />
       <div className="border-t border-b border-white/50">
         <Sponsors />
-        <Testimonials />
-
+        {/* <Testimonials /> */}
         <div id="faq-section">
           <Faq />
         </div>
