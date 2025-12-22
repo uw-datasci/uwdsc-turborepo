@@ -12,6 +12,7 @@ import {
   applicationDefaultValues,
 } from "@/lib/schemas/application";
 import { useState } from "react";
+import { submitApplication } from "@/lib/api";
 
 const FINAL_STEP_COUNT = STEP_NAMES.length;
 const NUMBER_PAGES = 8;
@@ -46,14 +47,35 @@ export default function ApplyPage() {
   });
 
   const handleSaveAndContinue = async (onSuccess: () => void) => {
+    // Check if we're on the final step (Review step)
+    const isLastStep =
+      currentDesktopStep === FINAL_STEP_COUNT - 1 ||
+      currentMobilePage === NUMBER_PAGES - 1;
+
     setIsLoading(true);
     try {
-      // TODO: Replace with Update Application API calls
-      // Example: await updateApplication(form.getValues());
-      await new Promise((resolve) => setTimeout(resolve, 1000)); // TO REMOVE
-      onSuccess();
+      if (isLastStep) {
+        // Validate the entire form before submitting
+        const isValid = await form.trigger();
+        if (!isValid) {
+          console.error("Form validation failed");
+          return;
+        }
+
+        // Submit the application
+        const formData = form.getValues();
+        await submitApplication(formData);
+        
+        // On success, navigate to the submitted page
+        onSuccess();
+      } else {
+        // For non-final steps, just continue (can add draft saving here later)
+        onSuccess();
+      }
     } catch (error) {
-      console.error(error);
+      console.error("Error saving application:", error);
+      // You might want to show an error toast/notification here
+      throw error; // Re-throw to prevent navigation on error
     } finally {
       setIsLoading(false);
     }

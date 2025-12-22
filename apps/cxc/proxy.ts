@@ -8,7 +8,7 @@ import { withProtected } from "./lib/middleware/withProtected";
 import { withAuth } from "./lib/middleware/withAuth";
 
 const APPLY_ROUTE = "/apply";
-const PROTECTED_ROUTES = new Set(["/admin"]);
+const PROTECTED_ROUTES = new Set(["/admin", "/review"]);
 const AUTH_ROUTES = new Set(["/login", "/register"]);
 
 /**
