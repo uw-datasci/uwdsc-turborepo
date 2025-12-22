@@ -53,17 +53,8 @@ export interface UserProfile {
   email: string;
   first_name: string | null;
   last_name: string | null;
-  dob: string | null;
   role: string;
   nfc_id: string | null;
-  created_at: string;
-  updated_at: string;
-}
-
-export interface GetProfileResponse {
-  profile: UserProfile | null;
-  error?: string;
-  message?: string;
 }
 
 export interface SubmitApplicationResponse {

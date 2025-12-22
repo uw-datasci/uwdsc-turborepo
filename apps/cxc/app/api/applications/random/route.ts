@@ -3,7 +3,7 @@ import { cookies } from "next/headers";
 import { createSupabaseServerClient } from "@uwdsc/server/core/database/client";
 import type { CookieOptions } from "@supabase/ssr";
 import { createAuthService } from "@/lib/services";
-import { pool } from "@uwdsc/server/core/database/connection";
+import { sql } from "@uwdsc/server/core/database/connection";
 
 /**
  * GET /api/applications/random
@@ -86,20 +86,18 @@ export async function GET(request: NextRequest) {
     // Note: profile_id in applications table is the same as auth.users.id
     // We'll query auth.users directly using the database connection
     let email: string | null = null;
-    
+
     try {
-      // Query auth.users directly using the database pool
-      const result = await pool.query(
-        "SELECT email FROM auth.users WHERE id = $1",
-        [data.profile_id]
-      );
-      
-      if (result.rows.length > 0) {
-        email = result.rows[0].email;
-      }
+      const rows = await sql<{ email: string }[]>`
+        SELECT email
+        FROM auth.users
+        WHERE id = ${data.profile_id}
+        LIMIT 1
+      `;
+
+      if (rows.length > 0) email = rows[0].email;
     } catch (emailError) {
       console.error("Error fetching user email:", emailError);
-      // Continue without email - it's not critical for the review
     }
 
     // Add email to application data if available

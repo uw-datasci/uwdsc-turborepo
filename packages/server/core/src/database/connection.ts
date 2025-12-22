@@ -1,50 +1,33 @@
-import { Pool } from "pg";
+import postgres from "postgres";
+
+const databaseUrl = process.env.DATABASE_URL;
+
+if (!databaseUrl) throw new Error("DATABASE_URL is not set");
 
 /**
- * Single PostgreSQL connection pool optimized for Supabase
+ * PostgreSQL connection using postgres.js optimized for Supabase Transaction Pooler
  * Shared across all repositories to prevent connection exhaustion
  */
-export const pool = new Pool({
-  connectionString: process.env.DATABASE_URL!,
+export const sql = postgres(databaseUrl, {
   // CRITICAL: Required for Supabase Transaction Pooler (port 6543)
-  // Without this, you'll get "Connection terminated" errors
-  options: "-c search_path=public,auth",
+  // Transaction pooler doesn't support prepared statements
+  prepare: false,
 
   // Optimized for serverless + Supabase Transaction Pooler
   max: 1, // One connection per serverless function
-  min: 0, // No persistent connections
-  idleTimeoutMillis: 0, // Don't close idle connections (pooler handles it)
-  connectionTimeoutMillis: 10000, // 10s for connection establishment
-  allowExitOnIdle: true, // Allow process to exit if no active queries
+  idle_timeout: 10, // Seconds before idle connections are closed
+  connect_timeout: 10, // Seconds to wait for connection
+  max_lifetime: 60 * 30,
 
-  // Query timeouts
-  statement_timeout: 60000, // 60s for complex queries
-  query_timeout: 60000, // 60s total query timeout
+  // Connection options
+  connection: { search_path: "public,auth" },
+
+  // Transform options for consistent behavior
+  transform: { undefined: null },
+
+  // Error handling
+  onnotice: () => {}, // Suppress notices
 });
 
-// Handle pool errors to prevent crashes
-pool.on("error", (err) => {
-  console.error("Unexpected database pool error:", err);
-  // Don't reset pool on errors - let it recover
-});
-
-/**
- * Test database connection health
- * @returns Promise<boolean> - true if connection is healthy
- */
-export const testConnection = async (): Promise<boolean> => {
-  try {
-    const client = await pool.connect();
-    await client.query("SELECT 1");
-    client.release();
-    return true;
-  } catch (error) {
-    console.error("Database connection failed:", error);
-    return false;
-  }
-};
-
-/**
- * Gracefully close all database connections
- */
-export const closeConnections = async (): Promise<void> => await pool.end();
+// Export type for use in repositories
+export type Sql = typeof sql;
