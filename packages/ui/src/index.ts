@@ -165,6 +165,8 @@ export { ScrollArea } from "./components/scroll-area";
 
 export { SpinningText } from "./components/spinning-text";
 
+export { ShimmerButton } from "./components/shimmer-button";
+
 // Hooks
 export * from "./hooks";
 

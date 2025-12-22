@@ -282,7 +282,7 @@ export default function PastProjectCard(project: Project) {
           rel="noopener noreferrer"
           className="p-3"
         >
-          <div className="relative w-48 min-h-24 group">
+          <div className="relative w-48 min-h-28 group">
             <Image
               src={project.imgSrc ?? ""}
               alt={project.title}

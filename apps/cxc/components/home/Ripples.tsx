@@ -144,7 +144,7 @@ const FloatingImage = ({
         },
       }}
     >
-      <div className="relative rounded-sm overflow-hidden shadow-lg w-full h-full">
+      <div className="relative overflow-hidden shadow-lg w-full h-full">
         <Image
           src={src}
           alt={alt}

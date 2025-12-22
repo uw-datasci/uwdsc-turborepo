@@ -1,5 +1,5 @@
 "use client";
-import { OrbitingCircles } from "@uwdsc/ui/index";
+import { OrbitingCircles, ShimmerButton } from "@uwdsc/ui/index";
 import { CURRENT_SPONSORS } from "../../constants/home";
 import Image from "next/image";
 import Link from "next/link";
@@ -34,8 +34,14 @@ export function Sponsors() {
         {/* Orbiting Sponsors */}
         <div className="relative flex h-[400px] md:h-[500px] w-full flex-col items-center justify-center overflow-hidden mb-12">
           {/* Center text */}
-          <div className="z-10 text-base md:text-2xl font-semibold">
-            CXC 2026
+          <div className="relative w-20 h-8 md:w-36 md:h-16">
+            <Image
+              src="/logos/cxc_logo.svg"
+              alt="CXC"
+              fill
+              className="object-contain"
+              priority
+            />
           </div>
 
           {/* Outer orbit - larger sponsors */}
@@ -90,16 +96,25 @@ export function Sponsors() {
           </OrbitingCircles>
         </div>
 
-        {/* Contact form */}
-        <p className="text-lg md:text-xl text-white max-w-2xl mx-auto mt-20">
-          Want to become a sponsor?{" "}
-          <a
-            href="mailto:outreach@uwdatascience.ca"
-            className="underline text-white hover:text-gray-200 transition"
+        {/* Contact CTA */}
+        <div className="mt-20 flex flex-col items-center gap-6">
+          <p className="text-lg md:text-xl text-white max-w-2xl mx-auto">
+            Interested in sponsoring CxC? Click the button to get in touch.
+          </p>
+
+          <ShimmerButton
+            className="shadow-sm shadow-white/30"
+            onClick={() =>
+              (window.location.href = "mailto:outreach@uwdatascience.ca")
+            }
+            shimmerSize="1.5px"
+            aria-label="Email outreach to become a sponsor"
           >
-            outreach@uwdatascience.ca
-          </a>
-        </p>
+            <span className="text-center text-base font-medium tracking-tight text-white md:text-xl">
+              Become a Sponsor
+            </span>
+          </ShimmerButton>
+        </div>
       </div>
     </section>
   );

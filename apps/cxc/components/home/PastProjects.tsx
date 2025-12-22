@@ -120,23 +120,25 @@ export function PastProjects() {
         </div>
         {/* Desktop */}
         <div className="hidden lg:block">
-          <div className="absolute top-0 -left-5 flex flex-col items-center">
-            <UFO category="CxC 2025" />
-            <div className="flex flex-wrap gap-3 max-w-xl items-center justify-center mt-6">
-              {CxC2025Projects.map((project) => (
-                <PastProjectCard key={project.title} {...project} />
-              ))}
+          <div className="flex flex-row justify-between items-start w-full max-w-7xl mx-auto gap-8">
+            <div className="flex flex-col items-center flex-1">
+              <UFO category="CxC 2025" />
+              <div className="flex flex-wrap gap-3 max-w-xl items-center justify-center mt-6">
+                {CxC2025Projects.map((project) => (
+                  <PastProjectCard key={project.title} {...project} />
+                ))}
+              </div>
+            </div>
+            <div className="flex flex-col items-center flex-1">
+              <UFO category="CxC 2024" />
+              <div className="flex flex-wrap gap-3 max-w-xl items-center justify-center mt-6">
+                {CxC2024Projects.map((project) => (
+                  <PastProjectCard key={project.title} {...project} />
+                ))}
+              </div>
             </div>
           </div>
-          <div className="absolute top-0 -right-5 flex flex-col items-center">
-            <UFO category="CxC 2024" />
-            <div className="flex flex-wrap gap-3 max-w-xl items-center justify-center mt-6">
-              {CxC2024Projects.map((project) => (
-                <PastProjectCard key={project.title} {...project} />
-              ))}
-            </div>
-          </div>
-          <div className="absolute top-[60%] left-[50%] flex flex-col items-center -translate-x-1/2">
+          <div className="absolute top-[65%] left-[50%] flex flex-col items-center -translate-x-1/2">
             <UFO category="CxC 2023" />
             <div className="flex flex-row gap-3 items-center justify-center mt-6">
               {CxC2023Projects.map((project) => (
