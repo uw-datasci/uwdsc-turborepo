@@ -43,6 +43,9 @@ import {
 // ============================================================================
 
 const FINAL_STEP_COUNT = STEP_NAMES.length;
+const STORAGE_KEY_DESKTOP_STEP = "desktop_step";
+const STORAGE_KEY_MOBILE_PAGE = "mobile_page";
+
 
 // ============================================================================
 // Helper Functions
@@ -72,8 +75,20 @@ export default function ApplyPage() {
   // ========================================================================
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [currentDesktopStep, setCurrentDesktopStep] = useState<number>(0);
-  const [currentMobilePage, setCurrentMobilePage] = useState<number>(0);
+  const [currentDesktopStep, setCurrentDesktopStep] = useState<number>(() => {
+    if (typeof window !== "undefined") {
+      const saved = localStorage.getItem(STORAGE_KEY_DESKTOP_STEP);
+      return saved ? parseInt(saved, 10) : 0;
+    }
+    return 0;
+  });
+  const [currentMobilePage, setCurrentMobilePage] = useState<number>(() => {
+    if (typeof window !== "undefined") {
+      const saved = localStorage.getItem(STORAGE_KEY_MOBILE_PAGE);
+      return saved ? parseInt(saved, 10) : 0;
+    }
+    return 0;
+  });
   const [applicationStatus, setApplicationStatus] = useState<string | null>(
     null,
   );
@@ -156,6 +171,19 @@ export default function ApplyPage() {
     initializeApplication();
   }, [user, form]);
 
+  // Save step/page to localStorage whenever they change
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      localStorage.setItem(STORAGE_KEY_DESKTOP_STEP, currentDesktopStep.toString());
+    }
+  }, [currentDesktopStep]);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      localStorage.setItem(STORAGE_KEY_MOBILE_PAGE, currentMobilePage.toString());
+    }
+  }, [currentMobilePage]);
+
   // ========================================================================
   // Event Handlers
   // ========================================================================
@@ -187,9 +215,15 @@ export default function ApplyPage() {
       const cleanedData = cleanFormData(transformedData);
       const response = await updateApplication(cleanedData);
 
+      // In handleSaveAndContinue, update the submit section:
       if (response.success) {
         if (isSubmit) {
           setApplicationStatus("submitted");
+          // Clear localStorage autosave when application is submitted
+          localStorage.removeItem("q1_save");
+          localStorage.removeItem("q2_save");
+          localStorage.removeItem(STORAGE_KEY_DESKTOP_STEP);
+          localStorage.removeItem(STORAGE_KEY_MOBILE_PAGE);
         }
         onSuccess();
       } else {
@@ -207,7 +241,12 @@ export default function ApplyPage() {
    */
   const handleDesktopStepChange = (newStep: number) => {
     setCurrentDesktopStep(newStep);
-    setCurrentMobilePage(stepToPage(newStep));
+    const newPage = stepToPage(newStep);
+    setCurrentMobilePage(newPage);
+    if (typeof window !== "undefined") {
+      localStorage.setItem(STORAGE_KEY_DESKTOP_STEP, newStep.toString());
+      localStorage.setItem(STORAGE_KEY_MOBILE_PAGE, newPage.toString());
+    }
   };
 
   /**
@@ -215,7 +254,12 @@ export default function ApplyPage() {
    */
   const handleMobilePageChange = (newPage: number) => {
     setCurrentMobilePage(newPage);
-    setCurrentDesktopStep(pageToStep(newPage));
+    const newStep = pageToStep(newPage);
+    setCurrentDesktopStep(newStep);
+    if (typeof window !== "undefined") {
+      localStorage.setItem(STORAGE_KEY_MOBILE_PAGE, newPage.toString());
+      localStorage.setItem(STORAGE_KEY_DESKTOP_STEP, newStep.toString());
+    }
   };
 
   // ========================================================================
