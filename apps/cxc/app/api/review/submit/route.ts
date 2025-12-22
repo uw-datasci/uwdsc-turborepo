@@ -25,6 +25,18 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
+    // Check if user has admin role
+    const { ProfileService } = await import("@uwdsc/server/cxc/services/profileService");
+    const profileService = new ProfileService();
+    const profile = await profileService.getProfileByUserId(user.id);
+    
+    if (!profile || profile.role !== "admin") {
+      return NextResponse.json(
+        { error: "Forbidden: Admin access required" },
+        { status: 403 },
+      );
+    }
+
     const body = await request.json();
     const { application_id, basic_info_score, q1_score, q2_score }: ReviewScores =
       body;
@@ -81,56 +93,63 @@ export async function POST(request: NextRequest) {
       },
     });
 
-    // Get current user metadata
-    const {
-      data: { user: authUser },
-      error: getUserError,
-    } = await supabase.auth.getUser();
+    // Check if reviewer has already reviewed this application
+    const { data: existingReview, error: checkError } = await supabase
+      .from("reviews")
+      .select("id")
+      .eq("application_id", application_id)
+      .eq("reviewer_id", profile.id)
+      .single();
 
-    if (getUserError || !authUser) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-
-    // Get existing scores from user metadata
-    const currentScores =
-      (authUser.user_metadata?.review_scores as Array<{
-        application_id: string;
-        basic_info_score: number;
-        q1_score: number;
-        q2_score: number;
-        reviewed_at: string;
-      }>) || [];
-
-    // Add new score
-    const newScore = {
-      application_id,
-      basic_info_score,
-      q1_score,
-      q2_score,
-      reviewed_at: new Date().toISOString(),
-    };
-
-    const updatedScores = [...currentScores, newScore];
-
-    // Update user metadata with new scores
-    const { error: updateError } = await supabase.auth.updateUser({
-      data: {
-        review_scores: updatedScores,
-      },
-    });
-
-    if (updateError) {
-      console.error("Error updating user scores:", updateError);
+    if (checkError && checkError.code !== "PGRST116") {
+      // PGRST116 means no row found, which is fine
+      console.error("Error checking existing review:", checkError);
       return NextResponse.json(
-        { error: "Failed to save scores" },
+        { error: "Failed to check existing review" },
         { status: 500 },
       );
     }
 
+    if (existingReview) {
+      return NextResponse.json(
+        { error: "You have already reviewed this application" },
+        { status: 400 },
+      );
+    }
+
+    // Insert review into reviews table
+    const { data: reviewData, error: insertError } = await supabase
+      .from("reviews")
+      .insert({
+        application_id,
+        reviewer_id: profile.id,
+        basic_info_score,
+        q1_score,
+        q2_score,
+        reviewed_at: new Date().toISOString(),
+      })
+      .select("*")
+      .single();
+
+    if (insertError) {
+      console.error("Error inserting review:", insertError);
+      return NextResponse.json(
+        { error: "Failed to save review" },
+        { status: 500 },
+      );
+    }
+
+    // Get total review count for this reviewer
+    const { count } = await supabase
+      .from("reviews")
+      .select("*", { count: "exact", head: true })
+      .eq("reviewer_id", profile.id);
+
     return NextResponse.json({
       success: true,
-      message: "Scores saved successfully",
-      total_reviews: updatedScores.length,
+      message: "Review saved successfully",
+      review: reviewData,
+      total_reviews: count || 0,
     });
   } catch (err: unknown) {
     console.error("Error in review submit route:", err);

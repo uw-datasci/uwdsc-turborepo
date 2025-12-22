@@ -36,7 +36,7 @@ export async function proxy(request: NextRequest) {
       return withApply(request, user);
     // 3. Handle Authenticated users trying to access protected routes
     case PROTECTED_ROUTES.has(pathname):
-      return withProtected(request, user);
+      return await withProtected(request, user);
   }
 
   // No specific middleware matched, continue with the request
