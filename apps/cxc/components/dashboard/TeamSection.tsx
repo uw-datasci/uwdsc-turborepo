@@ -16,7 +16,7 @@ interface TeamSectionProps {
   className?: string;
 }
 
-export default function TeamSection({
+export function TeamSection({
   teamMembers = [],
   className,
 }: TeamSectionProps) {

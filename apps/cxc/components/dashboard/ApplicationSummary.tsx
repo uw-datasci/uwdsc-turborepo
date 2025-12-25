@@ -58,7 +58,7 @@ function InfoRow({
   );
 }
 
-export default function ApplicationSummary({
+export function ApplicationSummary({
   application,
   className,
 }: ApplicationSummaryProps) {

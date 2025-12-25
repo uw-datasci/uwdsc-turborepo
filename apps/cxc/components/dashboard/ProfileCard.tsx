@@ -22,7 +22,7 @@ interface ProfileCardProps {
   className?: string;
 }
 
-export default function ProfileCard({
+export function ProfileCard({
   user,
   application,
   className,

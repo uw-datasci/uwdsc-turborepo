@@ -49,7 +49,7 @@ const statusConfig: Record<
   },
 };
 
-export default function StatusCard({ status, submittedAt }: StatusCardProps) {
+export function StatusCard({ status, submittedAt }: StatusCardProps) {
   const config = status ? statusConfig[status] : null;
 
   return (

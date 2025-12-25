@@ -128,7 +128,7 @@ function formatDate(date: Date) {
   });
 }
 
-export default function EventTimeline({
+export function EventTimeline({
   events = mockEvents,
   className,
 }: EventTimelineProps) {

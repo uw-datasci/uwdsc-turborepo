@@ -46,7 +46,7 @@ interface DashboardSidebarProps {
   onNavClick?: () => void;
 }
 
-export default function DashboardSidebar({
+export function DashboardSidebar({
   className,
   onNavClick,
 }: DashboardSidebarProps) {
