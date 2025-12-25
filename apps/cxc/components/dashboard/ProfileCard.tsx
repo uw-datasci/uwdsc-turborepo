@@ -26,7 +26,7 @@ export function ProfileCard({
   user,
   application,
   className,
-}: ProfileCardProps) {
+}: Readonly<ProfileCardProps>) {
   const initials =
     user.first_name && user.last_name
       ? `${user.first_name[0]}${user.last_name[0]}`

@@ -19,7 +19,7 @@ interface TeamSectionProps {
 export function TeamSection({
   teamMembers = [],
   className,
-}: TeamSectionProps) {
+}: Readonly<TeamSectionProps>) {
   const hasTeam = teamMembers.length > 0;
 
   return (
@@ -46,7 +46,7 @@ export function TeamSection({
               <div className="flex flex-wrap gap-3">
                 {teamMembers.map((member, index) => (
                   <motion.div
-                    key={index}
+                    key={member}
                     initial={{ opacity: 0, scale: 0.8 }}
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ delay: index * 0.1 }}

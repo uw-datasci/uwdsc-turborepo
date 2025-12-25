@@ -1,10 +1,10 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { cn } from "@uwdsc/ui";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
+  cn,
   IdentificationCardIcon,
   CalendarIcon,
   FileTextIcon,
@@ -49,7 +49,7 @@ interface DashboardSidebarProps {
 export function DashboardSidebar({
   className,
   onNavClick,
-}: DashboardSidebarProps) {
+}: Readonly<DashboardSidebarProps>) {
   const pathname = usePathname();
 
   return (

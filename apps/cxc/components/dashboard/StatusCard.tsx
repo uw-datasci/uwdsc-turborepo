@@ -49,7 +49,7 @@ const statusConfig: Record<
   },
 };
 
-export function StatusCard({ status, submittedAt }: StatusCardProps) {
+export function StatusCard({ status, submittedAt }: Readonly<StatusCardProps>) {
   const config = status ? statusConfig[status] : null;
 
   return (

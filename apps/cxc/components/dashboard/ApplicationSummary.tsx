@@ -21,13 +21,17 @@ interface ApplicationSummaryProps {
   className?: string;
 }
 
+interface InfoRowProps {
+  label: string;
+  value: React.ReactNode;
+  className?: string;
+}
+
 const container = {
   hidden: { opacity: 0 },
   show: {
     opacity: 1,
-    transition: {
-      staggerChildren: 0.1,
-    },
+    transition: { staggerChildren: 0.1 },
   },
 };
 
@@ -36,15 +40,7 @@ const item = {
   show: { opacity: 1, y: 0 },
 };
 
-function InfoRow({
-  label,
-  value,
-  className,
-}: {
-  label: string;
-  value: React.ReactNode;
-  className?: string;
-}) {
+function InfoRow({ label, value, className }: Readonly<InfoRowProps>) {
   return (
     <div
       className={cn(
@@ -61,7 +57,7 @@ function InfoRow({
 export function ApplicationSummary({
   application,
   className,
-}: ApplicationSummaryProps) {
+}: Readonly<ApplicationSummaryProps>) {
   return (
     <motion.div
       variants={container}
@@ -248,9 +244,9 @@ export function ApplicationSummary({
             </CardHeader>
             <CardContent>
               <div className="flex flex-wrap gap-2">
-                {application.team_members.map((member, index) => (
+                {application.team_members.map((member) => (
                   <Badge
-                    key={index}
+                    key={member}
                     className="bg-white/10 text-white/80 border-white/20"
                   >
                     {member}

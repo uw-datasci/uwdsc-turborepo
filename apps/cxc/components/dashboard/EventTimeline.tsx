@@ -131,14 +131,13 @@ function formatDate(date: Date) {
 export function EventTimeline({
   events = mockEvents,
   className,
-}: EventTimelineProps) {
+}: Readonly<EventTimelineProps>) {
   // Group events by date
   const groupedEvents = events.reduce(
     (acc, event) => {
       const dateKey = formatDate(event.start_time);
-      if (!acc[dateKey]) {
-        acc[dateKey] = [];
-      }
+      acc[dateKey] ??= [];
+
       acc[dateKey].push(event);
       return acc;
     },

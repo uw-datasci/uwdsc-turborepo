@@ -7,11 +7,11 @@ import { Sheet, SheetContent, SheetTrigger, HamburgerIcon } from "@uwdsc/ui";
 import { useAuth } from "@/contexts/AuthContext";
 import { DashboardSidebar } from "@/components/dashboard";
 
-export default function DashboardLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+interface DashboardLayoutProps {
+  readonly children: React.ReactNode;
+}
+
+export default function DashboardLayout({ children }: DashboardLayoutProps) {
   const { isLoading, isAuthenticated } = useAuth();
   const router = useRouter();
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -75,7 +75,9 @@ export default function DashboardLayout({
           <AnimatePresence mode="wait">
             <motion.div
               key={
-                typeof window !== "undefined" ? window.location.pathname : ""
+                globalThis.window === undefined
+                  ? ""
+                  : globalThis.location.pathname
               }
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
