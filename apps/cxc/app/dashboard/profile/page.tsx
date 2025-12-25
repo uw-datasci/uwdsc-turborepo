@@ -23,6 +23,7 @@ import {
   GraduationCapIcon,
 } from "@uwdsc/ui";
 import type { HackerApplication } from "@/types/application";
+import { transformDatabaseDataToForm } from "@/lib/utils/formDataTransformer";
 
 export default function ProfilePage() {
   const { user } = useAuth();
@@ -37,7 +38,11 @@ export default function ProfilePage() {
 
       try {
         const data = await getApplication(user.id);
-        setApplication(data as HackerApplication | null);
+        if (!data) return;
+
+        setApplication(
+          transformDatabaseDataToForm(data) as HackerApplication | null
+        );
       } catch (error) {
         console.error("Error loading application:", error);
       } finally {

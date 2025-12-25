@@ -9,6 +9,7 @@ import { ApplicationSummary } from "@/components/dashboard";
 import CxCButton from "@/components/CxCButton";
 import type { HackerApplication } from "@/types/application";
 import { Card, CardContent, FileTextIcon } from "@uwdsc/ui";
+import { transformDatabaseDataToForm } from "@/lib/utils/formDataTransformer";
 
 export default function ApplicationPage() {
   const { user } = useAuth();
@@ -23,7 +24,11 @@ export default function ApplicationPage() {
 
       try {
         const data = await getApplication(user.id);
-        setApplication(data as HackerApplication | null);
+        if (!data) return;
+
+        setApplication(
+          transformDatabaseDataToForm(data) as HackerApplication | null
+        );
       } catch (error) {
         console.error("Error loading application:", error);
       } finally {

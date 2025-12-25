@@ -20,7 +20,7 @@ export function TeamSection({
   teamMembers = [],
   className,
 }: Readonly<TeamSectionProps>) {
-  const hasTeam = teamMembers.length > 0;
+  const hasTeam = teamMembers?.length > 0;
 
   return (
     <motion.div
