@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { useAuth } from "@/contexts/AuthContext";
-import { fetchApplication } from "@/lib/api/application";
+import { getApplication } from "@/lib/api/application";
 import { StatusCard, ProfileCard, TeamSection } from "@/components/dashboard";
 import type { HackerApplication } from "@/types/application";
 
@@ -19,7 +19,7 @@ export default function DashboardPage() {
       if (!user?.id) return;
 
       try {
-        const data = await fetchApplication(user.id);
+        const data = await getApplication(user.id);
         setApplication(data as HackerApplication | null);
       } catch (error) {
         console.error("Error loading application:", error);

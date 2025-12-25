@@ -21,7 +21,7 @@ import {
 } from "@/lib/schemas/application";
 import {
   updateApplication,
-  fetchApplication,
+  getApplication,
   createApplication,
 } from "@/lib/api/application";
 import {
@@ -75,7 +75,7 @@ export default function ApplyPage() {
   const [currentDesktopStep, setCurrentDesktopStep] = useState<number>(0);
   const [currentMobilePage, setCurrentMobilePage] = useState<number>(0);
   const [applicationStatus, setApplicationStatus] = useState<string | null>(
-    null,
+    null
   );
   const { user } = useAuth();
   const hasInitialized = useRef<boolean>(false);
@@ -107,7 +107,7 @@ export default function ApplyPage() {
 
       setIsLoading(true);
       try {
-        const existingApplication = await fetchApplication(user.id);
+        const existingApplication = await getApplication(user.id);
         if (existingApplication) {
           // Pre-fill form with existing application data
           const formData = transformDatabaseDataToForm(existingApplication);
@@ -144,7 +144,7 @@ export default function ApplyPage() {
         }
         // Set application status
         setApplicationStatus(
-          (existingApplication?.status as string) || "draft",
+          (existingApplication?.status as string) || "draft"
         );
       } catch (error) {
         console.error("Error initializing application:", error);
@@ -166,7 +166,7 @@ export default function ApplyPage() {
    */
   const handleSaveAndContinue = async (
     onSuccess: () => void,
-    isSubmit: boolean = false,
+    isSubmit: boolean = false
   ) => {
     if (!user?.id) {
       console.error("Profile ID not found");

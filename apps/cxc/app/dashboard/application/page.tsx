@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { useAuth } from "@/contexts/AuthContext";
-import { fetchApplication } from "@/lib/api/application";
+import { getApplication } from "@/lib/api/application";
 import { ApplicationSummary } from "@/components/dashboard";
 import CxCButton from "@/components/CxCButton";
 import type { HackerApplication } from "@/types/application";
@@ -22,7 +22,7 @@ export default function ApplicationPage() {
       if (!user?.id) return;
 
       try {
-        const data = await fetchApplication(user.id);
+        const data = await getApplication(user.id);
         setApplication(data as HackerApplication | null);
       } catch (error) {
         console.error("Error loading application:", error);
