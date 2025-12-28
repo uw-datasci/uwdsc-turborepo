@@ -2,20 +2,26 @@
 
 import { CountdownClock } from "../CountdownClock";
 import CxCButton from "../CxCButton";
-import { WaterCube } from "../WaterCube";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { Badge, Meteors, WarpBackground } from "@uwdsc/ui/index";
+import Image from "next/image";
+import { useIsMobile } from "@/hooks/useIsMobile";
 
 export default function CxCTitle() {
   const router = useRouter();
-  const eventDate = useMemo(() => new Date("2026-01-06T00:00:00"), []);
+  const eventDate = useMemo(() => new Date("2026-01-02T00:00:00"), []);
   const [mounted, setMounted] = useState(false);
   const [countdownOver, setCountdownOver] = useState(false);
+  const isMobile = useIsMobile(640);
+  // const isTablet = useIsMobile(1024);
+  // const [cursorDone, setCursorDone] = useState(false);
+  // const [logoVisible, setLogoVisible] = useState(false);
 
   useEffect(() => {
     const checkCountdown = () => {
-      const now = new Date().getTime();
+      const now = Date.now();
       const difference = eventDate.getTime() - now;
 
       if (difference <= 0) {
@@ -31,14 +37,17 @@ export default function CxCTitle() {
 
   return (
     <div
-      className={`relative border-b border-white/50 flex flex-col items-center justify-center ${countdownOver ? "overflow-hidden" : "py-12"}`}
+      className={`relative border-b border-white/50 flex flex-col items-center justify-center ${countdownOver ? "overflow-hidden" : ""}`}
     >
       {mounted && (
-        <>
-          <AnimatePresence mode="wait">
-            {countdownOver ? (
-              <motion.p
-                key="cxc-text"
+        <AnimatePresence mode="wait">
+          {countdownOver ? (
+            <WarpBackground
+              perspective={isMobile ? 80 : 250}
+              className="w-full"
+            >
+              <motion.div
+                key="cxc-logo-section"
                 initial={{ opacity: 0, scale: 0.5, y: 50 }}
                 animate={{ opacity: 1, scale: 1, y: 0 }}
                 exit={{ opacity: 0, scale: 0.5 }}
@@ -46,120 +55,189 @@ export default function CxCTitle() {
                   duration: 1.2,
                   ease: [0.34, 1.56, 0.64, 1],
                 }}
-                className="font-semibold text-[length:50vw] leading-none whitespace-nowrap tracking-tighter -mb-[14%] -ml-2 sm:-ml-4 md:-ml-6 xl:-ml-10"
+                className="flex flex-col items-center py-16 md:py-28"
               >
-                CXC
-              </motion.p>
-            ) : (
-              <motion.div
-                key="countdown-section"
-                initial={{ opacity: 1 }}
-                exit={{ opacity: 0, scale: 0.95, y: -20 }}
-                transition={{ duration: 0.6, ease: "easeInOut" }}
-                className="w-full"
-              >
-                {/* Desktop Cubes */}
-                <div className="hidden xl:block">
-                  {/* Top Left Cube */}
-                  <motion.div
-                    initial={{ opacity: 0, x: -50 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: -50 }}
-                    transition={{ duration: 0.5 }}
-                    className="absolute top-0 left-10"
-                  >
-                    <WaterCube
-                      modelPath="/models/Watercube.glb"
-                      scale={1}
-                      maxWidth="175px"
-                      initialRotation={[0.4, 0.75, 0]}
-                    />
-                  </motion.div>
-
-                  {/* Bottom Right Cube */}
-                  <motion.div
-                    initial={{ opacity: 0, x: 50 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: 50 }}
-                    transition={{ duration: 0.5 }}
-                    className="absolute bottom-15 right-15"
-                  >
-                    <WaterCube
-                      modelPath="/models/Watercube.glb"
-                      scale={1}
-                      maxWidth="175px"
-                      initialRotation={[0.4, 0.75, 0]}
-                    />
-                  </motion.div>
-                </div>
-
-                {/* Medium Cubes */}
-                <div className="hidden sm:block xl:hidden">
-                  {/* Top Left Cube */}
-                  <motion.div
-                    initial={{ opacity: 0, x: -50 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: -50 }}
-                    transition={{ duration: 0.5 }}
-                    className="absolute top-0 left-10"
-                  >
-                    <WaterCube
-                      modelPath="/models/Watercube.glb"
-                      scale={1}
-                      maxWidth="125px"
-                      initialRotation={[0.4, 0.75, 0]}
-                    />
-                  </motion.div>
-
-                  {/* Bottom Right Cube */}
-                  <motion.div
-                    initial={{ opacity: 0, x: 50 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: 50 }}
-                    transition={{ duration: 0.5 }}
-                    className="absolute bottom-15 right-15"
-                  >
-                    <WaterCube
-                      modelPath="/models/Watercube.glb"
-                      scale={1}
-                      maxWidth="125px"
-                      initialRotation={[0.4, 0.75, 0]}
-                    />
-                  </motion.div>
-                </div>
-
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -20 }}
-                  transition={{ duration: 0.6, delay: 0.2 }}
-                  className="flex flex-col items-center gap-12"
-                >
-                  <div className="flex flex-col gap-6 items-center z-10">
-                    <h1 className="font-extrabold text-4xl md:text-5xl">
-                      CXC HACKATHON
-                    </h1>
-                    <h2 className="font-light text-3xl md:text-4xl text-white/80">
-                      COMING SOON
-                    </h2>
-                  </div>
-
-                  <CountdownClock
-                    targetDate={eventDate}
-                    className="mb-4 relative z-10"
+                <div className="relative w-64 h-28 md:w-96 md:h-40 mb-8">
+                  <Image
+                    src="/logos/cxc_logo.svg"
+                    alt="CXC"
+                    fill
+                    className="object-contain"
+                    priority
                   />
-
+                </div>
+                {/* TODO: -bottom-12 md:-bottom-10 when adding back tangerine*/}
+                <div className="flex flex-col items-center gap-6 md:gap-8 justify-center absolute -bottom-2">
+                  <div className="flex flex-col items-center">
+                    <Badge
+                      className="mb-2 md:mb-3 font-normal text-sm md:text-base border-white/50 bg-background"
+                      variant="outline"
+                    >
+                      FEB 6-8 · An AI Hackathon
+                    </Badge>
+                    {/* <div className="flex flex-row items-center">
+                      <TypingAnimation
+                        className="font-light text-xl sm:text-2xl lg:text-3xl text-white/80"
+                        showCursor={true}
+                        onComplete={() => {
+                          setLogoVisible(true);
+                          setCursorDone(true);
+                        }}
+                        cursorElement={
+                          <span className="inline-flex items-center ml-1.5">
+                            <motion.img
+                              src="/logos/tangerine_cursor.png"
+                              alt="tangerine-cursor"
+                              initial={{ x: 0, y: 0, rotate: -120 }}
+                              animate={
+                                cursorDone
+                                  ? {
+                                      x: isMobile ? 125 : isTablet ? 148 : 173,
+                                      y: isMobile ? -6 : isTablet ? -8 : -10,
+                                      rotate: 0,
+                                    }
+                                  : {
+                                      x: 0,
+                                      y: 0,
+                                      rotate: -120,
+                                    }
+                              }
+                              transition={{
+                                type: "tween",
+                                ease: [0.22, 1, 0.36, 1],
+                                duration: 0.8,
+                              }}
+                              className="inline-block w-4.5 h-4.5 sm:w-5 sm:h-5 lg:w-6 lg:h-6"
+                            />
+                          </span>
+                        }
+                      >
+                        Presented by
+                      </TypingAnimation>
+                      <motion.img
+                        src="/logos/tangerine_logo.png"
+                        alt="tangerine-logo"
+                        initial={{ opacity: 0, scale: 0 }}
+                        animate={
+                          logoVisible
+                            ? { opacity: 1, scale: 1 }
+                            : { opacity: 0, scale: 0 }
+                        }
+                        transition={{
+                          duration: 0.8,
+                          ease: [0.22, 1, 0.36, 1],
+                        }}
+                        className="w-36 h-8 sm:w-42 sm:h-9 lg:w-48 lg:h-10 object-contain -ml-5"
+                      />
+                    </div> */}
+                  </div>
                   <CxCButton
                     onClick={() => router.push("/apply")}
                     className="text-base md:text-2xl py-2 md:py-3 px-10 md:px-14 hover:scale-105"
                   >
                     Apply
                   </CxCButton>
-                </motion.div>
+                </div>
               </motion.div>
-            )}
-          </AnimatePresence>
-        </>
+            </WarpBackground>
+          ) : (
+            <motion.div
+              key="countdown-section"
+              initial={{ opacity: 1 }}
+              exit={{ opacity: 0, scale: 0.95, y: -20 }}
+              transition={{ duration: 0.6, ease: "easeInOut" }}
+              className="relative w-full h-full overflow-hidden select-none"
+            >
+              <Meteors />
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                transition={{ duration: 0.6, delay: 0.2 }}
+                className="flex flex-col items-center gap-4 sm:gap-6 pb-6 mt-5"
+              >
+                <div className="flex flex-col items-center z-10">
+                  <div className="relative w-64 h-28 lg:w-96 lg:h-42">
+                    <Image
+                      src="/logos/cxc_logo.svg"
+                      alt="CXC"
+                      fill
+                      className="object-contain"
+                    />
+                  </div>
+                </div>
+                <div className="flex flex-col items-center gap-4">
+                  <Badge
+                    className="font-normal text-base border-white/50 bg-background"
+                    variant="outline"
+                  >
+                    FEB 6-8 · An AI Hackathon
+                  </Badge>
+                  {/* <div className="flex flex-row items-center">
+                    <TypingAnimation
+                      className="font-light text-xl sm:text-2xl lg:text-3xl text-white/80"
+                      showCursor={true}
+                      onComplete={() => {
+                        setLogoVisible(true);
+                        setCursorDone(true);
+                      }}
+                      cursorElement={
+                        <span className="inline-flex items-center ml-1.5">
+                          <motion.img
+                            src="/logos/tangerine_cursor.png"
+                            alt="tangerine-cursor"
+                            initial={{ x: 0, y: 0, rotate: -120 }}
+                            animate={
+                              cursorDone
+                                ? {
+                                    x: isMobile ? 125 : isTablet ? 148 : 173,
+                                    y: isMobile ? -6 : isTablet ? -8 : -10,
+                                    rotate: 0,
+                                  }
+                                : {
+                                    x: 0,
+                                    y: 0,
+                                    rotate: -120,
+                                  }
+                            }
+                            transition={{
+                              type: "tween",
+                              ease: [0.22, 1, 0.36, 1],
+                              duration: 0.8,
+                            }}
+                            className="inline-block w-4.5 h-4.5 sm:w-5 sm:h-5 lg:w-6 lg:h-6"
+                          />
+                        </span>
+                      }
+                    >
+                      Presented by
+                    </TypingAnimation>
+                    <motion.img
+                      src="/logos/tangerine_logo.png"
+                      alt="tangerine-logo"
+                      initial={{ opacity: 0, scale: 0 }}
+                      animate={
+                        logoVisible
+                          ? { opacity: 1, scale: 1 }
+                          : { opacity: 0, scale: 0 }
+                      }
+                      transition={{
+                        duration: 0.8,
+                        ease: [0.22, 1, 0.36, 1],
+                      }}
+                      className="w-36 h-8 sm:w-42 sm:h-9 lg:w-48 lg:h-10 object-contain -ml-5"
+                    />
+                  </div> */}
+                </div>
+
+                <CountdownClock
+                  targetDate={eventDate}
+                  className="mb-4 relative z-10"
+                />
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       )}
     </div>
   );

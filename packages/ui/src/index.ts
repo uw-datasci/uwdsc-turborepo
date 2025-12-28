@@ -151,7 +151,21 @@ export {
   PopoverAnchor,
 } from "./components/popover";
 
+export { Meteors } from "./components/meteors";
+
+export { OrbitingCircles } from "./components/orbiting-circles";
+
+export { WarpBackground } from "./components/warp-background";
+
+export { Marquee } from "./components/marquee";
+
+export { TypingAnimation } from "./components/typing-animation";
+
 export { ScrollArea } from "./components/scroll-area";
+
+export { SpinningText } from "./components/spinning-text";
+
+export { ShimmerButton } from "./components/shimmer-button";
 
 // Hooks
 export * from "./hooks";
@@ -204,4 +218,5 @@ export {
   MapPinIcon,
   SquareIcon,
   CheckSquareIcon,
+  FlyingSaucerIcon,
 } from "@phosphor-icons/react";
