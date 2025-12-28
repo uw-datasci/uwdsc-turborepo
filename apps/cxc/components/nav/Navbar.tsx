@@ -96,7 +96,7 @@ export default function Navbar({ showAuthButtons = true }: NavbarProps) {
                           className={cn(
                             "inline-flex h-9 w-max items-center justify-center rounded-md px-4 py-2 !text-base font-medium",
                             "transition-colors hover:text-gray-400 focus:text-gray-400 outline-none",
-                            "hover:bg-transparent focus:bg-transparent bg-transparent",
+                            "hover:bg-transparent focus:bg-transparent bg-transparent"
                           )}
                         >
                           {link.label}
@@ -110,30 +110,16 @@ export default function Navbar({ showAuthButtons = true }: NavbarProps) {
           </div>
 
           {/* Right section - Auth Buttons */}
-          {showAuthButtons && !isLoading && (
-            <div className="flex items-center gap-4">
-              {isAuthenticated ? (
-                <CxCButton
-                  onClick={handleSignOut}
-                  className="group text-sm md:text-base inline-flex items-center lg:px-4"
-                >
-                  <span>Sign Out</span>
-                  <motion.div
-                    className="group-hover:translate-x-1.5 duration-200"
-                    transition={{
-                      ease: "easeInOut",
-                    }}
-                  >
-                    <ArrowRightIcon weight="bold" />
-                  </motion.div>
-                </CxCButton>
-              ) : (
-                <div className="flex flex-wrap gap-4 md:gap-8 font-normal">
+          {showAuthButtons &&
+            process.env.NODE_ENV === "development" &&
+            !isLoading && (
+              <div className="flex items-center gap-4">
+                {isAuthenticated ? (
                   <CxCButton
-                    onClick={() => router.push("/login")}
+                    onClick={handleSignOut}
                     className="group text-sm md:text-base inline-flex items-center lg:px-4"
                   >
-                    <span>Login</span>
+                    <span>Sign Out</span>
                     <motion.div
                       className="group-hover:translate-x-1.5 duration-200"
                       transition={{
@@ -143,24 +129,40 @@ export default function Navbar({ showAuthButtons = true }: NavbarProps) {
                       <ArrowRightIcon weight="bold" />
                     </motion.div>
                   </CxCButton>
-                  <CxCButton
-                    onClick={() => router.push("/register")}
-                    className="group text-sm md:text-base inline-flex items-center lg:px-4"
-                  >
-                    <span>Register</span>
-                    <motion.div
-                      className="group-hover:translate-x-1.5 duration-200"
-                      transition={{
-                        ease: "easeInOut",
-                      }}
+                ) : (
+                  <div className="flex flex-wrap gap-4 md:gap-8 font-normal">
+                    <CxCButton
+                      onClick={() => router.push("/login")}
+                      className="group text-sm md:text-base inline-flex items-center lg:px-4"
                     >
-                      <ArrowRightIcon weight="bold" />
-                    </motion.div>
-                  </CxCButton>
-                </div>
-              )}
-            </div>
-          )}
+                      <span>Login</span>
+                      <motion.div
+                        className="group-hover:translate-x-1.5 duration-200"
+                        transition={{
+                          ease: "easeInOut",
+                        }}
+                      >
+                        <ArrowRightIcon weight="bold" />
+                      </motion.div>
+                    </CxCButton>
+                    <CxCButton
+                      onClick={() => router.push("/register")}
+                      className="group text-sm md:text-base inline-flex items-center lg:px-4"
+                    >
+                      <span>Register</span>
+                      <motion.div
+                        className="group-hover:translate-x-1.5 duration-200"
+                        transition={{
+                          ease: "easeInOut",
+                        }}
+                      >
+                        <ArrowRightIcon weight="bold" />
+                      </motion.div>
+                    </CxCButton>
+                  </div>
+                )}
+              </div>
+            )}
         </div>
       </div>
     </motion.nav>
