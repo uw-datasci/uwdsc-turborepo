@@ -28,7 +28,7 @@ export interface ApiResponse {
  * @throws Error if creation fails
  */
 export async function createApplication(
-  profileId: string
+  profileId: string,
 ): Promise<ApiResponse> {
   const response = await fetch("/api/applications", {
     method: "POST",
@@ -50,7 +50,7 @@ export async function createApplication(
  * @throws Error if update fails
  */
 export async function updateApplication(
-  formData: Record<string, unknown>
+  formData: Record<string, unknown>,
 ): Promise<ApiResponse> {
   const response = await fetch("/api/applications", {
     method: "PATCH",

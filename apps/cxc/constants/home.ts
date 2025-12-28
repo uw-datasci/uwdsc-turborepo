@@ -7,6 +7,7 @@ import Runql from "../public/logos/runql.svg";
 import Sap from "../public/logos/sap.svg";
 import Telus from "../public/logos/telus.svg";
 
+// CXC-TODO: split into tiers later and add link field
 export const CURRENT_SPONSORS: Sponsor[] = [
   { name: "Federato", logo: Federato },
   { name: "Telus", logo: Telus },

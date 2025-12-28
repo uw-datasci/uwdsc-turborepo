@@ -1,6 +1,7 @@
 "use client";
 
-import { CountingNumber } from "@uwdsc/ui";
+import { motion } from "framer-motion";
+import { CountingNumber, SpinningText } from "@uwdsc/ui";
 import Ripples from "./Ripples";
 
 interface StatProps {
@@ -38,26 +39,80 @@ function Stat({ value, label, prefix, suffix }: Readonly<StatProps>) {
 
 export default function AboutCxC() {
   return (
-    <section className="relative text-white py-16 md:py-32 overflow-hidden">
-      <div className="mx-auto px-6 text-center">
+    <section className="relative text-white py-16 md:py-20 overflow-hidden">
+      <div className="mx-auto px-10 text-center">
         {/* About CXC */}
-        <h2 className="text-3xl md:text-4xl font-semibold mb-6">About CXC</h2>
-        <p className="text-lg md:text-xl text-gray-300 max-w-2xl mx-auto mb-10">
-          Canada&apos;s largest student-run data hackathon. We are a
-          beginner-friendly datathon that brings together students and companies
-          to build projects that solve real-world problems.
-        </p>
+        <motion.div
+          className="mb-10 items-center flex flex-col"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.25 }}
+          transition={{ duration: 0.6, ease: "easeOut" }}
+        >
+          <h2 className="text-3xl md:text-4xl font-semibold mb-6">About CXC</h2>
+          <p className="text-base sm:text-base lg:text-xl text-gray-300 lg:max-w-2xl max-w-3xl mb-10">
+            We are Canada&apos;s largest student-run AI hackathon. CXC is a
+            beginner-friendly hackathon aiming to bring students and companies
+            together to build projects that solve real-world problems.
+          </p>
+        </motion.div>
 
         <div className="w-full">
           <Ripples />
         </div>
+        <motion.div
+          className="my-32 items-center flex flex-col"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.25 }}
+          transition={{ duration: 0.6, ease: "easeOut" }}
+        >
+          <h2 className="text-3xl md:text-4xl font-semibold mb-6">
+            You Belong Here
+          </h2>
+          <p className="text-base sm:text-base lg:text-xl text-gray-300 lg:max-w-2xl max-w-3xl mb-10">
+            Join us at the University of Waterloo this February for our 5th
+            iteration. Meet a community of like-minded hackers, network with our
+            company sponsors and judges, and build the project you&apos;ve
+            always been dreaming of. With AI at the forefront of the world
+            recently, CXC is the perfect place for veterans and fledgling
+            hackers to get started!
+          </p>
+        </motion.div>
 
         {/* Stats */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12 max-w-5xl mx-auto">
           <Stat value={300} label="Participants" suffix="+" />
           <Stat value={10} label="Collaborating companies" suffix="+" />
-          <Stat value={20000} label="In prizes" prefix="$" />
+          <Stat value={5000} label="In prizes" prefix="$" />
         </div>
+
+        <motion.div
+          className="mt-32 items-center flex flex-col"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.25 }}
+          transition={{ duration: 0.6, ease: "easeOut" }}
+        >
+          <h2 className="text-3xl md:text-4xl font-semibold mb-6">
+            A Fresh New Spin
+          </h2>
+          <div className="flex flex-row items-start">
+            <SpinningText className="hidden lg:block mr-8 md:mr-16 shrink-0 h-[10ch] w-[10ch] md:h-[12ch] md:w-[12ch]">
+              CXC • 5TH ITERATION • AI HACKATHON •
+            </SpinningText>
+            <p className="text-base sm:text-base lg:text-xl text-gray-300 lg:max-w-2xl max-w-3xl mb-10">
+              For our 5th iteration of CXC, we&apos;ve decided to switch things
+              up and pivot to a full in-person weekend experience. Hackers who
+              are familiar with past CXCs can enjoy a change of pace with an
+              eventful weekend of in-person connections, workshops, sponsor
+              networking events, and activities!
+            </p>
+            <SpinningText className="hidden lg:block ml-8 md:ml-16 shrink-0 h-[10ch] w-[10ch] md:h-[12ch] md:w-[12ch]">
+              CXC • 5TH ITERATION • AI HACKATHON •
+            </SpinningText>
+          </div>
+        </motion.div>
       </div>
     </section>
   );
