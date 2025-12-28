@@ -13,8 +13,11 @@
   "aliases": {
     "components": "@uwdsc/ui/components",
     "utils": "@uwdsc/ui/lib/utils",
-    "hooks": "@uwdsc/ui/hooks",
+    "ui": "@uwdsc/ui/components",
     "lib": "@uwdsc/ui/lib",
-    "ui": "@uwdsc/ui/components"
+    "hooks": "@uwdsc/ui/hooks"
+  },
+  "registries": {
+    "@magicui": "https://magicui.design/r/{name}.json"
   }
 }

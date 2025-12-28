@@ -31,7 +31,7 @@ const calculateTimeLeft = (targetDate: Date): TimeLeft => {
 
 const AnimatedDigit = ({ value }: { value: string }) => {
   return (
-    <div className="relative w-[25px] sm:w-[45px] lg:w-[70px] h-[70px] sm:h-[80px] lg:h-[120px] overflow-hidden">
+    <div className="relative w-[25px] sm:w-[40px] lg:w-[50px] h-[70px] sm:h-[80px] lg:h-[100px] overflow-hidden">
       <AnimatePresence mode="popLayout">
         <motion.div
           key={value}
@@ -42,7 +42,7 @@ const AnimatedDigit = ({ value }: { value: string }) => {
             duration: 0.4,
             ease: [0.4, 0.0, 0.2, 1],
           }}
-          className="absolute inset-0 flex items-center justify-center text-4xl sm:text-6xl lg:text-8xl font-bold"
+          className="absolute inset-0 flex items-center justify-center text-4xl sm:text-5xl lg:text-6xl font-bold"
         >
           {value}
         </motion.div>
@@ -58,10 +58,13 @@ const CountdownUnit = ({ value, label }: { value: number; label: string }) => {
     <div className="flex flex-col items-center">
       <div className="flex items-center">
         {digits.map((digit, index) => (
-          <AnimatedDigit value={digit ?? "0"} key={`${value}-${index}`} />
+          <AnimatedDigit
+            value={digit ?? "0"}
+            key={`${label}-${index}-${digit}`}
+          />
         ))}
       </div>
-      <span className="text-sm sm:text-lg lg:text-2xl text-muted-foreground uppercase tracking-wider">
+      <span className="text-sm sm:text-lg lg:text-xl text-muted-foreground uppercase tracking-wider">
         {label}
       </span>
     </div>
@@ -95,19 +98,19 @@ export function CountdownClock({
       <div className="flex items-center gap-3 sm:gap-6 lg:gap-10">
         <CountdownUnit value={timeLeft.days} label="Days" />
 
-        <span className="text-4xl sm:text-6xl lg:text-7xl font-bold -mt-6">
+        <span className="text-4xl sm:text-5xl lg:text-6xl font-bold -mt-6">
           :
         </span>
 
         <CountdownUnit value={timeLeft.hours} label="Hours" />
 
-        <span className="text-4xl sm:text-6xl lg:text-7xl font-bold -mt-6">
+        <span className="text-4xl sm:text-5xl lg:text-6xl font-bold -mt-6">
           :
         </span>
 
         <CountdownUnit value={timeLeft.minutes} label="Minutes" />
 
-        <span className="text-4xl sm:text-6xl lg:text-7xl font-bold -mt-6">
+        <span className="text-4xl sm:text-5xl lg:text-6xl font-bold -mt-6">
           :
         </span>
 

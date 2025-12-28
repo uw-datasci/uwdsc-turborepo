@@ -10,7 +10,7 @@ import {
 export function Faq() {
   return (
     // emulate mx-container with padding instead bc of w-full
-    <section className="container mx-auto px-8 lg:px-16 flex flex-col md:flex-row md:items-center md:items-start justify-center space-y-4 md:space-y-0 md:space-x-20 mb-10 md:mb-20">
+    <section className="container mx-auto px-8 lg:px-16 flex flex-col md:flex-row md:items-center md:items-start justify-center space-y-4 md:space-y-0 md:space-x-20 mb-10 md:mb-20 py-20">
       <div className="flex flex-col gap-12">
         <h2 className="text-4xl font-light text-white md:text-5xl">
           FREQUENTLY ASKED QUESTIONS
