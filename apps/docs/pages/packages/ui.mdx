@@ -52,6 +52,16 @@ The `@uwdsc/ui` package contains all shared UI components (atoms) used across th
 - **Table** - Data tables
 - **Accordion** - Collapsible content
 
+### Animation Components
+
+- **Marquee** - Scrolling content with customizable direction and speed
+- **TypingAnimation** - Text typing effect with cursor
+- **SpinningText** - Circular text animation
+- **ShimmerButton** - Button with shimmer effect
+- **Meteors** - Animated meteor shower effect
+- **OrbitingCircles** - Elements orbiting around a center point
+- **WarpBackground** - Perspective grid with animated beams
+
 ## Installation
 
 ### Adding New Components
@@ -444,6 +454,194 @@ Modify CSS variables in `globals.css`:
 - [shadcn/ui Documentation](https://ui.shadcn.com/)
 - [Radix UI Documentation](https://www.radix-ui.com/)
 - [Tailwind CSS Documentation](https://tailwindcss.com/)
+
+## Animation Components
+
+### Marquee
+
+Scrolling content component with customizable direction and speed.
+
+```tsx
+import { Marquee } from "@uwdsc/ui";
+
+export function MarqueeExample() {
+  return (
+    <Marquee pauseOnHover className="[--duration:20s]">
+      <div className="flex gap-4">
+        {items.map((item) => (
+          <div key={item.id}>{item.content}</div>
+        ))}
+      </div>
+    </Marquee>
+  );
+}
+```
+
+**Props:**
+- `reverse` - Reverse animation direction
+- `pauseOnHover` - Pause on mouse hover
+- `vertical` - Vertical scrolling
+- `repeat` - Number of times to repeat content
+
+### TypingAnimation
+
+Text typing effect with blinking cursor.
+
+```tsx
+import { TypingAnimation } from "@uwdsc/ui";
+
+export function TypingExample() {
+  return (
+    <TypingAnimation
+      className="text-2xl font-bold"
+      duration={100}
+    >
+      Coming Soon!
+    </TypingAnimation>
+  );
+}
+```
+
+**Props:**
+- `duration` - Milliseconds per character
+- `className` - Custom styling
+
+### ShimmerButton
+
+Interactive button with animated shimmer effect.
+
+```tsx
+import { ShimmerButton } from "@uwdsc/ui";
+
+export function ShimmerExample() {
+  return (
+    <ShimmerButton
+      shimmerColor="#ffffff"
+      shimmerSize="0.05em"
+      shimmerDuration="3s"
+      background="rgba(0, 0, 0, 1)"
+    >
+      Become a Sponsor
+    </ShimmerButton>
+  );
+}
+```
+
+**Props:**
+- `shimmerColor` - Color of shimmer effect
+- `shimmerSize` - Size of shimmer
+- `shimmerDuration` - Animation duration
+- `background` - Button background color
+
+### WarpBackground
+
+Perspective grid with animated light beams.
+
+```tsx
+import { WarpBackground } from "@uwdsc/ui";
+
+export function WarpExample() {
+  return (
+    <WarpBackground
+      perspective={500}
+      beamsPerSide={8}
+      beamSize={3}
+      gridColor="#3b82f6"
+    >
+      <div className="relative z-10">
+        {/* Your content here */}
+      </div>
+    </WarpBackground>
+  );
+}
+```
+
+**Props:**
+- `perspective` - CSS perspective value
+- `beamsPerSide` - Number of animated beams per side
+- `beamSize` - Width of beam in pixels
+- `beamDelayMin/Max` - Random delay range
+- `beamDuration` - Animation duration in seconds
+- `gridColor` - Color of grid lines
+
+### Meteors
+
+Animated meteor shower effect for backgrounds.
+
+```tsx
+import { Meteors } from "@uwdsc/ui";
+
+export function MeteorExample() {
+  return (
+    <div className="relative h-screen overflow-hidden">
+      <Meteors number={20} />
+      <div className="relative z-10">
+        {/* Your content here */}
+      </div>
+    </div>
+  );
+}
+```
+
+**Props:**
+- `number` - Number of meteors to display
+
+### OrbitingCircles
+
+Elements that orbit around a central point.
+
+```tsx
+import { OrbitingCircles } from "@uwdsc/ui";
+
+export function OrbitExample() {
+  return (
+    <div className="relative h-[500px] flex items-center justify-center">
+      <div className="relative w-36 h-16">
+        {/* Center content */}
+      </div>
+      <OrbitingCircles
+        iconSize={80}
+        radius={240}
+        speed={1}
+        reverse
+      >
+        {/* Orbiting content */}
+      </OrbitingCircles>
+    </div>
+  );
+}
+```
+
+**Props:**
+- `iconSize` - Size of orbiting elements
+- `radius` - Orbit radius in pixels
+- `speed` - Animation speed multiplier
+- `reverse` - Reverse orbit direction
+
+### SpinningText
+
+Circular text animation around a center point.
+
+```tsx
+import { SpinningText } from "@uwdsc/ui";
+
+export function SpinningExample() {
+  return (
+    <SpinningText
+      radius={100}
+      fontSize={16}
+      duration={20}
+    >
+      Your Text Here • Your Text Here •
+    </SpinningText>
+  );
+}
+```
+
+**Props:**
+- `radius` - Circle radius
+- `fontSize` - Font size in pixels
+- `duration` - Rotation duration in seconds
 
 ## Next Steps
 

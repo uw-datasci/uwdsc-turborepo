@@ -6,7 +6,65 @@ This semester continues to build upon the foundation established in Fall 2025, w
 
 ## 🏆 CxC App (apps/cxc)
 
+### Landing Page Enhancements (PR #90)
+
+**Enhanced Visual Experience**
+- Updated hero section with improved `CxCTitle` component featuring dynamic animations
+- Enhanced `WarpBackground` grid system with customizable perspective and beam effects
+- Improved responsive layout for mobile and desktop experiences
+
+**New Sections**
+- **Past Projects Showcase**: Interactive gallery displaying winning projects from CxC 2024 and 2025
+  - Features projects like "Lasagna" (Federato AI Challenge), "Macrodata Refinement" (SAP Challenge), and "Adaptive Workflow Engine"
+  - Includes project cards with images, descriptions, and links to Devpost submissions
+  - Organized by competition year with smooth animations
+- **Testimonials**: Participant testimonials with scrolling marquee display (component ready, currently commented out)
+- **Sponsors Section**: Updated with `ShimmerButton` call-to-action for sponsor inquiries
+
+**UI Improvements**
+- Added `ComingSoon` component for placeholder pages (Calendar, Dashboard)
+- Enhanced `AboutCxC`, `FollowUs`, and `FAQ` sections with refined styling
+- Improved `CountdownClock` and `Ripples` components for better visual effects
+- Removed deprecated `WaterCube` component
+
+**New Utilities**
+- Added `useIsMobile` hook for responsive design with customizable breakpoints
+- Enhanced navbar with improved mobile responsiveness
+
+**Visual Assets**
+- Added logos for sponsors (Tangerine)
+- Added past project images (11 project thumbnails)
+- Added past CxC event photos (4 event photos)
+- Added testimonial avatars
+
 ## 🎨 Design System (packages/ui)
+
+### New Animation Components (PR #90)
+
+**Advanced Animation Components**
+- **Marquee**: Scrolling content component with customizable direction, speed, and pause-on-hover
+  - Supports horizontal and vertical scrolling
+  - Configurable repeat count and gradient overlays
+- **WarpBackground**: Perspective grid with animated beams
+  - Customizable beam count, size, delay, and duration
+  - Dynamic grid color support
+- **TypingAnimation**: Text typing effect with cursor
+  - Configurable duration and cursor visibility
+  - Smooth character-by-character animation
+- **SpinningText**: Circular text animation around a center point
+  - SVG-based with customizable radius and font size
+- **ShimmerButton**: Interactive button with shimmer effect
+  - Customizable shimmer color, size, and duration
+  - Built-in hover and active states
+
+**Visual Effects**
+- **Meteors**: Animated meteor shower effect with customizable count and styling
+- **OrbitingCircles**: Elements that orbit around a central point
+  - Configurable orbit radius, speed, and direction
+  - Supports reverse animation and icon sizing
+
+**Icon Updates**
+- Added `FlyingSaucerIcon` from Phosphor Icons
 
 ## 🔧 Infrastructure
 
