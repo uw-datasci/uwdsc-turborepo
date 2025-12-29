@@ -32,7 +32,7 @@ jobs:
         uses: actions/checkout@v6
 
       - name: Send Discord Notification
-        uses: your-username/nexus-discord-notification@v1
+        uses: uwdatasci/nexus-discord-notification@v1
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           discord-webhook-url: ${{ secrets.DISCORD_WEBHOOK_URL }}
