@@ -53,7 +53,7 @@ jobs:
 
   build-web:
     name: Build - Web
-    needs: setup
+    needs: code-quality
     uses: uw-datasci/nexus-workflows/.github/workflows/build-node.yml@v4
     with:
       node-version: ${{ needs.setup.outputs.node-version }}
@@ -67,7 +67,7 @@ jobs:
 
   build-cxc:
     name: Build - CxC
-    needs: setup
+    needs: code-quality
     uses: uw-datasci/nexus-workflows/.github/workflows/build-node.yml@v4
     with:
       node-version: ${{ needs.setup.outputs.node-version }}
