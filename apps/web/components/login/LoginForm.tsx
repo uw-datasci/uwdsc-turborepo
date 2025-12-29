@@ -14,6 +14,7 @@ import { Loader2 } from "lucide-react";
 import { VerifyEmailModal } from "./VerifyEmailModal";
 import { login } from "@/lib/api/auth";
 import { useAuth } from "@/contexts/AuthContext";
+import Link from "next/link";
 
 export function LoginForm() {
   const [authError, setAuthError] = useState<string>("");
@@ -63,7 +64,7 @@ export function LoginForm() {
       setAuthError(
         error?.error ||
           error?.message ||
-          "An unexpected error occurred. Please try again.",
+          "An unexpected error occurred. Please try again."
       );
     } finally {
       setIsLoading(false);
@@ -128,13 +129,10 @@ export function LoginForm() {
               <Button
                 variant="link"
                 size="sm"
-                onClick={() => {
-                  router.push("/register");
-                }}
+                asChild
                 className="text-gray-400/60 hover:text-gray-200 transition-colors text-sm font-medium p-0"
-                type="button"
               >
-                Not a member yet? Join here.
+                <Link href="/register">Not a member yet? Join here.</Link>
               </Button>
             </div>
           </div>

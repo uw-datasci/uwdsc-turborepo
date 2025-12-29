@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { useAuth } from "@/contexts/AuthContext";
@@ -17,21 +17,21 @@ import { cn } from "@uwdsc/ui/lib/utils";
 import CxCButton from "../CxCButton";
 import DSCLogo from "../DSCLogo";
 
-interface NavbarProps {
-  readonly showAuthButtons?: boolean;
-}
-
 const navLinks = [
   { href: "/", label: "Home" },
   { href: "/dashboard", label: "Dashboard" },
   { href: "/calendar", label: "Calendar" },
 ];
 
-export default function Navbar({ showAuthButtons = true }: NavbarProps) {
+export default function Navbar() {
   const router = useRouter();
   const { isAuthenticated, isLoading, mutate } = useAuth();
   const [isVisible, setIsVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
+
+  const pathname = usePathname();
+  const showAuthButtons =
+    process.env.NODE_ENV === "development" || pathname !== "/start";
 
   useEffect(() => {
     const handleScroll = () => {
@@ -110,31 +110,30 @@ export default function Navbar({ showAuthButtons = true }: NavbarProps) {
           </div>
 
           {/* Right section - Auth Buttons */}
-          {showAuthButtons &&
-            process.env.NODE_ENV === "development" &&
-            !isLoading && (
-              <div className="flex items-center gap-4">
-                {isAuthenticated ? (
+          {showAuthButtons && !isLoading && (
+            <div className="flex items-center gap-4">
+              {isAuthenticated ? (
+                <CxCButton
+                  onClick={handleSignOut}
+                  className="group text-sm md:text-base inline-flex items-center lg:px-4"
+                >
+                  <span>Sign Out</span>
+                  <motion.div
+                    className="group-hover:translate-x-1.5 duration-200"
+                    transition={{
+                      ease: "easeInOut",
+                    }}
+                  >
+                    <ArrowRightIcon weight="bold" />
+                  </motion.div>
+                </CxCButton>
+              ) : (
+                <div className="flex flex-wrap gap-4 md:gap-8 font-normal">
                   <CxCButton
-                    onClick={handleSignOut}
+                    asChild
                     className="group text-sm md:text-base inline-flex items-center lg:px-4"
                   >
-                    <span>Sign Out</span>
-                    <motion.div
-                      className="group-hover:translate-x-1.5 duration-200"
-                      transition={{
-                        ease: "easeInOut",
-                      }}
-                    >
-                      <ArrowRightIcon weight="bold" />
-                    </motion.div>
-                  </CxCButton>
-                ) : (
-                  <div className="flex flex-wrap gap-4 md:gap-8 font-normal">
-                    <CxCButton
-                      onClick={() => router.push("/login")}
-                      className="group text-sm md:text-base inline-flex items-center lg:px-4"
-                    >
+                    <Link href="/login">
                       <span>Login</span>
                       <motion.div
                         className="group-hover:translate-x-1.5 duration-200"
@@ -144,11 +143,13 @@ export default function Navbar({ showAuthButtons = true }: NavbarProps) {
                       >
                         <ArrowRightIcon weight="bold" />
                       </motion.div>
-                    </CxCButton>
-                    <CxCButton
-                      onClick={() => router.push("/register")}
-                      className="group text-sm md:text-base inline-flex items-center lg:px-4"
-                    >
+                    </Link>
+                  </CxCButton>
+                  <CxCButton
+                    asChild
+                    className="group text-sm md:text-base inline-flex items-center lg:px-4"
+                  >
+                    <Link href="/register">
                       <span>Register</span>
                       <motion.div
                         className="group-hover:translate-x-1.5 duration-200"
@@ -158,11 +159,12 @@ export default function Navbar({ showAuthButtons = true }: NavbarProps) {
                       >
                         <ArrowRightIcon weight="bold" />
                       </motion.div>
-                    </CxCButton>
-                  </div>
-                )}
-              </div>
-            )}
+                    </Link>
+                  </CxCButton>
+                </div>
+              )}
+            </div>
+          )}
         </div>
       </div>
     </motion.nav>

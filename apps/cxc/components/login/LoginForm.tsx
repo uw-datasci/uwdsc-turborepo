@@ -1,5 +1,5 @@
 "use client";
-import { FormField, Button, Form } from "@uwdsc/ui";
+import { FormField, Button, Form, ArrowRightIcon } from "@uwdsc/ui";
 import {
   LoginFormValues,
   loginSchema,
@@ -15,6 +15,8 @@ import { VerifyEmailModal } from "./VerifyEmailModal";
 import { login } from "@/lib/api/auth";
 import { useAuth } from "@/contexts/AuthContext";
 import AppSection from "../application/AppSection";
+import Link from "next/link";
+import CxCButton from "../CxCButton";
 
 export function LoginForm() {
   const [authError, setAuthError] = useState<string>("");
@@ -64,7 +66,7 @@ export function LoginForm() {
       setAuthError(
         error instanceof Error
           ? error.message
-          : "An unexpected error occurred. Please try again",
+          : "An unexpected error occurred. Please try again"
       );
     } finally {
       setIsLoading(false);
@@ -113,7 +115,7 @@ export function LoginForm() {
           </div>
 
           <div className="flex flex-col gap-4 font-normal">
-            <Button
+            <CxCButton
               disabled={isLoading}
               type="submit"
               className="!bg-white !text-black text-lg rounded-none !h-auto px-4 py-2 hover:!scale-105 hover:!bg-white w-fit font-normal"
@@ -125,11 +127,10 @@ export function LoginForm() {
                 </>
               ) : (
                 <>
-                  Sign in
-                  <span className="ml-8 font-sans">→</span>
+                  Sign in <ArrowRightIcon className="ml-8 font-sans" />
                 </>
               )}
-            </Button>
+            </CxCButton>
 
             <div className="flex flex-col sm:flex-row justify-between">
               <Button
@@ -142,13 +143,12 @@ export function LoginForm() {
               </Button>
               <Button
                 variant="link"
-                onClick={() => {
-                  router.push("/register");
-                }}
+                asChild
                 className="text-gray-400/60 hover:text-gray-200 transition-colors text-sm font-medium p-0 w-fit"
-                type="button"
               >
-                Don&apos;t have an account yet? Sign up here.
+                <Link href="/register">
+                  Don&apos;t have an account yet? Sign up here.
+                </Link>
               </Button>
             </div>
           </div>
