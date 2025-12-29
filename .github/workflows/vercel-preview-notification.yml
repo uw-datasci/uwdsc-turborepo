@@ -34,6 +34,5 @@ jobs:
       - name: Send Discord Notification
         uses: uw-datasci/nexus-discord-notification@v1
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
           discord-webhook-url: ${{ secrets.DISCORD_WEBHOOK_URL }}
           deployment-info: ${{ needs.construct-deployment-url.outputs.deployment-info }}
