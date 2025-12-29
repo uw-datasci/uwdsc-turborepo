@@ -75,6 +75,9 @@ jobs:
       build-command: pnpm --filter=cxc... build
       infisical-project-slug: ${{ needs.setup.outputs.infisical-project-slug }}
       infisical-secret-path: /cxc
+    secrets:
+      INFISICAL_CLIENT_ID: ${{ secrets.INFISICAL_CLIENT_ID }}
+      INFISICAL_CLIENT_SECRET: ${{ secrets.INFISICAL_CLIENT_SECRET }}
 
   quality-summary:
     name: Quality Gate Summary
