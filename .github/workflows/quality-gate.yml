@@ -42,7 +42,7 @@ jobs:
       - run: pnpm install --frozen-lockfile
 
   code-quality:
-    name: Lint & Typecheck
+    name: Code Quality
     needs: setup
     uses: uw-datasci/nexus-workflows/.github/workflows/quality-gate.yml@v4
     with:
