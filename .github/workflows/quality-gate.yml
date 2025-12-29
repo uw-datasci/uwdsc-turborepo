@@ -82,7 +82,7 @@ jobs:
   quality-summary:
     name: Quality Gate Summary
     runs-on: ubuntu-latest
-    needs: [code-quality, build-web, build-cxc]
+    needs: [build-web, build-cxc]
     if: always()
     permissions:
       pull-requests: write
