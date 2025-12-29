@@ -2,7 +2,7 @@ name: Vercel Preview Discord Notification
 
 on:
   pull_request:
-    types: [opened, synchronize]
+    types: [opened]
 
 jobs:
   construct-deployment-url:
