@@ -73,6 +73,9 @@ interface ComboboxFieldOptions {
 interface FileUploadFieldOptions {
   label?: string;
   required?: boolean;
+  existingFileName?: string;
+  onFileChange?: (fileName: string) => void;
+  onFileSelect?: (file: File | null) => void;
 }
 
 interface CheckboxGroupFieldOptions {
@@ -424,7 +427,7 @@ export const renderFileUploadField = <T extends Record<string, any>>(
   accept: string,
   fieldOptions: FileUploadFieldOptions = {},
 ) => {
-  const { label, required = false } = fieldOptions;
+  const { label, required = false, existingFileName, onFileChange, onFileSelect } = fieldOptions;
 
   const FileUploadFieldComponent = ({
     field: { value, onChange, ...fieldProps },
@@ -432,16 +435,26 @@ export const renderFileUploadField = <T extends Record<string, any>>(
     field: ControllerRenderProps<T, any>;
   }) => {
     const [fileName, setFileName] = useState<string>(() => {
-      if (value) return value.name;
+      if (value && typeof value === "object" && "name" in value) return value.name;
       if (typeof value === "string") return value;
+      if (existingFileName) return existingFileName;
       return "";
     });
 
     useEffect(() => {
-      if (value) setFileName(value.name);
-      else if (typeof value === "string") setFileName(value);
-      else setFileName("");
-    }, [value]);
+      if (value && typeof value === "object" && "name" in value) {
+        setFileName(value.name);
+        if (onFileChange) onFileChange(value.name);
+      } else if (typeof value === "string") {
+        setFileName(value);
+        if (onFileChange) onFileChange(value);
+      } else if (existingFileName) {
+        setFileName(existingFileName);
+      } else {
+        setFileName("");
+        if (onFileChange) onFileChange("");
+      }
+    }, [value, existingFileName, onFileChange]);
 
     return (
       <FormItem>
@@ -465,10 +478,14 @@ export const renderFileUploadField = <T extends Record<string, any>>(
                 if (file) {
                   onChange(file);
                   setFileName(file.name);
+                  if (onFileChange) onFileChange(file.name);
+                  if (onFileSelect) onFileSelect(file);
                 } else {
                   e.target.value = "";
                   onChange(undefined);
                   setFileName("");
+                  if (onFileChange) onFileChange("");
+                  if (onFileSelect) onFileSelect(null);
                 }
               }}
               {...fieldProps}

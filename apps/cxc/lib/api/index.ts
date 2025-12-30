@@ -11,7 +11,7 @@ export { register, login, resendVerificationEmail, signOut } from "./auth";
 export { getUserProfile } from "./user";
 
 // Export all file upload functions
-export { uploadResume } from "./resume";
+export { uploadResume, getResume } from "./resume";
 
 // Export all application functions
 export { submitApplication } from "./application";

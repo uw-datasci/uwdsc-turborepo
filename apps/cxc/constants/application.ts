@@ -1,13 +1,14 @@
 import { type ComboboxOption } from "@uwdsc/ui";
 
-export const MOBILE_STEP_TO_PAGE_MAP = [0, 3, 6, 8, 9];
-export const NUMBER_MOBILE_PAGES = 10;
+export const MOBILE_STEP_TO_PAGE_MAP = [0, 3, 6, 8, 9, 10];
+export const NUMBER_MOBILE_PAGES = 11;
 
 export const STEP_NAMES = [
   "Your Info",
   "Your Experience",
   "Application questions",
-  "Teams & MLH",
+  "Teams",
+  "MLH",
   "Submit!",
 ];
 

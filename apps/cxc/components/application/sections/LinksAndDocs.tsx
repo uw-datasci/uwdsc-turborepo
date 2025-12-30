@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { Form, FormField } from "@uwdsc/ui";
 import { UseFormReturn } from "react-hook-form";
 import {
@@ -9,12 +10,67 @@ import {
 import AppSection from "../AppSection";
 import { AppFormValues } from "@/lib/schemas/application";
 import { LINKS_FIELDS } from "@/constants/application";
+import { getResume, uploadResume } from "@/lib/api/resume";
+import { useFormFieldPersistence } from "@/hooks/useFormFieldPersistence";
 
 interface LinksAndDocsProps {
   readonly form: UseFormReturn<AppFormValues>;
 }
 
 export function LinksAndDocs({ form }: LinksAndDocsProps) {
+  // Persist form fields to localStorage (except resume)
+  useFormFieldPersistence(form, "github");
+  useFormFieldPersistence(form, "linkedin");
+  useFormFieldPersistence(form, "website_url");
+  useFormFieldPersistence(form, "other_link");
+  const [resumeFileName, setResumeFileName] = useState<string>("");
+  const [isUploading, setIsUploading] = useState(false);
+
+  // Fetch existing resume on mount
+  useEffect(() => {
+    const fetchResume = async () => {
+      try {
+        const result = await getResume();
+        if (result.resume && result.resume.name) {
+          setResumeFileName(result.resume.name);
+        }
+      } catch {
+        // No resume found - that's okay
+      }
+    };
+
+    fetchResume();
+  }, []);
+
+  // Handle file selection - upload immediately
+  const handleFileSelect = async (file: File | null) => {
+    if (!file) {
+      // File cleared
+      setResumeFileName("");
+      form.setValue(LINKS_FIELDS.resume, undefined);
+      return;
+    }
+
+    setIsUploading(true);
+    try {
+      // Upload resume immediately
+      await uploadResume(file);
+      
+      // Update UI
+      setResumeFileName(file.name);
+      
+      // Set file in form
+      form.setValue(LINKS_FIELDS.resume, file, { shouldDirty: true });
+    } catch (error) {
+      console.error("Failed to upload resume:", error);
+      // Reset on error
+      setResumeFileName("");
+      form.setValue(LINKS_FIELDS.resume, undefined);
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
   return (
     <Form {...form}>
       <AppSection label="Links & documents (optional)">
@@ -58,8 +114,16 @@ export function LinksAndDocs({ form }: LinksAndDocsProps) {
           render={renderFileUploadField(".pdf,.doc,.docx", {
             label: "Upload your resume (PDF or Word document)",
             required: false,
+            existingFileName: resumeFileName,
+            onFileChange: (fileName: string) => {
+              setResumeFileName(fileName);
+            },
+            onFileSelect: handleFileSelect,
           })}
         />
+        {isUploading && (
+          <p className="text-sm text-muted-foreground mt-2">Uploading resume...</p>
+        )}
       </AppSection>
     </Form>
   );

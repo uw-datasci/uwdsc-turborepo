@@ -66,7 +66,9 @@ const pageToStep = (page: number): number => {
   if (page < 3) return 0; // pages 0, 1, 2 = Contact Info, About You, Optional
   if (page < 6) return 1; // pages 3, 4, 5 = Education, Hack Exp, Links
   if (page < 8) return 2; // pages 6, 7 = Question 1, Question 2
-  return 3; // page 8 = Review
+  if (page < 9) return 3; // page 8 = Teams
+  if (page < 10) return 4; // page 9 = MLH
+  return 5; // page 10 = Review
 };
 
 export default function ApplyPage() {
@@ -204,7 +206,7 @@ export default function ApplyPage() {
     setIsLoading(true);
     try {
       const formData = form.getValues();
-
+      
       // Update status to submitted if this is the final submit
       if (isSubmit) {
         formData.status = "submitted";
@@ -212,6 +214,19 @@ export default function ApplyPage() {
       }
 
       const transformedData = transformFormDataForDatabase(formData, user.id);
+      
+      // If resume file is selected, upload it and get the key
+      if (formData.resume && formData.resume instanceof File) {
+        try {
+          const { uploadResume } = await import("@/lib/api/resume");
+          const uploadResult = await uploadResume(formData.resume);
+          transformedData.resume_id = uploadResult.key;
+        } catch (error) {
+          console.error("Failed to upload resume:", error);
+          // Continue without resume_id if upload fails
+        }
+      }
+      
       const cleanedData = cleanFormData(transformedData);
       const response = await updateApplication(cleanedData);
 
@@ -219,9 +234,15 @@ export default function ApplyPage() {
       if (response.success) {
         if (isSubmit) {
           setApplicationStatus("submitted");
-          // Clear localStorage autosave when application is submitted
-          localStorage.removeItem("q1_save");
-          localStorage.removeItem("q2_save");
+          // Clear all localStorage autosave when application is submitted
+          const keysToRemove: string[] = [];
+          for (let i = 0; i < localStorage.length; i++) {
+            const key = localStorage.key(i);
+            if (key && (key.startsWith("cxc_form_") || key === "q1_save" || key === "q2_save")) {
+              keysToRemove.push(key);
+            }
+          }
+          keysToRemove.forEach((key) => localStorage.removeItem(key));
           localStorage.removeItem(STORAGE_KEY_DESKTOP_STEP);
           localStorage.removeItem(STORAGE_KEY_MOBILE_PAGE);
         }

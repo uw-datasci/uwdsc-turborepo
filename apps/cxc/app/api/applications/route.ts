@@ -80,8 +80,9 @@ export async function PATCH(request: NextRequest): Promise<NextResponse> {
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error("Error updating application:", error);
+    const errorMessage = error instanceof Error ? error.message : "Internal server error";
     return NextResponse.json(
-      { error: "Failed to update application" },
+      { error: `Failed to update application: ${errorMessage}` },
       { status: 500 },
     );
   }

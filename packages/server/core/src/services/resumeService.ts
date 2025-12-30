@@ -49,10 +49,108 @@ export class ResumeService extends FileService {
   }
 
   /**
-   * Upload a resume file
+   * Generate consistent object key for resume (always replaces existing)
+   * Uses format: userId/resume.{ext}
+   */
+  protected generateObjectKey(userId: string, fileName: string): string {
+    // Get extension from file name or MIME type
+    const ext = this.getFileExtension(fileName);
+    return `${userId}/resume.${ext}`;
+  }
+
+  /**
+   * Get file extension from filename or MIME type
+   */
+  private getFileExtension(fileName: string): string {
+    // Try to get extension from filename
+    const lastDot = fileName.lastIndexOf(".");
+    if (lastDot !== -1) {
+      const ext = fileName.substring(lastDot + 1).toLowerCase();
+      if (["pdf", "doc", "docx"].includes(ext)) {
+        return ext;
+      }
+    }
+    // Fallback to pdf if we can't determine
+    return "pdf";
+  }
+
+  /**
+   * Upload a resume file (replaces existing resume for user)
    */
   async uploadResume(uploadData: ResumeUploadData) {
+    const { userId } = uploadData;
+
+    // First, delete any existing resume files for this user
+    const existingResumes = await this.listUserResumes(userId);
+    if (existingResumes.success && existingResumes.resumes.length > 0) {
+      // Delete all existing resume files
+      for (const resume of existingResumes.resumes) {
+        if (resume.name) {
+          await this.deleteResume(`${userId}/${resume.name}`);
+        }
+      }
+    }
+
+    // Upload new resume with consistent key
     return this.uploadFile(uploadData);
+  }
+
+  /**
+   * Get the user's current resume
+   */
+  async getUserResume(
+    userId: string,
+  ): Promise<
+    | { success: true; resume: FileObject | null; url: string | null; key: string | null }
+    | { success: false; error: string }
+  > {
+    try {
+      const result = await this.listUserResumes(userId);
+
+      if (!result.success) {
+        // If listing fails, return null (no resume found) instead of error
+        // This handles cases where the user folder doesn't exist yet
+        return {
+          success: true,
+          resume: null,
+          url: null,
+          key: null,
+        };
+      }
+
+      // Find resume file (should be only one due to replacement logic)
+      const resume = result.resumes.find((f) =>
+        f.name?.startsWith("resume."),
+      );
+
+      if (!resume || !resume.name) {
+        return {
+          success: true,
+          resume: null,
+          url: null,
+          key: null,
+        };
+      }
+
+      // Get URL for the resume
+      const objectKey = `${userId}/${resume.name}`;
+      const urlResult = await this.getResumeUrl(objectKey);
+
+      return {
+        success: true,
+        resume,
+        url: urlResult.success ? urlResult.url : null,
+        key: objectKey,
+      };
+    } catch (error) {
+      // Return null instead of error if resume doesn't exist
+      return {
+        success: true,
+        resume: null,
+        url: null,
+        key: null,
+      };
+    }
   }
 
   /**

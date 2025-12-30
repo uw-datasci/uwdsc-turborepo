@@ -53,10 +53,38 @@ export class ApplicationRepository extends BaseRepository {
     data: Partial<ApplicationData>,
   ): Promise<void> {
     try {
-      // Automatically add updated_at timestamp
+      // Remove profile_id from update data if present
+      const updateData = { ...data };
+      delete updateData.profile_id;
+      
+      // Filter out undefined and null values
+      const fieldsToUpdate = Object.entries(updateData).filter(
+        ([, value]) => value !== undefined && value !== null
+      );
+
+      if (fieldsToUpdate.length === 0) {
+        // Nothing to update, just update the timestamp
+        await this.sql`
+          UPDATE applications
+          SET updated_at = NOW()
+          WHERE profile_id = ${profileId}
+        `;
+        return;
+      }
+
+      // Build SET clause using postgres.js template syntax
+      // Create an object with only the fields to update
+      const updateObject: Record<string, unknown> = {};
+      fieldsToUpdate.forEach(([key, value]) => {
+        updateObject[key] = value;
+      });
+      updateObject.updated_at = new Date();
+
+      // Use postgres.js sql template with the update object
+      // This safely handles all column names and values
       await this.sql`
         UPDATE applications
-        SET ${this.sql(data)}, updated_at = NOW()
+        SET ${this.sql(updateObject)}
         WHERE profile_id = ${profileId}
       `;
     } catch (error) {
