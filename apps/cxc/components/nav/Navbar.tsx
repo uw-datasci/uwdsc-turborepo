@@ -1,11 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { useAuth } from "@/contexts/AuthContext";
-import { signOut } from "@/lib/api";
+import { MobileMenu } from "./MobileMenu";
+import UserAvatar from "./UserAvatar";
 import {
   ArrowRightIcon,
   NavigationMenu,
@@ -24,8 +25,7 @@ const navLinks = [
 ];
 
 export default function Navbar() {
-  const router = useRouter();
-  const { isAuthenticated, isLoading, mutate } = useAuth();
+  const { user, isAuthenticated, isLoading } = useAuth();
   const [isVisible, setIsVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
 
@@ -60,16 +60,6 @@ export default function Navbar() {
     };
   }, [lastScrollY]);
 
-  const handleSignOut = async () => {
-    try {
-      await signOut();
-      await mutate(); // Refresh auth state
-      router.push("/");
-    } catch (error) {
-      console.error("Sign out failed:", error);
-    }
-  };
-
   return (
     <motion.nav
       className="w-full fixed top-0 left-0 right-0 bg-background z-50 cxc-app-font"
@@ -86,7 +76,7 @@ export default function Navbar() {
 
             {/* Navigation Links - only show to authenticated users */}
             {!isLoading && isAuthenticated && (
-              <NavigationMenu className="hidden md:flex">
+              <NavigationMenu className="hidden sm:flex">
                 <NavigationMenuList>
                   {navLinks.map((link) => (
                     <NavigationMenuItem key={link.href}>
@@ -96,7 +86,7 @@ export default function Navbar() {
                           className={cn(
                             "inline-flex h-9 w-max items-center justify-center rounded-md px-4 py-2 !text-base font-medium",
                             "transition-colors hover:text-gray-400 focus:text-gray-400 outline-none",
-                            "hover:bg-transparent focus:bg-transparent bg-transparent"
+                            "hover:bg-transparent focus:bg-transparent bg-transparent",
                           )}
                         >
                           {link.label}
@@ -109,24 +99,18 @@ export default function Navbar() {
             )}
           </div>
 
-          {/* Right section - Auth Buttons */}
+          {/* Right section - Auth Buttons (includes mobile menu on small screens) */}
           {showAuthButtons && !isLoading && (
             <div className="flex items-center gap-4">
               {isAuthenticated ? (
-                <CxCButton
-                  onClick={handleSignOut}
-                  className="group text-sm md:text-base inline-flex items-center lg:px-4"
-                >
-                  <span>Sign Out</span>
-                  <motion.div
-                    className="group-hover:translate-x-1.5 duration-200"
-                    transition={{
-                      ease: "easeInOut",
-                    }}
-                  >
-                    <ArrowRightIcon weight="bold" />
-                  </motion.div>
-                </CxCButton>
+                <>
+                  <div className="hidden sm:block">
+                    <UserAvatar />
+                  </div>
+                  <div className="block sm:hidden flex items-center justify-center">
+                    <MobileMenu navLinks={navLinks} user={user ?? null} />
+                  </div>
+                </>
               ) : (
                 <div className="flex flex-wrap gap-4 md:gap-8 font-normal">
                   <CxCButton

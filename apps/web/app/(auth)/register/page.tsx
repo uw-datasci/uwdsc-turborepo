@@ -85,7 +85,7 @@ export default function RegisterPage() {
       setAuthError(
         error?.error ||
           error?.message ||
-          "An unexpected error occurred. Please try again"
+          "An unexpected error occurred. Please try again",
       );
     } finally {
       setIsLoading(false);
@@ -109,7 +109,9 @@ export default function RegisterPage() {
       setResendStatus("Verification email resent successfully.");
     } catch (error: any) {
       setResendStatus(
-        error?.error || error?.message || "Failed to resend verification email."
+        error?.error ||
+          error?.message ||
+          "Failed to resend verification email.",
       );
     } finally {
       setIsResending(false);
@@ -229,7 +231,7 @@ export default function RegisterPage() {
                           name="email"
                           render={renderTextField(
                             "Email (ex. slchow@uwaterloo.ca)",
-                            { variant: "auth", inputProps: { type: "email" } }
+                            { variant: "auth", inputProps: { type: "email" } },
                           )}
                         />
                         <FormField
@@ -243,7 +245,7 @@ export default function RegisterPage() {
                                 type: "password",
                                 autoComplete: "new-password",
                               },
-                            }
+                            },
                           )}
                         />
                         <FormField

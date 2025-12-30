@@ -54,7 +54,7 @@ export function RegisterForm() {
       setAuthError(
         error instanceof Error
           ? error.message
-          : "An unexpected error occurred. Please try again"
+          : "An unexpected error occurred. Please try again",
       );
     } finally {
       setIsLoading(false);
