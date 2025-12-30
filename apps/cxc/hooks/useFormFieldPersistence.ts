@@ -57,11 +57,9 @@ export function useFormFieldPersistence<T extends FieldPath<AppFormValues>>(
     try {
       // Check if field has validation errors before saving
       const fieldState = form.getFieldState(fieldName);
-      const errors = form.formState.errors;
-      const fieldError = errors[fieldName];
-      
+    
       // Don't save invalid values to localStorage
-      if (fieldError) {
+      if (fieldState.error) {
         return;
       }
 
