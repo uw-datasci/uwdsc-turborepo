@@ -9,7 +9,7 @@ import { withAuth } from "./lib/middleware/withAuth";
 
 const APPLY_ROUTE = "/apply";
 const PROTECTED_ROUTES = new Set(["/admin", "/review"]);
-const AUTH_ROUTES = new Set(["/login", "/register"]);
+const AUTH_ROUTES = new Set(["/login", "/register", "/start"]);
 
 /**
  * Main middleware dispatcher

@@ -372,13 +372,13 @@ export function Review({ form }: ReviewProps) {
         />
 
         {/* Resume Section */}
-        {resumeUrl && resumeFileName && (
-          <div className="bg-cxc-input-bg p-4 flex flex-col gap-2">
-            <div className="flex flex-row gap-3 items-center min-w-0">
-              <div className="flex-shrink-0">
-                <FileTextIcon size={24} />
-              </div>
-              Resume:
+        <div className="bg-cxc-input-bg p-4 flex flex-col gap-2">
+          <div className="flex flex-row gap-3 items-center min-w-0">
+            <div className="flex-shrink-0">
+              <FileTextIcon size={24} />
+            </div>
+            Resume:&nbsp;
+            {resumeUrl && resumeFileName ? (
               <div className="min-w-0 flex-1">
                 <a
                   className="underline decoration-1 break-words"
@@ -389,58 +389,67 @@ export function Review({ form }: ReviewProps) {
                   {resumeFileName} ↗
                 </a>
               </div>
-            </div>
+            ) : (
+              "???"
+            )}
           </div>
-        )}
+        </div>
 
         {/* Team Members Section */}
-        {Array.isArray(teamMembers) && teamMembers.length > 0 && (
-          <div className="bg-cxc-input-bg p-4 flex flex-col gap-2">
-            <div className="flex flex-row gap-3 items-start min-w-0">
-              <div className="flex-shrink-0 pt-0.5">
-                <UsersIcon size={24} />
-              </div>
-              <div className="min-w-0 flex-1">
-                <div className="font-medium mb-2">Team Members:</div>
-                <div className="flex flex-wrap gap-2 bg-cxc-input-bg">
-                  {teamMembersWithNames.length > 0
-                    ? // Display with names if available
-                      teamMembersWithNames.map((member, index) => (
-                        <div
-                          key={index}
-                          className="inline-flex items-center gap-2 px-3 py-1.5 bg-cxc-input-bg"
-                        >
-                          <span className="">
-                            {member.display_name ? (
-                              <>
-                                <span className="font-medium">
-                                  {member.display_name}
-                                </span>
-                                <span className="text-muted-foreground">
-                                  {" "}
-                                  ({member.email})
-                                </span>
-                              </>
-                            ) : (
-                              member.email
-                            )}
-                          </span>
-                        </div>
-                      ))
-                    : // Fallback to just emails if names not available
-                      (teamMembers as string[]).map((email, index) => (
-                        <div
-                          key={index}
-                          className="inline-flex items-center gap-2 px-3 py-1.5 bg-primary/10 rounded-md border border-primary/20"
-                        >
-                          <span className="text-sm">{email}</span>
-                        </div>
-                      ))}
+        <div className="bg-cxc-input-bg p-4 flex flex-col gap-2">
+          <div className={`flex flex-row gap-3 min-w-0`}>
+            <div className="flex-shrink-0 pt-0.5">
+              <UsersIcon size={24} />
+            </div>
+            <div className="min-w-0 flex-1">
+              {Array.isArray(teamMembers) && teamMembers.length > 0 ? (
+                <>
+                  <div className="font-medium mb-2">Team Members:</div>
+                  <div className="flex flex-wrap gap-2 bg-cxc-input-bg">
+                    {teamMembersWithNames.length > 0
+                      ? // Display with names if available
+                        teamMembersWithNames.map((member, index) => (
+                          <div
+                            key={index}
+                            className="inline-flex items-center gap-2 px-3 py-1.5 bg-cxc-input-bg"
+                          >
+                            <span className="">
+                              {member.display_name ? (
+                                <>
+                                  <span className="font-medium">
+                                    {member.display_name}
+                                  </span>
+                                  <span className="text-muted-foreground">
+                                    {" "}
+                                    ({member.email})
+                                  </span>
+                                </>
+                              ) : (
+                                member.email
+                              )}
+                            </span>
+                          </div>
+                        ))
+                      : // Fallback to just emails if names not available
+                        (teamMembers as string[]).map((email, index) => (
+                          <div
+                            key={index}
+                            className="inline-flex items-center gap-2 px-3 py-1.5 bg-primary/10 rounded-md border border-primary/20"
+                          >
+                            <span className="text-sm">{email}</span>
+                          </div>
+                        ))}
+                  </div>
+                </>
+              ) : (
+                <div className="flex items-center gap-2">
+                  <span className="font-medium">Team Members:</span>
+                  <span className="text-muted-foreground">No Team Members</span>
                 </div>
-              </div>
+              )}
             </div>
           </div>
-        )}
+        </div>
 
         <SectionReviewCard
           form={form}
