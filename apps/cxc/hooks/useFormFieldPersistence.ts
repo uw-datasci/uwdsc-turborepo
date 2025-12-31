@@ -159,7 +159,11 @@ export function useFormFieldPersistence<T extends FieldPath<AppFormValues>>(
       (Array.isArray(currentValue) && currentValue.length === 0);
 
     // For team_members, if it's an empty array, don't restore - allow 0 team members
-    if (fieldName === "team_members" && Array.isArray(currentValue) && currentValue.length === 0) {
+    if (
+      fieldName === "team_members" &&
+      Array.isArray(currentValue) &&
+      currentValue.length === 0
+    ) {
       // Clear localStorage when user explicitly sets team_members to empty
       localStorage.removeItem(key);
       return;
@@ -195,7 +199,11 @@ export function useFormFieldPersistence<T extends FieldPath<AppFormValues>>(
         fieldValue !== null &&
         fieldValue !== "" &&
         fieldValue !== undefined &&
-        !(Array.isArray(fieldValue) && fieldValue.length === 0 && fieldName !== "team_members");
+        !(
+          Array.isArray(fieldValue) &&
+          fieldValue.length === 0 &&
+          fieldName !== "team_members"
+        );
 
       if (shouldSave) {
         // Save as JSON for complex types (arrays, objects), string for simple types
@@ -219,11 +227,15 @@ export function useFormFieldPersistence<T extends FieldPath<AppFormValues>>(
         localStorage.setItem(key, valueToSave);
       } else {
         // For team_members, allow empty arrays - remove from localStorage
-        if (fieldName === "team_members" && Array.isArray(fieldValue) && fieldValue.length === 0) {
+        if (
+          fieldName === "team_members" &&
+          Array.isArray(fieldValue) &&
+          fieldValue.length === 0
+        ) {
           localStorage.removeItem(key);
           return;
         }
-        
+
         // Only remove if user actually interacted (field is dirty)
         const isDirty = !!fieldState.isDirty;
         if (isDirty) {

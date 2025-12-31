@@ -75,7 +75,7 @@ const UNIVERSITY_INFO_LABELS = ["University", "Program", "Year"];
 
 const PRIOR_HACK_EXP_LABELS = ["Experience", "Hackathons Attended"];
 
-const LINKS_LABELS = ["Github", "LinkedIn", "Website", "Other", "Resume"];
+const LINKS_LABELS = ["Github", "LinkedIn", "Website", "Other"];
 
 const APP_Q_LABEL = ["Question 1", "Question 2"];
 
@@ -256,7 +256,6 @@ const LinksIcons = [
   <LinkedinLogoIcon key="linkedin" size={24} />,
   <BrowserIcon key="x" size={24} />,
   <LinkIcon key="link" size={24} />,
-  <FileTextIcon key="resume" size={24} />,
 ];
 
 const CxCAppIcons = [
@@ -366,7 +365,9 @@ export function Review({ form }: ReviewProps) {
         <SectionReviewCard
           form={form}
           iconArr={LinksIcons}
-          fieldArr={Object.values(LINKS_FIELDS)}
+          fieldArr={Object.values(LINKS_FIELDS).filter(
+            (field) => field !== "resume",
+          )}
           labelArr={LINKS_LABELS}
         />
 

@@ -41,15 +41,20 @@ export function LinksAndDocs({ form }: LinksAndDocsProps) {
     const fetchResume = async () => {
       try {
         const result = await getResume();
-        
+
         // Try to get filename from multiple possible sources
         let fileName = "";
-        
+
         // First try: get from resume.name (FileObject property)
-        if (result.resume && typeof result.resume === "object" && "name" in result.resume && result.resume.name) {
+        if (
+          result.resume &&
+          typeof result.resume === "object" &&
+          "name" in result.resume &&
+          result.resume.name
+        ) {
           fileName = String(result.resume.name);
         }
-        
+
         // Fallback: extract filename from key (format: userId/filename)
         if (!fileName && result.key) {
           const keyParts = result.key.split("/");
@@ -60,7 +65,7 @@ export function LinksAndDocs({ form }: LinksAndDocsProps) {
             }
           }
         }
-        
+
         if (fileName) {
           setResumeFileName(fileName);
           // Update localStorage with the verified filename
@@ -149,7 +154,7 @@ export function LinksAndDocs({ form }: LinksAndDocsProps) {
 
       // Update UI with the uploaded file name
       setResumeFileName(file.name);
-      
+
       // Save filename to localStorage immediately
       localStorage.setItem(RESUME_FILENAME_STORAGE_KEY, file.name);
 
@@ -160,10 +165,15 @@ export function LinksAndDocs({ form }: LinksAndDocsProps) {
       setTimeout(async () => {
         try {
           const verifyResult = await getResume();
-          
+
           // Extract filename using same logic as fetch
           let fileName = "";
-          if (verifyResult.resume && typeof verifyResult.resume === "object" && "name" in verifyResult.resume && verifyResult.resume.name) {
+          if (
+            verifyResult.resume &&
+            typeof verifyResult.resume === "object" &&
+            "name" in verifyResult.resume &&
+            verifyResult.resume.name
+          ) {
             fileName = String(verifyResult.resume.name);
           }
           if (!fileName && verifyResult.key) {
@@ -175,7 +185,7 @@ export function LinksAndDocs({ form }: LinksAndDocsProps) {
               }
             }
           }
-          
+
           if (fileName) {
             // Resume is confirmed to be saved - update with the actual saved name
             setResumeFileName(fileName);
