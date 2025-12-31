@@ -52,6 +52,23 @@ export class FileRepository {
   }
 
   /**
+   * Create a signed URL for a file (for private buckets)
+   * @param objectKey - The file path/key
+   * @param expiresIn - Expiration time in seconds (default: 3600 = 1 hour)
+   */
+  async createSignedUrl(objectKey: string, expiresIn: number = 3600) {
+    const { data, error } = await this.client.storage
+      .from(this.bucketName)
+      .createSignedUrl(objectKey, expiresIn);
+
+    if (error) {
+      throw error;
+    }
+
+    return data.signedUrl;
+  }
+
+  /**
    * Delete a file
    */
   async deleteFile(objectKey: string): Promise<{ error: Error | null }> {

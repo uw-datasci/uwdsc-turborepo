@@ -145,6 +145,26 @@ export class FileService {
   }
 
   /**
+   * Create a signed URL for a file (for private buckets)
+   * @param objectKey - The file path/key
+   * @param expiresIn - Expiration time in seconds (default: 3600 = 1 hour)
+   */
+  async createSignedUrl(objectKey: string, expiresIn: number = 3600) {
+    try {
+      const signedUrl = await this.repository.createSignedUrl(objectKey, expiresIn);
+      return {
+        success: true,
+        url: signedUrl,
+      };
+    } catch (error) {
+      throw new ApiError(
+        `Failed to create signed URL: ${(error as Error).message}`,
+        500,
+      );
+    }
+  }
+
+  /**
    * Delete a file
    */
   async deleteFile(objectKey: string) {

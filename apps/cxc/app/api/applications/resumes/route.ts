@@ -53,7 +53,7 @@ export async function POST(req: NextRequest) {
 
 /**
  * GET /api/applications/resumes
- * Get the current user's resume
+ * Get the current user's resume (returns signed URL for private bucket)
  */
 export async function GET(): Promise<NextResponse> {
   try {
@@ -65,9 +65,10 @@ export async function GET(): Promise<NextResponse> {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    // Get user's resume
+    // Get user's resume with signed URL (ownership verified in service)
     const resumeService = await createResumeService();
-    const result = await resumeService.getUserResume(user.id);
+    // Use signed URL (1 hour expiration) for private bucket
+    const result = await resumeService.getSignedResumeUrl(user.id, 3600);
 
     if (!result.success) {
       // If resume doesn't exist, return null values (not an error)

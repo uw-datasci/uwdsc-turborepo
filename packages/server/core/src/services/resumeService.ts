@@ -143,6 +143,55 @@ export class ResumeService extends FileService {
   }
 
   /**
+   * Get signed URL for user's resume (with ownership verification)
+   * @param userId - The user ID (must match the file owner)
+   * @param expiresIn - Expiration time in seconds (default: 3600 = 1 hour)
+   */
+  async getSignedResumeUrl(
+    userId: string,
+    expiresIn: number = 3600,
+  ): Promise<
+    | { success: true; url: string; resume: FileObject | null; key: string | null }
+    | { success: false; error: string }
+  > {
+    try {
+      // First, verify the user has a resume
+      const resumeResult = await this.getUserResume(userId);
+
+      if (!resumeResult.success || !resumeResult.key) {
+        return {
+          success: false,
+          error: resumeResult.success
+            ? "No resume found"
+            : resumeResult.error || "Failed to get resume",
+        };
+      }
+
+      // Create signed URL for the resume
+      const signedUrlResult = await this.createSignedUrl(resumeResult.key, expiresIn);
+
+      if (!signedUrlResult.success) {
+        return {
+          success: false,
+          error: "Failed to create signed URL",
+        };
+      }
+
+      return {
+        success: true,
+        url: signedUrlResult.url,
+        resume: resumeResult.resume,
+        key: resumeResult.key,
+      };
+    } catch (error) {
+      return {
+        success: false,
+        error: (error as Error).message || "Failed to get signed resume URL",
+      };
+    }
+  }
+
+  /**
    * Delete a resume
    */
   async deleteResume(objectKey: string) {
