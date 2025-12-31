@@ -147,6 +147,7 @@ export function useFormFieldPersistence<T extends FieldPath<AppFormValues>>(
 
   // Also restore when field value becomes empty (handles form.reset() case)
   // This is especially important for select fields that get reset to undefined
+  // BUT: For team_members, allow empty arrays (user can have 0 team members)
   useEffect(() => {
     if (!canPersistRef.current) return;
 
@@ -157,6 +158,13 @@ export function useFormFieldPersistence<T extends FieldPath<AppFormValues>>(
       currentValue === undefined ||
       (Array.isArray(currentValue) && currentValue.length === 0);
 
+    // For team_members, if it's an empty array, don't restore - allow 0 team members
+    if (fieldName === "team_members" && Array.isArray(currentValue) && currentValue.length === 0) {
+      // Clear localStorage when user explicitly sets team_members to empty
+      localStorage.removeItem(key);
+      return;
+    }
+
     if (isEmpty) {
       // Use a small delay to ensure form.reset() has fully completed
       const timer = setTimeout(() => {
@@ -164,7 +172,7 @@ export function useFormFieldPersistence<T extends FieldPath<AppFormValues>>(
       }, 100);
       return () => clearTimeout(timer);
     }
-  }, [fieldValue, restoreFromStorage, form, fieldName]);
+  }, [fieldValue, restoreFromStorage, form, fieldName, key]);
 
   // Save to localStorage on change (only if field is valid)
   useEffect(() => {
@@ -182,11 +190,12 @@ export function useFormFieldPersistence<T extends FieldPath<AppFormValues>>(
 
       // Check if value should be saved (not null, not empty string, not empty array)
       // Note: "0" is a valid value for enum fields, so we need to check for it explicitly
+      // Exception: team_members can be empty array (0 team members is valid)
       const shouldSave =
         fieldValue !== null &&
         fieldValue !== "" &&
         fieldValue !== undefined &&
-        !(Array.isArray(fieldValue) && fieldValue.length === 0);
+        !(Array.isArray(fieldValue) && fieldValue.length === 0 && fieldName !== "team_members");
 
       if (shouldSave) {
         // Save as JSON for complex types (arrays, objects), string for simple types
@@ -209,6 +218,12 @@ export function useFormFieldPersistence<T extends FieldPath<AppFormValues>>(
 
         localStorage.setItem(key, valueToSave);
       } else {
+        // For team_members, allow empty arrays - remove from localStorage
+        if (fieldName === "team_members" && Array.isArray(fieldValue) && fieldValue.length === 0) {
+          localStorage.removeItem(key);
+          return;
+        }
+        
         // Only remove if user actually interacted (field is dirty)
         const isDirty = !!fieldState.isDirty;
         if (isDirty) {

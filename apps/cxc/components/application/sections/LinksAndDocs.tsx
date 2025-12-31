@@ -18,6 +18,7 @@ interface LinksAndDocsProps {
 }
 
 const MAX_RESUME_SIZE = 10 * 1024 * 1024; // 10 MB in bytes
+const RESUME_FILENAME_STORAGE_KEY = "resume_filename";
 
 export function LinksAndDocs({ form }: LinksAndDocsProps) {
   // Persist form fields to localStorage (except resume)
@@ -25,19 +26,58 @@ export function LinksAndDocs({ form }: LinksAndDocsProps) {
   useFormFieldPersistence(form, "linkedin");
   useFormFieldPersistence(form, "website_url");
   useFormFieldPersistence(form, "other_link");
-  const [resumeFileName, setResumeFileName] = useState<string>("");
+  const [resumeFileName, setResumeFileName] = useState<string>(() => {
+    // Initialize from localStorage if available
+    if (typeof window !== "undefined") {
+      const saved = localStorage.getItem(RESUME_FILENAME_STORAGE_KEY);
+      return saved || "";
+    }
+    return "";
+  });
   const [isUploading, setIsUploading] = useState(false);
 
-  // Fetch existing resume on mount
+  // Fetch existing resume on mount to verify/update localStorage
   useEffect(() => {
     const fetchResume = async () => {
       try {
         const result = await getResume();
-        if (result.resume && result.resume.name) {
-          setResumeFileName(result.resume.name);
+        
+        // Try to get filename from multiple possible sources
+        let fileName = "";
+        
+        // First try: get from resume.name (FileObject property)
+        if (result.resume && typeof result.resume === "object" && "name" in result.resume && result.resume.name) {
+          fileName = String(result.resume.name);
         }
-      } catch {
-        // No resume found - that's okay
+        
+        // Fallback: extract filename from key (format: userId/filename)
+        if (!fileName && result.key) {
+          const keyParts = result.key.split("/");
+          if (keyParts.length > 1) {
+            const extractedName = keyParts[keyParts.length - 1];
+            if (extractedName) {
+              fileName = extractedName;
+            }
+          }
+        }
+        
+        if (fileName) {
+          setResumeFileName(fileName);
+          // Update localStorage with the verified filename
+          localStorage.setItem(RESUME_FILENAME_STORAGE_KEY, fileName);
+        } else {
+          // No resume found - clear localStorage and state
+          setResumeFileName("");
+          localStorage.removeItem(RESUME_FILENAME_STORAGE_KEY);
+        }
+      } catch (error) {
+        console.error("Error fetching resume:", error);
+        // On error, keep localStorage value if it exists (might be a temporary network issue)
+        // Only clear if we're sure there's no resume
+        const saved = localStorage.getItem(RESUME_FILENAME_STORAGE_KEY);
+        if (!saved) {
+          setResumeFileName("");
+        }
       }
     };
 
@@ -52,6 +92,7 @@ export function LinksAndDocs({ form }: LinksAndDocsProps) {
     if (!file) {
       // File cleared
       setResumeFileName("");
+      localStorage.removeItem(RESUME_FILENAME_STORAGE_KEY);
       form.setValue(LINKS_FIELDS.resume, undefined);
       return;
     }
@@ -66,6 +107,7 @@ export function LinksAndDocs({ form }: LinksAndDocsProps) {
       });
       // Reset file input
       setResumeFileName("");
+      localStorage.removeItem(RESUME_FILENAME_STORAGE_KEY);
       form.setValue(LINKS_FIELDS.resume, undefined);
       return;
     }
@@ -92,6 +134,7 @@ export function LinksAndDocs({ form }: LinksAndDocsProps) {
         message: errorMessage,
       });
       setResumeFileName("");
+      localStorage.removeItem(RESUME_FILENAME_STORAGE_KEY);
       form.setValue(LINKS_FIELDS.resume, undefined);
       return;
     }
@@ -104,11 +147,45 @@ export function LinksAndDocs({ form }: LinksAndDocsProps) {
       // Clear any previous errors
       form.clearErrors(LINKS_FIELDS.resume);
 
-      // Update UI
+      // Update UI with the uploaded file name
       setResumeFileName(file.name);
+      
+      // Save filename to localStorage immediately
+      localStorage.setItem(RESUME_FILENAME_STORAGE_KEY, file.name);
 
-      // Set file in form
+      // Set file in form (this is for form validation, the actual file is already uploaded)
       form.setValue(LINKS_FIELDS.resume, file, { shouldDirty: true });
+
+      // Small delay to ensure the upload is fully processed, then verify
+      setTimeout(async () => {
+        try {
+          const verifyResult = await getResume();
+          
+          // Extract filename using same logic as fetch
+          let fileName = "";
+          if (verifyResult.resume && typeof verifyResult.resume === "object" && "name" in verifyResult.resume && verifyResult.resume.name) {
+            fileName = String(verifyResult.resume.name);
+          }
+          if (!fileName && verifyResult.key) {
+            const keyParts = verifyResult.key.split("/");
+            if (keyParts.length > 1) {
+              const extractedName = keyParts[keyParts.length - 1];
+              if (extractedName) {
+                fileName = extractedName;
+              }
+            }
+          }
+          
+          if (fileName) {
+            // Resume is confirmed to be saved - update with the actual saved name
+            setResumeFileName(fileName);
+            localStorage.setItem(RESUME_FILENAME_STORAGE_KEY, fileName);
+          }
+        } catch (verifyError) {
+          console.error("Error verifying resume upload:", verifyError);
+          // Don't fail the upload if verification fails, but log it
+        }
+      }, 500);
     } catch (error) {
       console.error("Failed to upload resume:", error);
 
@@ -131,6 +208,7 @@ export function LinksAndDocs({ form }: LinksAndDocsProps) {
 
       // Reset on error
       setResumeFileName("");
+      localStorage.removeItem(RESUME_FILENAME_STORAGE_KEY);
       form.setValue(LINKS_FIELDS.resume, undefined);
     } finally {
       setIsUploading(false);
