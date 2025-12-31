@@ -34,6 +34,7 @@ interface Application {
   cxc_q2?: string;
   // Team members
   team_members?: string;
+  team_members_with_names?: Array<{ email: string; display_name: string | null }>;
   // Resume
   resume_url?: string;
 }
@@ -364,27 +365,57 @@ export default function ReviewPage() {
                   </div>
                 )}
                 {application.resume_url && (
-                  <div>
+                  <div className="pt-2">
                     <span className="font-medium">Resume:</span>{" "}
                     <a
                       href={application.resume_url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-blue-500 hover:underline"
+                      className="text-blue-500 hover:underline font-medium"
+                      onClick={(e) => {
+                        // Ensure the link opens in a new tab
+                        e.stopPropagation();
+                      }}
                     >
-                      View Resume
+                      View Resume ↗
                     </a>
                   </div>
                 )}
-                {application.team_members && (
-                  <div>
-                    <span className="font-medium">Team Members:</span>{" "}
-                    {application.team_members.split(",").map((email, index) => (
-                      <span key={index}>
-                        {email.trim()}
-                        {index < application.team_members!.split(",").length - 1 && ", "}
-                      </span>
-                    ))}
+                {application.team_members && application.team_members.trim() && (
+                  <div className="pt-2">
+                    <span className="font-medium block mb-2">Team Members:</span>
+                    <div className="flex flex-wrap gap-2">
+                      {application.team_members_with_names && application.team_members_with_names.length > 0 ? (
+                        // Display with names if available
+                        application.team_members_with_names.map((member, index) => (
+                          <div
+                            key={index}
+                            className="flex items-center gap-2 px-3 py-1.5 bg-cxc-input-bg rounded-md border border-primary/20"
+                          >
+                            <span className="text-foreground">
+                              {member.display_name ? (
+                                <>
+                                  <span>{member.display_name}</span>
+                                  <span className="text-muted-foreground"> ({member.email})</span>
+                                </>
+                              ) : (
+                                <span>{member.email}</span>
+                              )}
+                            </span>
+                          </div>
+                        ))
+                      ) : (
+                        // Fallback to just emails if names not available
+                        application.team_members.split(",").map((email, index) => (
+                          <div
+                            key={index}
+                            className="flex items-center gap-2 px-3 py-1.5 bg-cxc-input-bg rounded-md border border-primary/20"
+                          >
+                            <span className="text-foreground">{email.trim()}</span>
+                          </div>
+                        ))
+                      )}
+                    </div>
                   </div>
                 )}
               </div>

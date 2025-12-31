@@ -175,9 +175,9 @@ export function Teams({ form }: TeamsProps) {
                 return (
                   <div
                     key={email}
-                    className="flex items-center gap-2 px-3 py-1.5 bg-primary/10 rounded-md border border-primary/20"
+                    className="flex items-center gap-2 px-3 py-1.5 bg-cxc-input-bg"
                   >
-                    <span className="text-sm text-foreground">{displayName}</span>
+                    <span className="text-foreground">{displayName}</span>
                     <button
                       type="button"
                       onClick={(e) => {

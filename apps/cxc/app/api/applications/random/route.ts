@@ -66,11 +66,13 @@ export async function GET() {
     }
     
     // Remove review_count from the data before returning
-    const { review_count: _review_count, ...applicationData } = data;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { review_count, ...applicationData } = data;
 
     // Get user email from auth.users using profile_id (which is the user id)
     let email: string | null = null;
     let resumeUrl: string | null = null;
+    let teamMembersWithNames: Array<{ email: string; display_name: string | null }> = [];
 
     try {
       const profileId = applicationData.profile_id as string;
@@ -95,15 +97,48 @@ export async function GET() {
           console.error("Error fetching resume URL:", resumeError);
         }
       }
+
+      // Get team member names if team_members exists
+      const teamMembersStr = applicationData.team_members as string | null | undefined;
+      if (teamMembersStr) {
+        const teamMemberEmails = teamMembersStr.split(",").map((e) => e.trim()).filter(Boolean);
+        
+        if (teamMemberEmails.length > 0) {
+          // Fetch display names for team member emails
+          // Use IN clause with array - postgres.js handles arrays automatically
+          const teamMemberResults = await sql<Array<{ email: string; display_name: string | null }>>`
+            SELECT 
+              au.email,
+              CASE 
+                WHEN au.raw_user_meta_data->>'first_name' IS NOT NULL 
+                  AND au.raw_user_meta_data->>'last_name' IS NOT NULL
+                THEN TRIM(
+                  COALESCE(au.raw_user_meta_data->>'first_name', '') || ' ' || 
+                  COALESCE(au.raw_user_meta_data->>'last_name', '')
+                )
+                WHEN au.raw_user_meta_data->>'first_name' IS NOT NULL
+                THEN au.raw_user_meta_data->>'first_name'
+                WHEN au.raw_user_meta_data->>'last_name' IS NOT NULL
+                THEN au.raw_user_meta_data->>'last_name'
+                ELSE NULL
+              END as display_name
+            FROM auth.users au
+            WHERE au.email = ANY(${teamMemberEmails})
+          `;
+          
+          teamMembersWithNames = teamMemberResults;
+        }
+      }
     } catch (emailError) {
-      console.error("Error fetching user email:", emailError);
+      console.error("Error fetching user email or team members:", emailError);
     }
 
-    // Add email and resume URL to application data if available
+    // Add email, resume URL, and team members with names to application data if available
     const applicationWithEmail = {
       ...applicationData,
       email: email,
       resume_url: resumeUrl,
+      team_members_with_names: teamMembersWithNames,
     };
 
     return NextResponse.json({ application: applicationWithEmail });

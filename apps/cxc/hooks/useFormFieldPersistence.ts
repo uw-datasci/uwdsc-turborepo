@@ -26,8 +26,8 @@ export function useFormFieldPersistence<T extends FieldPath<AppFormValues>>(
       if (savedValue) {
         const currentValue = form.getValues(fieldName);
         
-        // Debug logging for hackathons_attended
-        if (fieldName === "hackathons_attended") {
+        // Debug logging for hackathons_attended and team_members
+        if (fieldName === "hackathons_attended" || fieldName === "team_members") {
           console.log(`[${fieldName}] Restore attempt:`, {
             savedValue,
             currentValue,
@@ -63,7 +63,7 @@ export function useFormFieldPersistence<T extends FieldPath<AppFormValues>>(
             try {
               // Try to parse as JSON for complex types (arrays, objects)
               const parsed = JSON.parse(savedValue);
-              if (fieldName === "hackathons_attended") {
+              if (fieldName === "hackathons_attended" || fieldName === "team_members") {
                 console.log(`[${fieldName}] Restoring parsed value:`, parsed);
               }
               form.setValue(fieldName, parsed, { shouldDirty: false, shouldValidate: false });
@@ -79,16 +79,16 @@ export function useFormFieldPersistence<T extends FieldPath<AppFormValues>>(
           
           // Verify the value was set
           const afterValue = form.getValues(fieldName);
-          if (fieldName === "hackathons_attended") {
+          if (fieldName === "hackathons_attended" || fieldName === "team_members") {
             console.log(`[${fieldName}] Value after restore:`, afterValue);
           }
         } else {
-          if (fieldName === "hackathons_attended") {
+          if (fieldName === "hackathons_attended" || fieldName === "team_members") {
             console.log(`[${fieldName}] Skipping restore - field not empty:`, currentValue);
           }
         }
       } else {
-        if (fieldName === "hackathons_attended") {
+        if (fieldName === "hackathons_attended" || fieldName === "team_members") {
           console.log(`[${fieldName}] No saved value in localStorage for key:`, key);
         }
       }
@@ -157,8 +157,8 @@ export function useFormFieldPersistence<T extends FieldPath<AppFormValues>>(
           ? JSON.stringify(fieldValue)
           : String(fieldValue);
         
-        // Debug logging for hackathons_attended
-        if (fieldName === "hackathons_attended") {
+        // Debug logging for hackathons_attended and team_members
+        if (fieldName === "hackathons_attended" || fieldName === "team_members") {
           console.log(`[${fieldName}] Saving to localStorage:`, { fieldValue, valueToSave, key });
         }
         
