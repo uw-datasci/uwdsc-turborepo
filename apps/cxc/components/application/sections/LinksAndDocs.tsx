@@ -17,6 +17,8 @@ interface LinksAndDocsProps {
   readonly form: UseFormReturn<AppFormValues>;
 }
 
+const MAX_RESUME_SIZE = 10 * 1024 * 1024; // 10 MB in bytes
+
 export function LinksAndDocs({ form }: LinksAndDocsProps) {
   // Persist form fields to localStorage (except resume)
   useFormFieldPersistence(form, "github");
@@ -25,6 +27,7 @@ export function LinksAndDocs({ form }: LinksAndDocsProps) {
   useFormFieldPersistence(form, "other_link");
   const [resumeFileName, setResumeFileName] = useState<string>("");
   const [isUploading, setIsUploading] = useState(false);
+  const [resumeError, setResumeError] = useState<string | null>(null);
 
   // Fetch existing resume on mount
   useEffect(() => {
@@ -44,8 +47,47 @@ export function LinksAndDocs({ form }: LinksAndDocsProps) {
 
   // Handle file selection - upload immediately
   const handleFileSelect = async (file: File | null) => {
+    // Clear previous errors
+    setResumeError(null);
+    
     if (!file) {
       // File cleared
+      setResumeFileName("");
+      form.setValue(LINKS_FIELDS.resume, undefined);
+      return;
+    }
+
+    // Client-side validation: Check file size
+    if (file.size > MAX_RESUME_SIZE) {
+      const fileSizeMB = (file.size / (1024 * 1024)).toFixed(2);
+      const errorMessage = `File size (${fileSizeMB} MB) exceeds the maximum allowed size of 10 MB. Please choose a smaller file.`;
+      setResumeError(errorMessage);
+      form.setError(LINKS_FIELDS.resume, {
+        type: "manual",
+        message: errorMessage,
+      });
+      // Reset file input
+      setResumeFileName("");
+      form.setValue(LINKS_FIELDS.resume, undefined);
+      return;
+    }
+
+    // Client-side validation: Check file type
+    const allowedTypes = [
+      "application/pdf",
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document", // .docx
+      "application/msword", // .doc
+    ];
+    const allowedExtensions = [".pdf", ".doc", ".docx"];
+    const fileExtension = file.name.toLowerCase().substring(file.name.lastIndexOf("."));
+    
+    if (!allowedTypes.includes(file.type) && !allowedExtensions.includes(fileExtension)) {
+      const errorMessage = "Invalid file type. Please upload a PDF, DOC, or DOCX file.";
+      setResumeError(errorMessage);
+      form.setError(LINKS_FIELDS.resume, {
+        type: "manual",
+        message: errorMessage,
+      });
       setResumeFileName("");
       form.setValue(LINKS_FIELDS.resume, undefined);
       return;
@@ -56,6 +98,10 @@ export function LinksAndDocs({ form }: LinksAndDocsProps) {
       // Upload resume immediately
       await uploadResume(file);
       
+      // Clear any previous errors
+      setResumeError(null);
+      form.clearErrors(LINKS_FIELDS.resume);
+      
       // Update UI
       setResumeFileName(file.name);
       
@@ -63,6 +109,21 @@ export function LinksAndDocs({ form }: LinksAndDocsProps) {
       form.setValue(LINKS_FIELDS.resume, file, { shouldDirty: true });
     } catch (error) {
       console.error("Failed to upload resume:", error);
+      
+      // Extract error message
+      let errorMessage = "Failed to upload resume. Please try again.";
+      if (error instanceof Error) {
+        errorMessage = error.message;
+      } else if (typeof error === "object" && error !== null && "message" in error) {
+        errorMessage = String(error.message);
+      }
+      
+      setResumeError(errorMessage);
+      form.setError(LINKS_FIELDS.resume, {
+        type: "manual",
+        message: errorMessage,
+      });
+      
       // Reset on error
       setResumeFileName("");
       form.setValue(LINKS_FIELDS.resume, undefined);
@@ -112,7 +173,7 @@ export function LinksAndDocs({ form }: LinksAndDocsProps) {
           control={form.control}
           name={LINKS_FIELDS.resume}
           render={renderFileUploadField(".pdf,.doc,.docx", {
-            label: "Upload your resume (PDF or Word document)",
+            label: "Upload your resume (PDF or Word document, max 10 MB)",
             required: false,
             existingFileName: resumeFileName,
             onFileChange: (fileName: string) => {
@@ -123,6 +184,9 @@ export function LinksAndDocs({ form }: LinksAndDocsProps) {
         />
         {isUploading && (
           <p className="text-sm text-muted-foreground mt-2">Uploading resume...</p>
+        )}
+        {resumeError && (
+          <p className="text-sm text-destructive mt-2">{resumeError}</p>
         )}
       </AppSection>
     </Form>

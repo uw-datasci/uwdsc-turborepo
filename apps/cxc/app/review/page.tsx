@@ -34,6 +34,8 @@ interface Application {
   cxc_q2?: string;
   // Team members
   team_members?: string;
+  // Resume
+  resume_url?: string;
 }
 
 export default function ReviewPage() {
@@ -361,10 +363,28 @@ export default function ReviewPage() {
                     </a>
                   </div>
                 )}
+                {application.resume_url && (
+                  <div>
+                    <span className="font-medium">Resume:</span>{" "}
+                    <a
+                      href={application.resume_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-blue-500 hover:underline"
+                    >
+                      View Resume
+                    </a>
+                  </div>
+                )}
                 {application.team_members && (
                   <div>
                     <span className="font-medium">Team Members:</span>{" "}
-                    {application.team_members}
+                    {application.team_members.split(",").map((email, index) => (
+                      <span key={index}>
+                        {email.trim()}
+                        {index < application.team_members!.split(",").length - 1 && ", "}
+                      </span>
+                    ))}
                   </div>
                 )}
               </div>

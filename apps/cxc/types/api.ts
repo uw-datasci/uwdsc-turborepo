@@ -56,15 +56,3 @@ export interface UserProfile {
   role: string;
   nfc_id: string | null;
 }
-
-export interface SubmitApplicationResponse {
-  application: {
-    id: string;
-    profile_id: string;
-    resume_id?: string | null;
-    status: string;
-    submitted_at: string;
-    updated_at: string;
-    [key: string]: unknown;
-  };
-}

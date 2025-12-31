@@ -49,29 +49,12 @@ export class ResumeService extends FileService {
   }
 
   /**
-   * Generate consistent object key for resume (always replaces existing)
-   * Uses format: userId/resume.{ext}
+   * Generate object key for resume using original filename
+   * Uses format: userId/{originalFileName}
    */
   protected generateObjectKey(userId: string, fileName: string): string {
-    // Get extension from file name or MIME type
-    const ext = this.getFileExtension(fileName);
-    return `${userId}/resume.${ext}`;
-  }
-
-  /**
-   * Get file extension from filename or MIME type
-   */
-  private getFileExtension(fileName: string): string {
-    // Try to get extension from filename
-    const lastDot = fileName.lastIndexOf(".");
-    if (lastDot !== -1) {
-      const ext = fileName.substring(lastDot + 1).toLowerCase();
-      if (["pdf", "doc", "docx"].includes(ext)) {
-        return ext;
-      }
-    }
-    // Fallback to pdf if we can't determine
-    return "pdf";
+    // Use original filename, sanitized if needed
+    return `${userId}/${fileName}`;
   }
 
   /**
@@ -119,9 +102,8 @@ export class ResumeService extends FileService {
       }
 
       // Find resume file (should be only one due to replacement logic)
-      const resume = result.resumes.find((f) =>
-        f.name?.startsWith("resume."),
-      );
+      // Get the first file in the user's folder
+      const resume = result.resumes.length > 0 ? result.resumes[0] : null;
 
       if (!resume || !resume.name) {
         return {
@@ -142,7 +124,7 @@ export class ResumeService extends FileService {
         url: urlResult.success ? urlResult.url : null,
         key: objectKey,
       };
-    } catch (error) {
+    } catch {
       // Return null instead of error if resume doesn't exist
       return {
         success: true,

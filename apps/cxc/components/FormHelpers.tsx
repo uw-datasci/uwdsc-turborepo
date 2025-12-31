@@ -225,7 +225,10 @@ export const renderSelectField = <T extends Record<string, any>>(
           {label} {required && <span className="text-destructive">*</span>}
         </FormLabel>
       )}
-      <Select onValueChange={field.onChange} value={field.value}>
+      <Select 
+        onValueChange={field.onChange} 
+        value={field.value === undefined ? "" : field.value}
+      >
         <FormControl>
           <SelectTrigger className={selectTriggerStyles[variant]}>
             <SelectValue placeholder={placeholder} />

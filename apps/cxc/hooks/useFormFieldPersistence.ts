@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useCallback } from "react";
 import { UseFormReturn, FieldPath } from "react-hook-form";
 import { AppFormValues } from "@/lib/schemas/application";
 
@@ -19,41 +19,121 @@ export function useFormFieldPersistence<T extends FieldPath<AppFormValues>>(
   const canPersistRef = useRef(false);
   const key = storageKey || `cxc_form_${fieldName}`;
 
-  // Restore from localStorage on mount
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      try {
-        const savedValue = localStorage.getItem(key);
-        if (savedValue) {
-          const currentValue = form.getValues(fieldName);
+  // Helper function to restore from localStorage
+  const restoreFromStorage = useCallback(() => {
+    try {
+      const savedValue = localStorage.getItem(key);
+      if (savedValue) {
+        const currentValue = form.getValues(fieldName);
+        
+        // Debug logging for hackathons_attended
+        if (fieldName === "hackathons_attended") {
+          console.log(`[${fieldName}] Restore attempt:`, {
+            savedValue,
+            currentValue,
+            key,
+          });
+        }
+        
+        // Only restore if localStorage has a value and form field is empty
+        // Check for null, undefined, empty string, or empty array
+        const isEmpty = 
+          currentValue == null || 
+          currentValue === "" || 
+          currentValue === undefined ||
+          (Array.isArray(currentValue) && currentValue.length === 0);
+        
+        if (isEmpty) {
+          // For string enum fields like hackathons_attended, don't parse as JSON
+          // JSON.parse("1") would return number 1, but we need string "1" to match Select options
+          const isStringEnumField = fieldName === "hackathons_attended" || 
+                                    fieldName === "year_of_study" ||
+                                    fieldName === "tshirt_size" ||
+                                    fieldName === "dietary_restrictions" ||
+                                    fieldName === "gender" ||
+                                    fieldName === "country_of_residence";
           
-          // Only restore if localStorage has a value and form field is empty
-          if (currentValue == null || currentValue === "" || currentValue === undefined) {
+          if (isStringEnumField) {
+            if (fieldName === "hackathons_attended") {
+              console.log(`[${fieldName}] Restoring string value (no JSON parse):`, savedValue);
+            }
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            form.setValue(fieldName, savedValue as any, { shouldDirty: false, shouldValidate: false });
+          } else {
             try {
               // Try to parse as JSON for complex types (arrays, objects)
               const parsed = JSON.parse(savedValue);
-              form.setValue(fieldName, parsed, { shouldDirty: false });
+              if (fieldName === "hackathons_attended") {
+                console.log(`[${fieldName}] Restoring parsed value:`, parsed);
+              }
+              form.setValue(fieldName, parsed, { shouldDirty: false, shouldValidate: false });
             } catch {
               // If not JSON, use as string
-              form.setValue(fieldName, savedValue as any, { shouldDirty: false });
+              if (fieldName === "hackathons_attended") {
+                console.log(`[${fieldName}] Restoring string value:`, savedValue);
+              }
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              form.setValue(fieldName, savedValue as any, { shouldDirty: false, shouldValidate: false });
             }
           }
+          
+          // Verify the value was set
+          const afterValue = form.getValues(fieldName);
+          if (fieldName === "hackathons_attended") {
+            console.log(`[${fieldName}] Value after restore:`, afterValue);
+          }
+        } else {
+          if (fieldName === "hackathons_attended") {
+            console.log(`[${fieldName}] Skipping restore - field not empty:`, currentValue);
+          }
         }
-      } catch (error) {
-        console.error(`Error restoring ${fieldName} from localStorage:`, error);
+      } else {
+        if (fieldName === "hackathons_attended") {
+          console.log(`[${fieldName}] No saved value in localStorage for key:`, key);
+        }
       }
-      
+    } catch (error) {
+      console.error(`Error restoring ${fieldName} from localStorage:`, error);
+    }
+  }, [form, fieldName, key]);
+
+  // Restore from localStorage on mount
+  useEffect(() => {
+    // Use a longer timeout to ensure form.reset() has completed
+    const timer = setTimeout(() => {
+      restoreFromStorage();
       canPersistRef.current = true;
-    }, 100);
+    }, 500); // Increased timeout to allow form.reset() to complete
 
     return () => clearTimeout(timer);
-  }, [form, fieldName, key]);
+  }, [restoreFromStorage]);
+
+  // Also restore when field value becomes empty (handles form.reset() case)
+  // This is especially important for select fields that get reset to undefined
+  useEffect(() => {
+    if (!canPersistRef.current) return;
+    
+    const currentValue = form.getValues(fieldName);
+    const isEmpty = 
+      currentValue == null || 
+      currentValue === "" || 
+      currentValue === undefined ||
+      (Array.isArray(currentValue) && currentValue.length === 0);
+    
+    if (isEmpty) {
+      // Use a small delay to ensure form.reset() has fully completed
+      const timer = setTimeout(() => {
+        restoreFromStorage();
+      }, 100);
+      return () => clearTimeout(timer);
+    }
+  }, [fieldValue, restoreFromStorage, form, fieldName]);
 
   // Save to localStorage on change (only if field is valid)
   useEffect(() => {
     if (!canPersistRef.current) return;
-    if (fieldValue === undefined) return;
-
+    // Allow saving even if value is undefined initially (will be handled by shouldSave check)
+    
     try {
       // Check if field has validation errors before saving
       const fieldState = form.getFieldState(fieldName);
@@ -63,11 +143,25 @@ export function useFormFieldPersistence<T extends FieldPath<AppFormValues>>(
         return;
       }
 
-      if (fieldValue !== null && fieldValue !== "") {
-        // Save as JSON for complex types, string for simple types
-        const valueToSave = typeof fieldValue === "object" 
+      // Check if value should be saved (not null, not empty string, not empty array)
+      // Note: "0" is a valid value for enum fields, so we need to check for it explicitly
+      const shouldSave = 
+        fieldValue !== null && 
+        fieldValue !== "" && 
+        fieldValue !== undefined &&
+        !(Array.isArray(fieldValue) && fieldValue.length === 0);
+      
+      if (shouldSave) {
+        // Save as JSON for complex types (arrays, objects), string for simple types
+        const valueToSave = typeof fieldValue === "object" && fieldValue !== null
           ? JSON.stringify(fieldValue)
           : String(fieldValue);
+        
+        // Debug logging for hackathons_attended
+        if (fieldName === "hackathons_attended") {
+          console.log(`[${fieldName}] Saving to localStorage:`, { fieldValue, valueToSave, key });
+        }
+        
         localStorage.setItem(key, valueToSave);
       } else {
         // Only remove if user actually interacted (field is dirty)

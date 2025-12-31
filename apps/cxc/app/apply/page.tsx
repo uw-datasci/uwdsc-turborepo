@@ -140,6 +140,27 @@ export default function ApplyPage() {
             email: user.email || "",
             name: fullName,
           });
+          
+          // Restore localStorage values after form.reset() for fields that might be undefined in DB
+          // This ensures localStorage takes precedence for fields like hackathons_attended
+          setTimeout(() => {
+            const hackathonsKey = "cxc_form_hackathons_attended";
+            const savedHackathons = localStorage.getItem(hackathonsKey);
+            if (savedHackathons) {
+              const currentHackathons = form.getValues("hackathons_attended");
+              console.log("[apply/page] Restoring hackathons_attended:", {
+                saved: savedHackathons,
+                current: currentHackathons,
+              });
+              if (currentHackathons === undefined || currentHackathons === null) {
+                form.setValue("hackathons_attended", savedHackathons as AppFormValues["hackathons_attended"], {
+                  shouldDirty: false,
+                  shouldValidate: false,
+                });
+                console.log("[apply/page] Set hackathons_attended to:", form.getValues("hackathons_attended"));
+              }
+            }
+          }, 700);
         } else {
           // Create blank application entry for new user
           const resp = await createApplication(user.id);
@@ -158,6 +179,26 @@ export default function ApplyPage() {
             email: user.email || "",
             name: fullName,
           });
+          
+          // Restore localStorage values after form.reset() for new applications
+          setTimeout(() => {
+            const hackathonsKey = "cxc_form_hackathons_attended";
+            const savedHackathons = localStorage.getItem(hackathonsKey);
+            if (savedHackathons) {
+              const currentHackathons = form.getValues("hackathons_attended");
+              console.log("[apply/page] Restoring hackathons_attended (new app):", {
+                saved: savedHackathons,
+                current: currentHackathons,
+              });
+              if (currentHackathons === undefined || currentHackathons === null) {
+                form.setValue("hackathons_attended", savedHackathons as AppFormValues["hackathons_attended"], {
+                  shouldDirty: false,
+                  shouldValidate: false,
+                });
+                console.log("[apply/page] Set hackathons_attended to:", form.getValues("hackathons_attended"));
+              }
+            }
+          }, 700);
         }
         // Set application status
         setApplicationStatus(
@@ -215,15 +256,14 @@ export default function ApplyPage() {
 
       const transformedData = transformFormDataForDatabase(formData, user.id);
       
-      // If resume file is selected, upload it and get the key
+      // If resume file is selected, upload it (resume is stored by user ID in storage)
       if (formData.resume && formData.resume instanceof File) {
         try {
           const { uploadResume } = await import("@/lib/api/resume");
-          const uploadResult = await uploadResume(formData.resume);
-          transformedData.resume_id = uploadResult.key;
+          await uploadResume(formData.resume);
         } catch (error) {
           console.error("Failed to upload resume:", error);
-          // Continue without resume_id if upload fails
+          // Continue even if upload fails
         }
       }
       

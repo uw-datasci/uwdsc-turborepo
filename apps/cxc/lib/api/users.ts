@@ -3,6 +3,7 @@ import { createApiError } from "./errors";
 export interface UserEmail {
   id: string;
   email: string;
+  display_name: string | null;
 }
 
 export interface GetUserEmailsResponse {

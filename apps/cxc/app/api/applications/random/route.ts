@@ -70,6 +70,7 @@ export async function GET() {
 
     // Get user email from auth.users using profile_id (which is the user id)
     let email: string | null = null;
+    let resumeUrl: string | null = null;
 
     try {
       const profileId = applicationData.profile_id as string;
@@ -81,15 +82,28 @@ export async function GET() {
         if (emailResults.length > 0 && emailResults[0]) {
           email = emailResults[0].email;
         }
+
+        // Get resume URL by user ID (resume is stored by user ID in storage)
+        try {
+          const { createResumeService } = await import("@/lib/services");
+          const resumeService = await createResumeService();
+          const resumeResult = await resumeService.getUserResume(profileId);
+          if (resumeResult.success && resumeResult.url) {
+            resumeUrl = resumeResult.url;
+          }
+        } catch (resumeError) {
+          console.error("Error fetching resume URL:", resumeError);
+        }
       }
     } catch (emailError) {
       console.error("Error fetching user email:", emailError);
     }
 
-    // Add email to application data if available
+    // Add email and resume URL to application data if available
     const applicationWithEmail = {
       ...applicationData,
       email: email,
+      resume_url: resumeUrl,
     };
 
     return NextResponse.json({ application: applicationWithEmail });
