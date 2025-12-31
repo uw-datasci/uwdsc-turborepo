@@ -142,7 +142,7 @@ export default function ReviewPage() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
+      <div className="flex items-center justify-center min-h-screen pt-24 md:pt-28">
         <div className="text-center space-y-4">
           <Loader2 className="w-8 h-8 animate-spin mx-auto" />
           <p className="text-muted-foreground">Loading application...</p>
@@ -153,7 +153,7 @@ export default function ReviewPage() {
 
   if (error && !application) {
     return (
-      <div className="flex items-center justify-center min-h-screen px-4">
+      <div className="flex items-center justify-center min-h-screen px-4 pt-24 md:pt-28">
         <Card className="max-w-2xl w-full">
           <CardHeader>
             <CardTitle>Error Loading Application</CardTitle>
@@ -172,7 +172,7 @@ export default function ReviewPage() {
 
   if (submitted) {
     return (
-      <div className="flex items-center justify-center min-h-screen px-4">
+      <div className="flex items-center justify-center min-h-screen px-4 pt-24 md:pt-28">
         <Card className="max-w-2xl w-full">
           <CardHeader>
             <CardTitle>Review Submitted Successfully!</CardTitle>
@@ -194,7 +194,7 @@ export default function ReviewPage() {
 
   if (!application) {
     return (
-      <div className="flex items-center justify-center min-h-screen px-4">
+      <div className="flex items-center justify-center min-h-screen px-4 pt-24 md:pt-28">
         <Card className="max-w-2xl w-full">
           <CardHeader>
             <CardTitle>No Applications Available</CardTitle>
@@ -210,7 +210,7 @@ export default function ReviewPage() {
   }
 
   return (
-    <div className="min-h-screen bg-background p-4 md:p-8">
+    <div className="min-h-screen bg-background p-4 md:p-8 pt-24 md:pt-28">
       <div className="max-w-4xl mx-auto space-y-6">
         <div className="flex items-center justify-between">
           <h1 className="text-3xl font-bold">Application Review</h1>
