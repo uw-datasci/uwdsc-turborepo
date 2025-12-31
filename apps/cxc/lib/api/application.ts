@@ -5,9 +5,6 @@
  * Components should use these functions instead of making direct fetch calls.
  */
 
-import type { AppFormValues } from "@/lib/schemas/application";
-import { getUserProfile } from "./user";
-import { uploadResume } from "./resume";
 import { createApiError } from "./errors";
 
 // ============================================================================
