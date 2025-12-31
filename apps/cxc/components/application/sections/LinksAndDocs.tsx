@@ -27,7 +27,6 @@ export function LinksAndDocs({ form }: LinksAndDocsProps) {
   useFormFieldPersistence(form, "other_link");
   const [resumeFileName, setResumeFileName] = useState<string>("");
   const [isUploading, setIsUploading] = useState(false);
-  const [resumeError, setResumeError] = useState<string | null>(null);
 
   // Fetch existing resume on mount
   useEffect(() => {
@@ -48,7 +47,7 @@ export function LinksAndDocs({ form }: LinksAndDocsProps) {
   // Handle file selection - upload immediately
   const handleFileSelect = async (file: File | null) => {
     // Clear previous errors
-    setResumeError(null);
+    form.clearErrors(LINKS_FIELDS.resume);
     
     if (!file) {
       // File cleared
@@ -61,7 +60,6 @@ export function LinksAndDocs({ form }: LinksAndDocsProps) {
     if (file.size > MAX_RESUME_SIZE) {
       const fileSizeMB = (file.size / (1024 * 1024)).toFixed(2);
       const errorMessage = `File size (${fileSizeMB} MB) exceeds the maximum allowed size of 10 MB. Please choose a smaller file.`;
-      setResumeError(errorMessage);
       form.setError(LINKS_FIELDS.resume, {
         type: "manual",
         message: errorMessage,
@@ -83,7 +81,6 @@ export function LinksAndDocs({ form }: LinksAndDocsProps) {
     
     if (!allowedTypes.includes(file.type) && !allowedExtensions.includes(fileExtension)) {
       const errorMessage = "Invalid file type. Please upload a PDF, DOC, or DOCX file.";
-      setResumeError(errorMessage);
       form.setError(LINKS_FIELDS.resume, {
         type: "manual",
         message: errorMessage,
@@ -99,7 +96,6 @@ export function LinksAndDocs({ form }: LinksAndDocsProps) {
       await uploadResume(file);
       
       // Clear any previous errors
-      setResumeError(null);
       form.clearErrors(LINKS_FIELDS.resume);
       
       // Update UI
@@ -118,7 +114,6 @@ export function LinksAndDocs({ form }: LinksAndDocsProps) {
         errorMessage = String(error.message);
       }
       
-      setResumeError(errorMessage);
       form.setError(LINKS_FIELDS.resume, {
         type: "manual",
         message: errorMessage,
@@ -184,9 +179,6 @@ export function LinksAndDocs({ form }: LinksAndDocsProps) {
         />
         {isUploading && (
           <p className="text-sm text-muted-foreground mt-2">Uploading resume...</p>
-        )}
-        {resumeError && (
-          <p className="text-sm text-destructive mt-2">{resumeError}</p>
         )}
       </AppSection>
     </Form>
