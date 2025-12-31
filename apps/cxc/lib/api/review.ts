@@ -71,4 +71,3 @@ export async function submitReview(
 
   return data;
 }
-

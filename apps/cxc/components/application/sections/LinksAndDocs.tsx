@@ -48,7 +48,7 @@ export function LinksAndDocs({ form }: LinksAndDocsProps) {
   const handleFileSelect = async (file: File | null) => {
     // Clear previous errors
     form.clearErrors(LINKS_FIELDS.resume);
-    
+
     if (!file) {
       // File cleared
       setResumeFileName("");
@@ -77,10 +77,16 @@ export function LinksAndDocs({ form }: LinksAndDocsProps) {
       "application/msword", // .doc
     ];
     const allowedExtensions = [".pdf", ".doc", ".docx"];
-    const fileExtension = file.name.toLowerCase().substring(file.name.lastIndexOf("."));
-    
-    if (!allowedTypes.includes(file.type) && !allowedExtensions.includes(fileExtension)) {
-      const errorMessage = "Invalid file type. Please upload a PDF, DOC, or DOCX file.";
+    const fileExtension = file.name
+      .toLowerCase()
+      .substring(file.name.lastIndexOf("."));
+
+    if (
+      !allowedTypes.includes(file.type) &&
+      !allowedExtensions.includes(fileExtension)
+    ) {
+      const errorMessage =
+        "Invalid file type. Please upload a PDF, DOC, or DOCX file.";
       form.setError(LINKS_FIELDS.resume, {
         type: "manual",
         message: errorMessage,
@@ -94,31 +100,35 @@ export function LinksAndDocs({ form }: LinksAndDocsProps) {
     try {
       // Upload resume immediately
       await uploadResume(file);
-      
+
       // Clear any previous errors
       form.clearErrors(LINKS_FIELDS.resume);
-      
+
       // Update UI
       setResumeFileName(file.name);
-      
+
       // Set file in form
       form.setValue(LINKS_FIELDS.resume, file, { shouldDirty: true });
     } catch (error) {
       console.error("Failed to upload resume:", error);
-      
+
       // Extract error message
       let errorMessage = "Failed to upload resume. Please try again.";
       if (error instanceof Error) {
         errorMessage = error.message;
-      } else if (typeof error === "object" && error !== null && "message" in error) {
+      } else if (
+        typeof error === "object" &&
+        error !== null &&
+        "message" in error
+      ) {
         errorMessage = String(error.message);
       }
-      
+
       form.setError(LINKS_FIELDS.resume, {
         type: "manual",
         message: errorMessage,
       });
-      
+
       // Reset on error
       setResumeFileName("");
       form.setValue(LINKS_FIELDS.resume, undefined);
@@ -178,7 +188,9 @@ export function LinksAndDocs({ form }: LinksAndDocsProps) {
           })}
         />
         {isUploading && (
-          <p className="text-sm text-muted-foreground mt-2">Uploading resume...</p>
+          <p className="text-sm text-muted-foreground mt-2">
+            Uploading resume...
+          </p>
         )}
       </AppSection>
     </Form>

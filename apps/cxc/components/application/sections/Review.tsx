@@ -269,7 +269,9 @@ const MLHIcons = [null, null, null];
 export function Review({ form }: ReviewProps) {
   const [resumeUrl, setResumeUrl] = useState<string | null>(null);
   const [resumeFileName, setResumeFileName] = useState<string | null>(null);
-  const [teamMembersWithNames, setTeamMembersWithNames] = useState<Array<{ email: string; display_name: string | null }>>([]);
+  const [teamMembersWithNames, setTeamMembersWithNames] = useState<
+    Array<{ email: string; display_name: string | null }>
+  >([]);
 
   // Fetch resume URL and filename
   useEffect(() => {
@@ -292,27 +294,36 @@ export function Review({ form }: ReviewProps) {
   useEffect(() => {
     const fetchTeamMemberNames = async () => {
       const teamMembers = form.getValues("team_members");
-      if (!teamMembers || !Array.isArray(teamMembers) || teamMembers.length === 0) {
+      if (
+        !teamMembers ||
+        !Array.isArray(teamMembers) ||
+        teamMembers.length === 0
+      ) {
         return;
       }
 
       try {
         const result = await getUserEmails();
         const teamMemberEmails = teamMembers as string[];
-        
+
         // Match team member emails with user data
         const matchedMembers = teamMemberEmails
           .map((email) => {
             const user = result.emails.find((u) => u.email === email);
-            return user ? { email: user.email, display_name: user.display_name } : { email, display_name: null };
+            return user
+              ? { email: user.email, display_name: user.display_name }
+              : { email, display_name: null };
           })
           .filter((member) => member !== null);
-        
+
         setTeamMembersWithNames(matchedMembers);
       } catch (error) {
         console.error("Failed to fetch team member names:", error);
         // Fallback to just emails
-        const fallback = (teamMembers as string[]).map((email) => ({ email, display_name: null }));
+        const fallback = (teamMembers as string[]).map((email) => ({
+          email,
+          display_name: null,
+        }));
         setTeamMembersWithNames(fallback);
       }
     };
@@ -358,7 +369,7 @@ export function Review({ form }: ReviewProps) {
           fieldArr={Object.values(LINKS_FIELDS)}
           labelArr={LINKS_LABELS}
         />
-        
+
         {/* Resume Section */}
         {resumeUrl && resumeFileName && (
           <div className="bg-cxc-input-bg p-4 flex flex-col gap-2">
@@ -391,36 +402,39 @@ export function Review({ form }: ReviewProps) {
               <div className="min-w-0 flex-1">
                 <div className="font-medium mb-2">Team Members:</div>
                 <div className="flex flex-wrap gap-2 bg-cxc-input-bg">
-                  {teamMembersWithNames.length > 0 ? (
-                    // Display with names if available
-                    teamMembersWithNames.map((member, index) => (
-                      <div
-                        key={index}
-                        className="inline-flex items-center gap-2 px-3 py-1.5 bg-cxc-input-bg"
-                      >
-                        <span className="">
-                          {member.display_name ? (
-                            <>
-                              <span className="font-medium">{member.display_name}</span>
-                              <span className="text-muted-foreground"> ({member.email})</span>
-                            </>
-                          ) : (
-                            member.email
-                          )}
-                        </span>
-                      </div>
-                    ))
-                  ) : (
-                    // Fallback to just emails if names not available
-                    (teamMembers as string[]).map((email, index) => (
-                      <div
-                        key={index}
-                        className="inline-flex items-center gap-2 px-3 py-1.5 bg-primary/10 rounded-md border border-primary/20"
-                      >
-                        <span className="text-sm">{email}</span>
-                      </div>
-                    ))
-                  )}
+                  {teamMembersWithNames.length > 0
+                    ? // Display with names if available
+                      teamMembersWithNames.map((member, index) => (
+                        <div
+                          key={index}
+                          className="inline-flex items-center gap-2 px-3 py-1.5 bg-cxc-input-bg"
+                        >
+                          <span className="">
+                            {member.display_name ? (
+                              <>
+                                <span className="font-medium">
+                                  {member.display_name}
+                                </span>
+                                <span className="text-muted-foreground">
+                                  {" "}
+                                  ({member.email})
+                                </span>
+                              </>
+                            ) : (
+                              member.email
+                            )}
+                          </span>
+                        </div>
+                      ))
+                    : // Fallback to just emails if names not available
+                      (teamMembers as string[]).map((email, index) => (
+                        <div
+                          key={index}
+                          className="inline-flex items-center gap-2 px-3 py-1.5 bg-primary/10 rounded-md border border-primary/20"
+                        >
+                          <span className="text-sm">{email}</span>
+                        </div>
+                      ))}
                 </div>
               </div>
             </div>

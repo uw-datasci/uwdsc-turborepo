@@ -56,10 +56,10 @@ export class ApplicationRepository extends BaseRepository {
       // Remove profile_id from update data if present
       const updateData = { ...data };
       delete updateData.profile_id;
-      
+
       // Filter out undefined and null values
       const fieldsToUpdate = Object.entries(updateData).filter(
-        ([, value]) => value !== undefined && value !== null
+        ([, value]) => value !== undefined && value !== null,
       );
 
       if (fieldsToUpdate.length === 0) {

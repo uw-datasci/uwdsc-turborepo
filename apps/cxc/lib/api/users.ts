@@ -26,4 +26,3 @@ export async function getUserEmails(): Promise<GetUserEmailsResponse> {
 
   return data;
 }
-

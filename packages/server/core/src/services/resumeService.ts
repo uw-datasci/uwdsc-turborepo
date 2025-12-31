@@ -81,10 +81,13 @@ export class ResumeService extends FileService {
   /**
    * Get the user's current resume
    */
-  async getUserResume(
-    userId: string,
-  ): Promise<
-    | { success: true; resume: FileObject | null; url: string | null; key: string | null }
+  async getUserResume(userId: string): Promise<
+    | {
+        success: true;
+        resume: FileObject | null;
+        url: string | null;
+        key: string | null;
+      }
     | { success: false; error: string }
   > {
     try {
@@ -151,7 +154,12 @@ export class ResumeService extends FileService {
     userId: string,
     expiresIn: number = 3600,
   ): Promise<
-    | { success: true; url: string; resume: FileObject | null; key: string | null }
+    | {
+        success: true;
+        url: string;
+        resume: FileObject | null;
+        key: string | null;
+      }
     | { success: false; error: string }
   > {
     try {
@@ -168,7 +176,10 @@ export class ResumeService extends FileService {
       }
 
       // Create signed URL for the resume
-      const signedUrlResult = await this.createSignedUrl(resumeResult.key, expiresIn);
+      const signedUrlResult = await this.createSignedUrl(
+        resumeResult.key,
+        expiresIn,
+      );
 
       if (!signedUrlResult.success) {
         return {

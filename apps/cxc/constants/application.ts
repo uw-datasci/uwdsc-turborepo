@@ -207,6 +207,7 @@ export const ETHNICITIES = [
 export const ETHNICITY_OTHER_LABEL = "Other (Please Specify)";
 
 export const COUNTRY_OPTIONS: ComboboxOption[] = [
+  { value: "Canada", label: "Canada" },
   { value: "Afghanistan", label: "Afghanistan" },
   { value: "Åland Islands", label: "Åland Islands" },
   { value: "Albania", label: "Albania" },
@@ -258,7 +259,6 @@ export const COUNTRY_OPTIONS: ComboboxOption[] = [
   { value: "Cabo Verde", label: "Cabo Verde" },
   { value: "Cambodia", label: "Cambodia" },
   { value: "Cameroon", label: "Cameroon" },
-  { value: "Canada", label: "Canada" },
   { value: "Cayman Islands", label: "Cayman Islands" },
   { value: "Central African Republic", label: "Central African Republic" },
   { value: "Chad", label: "Chad" },
@@ -529,6 +529,7 @@ export const COUNTRY_OPTIONS: ComboboxOption[] = [
   { value: "Yemen", label: "Yemen" },
   { value: "Zambia", label: "Zambia" },
   { value: "Zimbabwe", label: "Zimbabwe" },
+  { value: "Other", label: "Other" },
 ];
 
 // experience

@@ -21,7 +21,7 @@ export async function GET() {
     // Check if user has admin role
     const profileService = new ProfileService();
     const profile = await profileService.getProfileByUserId(user.id);
-    
+
     if (!profile || profile.role !== "admin") {
       return NextResponse.json(
         { error: "Forbidden: Admin access required" },
@@ -31,7 +31,9 @@ export async function GET() {
 
     // Get application with least number of reviews
     // Ties are broken lexicographically by application id
-    const applications = await sql<Array<Record<string, unknown> & { review_count: number }>>`
+    const applications = await sql<
+      Array<Record<string, unknown> & { review_count: number }>
+    >`
       SELECT 
         a.*,
         COALESCE(review_counts.review_count, 0)::int as review_count
@@ -64,7 +66,7 @@ export async function GET() {
         { status: 404 },
       );
     }
-    
+
     // Remove review_count from the data before returning
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { review_count, ...applicationData } = data;
@@ -72,7 +74,10 @@ export async function GET() {
     // Get user email from auth.users using profile_id (which is the user id)
     let email: string | null = null;
     let resumeUrl: string | null = null;
-    let teamMembersWithNames: Array<{ email: string; display_name: string | null }> = [];
+    let teamMembersWithNames: Array<{
+      email: string;
+      display_name: string | null;
+    }> = [];
 
     try {
       const profileId = applicationData.profile_id as string;
@@ -92,7 +97,10 @@ export async function GET() {
           const resumeService = await createResumeService();
           // Use signed URL for private bucket (1 hour expiration)
           // Since this is admin-only, we don't need ownership verification
-          const resumeResult = await resumeService.getSignedResumeUrl(profileId, 3600);
+          const resumeResult = await resumeService.getSignedResumeUrl(
+            profileId,
+            3600,
+          );
           if (resumeResult.success && resumeResult.url) {
             resumeUrl = resumeResult.url;
           }
@@ -102,14 +110,22 @@ export async function GET() {
       }
 
       // Get team member names if team_members exists
-      const teamMembersStr = applicationData.team_members as string | null | undefined;
+      const teamMembersStr = applicationData.team_members as
+        | string
+        | null
+        | undefined;
       if (teamMembersStr) {
-        const teamMemberEmails = teamMembersStr.split(",").map((e) => e.trim()).filter(Boolean);
-        
+        const teamMemberEmails = teamMembersStr
+          .split(",")
+          .map((e) => e.trim())
+          .filter(Boolean);
+
         if (teamMemberEmails.length > 0) {
           // Fetch display names for team member emails
           // Use IN clause with array - postgres.js handles arrays automatically
-          const teamMemberResults = await sql<Array<{ email: string; display_name: string | null }>>`
+          const teamMemberResults = await sql<
+            Array<{ email: string; display_name: string | null }>
+          >`
             SELECT 
               au.email,
               CASE 
@@ -128,7 +144,7 @@ export async function GET() {
             FROM auth.users au
             WHERE au.email = ANY(${teamMemberEmails})
           `;
-          
+
           teamMembersWithNames = teamMemberResults;
         }
       }
@@ -153,4 +169,3 @@ export async function GET() {
     );
   }
 }
-

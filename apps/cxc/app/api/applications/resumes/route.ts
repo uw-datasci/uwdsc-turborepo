@@ -72,17 +72,17 @@ export async function GET(): Promise<NextResponse> {
 
     if (!result.success) {
       // If resume doesn't exist, return null values (not an error)
-      if (result.error?.includes("not found") || result.error?.includes("No resume")) {
+      if (
+        result.error?.includes("not found") ||
+        result.error?.includes("No resume")
+      ) {
         return NextResponse.json({
           resume: null,
           url: null,
           key: null,
         });
       }
-      return NextResponse.json(
-        { error: result.error },
-        { status: 500 },
-      );
+      return NextResponse.json({ error: result.error }, { status: 500 });
     }
 
     return NextResponse.json({

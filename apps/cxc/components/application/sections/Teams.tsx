@@ -1,7 +1,15 @@
 "use client";
 
 import { useState, useEffect, useMemo, useRef } from "react";
-import { Form, FormField, Input, FormItem, FormLabel, FormControl, FormMessage } from "@uwdsc/ui";
+import {
+  Form,
+  FormField,
+  Input,
+  FormItem,
+  FormLabel,
+  FormControl,
+  FormMessage,
+} from "@uwdsc/ui";
 import { UseFormReturn } from "react-hook-form";
 import { X } from "lucide-react";
 import AppSection from "../AppSection";
@@ -15,7 +23,9 @@ interface TeamsProps {
 
 export function Teams({ form }: TeamsProps) {
   const [searchQuery, setSearchQuery] = useState("");
-  const [userEmails, setUserEmails] = useState<Array<{ id: string; email: string; display_name: string | null }>>([]);
+  const [userEmails, setUserEmails] = useState<
+    Array<{ id: string; email: string; display_name: string | null }>
+  >([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -23,12 +33,18 @@ export function Teams({ form }: TeamsProps) {
 
   // Watch team_members to trigger re-renders when it changes
   const watchedTeamMembers = form.watch("team_members");
-  const teamMembers = useMemo(() => watchedTeamMembers || [], [watchedTeamMembers]);
-  
+  const teamMembers = useMemo(
+    () => watchedTeamMembers || [],
+    [watchedTeamMembers],
+  );
+
   // Debug: Log whenever teamMembers changes
   useEffect(() => {
     console.log("[Teams] teamMembers changed:", teamMembers);
-    console.log("[Teams] Form value from getValues:", form.getValues("team_members"));
+    console.log(
+      "[Teams] Form value from getValues:",
+      form.getValues("team_members"),
+    );
   }, [teamMembers, form]);
 
   // Persist team_members to localStorage
@@ -42,21 +58,21 @@ export function Teams({ form }: TeamsProps) {
       const target = event.target as Node;
       const clickedDropdown = dropdownRef.current?.contains(target);
       const clickedInput = inputRef.current?.contains(target);
-      
+
       console.log("[Teams] Click outside handler:", {
         clickedDropdown,
         clickedInput,
         target: (target as Element)?.tagName,
         targetClass: (target as Element)?.className,
       });
-      
+
       // Don't close if clicking on a button inside the dropdown or the X button
       const isButton = (target as Element)?.tagName === "BUTTON";
       if (isButton && clickedDropdown) {
         console.log("[Teams] Clicked button inside dropdown - not closing");
         return;
       }
-      
+
       if (!clickedDropdown && !clickedInput) {
         console.log("[Teams] Closing dropdown - clicked outside");
         setIsOpen(false);
@@ -68,7 +84,7 @@ export function Teams({ form }: TeamsProps) {
       // Use capture phase but check for buttons
       document.addEventListener("click", handleClickOutside, true);
     }, 100);
-    
+
     return () => {
       clearTimeout(timer);
       document.removeEventListener("click", handleClickOutside, true);
@@ -80,7 +96,12 @@ export function Teams({ form }: TeamsProps) {
     const fetchEmails = async () => {
       try {
         const result = await getUserEmails();
-        console.log("Fetched user emails:", result.emails.length, "First user:", result.emails[0]);
+        console.log(
+          "Fetched user emails:",
+          result.emails.length,
+          "First user:",
+          result.emails[0],
+        );
         setUserEmails(result.emails);
       } catch (error) {
         console.error("Failed to fetch user emails:", error);
@@ -95,12 +116,11 @@ export function Teams({ form }: TeamsProps) {
   // Filter emails based on search query
   const filteredEmails = useMemo(() => {
     const currentUserEmail = form.getValues("email");
-    
+
     if (!searchQuery.trim()) {
       return userEmails.filter(
-        (user) => 
-          !teamMembers.includes(user.email) && 
-          user.email !== currentUserEmail
+        (user) =>
+          !teamMembers.includes(user.email) && user.email !== currentUserEmail,
       );
     }
 
@@ -110,7 +130,8 @@ export function Teams({ form }: TeamsProps) {
         !teamMembers.includes(user.email) &&
         user.email !== currentUserEmail &&
         (user.email.toLowerCase().includes(query) ||
-         (user.display_name && user.display_name.toLowerCase().includes(query))),
+          (user.display_name &&
+            user.display_name.toLowerCase().includes(query))),
     );
   }, [searchQuery, userEmails, teamMembers, form]);
 
@@ -118,8 +139,13 @@ export function Teams({ form }: TeamsProps) {
     console.log("[Teams] handleAddEmail called with:", email);
     const current = form.getValues("team_members") || [];
     const currentUserEmail = form.getValues("email");
-    console.log("[Teams] Current team members:", current, "Current user email:", currentUserEmail);
-    
+    console.log(
+      "[Teams] Current team members:",
+      current,
+      "Current user email:",
+      currentUserEmail,
+    );
+
     if (current.length >= 4) {
       console.log("[Teams] Already at max limit (4)");
       return;
@@ -132,7 +158,10 @@ export function Teams({ form }: TeamsProps) {
       const newMembers = [...current, email];
       console.log("[Teams] Adding email, new members:", newMembers);
       form.setValue("team_members", newMembers, { shouldDirty: true });
-      console.log("[Teams] After setValue, form value:", form.getValues("team_members"));
+      console.log(
+        "[Teams] After setValue, form value:",
+        form.getValues("team_members"),
+      );
     } else {
       console.log("[Teams] Email already in team members");
     }
@@ -146,24 +175,28 @@ export function Teams({ form }: TeamsProps) {
     console.log("[Teams] Current team members before remove:", current);
     const newMembers = current.filter((e) => e !== email);
     console.log("[Teams] New team members after remove:", newMembers);
-    form.setValue(
-      "team_members",
-      newMembers,
-      { shouldDirty: true },
+    form.setValue("team_members", newMembers, { shouldDirty: true });
+    console.log(
+      "[Teams] After setValue, form value:",
+      form.getValues("team_members"),
     );
-    console.log("[Teams] After setValue, form value:", form.getValues("team_members"));
   };
 
   // Helper to format user display name
-  const formatUserName = (user: { email: string; display_name: string | null }) => {
-    return user.display_name ? `${user.display_name} (${user.email})` : user.email;
+  const formatUserName = (user: {
+    email: string;
+    display_name: string | null;
+  }) => {
+    return user.display_name
+      ? `${user.display_name} (${user.email})`
+      : user.email;
   };
 
   return (
     <Form {...form}>
       <AppSection
         label="Team Members (optional)"
-        description="Search and add team members by email (optional, max 3)"
+        description="Search and add team members by email (max 3). Only users who have already created an account will appear in the list."
       >
         <div className="flex flex-col gap-4">
           {/* Selected team members */}
@@ -249,7 +282,10 @@ export function Teams({ form }: TeamsProps) {
                               key={user.id}
                               type="button"
                               onClick={(e) => {
-                                console.log("[Teams] Dropdown item clicked:", user.email);
+                                console.log(
+                                  "[Teams] Dropdown item clicked:",
+                                  user.email,
+                                );
                                 e.preventDefault();
                                 e.stopPropagation();
                                 handleAddEmail(user.email);
@@ -273,4 +309,3 @@ export function Teams({ form }: TeamsProps) {
     </Form>
   );
 }
-

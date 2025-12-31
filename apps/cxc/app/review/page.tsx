@@ -34,7 +34,10 @@ interface Application {
   cxc_q2?: string;
   // Team members
   team_members?: string;
-  team_members_with_names?: Array<{ email: string; display_name: string | null }>;
+  team_members_with_names?: Array<{
+    email: string;
+    display_name: string | null;
+  }>;
   // Resume
   resume_url?: string;
 }
@@ -128,9 +131,7 @@ export default function ReviewPage() {
             size="sm"
             onClick={() => onSelect(score)}
             className={
-              selected === score
-                ? "bg-white text-black hover:bg-white/90"
-                : ""
+              selected === score ? "bg-white text-black hover:bg-white/90" : ""
             }
           >
             {score}
@@ -302,7 +303,9 @@ export default function ReviewPage() {
                 )}
                 {application.prior_hack_exp && (
                   <div>
-                    <span className="font-medium">Prior Hackathon Experience:</span>{" "}
+                    <span className="font-medium">
+                      Prior Hackathon Experience:
+                    </span>{" "}
                     {application.prior_hack_exp}
                   </div>
                 )}
@@ -381,43 +384,54 @@ export default function ReviewPage() {
                     </a>
                   </div>
                 )}
-                {application.team_members && application.team_members.trim() && (
-                  <div className="pt-2">
-                    <span className="font-medium block mb-2">Team Members:</span>
-                    <div className="flex flex-wrap gap-2">
-                      {application.team_members_with_names && application.team_members_with_names.length > 0 ? (
-                        // Display with names if available
-                        application.team_members_with_names.map((member, index) => (
-                          <div
-                            key={index}
-                            className="flex items-center gap-2 px-3 py-1.5 bg-cxc-input-bg rounded-md border border-primary/20"
-                          >
-                            <span className="text-foreground">
-                              {member.display_name ? (
-                                <>
-                                  <span>{member.display_name}</span>
-                                  <span className="text-muted-foreground"> ({member.email})</span>
-                                </>
-                              ) : (
-                                <span>{member.email}</span>
-                              )}
-                            </span>
-                          </div>
-                        ))
-                      ) : (
-                        // Fallback to just emails if names not available
-                        application.team_members.split(",").map((email, index) => (
-                          <div
-                            key={index}
-                            className="flex items-center gap-2 px-3 py-1.5 bg-cxc-input-bg rounded-md border border-primary/20"
-                          >
-                            <span className="text-foreground">{email.trim()}</span>
-                          </div>
-                        ))
-                      )}
+                {application.team_members &&
+                  application.team_members.trim() && (
+                    <div className="pt-2">
+                      <span className="font-medium block mb-2">
+                        Team Members:
+                      </span>
+                      <div className="flex flex-wrap gap-2">
+                        {application.team_members_with_names &&
+                        application.team_members_with_names.length > 0
+                          ? // Display with names if available
+                            application.team_members_with_names.map(
+                              (member, index) => (
+                                <div
+                                  key={index}
+                                  className="flex items-center gap-2 px-3 py-1.5 bg-cxc-input-bg rounded-md border border-primary/20"
+                                >
+                                  <span className="text-foreground">
+                                    {member.display_name ? (
+                                      <>
+                                        <span>{member.display_name}</span>
+                                        <span className="text-muted-foreground">
+                                          {" "}
+                                          ({member.email})
+                                        </span>
+                                      </>
+                                    ) : (
+                                      <span>{member.email}</span>
+                                    )}
+                                  </span>
+                                </div>
+                              ),
+                            )
+                          : // Fallback to just emails if names not available
+                            application.team_members
+                              .split(",")
+                              .map((email, index) => (
+                                <div
+                                  key={index}
+                                  className="flex items-center gap-2 px-3 py-1.5 bg-cxc-input-bg rounded-md border border-primary/20"
+                                >
+                                  <span className="text-foreground">
+                                    {email.trim()}
+                                  </span>
+                                </div>
+                              ))}
+                      </div>
                     </div>
-                  </div>
-                )}
+                  )}
               </div>
 
               <div className="pt-4 border-t">
@@ -512,4 +526,3 @@ export default function ReviewPage() {
     </div>
   );
 }
-

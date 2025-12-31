@@ -225,8 +225,8 @@ export const renderSelectField = <T extends Record<string, any>>(
           {label} {required && <span className="text-destructive">*</span>}
         </FormLabel>
       )}
-      <Select 
-        onValueChange={field.onChange} 
+      <Select
+        onValueChange={field.onChange}
         value={field.value === undefined ? "" : field.value}
       >
         <FormControl>
@@ -430,7 +430,13 @@ export const renderFileUploadField = <T extends Record<string, any>>(
   accept: string,
   fieldOptions: FileUploadFieldOptions = {},
 ) => {
-  const { label, required = false, existingFileName, onFileChange, onFileSelect } = fieldOptions;
+  const {
+    label,
+    required = false,
+    existingFileName,
+    onFileChange,
+    onFileSelect,
+  } = fieldOptions;
 
   const FileUploadFieldComponent = ({
     field: { value, onChange, ...fieldProps },
@@ -438,7 +444,8 @@ export const renderFileUploadField = <T extends Record<string, any>>(
     field: ControllerRenderProps<T, any>;
   }) => {
     const [fileName, setFileName] = useState<string>(() => {
-      if (value && typeof value === "object" && "name" in value) return value.name;
+      if (value && typeof value === "object" && "name" in value)
+        return value.name;
       if (typeof value === "string") return value;
       if (existingFileName) return existingFileName;
       return "";

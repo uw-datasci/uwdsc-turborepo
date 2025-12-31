@@ -18,7 +18,9 @@ export async function GET() {
 
     // Get all user emails and display names from auth.users
     // Construct display_name from first_name + last_name in raw_user_meta_data
-    const result = await sql<Array<{ id: string; email: string; display_name: string | null }>>`
+    const result = await sql<
+      Array<{ id: string; email: string; display_name: string | null }>
+    >`
       SELECT 
         au.id,
         au.email,
@@ -49,4 +51,3 @@ export async function GET() {
     );
   }
 }
-

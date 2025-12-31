@@ -46,7 +46,6 @@ const FINAL_STEP_COUNT = STEP_NAMES.length;
 const STORAGE_KEY_DESKTOP_STEP = "desktop_step";
 const STORAGE_KEY_MOBILE_PAGE = "mobile_page";
 
-
 // ============================================================================
 // Helper Functions
 // ============================================================================
@@ -126,14 +125,14 @@ export default function ApplyPage() {
       setIsLoading(true);
       try {
         const existingApplication = await fetchApplication(user.id);
-        
+
         // Check if application is already submitted - if so, show Submitted page immediately
         if (existingApplication && existingApplication.status === "submitted") {
           setApplicationStatus("submitted");
           setIsLoading(false);
           return; // Don't allow editing a submitted application
         }
-        
+
         if (existingApplication) {
           // Pre-fill form with existing application data
           const formData = transformDatabaseDataToForm(existingApplication);
@@ -149,7 +148,7 @@ export default function ApplyPage() {
             email: user.email || "",
             name: fullName,
           });
-          
+
           // Restore localStorage values after form.reset() for fields that might be undefined in DB
           // This ensures localStorage takes precedence for fields like hackathons_attended
           setTimeout(() => {
@@ -161,12 +160,22 @@ export default function ApplyPage() {
                 saved: savedHackathons,
                 current: currentHackathons,
               });
-              if (currentHackathons === undefined || currentHackathons === null) {
-                form.setValue("hackathons_attended", savedHackathons as AppFormValues["hackathons_attended"], {
-                  shouldDirty: false,
-                  shouldValidate: false,
-                });
-                console.log("[apply/page] Set hackathons_attended to:", form.getValues("hackathons_attended"));
+              if (
+                currentHackathons === undefined ||
+                currentHackathons === null
+              ) {
+                form.setValue(
+                  "hackathons_attended",
+                  savedHackathons as AppFormValues["hackathons_attended"],
+                  {
+                    shouldDirty: false,
+                    shouldValidate: false,
+                  },
+                );
+                console.log(
+                  "[apply/page] Set hackathons_attended to:",
+                  form.getValues("hackathons_attended"),
+                );
               }
             }
           }, 700);
@@ -188,23 +197,36 @@ export default function ApplyPage() {
             email: user.email || "",
             name: fullName,
           });
-          
+
           // Restore localStorage values after form.reset() for new applications
           setTimeout(() => {
             const hackathonsKey = "cxc_form_hackathons_attended";
             const savedHackathons = localStorage.getItem(hackathonsKey);
             if (savedHackathons) {
               const currentHackathons = form.getValues("hackathons_attended");
-              console.log("[apply/page] Restoring hackathons_attended (new app):", {
-                saved: savedHackathons,
-                current: currentHackathons,
-              });
-              if (currentHackathons === undefined || currentHackathons === null) {
-                form.setValue("hackathons_attended", savedHackathons as AppFormValues["hackathons_attended"], {
-                  shouldDirty: false,
-                  shouldValidate: false,
-                });
-                console.log("[apply/page] Set hackathons_attended to:", form.getValues("hackathons_attended"));
+              console.log(
+                "[apply/page] Restoring hackathons_attended (new app):",
+                {
+                  saved: savedHackathons,
+                  current: currentHackathons,
+                },
+              );
+              if (
+                currentHackathons === undefined ||
+                currentHackathons === null
+              ) {
+                form.setValue(
+                  "hackathons_attended",
+                  savedHackathons as AppFormValues["hackathons_attended"],
+                  {
+                    shouldDirty: false,
+                    shouldValidate: false,
+                  },
+                );
+                console.log(
+                  "[apply/page] Set hackathons_attended to:",
+                  form.getValues("hackathons_attended"),
+                );
               }
             }
           }, 700);
@@ -226,13 +248,19 @@ export default function ApplyPage() {
   // Save step/page to localStorage whenever they change
   useEffect(() => {
     if (typeof window !== "undefined") {
-      localStorage.setItem(STORAGE_KEY_DESKTOP_STEP, currentDesktopStep.toString());
+      localStorage.setItem(
+        STORAGE_KEY_DESKTOP_STEP,
+        currentDesktopStep.toString(),
+      );
     }
   }, [currentDesktopStep]);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
-      localStorage.setItem(STORAGE_KEY_MOBILE_PAGE, currentMobilePage.toString());
+      localStorage.setItem(
+        STORAGE_KEY_MOBILE_PAGE,
+        currentMobilePage.toString(),
+      );
     }
   }, [currentMobilePage]);
 
@@ -256,7 +284,7 @@ export default function ApplyPage() {
     setIsLoading(true);
     try {
       const formData = form.getValues();
-      
+
       // Update status to submitted if this is the final submit
       if (isSubmit) {
         formData.status = "submitted";
@@ -264,7 +292,7 @@ export default function ApplyPage() {
       }
 
       const transformedData = transformFormDataForDatabase(formData, user.id);
-      
+
       // If resume file is selected, upload it (resume is stored by user ID in storage)
       if (formData.resume && formData.resume instanceof File) {
         try {
@@ -275,7 +303,7 @@ export default function ApplyPage() {
           // Continue even if upload fails
         }
       }
-      
+
       const cleanedData = cleanFormData(transformedData);
       const response = await updateApplication(cleanedData);
 
@@ -287,7 +315,12 @@ export default function ApplyPage() {
           const keysToRemove: string[] = [];
           for (let i = 0; i < localStorage.length; i++) {
             const key = localStorage.key(i);
-            if (key && (key.startsWith("cxc_form_") || key === "q1_save" || key === "q2_save")) {
+            if (
+              key &&
+              (key.startsWith("cxc_form_") ||
+                key === "q1_save" ||
+                key === "q2_save")
+            ) {
               keysToRemove.push(key);
             }
           }

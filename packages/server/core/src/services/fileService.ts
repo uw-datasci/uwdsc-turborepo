@@ -151,7 +151,10 @@ export class FileService {
    */
   async createSignedUrl(objectKey: string, expiresIn: number = 3600) {
     try {
-      const signedUrl = await this.repository.createSignedUrl(objectKey, expiresIn);
+      const signedUrl = await this.repository.createSignedUrl(
+        objectKey,
+        expiresIn,
+      );
       return {
         success: true,
         url: signedUrl,

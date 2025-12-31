@@ -18,10 +18,10 @@ export default function MLHCheckboxes({ form }: PriorHackExpProps) {
 
   return (
     <Form {...form}>
-        <AppSection
-          label="MLH Checkboxes"
-          description="We are currently in the process of partnering with MLH. The following 3 checkboxes are for this partnership. If we do not end up partnering with MLH, your information will not be shared."
-        >
+      <AppSection
+        label="MLH Checkboxes"
+        description="We are currently in the process of partnering with MLH. The following 3 checkboxes are for this partnership. If we do not end up partnering with MLH, your information will not be shared."
+      >
         <div className="flex flex-col gap-2">
           <FormField
             control={form.control}

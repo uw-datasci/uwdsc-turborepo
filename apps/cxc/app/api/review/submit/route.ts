@@ -26,10 +26,11 @@ export async function POST(request: NextRequest) {
     }
 
     // Check if user has admin role
-    const { ProfileService } = await import("@uwdsc/server/cxc/services/profileService");
+    const { ProfileService } =
+      await import("@uwdsc/server/cxc/services/profileService");
     const profileService = new ProfileService();
     const profile = await profileService.getProfileByUserId(user.id);
-    
+
     if (!profile || profile.role !== "admin") {
       return NextResponse.json(
         { error: "Forbidden: Admin access required" },
@@ -38,8 +39,12 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    const { application_id, basic_info_score, q1_score, q2_score }: ReviewScores =
-      body;
+    const {
+      application_id,
+      basic_info_score,
+      q1_score,
+      q2_score,
+    }: ReviewScores = body;
 
     // Validate scores
     if (
@@ -53,22 +58,14 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    if (
-      typeof q1_score !== "number" ||
-      q1_score < 1 ||
-      q1_score > 10
-    ) {
+    if (typeof q1_score !== "number" || q1_score < 1 || q1_score > 10) {
       return NextResponse.json(
         { error: "q1_score must be between 1 and 10" },
         { status: 400 },
       );
     }
 
-    if (
-      typeof q2_score !== "number" ||
-      q2_score < 1 ||
-      q2_score > 10
-    ) {
+    if (typeof q2_score !== "number" || q2_score < 1 || q2_score > 10) {
       return NextResponse.json(
         { error: "q2_score must be between 1 and 10" },
         { status: 400 },
@@ -159,4 +156,3 @@ export async function POST(request: NextRequest) {
     );
   }
 }
-
