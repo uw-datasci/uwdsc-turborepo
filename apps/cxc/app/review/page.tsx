@@ -120,7 +120,7 @@ export default function ReviewPage() {
     onSelect: (score: number) => void;
     label: string;
   }) => (
-    <div className="space-y-2">
+    <div className="flex flex-col gap-3">
       <label className="text-sm font-medium">{label}</label>
       <div className="flex flex-wrap gap-2">
         {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((score) => (
@@ -448,7 +448,10 @@ export default function ReviewPage() {
           {application.cxc_q1 && (
             <Card>
               <CardHeader>
-                <CardTitle>Application Question 1</CardTitle>
+                <CardTitle>
+                  Tell us about a technical project that you have worked on.
+                  What did you learn? What challenges did you face?
+                </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="space-y-2">
@@ -472,7 +475,7 @@ export default function ReviewPage() {
           {application.cxc_q2 && (
             <Card>
               <CardHeader>
-                <CardTitle>Application Question 2</CardTitle>
+                <CardTitle>Write us a Haiku</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="space-y-2">

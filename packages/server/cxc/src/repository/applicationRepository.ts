@@ -6,6 +6,12 @@ export interface ApplicationData {
   [key: string]: unknown;
 }
 
+export interface UserEmailData {
+  id: string;
+  email: string;
+  display_name: string | null;
+}
+
 export class ApplicationRepository extends BaseRepository {
   /**
    * Fetch an application by profile ID
@@ -90,6 +96,43 @@ export class ApplicationRepository extends BaseRepository {
     } catch (error) {
       throw new ApiError(
         `Failed to update application: ${(error as Error).message}`,
+        500,
+      );
+    }
+  }
+
+  /**
+   * Get all user emails with display names
+   * Display name is constructed from first_name and last_name in raw_user_meta_data
+   */
+  async getAllUserEmails(): Promise<UserEmailData[]> {
+    try {
+      const result = await this.sql<UserEmailData[]>`
+        SELECT 
+          au.id,
+          au.email,
+          CASE 
+            WHEN au.raw_user_meta_data->>'first_name' IS NOT NULL 
+              AND au.raw_user_meta_data->>'last_name' IS NOT NULL
+            THEN TRIM(
+              COALESCE(au.raw_user_meta_data->>'first_name', '') || ' ' || 
+              COALESCE(au.raw_user_meta_data->>'last_name', '')
+            )
+            WHEN au.raw_user_meta_data->>'first_name' IS NOT NULL
+            THEN au.raw_user_meta_data->>'first_name'
+            WHEN au.raw_user_meta_data->>'last_name' IS NOT NULL
+            THEN au.raw_user_meta_data->>'last_name'
+            ELSE NULL
+          END as display_name
+        FROM auth.users au
+        WHERE au.email IS NOT NULL
+        ORDER BY au.email ASC
+      `;
+
+      return result;
+    } catch (error) {
+      throw new ApiError(
+        `Failed to fetch user emails: ${(error as Error).message}`,
         500,
       );
     }

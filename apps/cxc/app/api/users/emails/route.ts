@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { createAuthService } from "@/lib/services";
-import { sql } from "@uwdsc/server/core/database/connection";
+import { ApplicationService } from "@uwdsc/server/cxc/services/applicationService";
 
 /**
  * GET /api/users/emails
@@ -16,33 +16,11 @@ export async function GET() {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    // Get all user emails and display names from auth.users
-    // Construct display_name from first_name + last_name in raw_user_meta_data
-    const result = await sql<
-      Array<{ id: string; email: string; display_name: string | null }>
-    >`
-      SELECT 
-        au.id,
-        au.email,
-        CASE 
-          WHEN au.raw_user_meta_data->>'first_name' IS NOT NULL 
-            AND au.raw_user_meta_data->>'last_name' IS NOT NULL
-          THEN TRIM(
-            COALESCE(au.raw_user_meta_data->>'first_name', '') || ' ' || 
-            COALESCE(au.raw_user_meta_data->>'last_name', '')
-          )
-          WHEN au.raw_user_meta_data->>'first_name' IS NOT NULL
-          THEN au.raw_user_meta_data->>'first_name'
-          WHEN au.raw_user_meta_data->>'last_name' IS NOT NULL
-          THEN au.raw_user_meta_data->>'last_name'
-          ELSE NULL
-        END as display_name
-      FROM auth.users au
-      WHERE au.email IS NOT NULL
-      ORDER BY au.email ASC
-    `;
+    // Get all user emails
+    const applicationService = new ApplicationService();
+    const emails = await applicationService.getAllUserEmails();
 
-    return NextResponse.json({ emails: result });
+    return NextResponse.json({ emails });
   } catch (err: unknown) {
     console.error("Error fetching user emails:", err);
     return NextResponse.json(

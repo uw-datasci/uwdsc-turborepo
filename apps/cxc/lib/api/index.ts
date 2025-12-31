@@ -13,9 +13,6 @@ export { getUserProfile } from "./user";
 // Export all file upload functions
 export { uploadResume, getResume } from "./resume";
 
-// Export all application functions
-/// export { submitApplication } from "./application";
-
 // Export all review functions
 export { getRandomApplication, submitReview } from "./review";
 export type { SubmitReviewRequest, SubmitReviewResponse } from "./review";
