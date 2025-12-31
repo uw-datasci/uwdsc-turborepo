@@ -457,7 +457,6 @@ export const renderFileUploadField = <T extends Record<string, any>>(
         setFileName("");
         if (onFileChange) onFileChange("");
       }
-      // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [value]);
 
     return (
