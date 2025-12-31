@@ -85,16 +85,19 @@ export async function GET() {
           email = emailResults[0].email;
         }
 
-        // Get resume URL by user ID (resume is stored by user ID in storage)
+        // Get resume signed URL by user ID (resume is stored by user ID in storage)
+        // Admin can view any applicant's resume, so we use signed URL without ownership check
         try {
           const { createResumeService } = await import("@/lib/services");
           const resumeService = await createResumeService();
-          const resumeResult = await resumeService.getUserResume(profileId);
+          // Use signed URL for private bucket (1 hour expiration)
+          // Since this is admin-only, we don't need ownership verification
+          const resumeResult = await resumeService.getSignedResumeUrl(profileId, 3600);
           if (resumeResult.success && resumeResult.url) {
             resumeUrl = resumeResult.url;
           }
         } catch (resumeError) {
-          console.error("Error fetching resume URL:", resumeError);
+          console.error("Error fetching resume signed URL:", resumeError);
         }
       }
 
