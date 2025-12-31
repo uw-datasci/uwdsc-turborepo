@@ -116,6 +116,7 @@ export default function ApplyPage() {
    * - Fetch existing application if user has one
    * - Create blank application if user is new
    * - Pre-fill form with fetched data
+   * - If application is already submitted, show Submitted component immediately
    */
   useEffect(() => {
     const initializeApplication = async () => {
@@ -125,6 +126,14 @@ export default function ApplyPage() {
       setIsLoading(true);
       try {
         const existingApplication = await fetchApplication(user.id);
+        
+        // Check if application is already submitted - if so, show Submitted page immediately
+        if (existingApplication && existingApplication.status === "submitted") {
+          setApplicationStatus("submitted");
+          setIsLoading(false);
+          return; // Don't allow editing a submitted application
+        }
+        
         if (existingApplication) {
           // Pre-fill form with existing application data
           const formData = transformDatabaseDataToForm(existingApplication);
