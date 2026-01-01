@@ -4,12 +4,14 @@ import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { useAuth } from "@/contexts/AuthContext";
 import { getApplication } from "@/lib/api/application";
+import { getMyTeam, type Team } from "@/lib/api";
 import { StatusCard, ProfileCard, TeamSection } from "@/components/dashboard";
 import { AppFormValues } from "@/lib/schemas/application";
 
 export default function DashboardPage() {
   const { user } = useAuth();
   const [application, setApplication] = useState<AppFormValues | null>(null);
+  const [team, setTeam] = useState<Team | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -26,7 +28,19 @@ export default function DashboardPage() {
       }
     }
 
+    async function loadTeam() {
+      try {
+        const result = await getMyTeam();
+        if (result.success && result.team) {
+          setTeam(result.team);
+        }
+      } catch (error) {
+        console.error("Error loading team:", error);
+      }
+    }
+
     loadApplication();
+    loadTeam();
   }, [user?.id]);
 
   if (isLoading) {
@@ -71,7 +85,7 @@ export default function DashboardPage() {
         {user && <ProfileCard user={user} application={application} />}
 
         {/* Team Section */}
-        <TeamSection teamMembers={application?.team_members} />
+        <TeamSection teamMembers={application?.team_members} teamName={team?.team_name} />
 
         {/* Quick Links */}
         <motion.div

@@ -10,16 +10,22 @@ import {
   AvatarFallback,
   UsersIcon,
 } from "@uwdsc/ui";
+import { useAuth } from "@/contexts/AuthContext";
 
 interface TeamSectionProps {
   teamMembers?: string[] | string;
+  teamName?: string | null;
   className?: string;
 }
 
 export function TeamSection({
   teamMembers = [],
+  teamName,
   className,
 }: Readonly<TeamSectionProps>) {
+  const { user } = useAuth();
+  const currentUserEmail = user?.email?.toLowerCase();
+
   const normalizedMembers: string[] = Array.isArray(teamMembers)
     ? teamMembers
     : typeof teamMembers === "string" && teamMembers.trim() !== ""
@@ -29,7 +35,14 @@ export function TeamSection({
           .filter(Boolean)
       : [];
 
-  const hasTeam = normalizedMembers.length > 0;
+  // Filter out the current user from the team members list
+  const otherMembers = currentUserEmail
+    ? normalizedMembers.filter(
+        (member) => member.toLowerCase() !== currentUserEmail,
+      )
+    : normalizedMembers;
+
+  const hasTeam = otherMembers.length > 0;
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -47,12 +60,19 @@ export function TeamSection({
         <CardContent>
           {hasTeam ? (
             <div className="space-y-4">
+              {teamName && (
+                <div className="mb-3">
+                  <p className="text-white font-medium text-lg">
+                    Team Name: <span className="font-semibold">{teamName}</span>
+                  </p>
+                </div>
+              )}
               <p className="text-white/60 text-sm">
-                You&apos;re teaming up with {normalizedMembers.length} other{" "}
-                {normalizedMembers.length === 1 ? "person" : "people"}!
+                You&apos;re teaming up with {otherMembers.length} other{" "}
+                {otherMembers.length === 1 ? "person" : "people"}!
               </p>
               <div className="flex flex-wrap gap-3">
-                {normalizedMembers.map((member, index) => (
+                {otherMembers.map((member, index) => (
                   <motion.div
                     key={member}
                     initial={{ opacity: 0, scale: 0.8 }}
