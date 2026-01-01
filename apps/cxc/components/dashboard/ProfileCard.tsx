@@ -14,11 +14,11 @@ import {
   BrowserIcon,
 } from "@uwdsc/ui";
 import type { UserProfile } from "@/types/api";
-import type { HackerApplication } from "@/types/application";
+import { AppFormValues } from "@/lib/schemas/application";
 
 interface ProfileCardProps {
   user: UserProfile;
-  application?: HackerApplication | null;
+  application?: AppFormValues | null;
   className?: string;
 }
 
@@ -79,9 +79,9 @@ export function ProfileCard({
             <div className="mt-6 pt-4 border-t border-white/10">
               <p className="text-white/40 text-sm mb-3">Social Links</p>
               <div className="flex flex-wrap gap-3">
-                {application.github_url && (
+                {application.github && (
                   <a
-                    href={application.github_url}
+                    href={application.github}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex items-center gap-2 px-3 py-2 bg-white/10 rounded-lg text-white/80 hover:bg-white/20 transition-colors"
@@ -90,9 +90,9 @@ export function ProfileCard({
                     <span className="text-sm">GitHub</span>
                   </a>
                 )}
-                {application.linkedin_url && (
+                {application.linkedin && (
                   <a
-                    href={application.linkedin_url}
+                    href={application.linkedin}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex items-center gap-2 px-3 py-2 bg-white/10 rounded-lg text-white/80 hover:bg-white/20 transition-colors"
@@ -112,8 +112,8 @@ export function ProfileCard({
                     <span className="text-sm">Website</span>
                   </a>
                 )}
-                {!application.github_url &&
-                  !application.linkedin_url &&
+                {!application.github &&
+                  !application.linkedin &&
                   !application.website_url && (
                     <span className="text-white/40 text-sm">
                       No social links added

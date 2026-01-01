@@ -31,70 +31,70 @@ interface EventTimelineProps {
 
 // Mock events for UI demonstration
 const mockEvents: Event[] = [
-  {
-    id: 1,
-    name: "Opening Ceremony",
-    description:
-      "Welcome to CxC! Learn about the hackathon schedule and rules.",
-    location: "Main Hall",
-    start_time: new Date("2025-01-15T09:00:00"),
-    end_time: new Date("2025-01-15T10:00:00"),
-    checked_in: false,
-  },
-  {
-    id: 2,
-    name: "Team Formation",
-    description: "Find teammates and form your project groups.",
-    location: "Networking Area",
-    start_time: new Date("2025-01-15T10:00:00"),
-    end_time: new Date("2025-01-15T11:00:00"),
-    checked_in: false,
-  },
-  {
-    id: 3,
-    name: "Workshop: AI/ML Fundamentals",
-    description: "Learn the basics of machine learning and AI development.",
-    location: "Workshop Room A",
-    start_time: new Date("2025-01-15T13:00:00"),
-    end_time: new Date("2025-01-15T14:30:00"),
-    checked_in: false,
-  },
-  {
-    id: 4,
-    name: "Dinner",
-    description: "Take a break and enjoy some food!",
-    location: "Cafeteria",
-    start_time: new Date("2025-01-15T18:00:00"),
-    end_time: new Date("2025-01-15T19:00:00"),
-    checked_in: false,
-  },
-  {
-    id: 5,
-    name: "Midnight Check-in",
-    description: "Quick progress update and Q&A session.",
-    location: "Main Hall",
-    start_time: new Date("2025-01-16T00:00:00"),
-    end_time: new Date("2025-01-16T00:30:00"),
-    checked_in: false,
-  },
-  {
-    id: 6,
-    name: "Project Submissions Due",
-    description: "Submit your project on Devpost.",
-    location: "Online",
-    start_time: new Date("2025-01-16T09:00:00"),
-    end_time: new Date("2025-01-16T09:00:00"),
-    checked_in: false,
-  },
-  {
-    id: 7,
-    name: "Closing Ceremony & Awards",
-    description: "Project demos and winner announcements.",
-    location: "Main Hall",
-    start_time: new Date("2025-01-16T12:00:00"),
-    end_time: new Date("2025-01-16T14:00:00"),
-    checked_in: false,
-  },
+  // {
+  //   id: 1,
+  //   name: "Opening Ceremony",
+  //   description:
+  //     "Welcome to CxC! Learn about the hackathon schedule and rules.",
+  //   location: "Main Hall",
+  //   start_time: new Date("2025-01-15T09:00:00"),
+  //   end_time: new Date("2025-01-15T10:00:00"),
+  //   checked_in: false,
+  // },
+  // {
+  //   id: 2,
+  //   name: "Team Formation",
+  //   description: "Find teammates and form your project groups.",
+  //   location: "Networking Area",
+  //   start_time: new Date("2025-01-15T10:00:00"),
+  //   end_time: new Date("2025-01-15T11:00:00"),
+  //   checked_in: false,
+  // },
+  // {
+  //   id: 3,
+  //   name: "Workshop: AI/ML Fundamentals",
+  //   description: "Learn the basics of machine learning and AI development.",
+  //   location: "Workshop Room A",
+  //   start_time: new Date("2025-01-15T13:00:00"),
+  //   end_time: new Date("2025-01-15T14:30:00"),
+  //   checked_in: false,
+  // },
+  // {
+  //   id: 4,
+  //   name: "Dinner",
+  //   description: "Take a break and enjoy some food!",
+  //   location: "Cafeteria",
+  //   start_time: new Date("2025-01-15T18:00:00"),
+  //   end_time: new Date("2025-01-15T19:00:00"),
+  //   checked_in: false,
+  // },
+  // {
+  //   id: 5,
+  //   name: "Midnight Check-in",
+  //   description: "Quick progress update and Q&A session.",
+  //   location: "Main Hall",
+  //   start_time: new Date("2025-01-16T00:00:00"),
+  //   end_time: new Date("2025-01-16T00:30:00"),
+  //   checked_in: false,
+  // },
+  // {
+  //   id: 6,
+  //   name: "Project Submissions Due",
+  //   description: "Submit your project on Devpost.",
+  //   location: "Online",
+  //   start_time: new Date("2025-01-16T09:00:00"),
+  //   end_time: new Date("2025-01-16T09:00:00"),
+  //   checked_in: false,
+  // },
+  // {
+  //   id: 7,
+  //   name: "Closing Ceremony & Awards",
+  //   description: "Project demos and winner announcements.",
+  //   location: "Main Hall",
+  //   start_time: new Date("2025-01-16T12:00:00"),
+  //   end_time: new Date("2025-01-16T14:00:00"),
+  //   checked_in: false,
+  // },
 ];
 
 const container = {
@@ -141,7 +141,7 @@ export function EventTimeline({
       acc[dateKey].push(event);
       return acc;
     },
-    {} as Record<string, Event[]>
+    {} as Record<string, Event[]>,
   );
 
   return (

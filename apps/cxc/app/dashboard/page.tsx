@@ -5,13 +5,11 @@ import { motion } from "framer-motion";
 import { useAuth } from "@/contexts/AuthContext";
 import { getApplication } from "@/lib/api/application";
 import { StatusCard, ProfileCard, TeamSection } from "@/components/dashboard";
-import type { HackerApplication } from "@/types/application";
+import { AppFormValues } from "@/lib/schemas/application";
 
 export default function DashboardPage() {
   const { user } = useAuth();
-  const [application, setApplication] = useState<HackerApplication | null>(
-    null
-  );
+  const [application, setApplication] = useState<AppFormValues | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -20,7 +18,7 @@ export default function DashboardPage() {
 
       try {
         const data = await getApplication(user.id);
-        setApplication(data as HackerApplication | null);
+        setApplication(data as AppFormValues | null);
       } catch (error) {
         console.error("Error loading application:", error);
       } finally {

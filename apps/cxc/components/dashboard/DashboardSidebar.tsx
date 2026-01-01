@@ -78,7 +78,7 @@ export function DashboardSidebar({
                 className={cn(
                   "flex items-center gap-3 px-4 py-3 rounded-lg transition-colors",
                   "hover:bg-white/10",
-                  isActive ? "text-white" : "text-white/60"
+                  isActive ? "text-white" : "text-white/60",
                 )}
                 whileHover={{ x: 4 }}
                 whileTap={{ scale: 0.98 }}

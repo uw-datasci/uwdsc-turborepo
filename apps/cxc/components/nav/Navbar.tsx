@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { useAuth } from "@/contexts/AuthContext";
@@ -61,96 +61,99 @@ export default function Navbar() {
   }, [lastScrollY]);
 
   return (
-    <motion.nav
-      className="w-full fixed top-0 left-0 right-0 bg-background z-50 cxc-app-font"
-      initial={{ y: 0 }}
-      animate={{ y: isVisible ? 0 : "-100%" }}
-      transition={{ duration: 0.3, ease: "easeInOut" }}
-    >
-      <div className="w-full py-4 px-4 sm:px-6 lg:px-8">
-        <div className="flex h-16 w-full items-center justify-between">
-          {/* Left section - Logo and Navigation */}
-          <div className="flex items-center gap-12">
-            {/* Logo */}
-            <DSCLogo size={12} href="/" />
+    // Hide navbar on dashboard routes
+    pathname?.startsWith("/dashboard") ? null : (
+      <motion.nav
+        className="w-full fixed top-0 left-0 right-0 bg-background z-50 cxc-app-font"
+        initial={{ y: 0 }}
+        animate={{ y: isVisible ? 0 : "-100%" }}
+        transition={{ duration: 0.3, ease: "easeInOut" }}
+      >
+        <div className="w-full py-4 px-4 sm:px-6 lg:px-8">
+          <div className="flex h-16 w-full items-center justify-between">
+            {/* Left section - Logo and Navigation */}
+            <div className="flex items-center gap-12">
+              {/* Logo */}
+              <DSCLogo size={12} href="/" />
 
-            {/* Navigation Links - only show to authenticated users */}
-            {!isLoading && isAuthenticated && (
-              <NavigationMenu className="hidden sm:flex">
-                <NavigationMenuList>
-                  {navLinks.map((link) => (
-                    <NavigationMenuItem key={link.href}>
-                      <NavigationMenuLink asChild>
-                        <Link
-                          href={link.href}
-                          className={cn(
-                            "inline-flex h-9 w-max items-center justify-center rounded-md px-4 py-2 !text-base font-medium",
-                            "transition-colors hover:text-gray-400 focus:text-gray-400 outline-none",
-                            "hover:bg-transparent focus:bg-transparent bg-transparent",
-                          )}
-                        >
-                          {link.label}
-                        </Link>
-                      </NavigationMenuLink>
-                    </NavigationMenuItem>
-                  ))}
-                </NavigationMenuList>
-              </NavigationMenu>
-            )}
-          </div>
-
-          {/* Right section - Auth Buttons (includes mobile menu on small screens) */}
-          {showAuthButtons && !isLoading && (
-            <div className="flex items-center gap-4">
-              {isAuthenticated ? (
-                <>
-                  <div className="hidden sm:block">
-                    <UserAvatar />
-                  </div>
-                  <div className="block sm:hidden flex items-center justify-center">
-                    <MobileMenu navLinks={navLinks} user={user ?? null} />
-                  </div>
-                </>
-              ) : (
-                <div className="flex flex-wrap gap-4 md:gap-8 font-normal">
-                  <CxCButton
-                    asChild
-                    className="group text-sm md:text-base inline-flex items-center lg:px-4"
-                  >
-                    <Link href="/login">
-                      <span>Login</span>
-                      <motion.div
-                        className="group-hover:translate-x-1.5 duration-200"
-                        transition={{
-                          ease: "easeInOut",
-                        }}
-                      >
-                        <ArrowRightIcon weight="bold" />
-                      </motion.div>
-                    </Link>
-                  </CxCButton>
-                  <CxCButton
-                    asChild
-                    className="group text-sm md:text-base inline-flex items-center lg:px-4"
-                  >
-                    <Link href="/register">
-                      <span>Register</span>
-                      <motion.div
-                        className="group-hover:translate-x-1.5 duration-200"
-                        transition={{
-                          ease: "easeInOut",
-                        }}
-                      >
-                        <ArrowRightIcon weight="bold" />
-                      </motion.div>
-                    </Link>
-                  </CxCButton>
-                </div>
+              {/* Navigation Links - only show to authenticated users */}
+              {!isLoading && isAuthenticated && (
+                <NavigationMenu className="hidden sm:flex">
+                  <NavigationMenuList>
+                    {navLinks.map((link) => (
+                      <NavigationMenuItem key={link.href}>
+                        <NavigationMenuLink asChild>
+                          <Link
+                            href={link.href}
+                            className={cn(
+                              "inline-flex h-9 w-max items-center justify-center rounded-md px-4 py-2 !text-base font-medium",
+                              "transition-colors hover:text-gray-400 focus:text-gray-400 outline-none",
+                              "hover:bg-transparent focus:bg-transparent bg-transparent",
+                            )}
+                          >
+                            {link.label}
+                          </Link>
+                        </NavigationMenuLink>
+                      </NavigationMenuItem>
+                    ))}
+                  </NavigationMenuList>
+                </NavigationMenu>
               )}
             </div>
-          )}
+
+            {/* Right section - Auth Buttons (includes mobile menu on small screens) */}
+            {showAuthButtons && !isLoading && (
+              <div className="flex items-center gap-4">
+                {isAuthenticated ? (
+                  <>
+                    <div className="hidden sm:block">
+                      <UserAvatar />
+                    </div>
+                    <div className="block sm:hidden flex items-center justify-center">
+                      <MobileMenu navLinks={navLinks} user={user ?? null} />
+                    </div>
+                  </>
+                ) : (
+                  <div className="flex flex-wrap gap-4 md:gap-8 font-normal">
+                    <CxCButton
+                      asChild
+                      className="group text-sm md:text-base inline-flex items-center lg:px-4"
+                    >
+                      <Link href="/login">
+                        <span>Login</span>
+                        <motion.div
+                          className="group-hover:translate-x-1.5 duration-200"
+                          transition={{
+                            ease: "easeInOut",
+                          }}
+                        >
+                          <ArrowRightIcon weight="bold" />
+                        </motion.div>
+                      </Link>
+                    </CxCButton>
+                    <CxCButton
+                      asChild
+                      className="group text-sm md:text-base inline-flex items-center lg:px-4"
+                    >
+                      <Link href="/register">
+                        <span>Register</span>
+                        <motion.div
+                          className="group-hover:translate-x-1.5 duration-200"
+                          transition={{
+                            ease: "easeInOut",
+                          }}
+                        >
+                          <ArrowRightIcon weight="bold" />
+                        </motion.div>
+                      </Link>
+                    </CxCButton>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
         </div>
-      </div>
-    </motion.nav>
+      </motion.nav>
+    )
   );
 }

@@ -22,14 +22,12 @@ import {
   GlobeIcon,
   GraduationCapIcon,
 } from "@uwdsc/ui";
-import type { HackerApplication } from "@/types/application";
 import { transformDatabaseDataToForm } from "@/lib/utils/formDataTransformer";
+import { AppFormValues } from "@/lib/schemas/application";
 
 export default function ProfilePage() {
   const { user } = useAuth();
-  const [application, setApplication] = useState<HackerApplication | null>(
-    null
-  );
+  const [application, setApplication] = useState<AppFormValues | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -41,7 +39,7 @@ export default function ProfilePage() {
         if (!data) return;
 
         setApplication(
-          transformDatabaseDataToForm(data) as HackerApplication | null
+          transformDatabaseDataToForm(data) as AppFormValues | null,
         );
       } catch (error) {
         console.error("Error loading application:", error);
@@ -147,13 +145,13 @@ export default function ProfilePage() {
                       <p className="text-white text-sm">{user.email}</p>
                     </div>
                   </div>
-                  {application?.phone_number && (
+                  {application?.phone && (
                     <div className="flex items-center gap-3 p-3 bg-white/5 rounded-lg">
                       <PhoneIcon className="w-5 h-5 text-white/40" />
                       <div>
                         <p className="text-white/40 text-xs">Phone</p>
                         <p className="text-white text-sm">
-                          {application.phone_number}
+                          {application.phone}
                         </p>
                       </div>
                     </div>
@@ -193,10 +191,14 @@ export default function ProfilePage() {
                     <GraduationCapIcon className="w-6 h-6 text-white/40 mt-0.5" />
                     <div className="space-y-1">
                       <p className="text-white font-medium">
-                        {application.uni_name || "University not specified"}
+                        {application.university_name ||
+                          application.university_name_other ||
+                          "University not specified"}
                       </p>
                       <p className="text-white/60 text-sm">
-                        {application.uni_program || "Program not specified"}
+                        {application.program ||
+                          application.program_other ||
+                          "Program not specified"}
                       </p>
                       <p className="text-white/40 text-sm">
                         {application.year_of_study || "Year not specified"}
@@ -212,9 +214,9 @@ export default function ProfilePage() {
               <div>
                 <h3 className="text-white font-medium mb-4">Social Links</h3>
                 <div className="flex flex-wrap gap-3">
-                  {application?.github_url && (
+                  {application?.github && (
                     <a
-                      href={application.github_url}
+                      href={application.github}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="flex items-center gap-2 px-4 py-2 bg-white/10 rounded-lg text-white hover:bg-white/20 transition-colors"
@@ -223,9 +225,9 @@ export default function ProfilePage() {
                       <span>GitHub</span>
                     </a>
                   )}
-                  {application?.linkedin_url && (
+                  {application?.linkedin && (
                     <a
-                      href={application.linkedin_url}
+                      href={application.linkedin}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="flex items-center gap-2 px-4 py-2 bg-white/10 rounded-lg text-white hover:bg-white/20 transition-colors"
@@ -245,8 +247,8 @@ export default function ProfilePage() {
                       <span>Website</span>
                     </a>
                   )}
-                  {!application?.github_url &&
-                    !application?.linkedin_url &&
+                  {!application?.github &&
+                    !application?.linkedin &&
                     !application?.website_url && (
                       <p className="text-white/40 text-sm">
                         No social links added to your application.
@@ -272,7 +274,7 @@ export default function ProfilePage() {
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                 <div className="text-center p-4 bg-white/5 rounded-lg">
                   <p className="text-3xl font-bold text-white">
-                    {application?.num_hackathons || "0"}
+                    {application?.hackathons_attended || "—"}
                   </p>
                   <p className="text-white/40 text-sm mt-1">Prior Hackathons</p>
                 </div>

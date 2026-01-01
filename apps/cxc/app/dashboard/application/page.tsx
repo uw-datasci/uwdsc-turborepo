@@ -7,15 +7,13 @@ import { useAuth } from "@/contexts/AuthContext";
 import { getApplication } from "@/lib/api/application";
 import { ApplicationSummary } from "@/components/dashboard";
 import CxCButton from "@/components/CxCButton";
-import type { HackerApplication } from "@/types/application";
 import { Card, CardContent, FileTextIcon } from "@uwdsc/ui";
 import { transformDatabaseDataToForm } from "@/lib/utils/formDataTransformer";
+import { AppFormValues } from "@/lib/schemas/application";
 
 export default function ApplicationPage() {
   const { user } = useAuth();
-  const [application, setApplication] = useState<HackerApplication | null>(
-    null
-  );
+  const [application, setApplication] = useState<AppFormValues | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -27,7 +25,7 @@ export default function ApplicationPage() {
         if (!data) return;
 
         setApplication(
-          transformDatabaseDataToForm(data) as HackerApplication | null
+          transformDatabaseDataToForm(data) as AppFormValues | null,
         );
       } catch (error) {
         console.error("Error loading application:", error);
@@ -55,8 +53,8 @@ export default function ApplicationPage() {
   // No application state
   if (!application) {
     return (
-      <div className="p-6 lg:p-8">
-        <div className="max-w-4xl mx-auto">
+      <div className="p-6 lg:p-8 min-h-screen flex items-center justify-center">
+        <div className="max-w-4xl mx-auto w-full">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -193,7 +191,7 @@ export default function ApplicationPage() {
                           year: "numeric",
                           hour: "numeric",
                           minute: "2-digit",
-                        }
+                        },
                       )}
                     </p>
                   )}

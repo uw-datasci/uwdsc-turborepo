@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import {
   Card,
@@ -13,11 +14,14 @@ import {
   LinkedinLogoIcon,
   BrowserIcon,
   LinkIcon,
+  FileTextIcon,
 } from "@uwdsc/ui";
-import type { HackerApplication } from "@/types/application";
+
+import { AppFormValues } from "@/lib/schemas/application";
+import { getResume } from "@/lib/api/resume";
 
 interface ApplicationSummaryProps {
-  application: HackerApplication;
+  application: AppFormValues;
   className?: string;
 }
 
@@ -45,7 +49,7 @@ function InfoRow({ label, value, className }: Readonly<InfoRowProps>) {
     <div
       className={cn(
         "flex flex-col sm:flex-row sm:justify-between gap-1",
-        className
+        className,
       )}
     >
       <span className="text-white/40 text-sm">{label}</span>
@@ -58,6 +62,26 @@ export function ApplicationSummary({
   application,
   className,
 }: Readonly<ApplicationSummaryProps>) {
+  const [resumeUrl, setResumeUrl] = useState<string | null>(null);
+  const [resumeFileName, setResumeFileName] = useState<string | null>(null);
+
+  // Fetch resume URL and filename
+  useEffect(() => {
+    const fetchResume = async () => {
+      try {
+        const result = await getResume();
+        if (result.url && result.resume) {
+          setResumeUrl(result.url);
+          setResumeFileName(result.resume.name);
+        }
+      } catch {
+        // No resume found - that's okay
+      }
+    };
+
+    fetchResume();
+  }, []);
+
   return (
     <motion.div
       variants={container}
@@ -74,7 +98,7 @@ export function ApplicationSummary({
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-3">
-            <InfoRow label="Phone" value={application.phone_number || "—"} />
+            <InfoRow label="Phone" value={application.phone || "—"} />
             <InfoRow label="Discord" value={application.discord || "—"} />
             <InfoRow label="Age" value={application.age || "—"} />
             <InfoRow label="Gender" value={application.gender || "—"} />
@@ -82,7 +106,10 @@ export function ApplicationSummary({
               label="Country"
               value={application.country_of_residence || "—"}
             />
-            <InfoRow label="T-Shirt Size" value={application.t_shirt || "—"} />
+            <InfoRow
+              label="T-Shirt Size"
+              value={application.tshirt_size || "—"}
+            />
             <InfoRow
               label="Dietary Restrictions"
               value={application.dietary_restrictions || "None"}
@@ -98,8 +125,18 @@ export function ApplicationSummary({
             <CardTitle className="text-white text-lg">Education</CardTitle>
           </CardHeader>
           <CardContent className="space-y-3">
-            <InfoRow label="University" value={application.uni_name || "—"} />
-            <InfoRow label="Program" value={application.uni_program || "—"} />
+            <InfoRow
+              label="University"
+              value={
+                application.university_name ||
+                application.university_name_other ||
+                "—"
+              }
+            />
+            <InfoRow
+              label="Program"
+              value={application.program || application.program_other || "—"}
+            />
             <InfoRow
               label="Year of Study"
               value={application.year_of_study || "—"}
@@ -117,13 +154,13 @@ export function ApplicationSummary({
           <CardContent className="space-y-3">
             <InfoRow
               label="Hackathons Attended"
-              value={application.num_hackathons || "0"}
+              value={application.hackathons_attended || "0"}
             />
             <div className="flex flex-col gap-2">
               <span className="text-white/40 text-sm">Prior Experience</span>
               <div className="flex flex-wrap gap-2">
-                {application.prior_hack_exp?.length > 0 ? (
-                  application.prior_hack_exp.map((exp) => (
+                {application.prior_hackathon_experience?.length > 0 ? (
+                  application.prior_hackathon_experience.map((exp) => (
                     <Badge
                       key={exp}
                       className="bg-white/10 text-white/80 border-white/20"
@@ -148,9 +185,9 @@ export function ApplicationSummary({
           </CardHeader>
           <CardContent>
             <div className="flex flex-wrap gap-3">
-              {application.github_url && (
+              {application.github && (
                 <a
-                  href={application.github_url}
+                  href={application.github}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center gap-2 px-3 py-2 bg-white/10 rounded-lg text-white/80 hover:bg-white/20 transition-colors"
@@ -159,9 +196,9 @@ export function ApplicationSummary({
                   <span className="text-sm">GitHub</span>
                 </a>
               )}
-              {application.linkedin_url && (
+              {application.linkedin && (
                 <a
-                  href={application.linkedin_url}
+                  href={application.linkedin}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center gap-2 px-3 py-2 bg-white/10 rounded-lg text-white/80 hover:bg-white/20 transition-colors"
@@ -181,9 +218,9 @@ export function ApplicationSummary({
                   <span className="text-sm">Website</span>
                 </a>
               )}
-              {application.other_url && (
+              {application.other_link && (
                 <a
-                  href={application.other_url}
+                  href={application.other_link}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center gap-2 px-3 py-2 bg-white/10 rounded-lg text-white/80 hover:bg-white/20 transition-colors"
@@ -192,10 +229,22 @@ export function ApplicationSummary({
                   <span className="text-sm">Other</span>
                 </a>
               )}
-              {!application.github_url &&
-                !application.linkedin_url &&
+              {resumeUrl && resumeFileName && (
+                <a
+                  href={resumeUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 px-3 py-2 bg-white/10 rounded-lg text-white/80 hover:bg-white/20 transition-colors"
+                >
+                  <FileTextIcon className="w-4 h-4" />
+                  <span className="text-sm">Resume</span>
+                </a>
+              )}
+              {!application.github &&
+                !application.linkedin &&
                 !application.website_url &&
-                !application.other_url && (
+                !application.other_link &&
+                !resumeUrl && (
                   <span className="text-white/40 text-sm">
                     No links provided
                   </span>

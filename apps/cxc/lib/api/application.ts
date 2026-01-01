@@ -72,7 +72,7 @@ export async function updateApplication(
  * @throws Error if fetch fails (except 404)
  */
 export async function getApplication(
-  profileId: string
+  profileId: string,
 ): Promise<Record<string, unknown> | null> {
   try {
     const response = await fetch(`/api/applications?profile_id=${profileId}`, {

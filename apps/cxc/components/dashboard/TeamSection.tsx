@@ -12,7 +12,7 @@ import {
 } from "@uwdsc/ui";
 
 interface TeamSectionProps {
-  teamMembers?: string[];
+  teamMembers?: string[] | string;
   className?: string;
 }
 
@@ -20,8 +20,16 @@ export function TeamSection({
   teamMembers = [],
   className,
 }: Readonly<TeamSectionProps>) {
-  const hasTeam = teamMembers?.length > 0;
+  const normalizedMembers: string[] = Array.isArray(teamMembers)
+    ? teamMembers
+    : typeof teamMembers === "string" && teamMembers.trim() !== ""
+      ? teamMembers
+          .split(",")
+          .map((m) => m.trim())
+          .filter(Boolean)
+      : [];
 
+  const hasTeam = normalizedMembers.length > 0;
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -40,11 +48,11 @@ export function TeamSection({
           {hasTeam ? (
             <div className="space-y-4">
               <p className="text-white/60 text-sm">
-                You&apos;re teaming up with {teamMembers.length} other{" "}
-                {teamMembers.length === 1 ? "person" : "people"}!
+                You&apos;re teaming up with {normalizedMembers.length} other{" "}
+                {normalizedMembers.length === 1 ? "person" : "people"}!
               </p>
               <div className="flex flex-wrap gap-3">
-                {teamMembers.map((member, index) => (
+                {normalizedMembers.map((member, index) => (
                   <motion.div
                     key={member}
                     initial={{ opacity: 0, scale: 0.8 }}

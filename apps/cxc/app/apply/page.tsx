@@ -91,7 +91,7 @@ export default function ApplyPage() {
     return 0;
   });
   const [applicationStatus, setApplicationStatus] = useState<string | null>(
-    null
+    null,
   );
   const { user } = useAuth();
   const hasInitialized = useRef<boolean>(false);
@@ -233,7 +233,7 @@ export default function ApplyPage() {
         }
         // Set application status
         setApplicationStatus(
-          (existingApplication?.status as string) || "draft"
+          (existingApplication?.status as string) || "draft",
         );
       } catch (error) {
         console.error("Error initializing application:", error);
@@ -274,7 +274,7 @@ export default function ApplyPage() {
    */
   const handleSaveAndContinue = async (
     onSuccess: () => void,
-    isSubmit: boolean = false
+    isSubmit: boolean = false,
   ) => {
     if (!user?.id) {
       console.error("Profile ID not found");
