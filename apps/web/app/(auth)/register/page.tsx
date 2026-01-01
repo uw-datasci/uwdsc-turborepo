@@ -6,7 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Form, Button, FormField } from "@uwdsc/ui";
 import { Typing } from "@/components/login/Typing";
-import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { Loader2, Mail, ArrowRight } from "lucide-react";
 import { renderTextField } from "@/components/FormHelpers";
 import { motion, AnimatePresence } from "framer-motion";
@@ -33,7 +33,6 @@ export default function RegisterPage() {
   const [authError, setAuthError] = useState("");
   const [isRegistered, setIsRegistered] = useState(false);
   const [registeredEmail, setRegisteredEmail] = useState("");
-  const router = useRouter();
 
   const form = useForm<RegisterFormValues>({
     resolver: zodResolver(registerSchema),
@@ -155,7 +154,7 @@ export default function RegisterPage() {
 
               {/* Description */}
               <p className="text-xl mt-8 text-gray-300 max-w-2xl">
-                We've sent a verification link to your email address.
+                We&apos;ve sent a verification link to your email address.
                 <br />
                 Please check your inbox and click the link to verify your
                 account.
@@ -165,12 +164,14 @@ export default function RegisterPage() {
               <div className="mt-12 flex flex-col gap-4 items-center">
                 <div className="flex flex-row gap-5">
                   <Button
-                    onClick={() => router.push("/login")}
+                    asChild
                     size="lg"
                     className="group bg-gradient-purple hover:opacity-90 transition-all text-lg font-bold rounded-lg px-8 py-6 flex items-center gap-2"
                   >
-                    Go to Login
-                    <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                    <Link href="/login">
+                      Go to Login
+                      <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                    </Link>
                   </Button>
                   <div className="flex flex-col items-center">
                     <Button
@@ -287,13 +288,12 @@ export default function RegisterPage() {
                         <Button
                           variant="link"
                           size="sm"
-                          onClick={() => {
-                            router.push("/login");
-                          }}
+                          asChild
                           className="text-gray-400/60 hover:text-gray-200 transition-colors text-sm font-medium p-0"
-                          type="button"
                         >
-                          Already a member? Sign in here.
+                          <Link href="/login">
+                            Already a member? Sign in here.
+                          </Link>
                         </Button>
                       </div>
                     </div>

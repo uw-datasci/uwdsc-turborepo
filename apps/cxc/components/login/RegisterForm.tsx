@@ -16,6 +16,7 @@ import {
 } from "@/lib/schemas/register";
 import { isRegistrationFormValid } from "@/lib/utils/register";
 import { useAuth } from "@/contexts/AuthContext";
+import Link from "next/link";
 
 export function RegisterForm() {
   const [isLoading, setIsLoading] = useState(false);
@@ -168,13 +169,10 @@ export function RegisterForm() {
             </Button>
             <Button
               variant="link"
-              onClick={() => {
-                router.push("/login");
-              }}
+              asChild
               className="text-gray-400/60 hover:text-gray-200 transition-colors text-sm font-medium p-0 w-fit"
-              type="button"
             >
-              Already have an account? Sign in here.
+              <Link href="/login">Already have an account? Sign in here.</Link>
             </Button>
           </div>
         </form>
