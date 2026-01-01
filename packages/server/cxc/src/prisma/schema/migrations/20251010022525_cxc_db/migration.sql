@@ -156,7 +156,7 @@ ALTER TABLE "public"."event_attendance" ADD CONSTRAINT "event_attendance_event_i
 ALTER TABLE "public"."event_attendance" ADD CONSTRAINT "event_attendance_profile_id_fkey" FOREIGN KEY ("profile_id") REFERENCES "public"."profiles"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- Policies
-alter policy "Admins can insert reviews"
+create policy "Admins can insert reviews"
 on "public"."reviews"
 to public
 with check (
@@ -166,7 +166,7 @@ with check (
 );
 
 
-alter policy "Admins can update their own reviews"
+create policy "Admins can update their own reviews"
 on "public"."reviews"
 to public
 using (
@@ -175,7 +175,7 @@ using (
   WHERE ((profiles.id = auth.uid()) AND (profiles.role = 'admin'::role_enum)))) AND (auth.uid() = reviewer_id))
 );
 
-alter policy "Admins can view all reviews"
+create policy "Admins can view all reviews"
 on "public"."reviews"
 to public
 using (
@@ -184,7 +184,7 @@ using (
   WHERE ((profiles.id = auth.uid()) AND (profiles.role = 'admin'::role_enum))))
 );
 
-alter policy "Reviewers can view their own reviews"
+create policy "Reviewers can view their own reviews"
 on "public"."reviews"
 to public
 using (
