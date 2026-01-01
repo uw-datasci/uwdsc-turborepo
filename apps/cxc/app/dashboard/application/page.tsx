@@ -49,7 +49,6 @@ export default function ApplicationPage() {
       </div>
     );
   }
-
   // No application state
   if (!application) {
     return (

@@ -32,6 +32,7 @@ import {
 import DesktopApplication from "@/components/application/DesktopApplication";
 import MobileApplication from "@/components/application/MobileApplication";
 import { Submitted } from "@/components/application/sections";
+import { ApplicationClosed } from "@/components/application/ApplicationClosed";
 import {
   MOBILE_STEP_TO_PAGE_MAP,
   NUMBER_MOBILE_PAGES,
@@ -43,6 +44,11 @@ import {
 // ============================================================================
 
 const FINAL_STEP_COUNT = STEP_NAMES.length;
+
+// Application availability dates (January 2-12, 2026)
+const APPLICATION_START_DATE = new Date("2026-01-02T00:00:00");
+const APPLICATION_END_DATE = new Date("2026-01-12T23:59:59");
+
 const STORAGE_KEY_DESKTOP_STEP = "desktop_step";
 const STORAGE_KEY_MOBILE_PAGE = "mobile_page";
 
@@ -76,6 +82,10 @@ export default function ApplyPage() {
   // ========================================================================
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isApplicationOpen, setIsApplicationOpen] = useState<boolean>(() => {
+    const now = new Date();
+    return now >= APPLICATION_START_DATE && now <= APPLICATION_END_DATE;
+  });
   const [currentDesktopStep, setCurrentDesktopStep] = useState<number>(() => {
     if (typeof window !== "undefined") {
       const saved = localStorage.getItem(STORAGE_KEY_DESKTOP_STEP);
@@ -111,15 +121,41 @@ export default function ApplyPage() {
   // ========================================================================
 
   /**
+   * Continuously check if applications are open
+   * Checks every second to dynamically update when the date window changes
+   */
+  useEffect(() => {
+    const checkApplicationStatus = () => {
+      const now = new Date();
+      const isOpen =
+        now >= APPLICATION_START_DATE && now <= APPLICATION_END_DATE;
+      setIsApplicationOpen(isOpen);
+    };
+
+    const timer = setInterval(checkApplicationStatus, 1000);
+
+    return () => clearInterval(timer);
+  }, []);
+
+  /**
    * Initialize application on component mount
    * - Fetch existing application if user has one
    * - Create blank application if user is new
    * - Pre-fill form with fetched data
    * - If application is already submitted, show Submitted component immediately
+   * - Responds dynamically to isApplicationOpen changes
    */
   useEffect(() => {
     const initializeApplication = async () => {
       if (!user?.id || hasInitialized.current) return;
+
+      // Don't initialize application if outside the date range
+      if (!isApplicationOpen) {
+        setApplicationStatus("closed");
+        setIsLoading(false);
+        return;
+      }
+
       hasInitialized.current = true;
 
       setIsLoading(true);
@@ -243,7 +279,7 @@ export default function ApplyPage() {
     };
 
     initializeApplication();
-  }, [user, form]);
+  }, [user, form, isApplicationOpen]);
 
   // Save step/page to localStorage whenever they change
   useEffect(() => {
@@ -370,6 +406,10 @@ export default function ApplyPage() {
   // ========================================================================
   // Render
   // ========================================================================
+
+  if (!isApplicationOpen) {
+    return <ApplicationClosed />;
+  }
 
   if (!applicationStatus) {
     return null;
