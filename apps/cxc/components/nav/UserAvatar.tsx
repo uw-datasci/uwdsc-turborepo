@@ -3,13 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-  Button,
-  GlassSurface,
-} from "@uwdsc/ui";
+import { Avatar, AvatarFallback, AvatarImage, Button } from "@uwdsc/ui";
 import { User, LogOut } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { signOut } from "@/lib/api";
@@ -82,16 +76,9 @@ export default function UserAvatar() {
 
       {open && (
         <div className="absolute right-0 mt-2 z-50">
-          <GlassSurface
-            width={220}
-            height="auto"
-            borderRadius={10}
-            backgroundOpacity={0.5}
-            brightness={95}
-            className="p-0"
-          >
-            <ul className="grid w-56 gap-1 p-2">
-              <li className="px-3 py-2 border-b border-border/50">
+          <div className="w-56 rounded-sm bg-background backdrop-blur-lg border border-white/30 shadow-lg p-2">
+            <ul className="grid gap-1 p-2">
+              <li className="px-3 py-2">
                 <div className="flex flex-col space-y-1">
                   <p className="text-sm font-medium leading-none">{fullName}</p>
                   <p className="text-xs leading-none text-muted-foreground">
@@ -103,7 +90,7 @@ export default function UserAvatar() {
                 <Link
                   href="/dashboard"
                   onClick={() => setOpen(false)}
-                  className="flex flex-row items-center gap-3 rounded-md p-3 no-underline outline-none transition-colors hover:bg-muted/75 focus:bg-muted/75 mb-1"
+                  className="flex flex-row items-center gap-3 rounded-sm p-3 no-underline outline-none transition-colors hover:bg-muted/75 focus:bg-muted/75 mb-1"
                 >
                   <User className="h-4 w-4 shrink-0" />
                   <span className="text-sm font-medium leading-normal">
@@ -127,7 +114,7 @@ export default function UserAvatar() {
                 </button>
               </li>
             </ul>
-          </GlassSurface>
+          </div>
         </div>
       )}
     </div>
