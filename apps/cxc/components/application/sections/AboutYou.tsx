@@ -16,12 +16,20 @@ import {
   OPTIONAL_ABOUT_YOU_FIELDS,
   TSHIRT_OPTIONS,
 } from "@/constants/application";
+import { useFormFieldPersistence } from "@/hooks/useFormFieldPersistence";
 
 interface AboutYouProps {
   readonly form: UseFormReturn<AppFormValues>;
 }
 
 export function AboutYou({ form }: AboutYouProps) {
+  // Persist form fields to localStorage
+  useFormFieldPersistence(form, "tshirt_size");
+  useFormFieldPersistence(form, "dietary_restrictions");
+  useFormFieldPersistence(form, "dietary_restrictions_other");
+  useFormFieldPersistence(form, "age");
+  useFormFieldPersistence(form, "country_of_residence");
+  useFormFieldPersistence(form, "country_of_residence_other");
   const dietaryRestriction = form.watch("dietary_restrictions");
   const countryOfResidence = form.watch("country_of_residence");
 

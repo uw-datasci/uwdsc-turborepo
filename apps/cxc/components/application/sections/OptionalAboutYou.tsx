@@ -16,12 +16,17 @@ import {
   GENDERS,
   OPTIONAL_ABOUT_YOU_FIELDS,
 } from "@/constants/application";
+import { useFormFieldPersistence } from "@/hooks/useFormFieldPersistence";
 
 interface OptionalAboutYouProps {
   readonly form: UseFormReturn<AppFormValues>;
 }
 
 export function OptionalAboutYou({ form }: OptionalAboutYouProps) {
+  // Persist form fields to localStorage
+  useFormFieldPersistence(form, "gender");
+  useFormFieldPersistence(form, "ethnicity");
+  useFormFieldPersistence(form, "ethnicity_other");
   const dietaryRestriction = form.watch("dietary_restrictions");
   const ethnicity = form.watch("ethnicity");
 
