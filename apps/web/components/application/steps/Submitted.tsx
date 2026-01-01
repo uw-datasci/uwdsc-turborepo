@@ -3,12 +3,11 @@
 import { Button } from "@uwdsc/ui";
 import { AnimatePresence, motion } from "framer-motion";
 import { PartyPopper } from "lucide-react";
-import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import ConfettiEffect from "../Confetti";
 
 export function Submitted() {
-  const router = useRouter();
   const [showConfetti, setShowConfetti] = useState(false);
 
   useEffect(() => {
@@ -75,8 +74,8 @@ export function Submitted() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 1.8 }}
         >
-          <Button className="p-5" onClick={() => router.push("/")}>
-            Return Home
+          <Button asChild className="p-5">
+            <Link href="/">Return Home</Link>
           </Button>
         </motion.div>
       </motion.div>
