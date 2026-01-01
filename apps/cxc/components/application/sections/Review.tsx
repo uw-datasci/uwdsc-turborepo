@@ -1,9 +1,8 @@
 import { AppFormValues } from "@/lib/schemas/application";
 import AppSection from "../AppSection";
 import { UseFormReturn } from "react-hook-form";
-import { useState, useEffect } from "react";
-import { getResume } from "@/lib/api/resume";
-import { getUserEmails } from "@/lib/api/users";
+import React, { useState, useEffect } from "react";
+import { getResume, getUserEmails } from "@/lib/api";
 import {
   BookIcon,
   CalendarIcon,
@@ -30,7 +29,6 @@ import {
   CheckSquareIcon,
   SquareIcon,
 } from "@uwdsc/ui/index";
-import React from "react";
 import {
   APP_Q_FIELDS,
   CONTACT_INFO_FIELDS,
@@ -366,7 +364,7 @@ export function Review({ form }: ReviewProps) {
           form={form}
           iconArr={LinksIcons}
           fieldArr={Object.values(LINKS_FIELDS).filter(
-            (field) => field !== "resume",
+            (field) => field !== "resume"
           )}
           labelArr={LINKS_LABELS}
         />

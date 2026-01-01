@@ -35,13 +35,16 @@ export class AdminReviewService {
 
   /**
    * Get the next application for review (least reviewed)
+   * Excludes applications already reviewed by the specified reviewer
    * Includes applicant email, resume URL, and team member details
    */
   async getNextApplicationForReview(
+    reviewerId: string,
     getResumeUrl: (profileId: string) => Promise<string | null>,
   ): Promise<ApplicationForReview | null> {
-    // Get the application with least reviews
-    const application = await this.repository.getApplicationWithLeastReviews();
+    // Get the application with least reviews (excluding those already reviewed by this reviewer)
+    const application =
+      await this.repository.getApplicationWithLeastReviews(reviewerId);
 
     if (!application) {
       return null;

@@ -22,7 +22,7 @@ export async function GET() {
     const profileService = new ProfileService();
     const profile = await profileService.getProfileByUserId(user.id);
 
-    if (!profile || profile.role !== "admin") {
+    if (profile?.role !== "admin") {
       return NextResponse.json(
         { error: "Forbidden: Admin access required" },
         { status: 403 },
@@ -52,7 +52,10 @@ export async function GET() {
     };
 
     const application =
-      await adminReviewService.getNextApplicationForReview(getResumeUrl);
+      await adminReviewService.getNextApplicationForReview(
+        user.id,
+        getResumeUrl,
+      );
 
     if (!application) {
       return NextResponse.json(

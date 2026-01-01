@@ -67,7 +67,7 @@ export default function ReviewPage() {
       setError(
         err instanceof Error
           ? err.message
-          : "Failed to load application. Please try again.",
+          : "Failed to load application. Please try again."
       );
     } finally {
       setLoading(false);
@@ -104,7 +104,7 @@ export default function ReviewPage() {
       setError(
         err instanceof Error
           ? err.message
-          : "Failed to submit review. Please try again.",
+          : "Failed to submit review. Please try again."
       );
     } finally {
       setSubmitting(false);
@@ -183,7 +183,7 @@ export default function ReviewPage() {
               Thank you for reviewing this application. Your scores have been
               saved.
             </p>
-            <Button onClick={fetchApplication} className="w-full">
+            <Button onClick={() => window.location.reload()} className="w-full">
               <RefreshCw className="w-4 h-4 mr-2" />
               Review Another Application
             </Button>
@@ -216,7 +216,7 @@ export default function ReviewPage() {
         <div className="flex items-center justify-between">
           <h1 className="text-3xl font-bold">Application Review</h1>
           <Button
-            onClick={fetchApplication}
+            onClick={() => window.location.reload()}
             variant="outline"
             disabled={loading}
           >
@@ -414,7 +414,7 @@ export default function ReviewPage() {
                                     )}
                                   </span>
                                 </div>
-                              ),
+                              )
                             )
                           : // Fallback to just emails if names not available
                             application.team_members

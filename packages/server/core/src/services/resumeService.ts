@@ -83,11 +83,11 @@ export class ResumeService extends FileService {
    */
   async getUserResume(userId: string): Promise<
     | {
-        success: true;
-        resume: FileObject | null;
-        url: string | null;
-        key: string | null;
-      }
+      success: true;
+      resume: FileObject | null;
+      url: string | null;
+      key: string | null;
+    }
     | { success: false; error: string }
   > {
     try {
@@ -108,7 +108,7 @@ export class ResumeService extends FileService {
       // Get the first file in the user's folder
       const resume = result.resumes.length > 0 ? result.resumes[0] : null;
 
-      if (!resume || !resume.name) {
+      if (!resume?.name) {
         return {
           success: true,
           resume: null,
@@ -155,11 +155,11 @@ export class ResumeService extends FileService {
     expiresIn: number = 3600,
   ): Promise<
     | {
-        success: true;
-        url: string;
-        resume: FileObject | null;
-        key: string | null;
-      }
+      success: true;
+      url: string;
+      resume: FileObject | null;
+      key: string | null;
+    }
     | { success: false; error: string }
   > {
     try {

@@ -19,7 +19,7 @@ export async function withProtected(request: NextRequest, user: any) {
       const profileService = new ProfileService();
       const profile = await profileService.getProfileByUserId(user.id);
 
-      if (!profile || profile.role !== "admin") {
+      if (profile?.role !== "admin") {
         // Redirect non-admin users to home
         return NextResponse.redirect(new URL("/", request.url));
       }

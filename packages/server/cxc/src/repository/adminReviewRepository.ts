@@ -29,9 +29,12 @@ export interface ReviewData {
 export class AdminReviewRepository extends BaseRepository {
   /**
    * Get the application with the least number of reviews
+   * Excludes applications already reviewed by the specified reviewer
    * Ties broken lexicographically by application ID
    */
-  async getApplicationWithLeastReviews(): Promise<ApplicationWithReviewCount | null> {
+  async getApplicationWithLeastReviews(
+    reviewerId: string,
+  ): Promise<ApplicationWithReviewCount | null> {
     try {
       const applications = await this.sql<ApplicationWithReviewCount[]>`
         SELECT 
@@ -46,6 +49,11 @@ export class AdminReviewRepository extends BaseRepository {
           GROUP BY application_id
         ) review_counts ON a.id = review_counts.application_id
         WHERE a.status = 'submitted'
+          AND NOT EXISTS (
+            SELECT 1
+            FROM reviews r
+            WHERE r.application_id = a.id AND r.reviewer_id = ${reviewerId}
+          )
         ORDER BY 
           COALESCE(review_counts.review_count, 0) ASC,
           a.id ASC

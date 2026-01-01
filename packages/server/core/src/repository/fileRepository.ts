@@ -33,9 +33,7 @@ export class FileRepository {
         contentType,
       });
 
-    if (error) {
-      return { data: null, error };
-    }
+    if (error) return { data: null, error };
 
     return { data, error: null };
   }
@@ -61,9 +59,7 @@ export class FileRepository {
       .from(this.bucketName)
       .createSignedUrl(objectKey, expiresIn);
 
-    if (error) {
-      throw error;
-    }
+    if (error) throw error;
 
     return data.signedUrl;
   }

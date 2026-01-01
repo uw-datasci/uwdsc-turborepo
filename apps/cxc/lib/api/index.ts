@@ -10,6 +10,9 @@ export { register, login, resendVerificationEmail, signOut } from "./auth";
 // Export all user functions
 export { getUserProfile } from "./user";
 
+// Export all user emails functions
+export { getUserEmails } from "./emails";
+
 // Export all file upload functions
 export { uploadResume, getResume } from "./resume";
 

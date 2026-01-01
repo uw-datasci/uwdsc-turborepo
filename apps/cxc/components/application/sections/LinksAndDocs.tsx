@@ -10,7 +10,7 @@ import {
 import AppSection from "../AppSection";
 import { AppFormValues } from "@/lib/schemas/application";
 import { LINKS_FIELDS } from "@/constants/application";
-import { getResume, uploadResume } from "@/lib/api/resume";
+import { getResume, uploadResume } from "@/lib/api";
 import { useFormFieldPersistence } from "@/hooks/useFormFieldPersistence";
 
 interface LinksAndDocsProps {

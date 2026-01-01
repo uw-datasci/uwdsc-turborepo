@@ -24,7 +24,7 @@ export async function POST(request: NextRequest) {
     const profileService = new ProfileService();
     const profile = await profileService.getProfileByUserId(user.id);
 
-    if (!profile || profile.role !== "admin") {
+    if (profile?.role !== "admin") {
       return NextResponse.json(
         { error: "Forbidden: Admin access required" },
         { status: 403 },
