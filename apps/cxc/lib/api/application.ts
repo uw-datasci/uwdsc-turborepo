@@ -71,7 +71,7 @@ export async function updateApplication(
  * @returns Promise with application data or null if not found
  * @throws Error if fetch fails (except 404)
  */
-export async function fetchApplication(
+export async function getApplication(
   profileId: string,
 ): Promise<Record<string, unknown> | null> {
   try {

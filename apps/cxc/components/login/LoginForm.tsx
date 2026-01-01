@@ -62,12 +62,16 @@ export function LoginForm() {
         router.refresh();
       }
     } catch (error: unknown) {
-      console.error("An unexpected error occurred:", error);
-      setAuthError(
-        error instanceof Error
-          ? error.message
-          : "An unexpected error occurred. Please try again",
-      );
+      console.error("Login error:", error);
+
+      // Handle API errors with proper error message
+      if (error && typeof error === "object" && "error" in error) {
+        setAuthError(error.error as string);
+      } else if (error instanceof Error) {
+        setAuthError(error.message);
+      } else {
+        setAuthError("An unexpected error occurred. Please try again");
+      }
     } finally {
       setIsLoading(false);
     }
@@ -104,13 +108,13 @@ export function LoginForm() {
                     />
                   </div>
                 </div>
-                {/* Show Authentication error */}
-                {authError && (
-                  <div className="text-destructive text-base mb-4">
-                    {authError}
-                  </div>
-                )}
               </AppSection>
+              {/* Show Authentication error */}
+              {authError && (
+                <div className="text-destructive text-base mt-2">
+                  {authError}
+                </div>
+              )}
             </div>
           </div>
 

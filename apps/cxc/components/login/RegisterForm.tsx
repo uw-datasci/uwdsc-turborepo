@@ -50,12 +50,16 @@ export function RegisterForm() {
       }
       await mutate();
     } catch (error: unknown) {
-      console.error(error);
-      setAuthError(
-        error instanceof Error
-          ? error.message
-          : "An unexpected error occurred. Please try again",
-      );
+      console.error("Registration error:", error);
+
+      // Handle API errors with proper error message
+      if (error && typeof error === "object" && "error" in error) {
+        setAuthError(error.error as string);
+      } else if (error instanceof Error) {
+        setAuthError(error.message);
+      } else {
+        setAuthError("An unexpected error occurred. Please try again");
+      }
     } finally {
       setIsLoading(false);
     }
