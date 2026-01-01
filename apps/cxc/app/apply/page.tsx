@@ -43,6 +43,8 @@ import {
 // ============================================================================
 
 const FINAL_STEP_COUNT = STEP_NAMES.length;
+const STORAGE_KEY_DESKTOP_STEP = "desktop_step";
+const STORAGE_KEY_MOBILE_PAGE = "mobile_page";
 
 // ============================================================================
 // Helper Functions
@@ -63,7 +65,9 @@ const pageToStep = (page: number): number => {
   if (page < 3) return 0; // pages 0, 1, 2 = Contact Info, About You, Optional
   if (page < 6) return 1; // pages 3, 4, 5 = Education, Hack Exp, Links
   if (page < 8) return 2; // pages 6, 7 = Question 1, Question 2
-  return 3; // page 8 = Review
+  if (page < 9) return 3; // page 8 = Teams
+  if (page < 10) return 4; // page 9 = MLH
+  return 5; // page 10 = Review
 };
 
 export default function ApplyPage() {
@@ -72,8 +76,20 @@ export default function ApplyPage() {
   // ========================================================================
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [currentDesktopStep, setCurrentDesktopStep] = useState<number>(0);
-  const [currentMobilePage, setCurrentMobilePage] = useState<number>(0);
+  const [currentDesktopStep, setCurrentDesktopStep] = useState<number>(() => {
+    if (typeof window !== "undefined") {
+      const saved = localStorage.getItem(STORAGE_KEY_DESKTOP_STEP);
+      return saved ? parseInt(saved, 10) : 0;
+    }
+    return 0;
+  });
+  const [currentMobilePage, setCurrentMobilePage] = useState<number>(() => {
+    if (typeof window !== "undefined") {
+      const saved = localStorage.getItem(STORAGE_KEY_MOBILE_PAGE);
+      return saved ? parseInt(saved, 10) : 0;
+    }
+    return 0;
+  });
   const [applicationStatus, setApplicationStatus] = useState<string | null>(
     null,
   );
@@ -99,6 +115,7 @@ export default function ApplyPage() {
    * - Fetch existing application if user has one
    * - Create blank application if user is new
    * - Pre-fill form with fetched data
+   * - If application is already submitted, show Submitted component immediately
    */
   useEffect(() => {
     const initializeApplication = async () => {
@@ -108,6 +125,14 @@ export default function ApplyPage() {
       setIsLoading(true);
       try {
         const existingApplication = await fetchApplication(user.id);
+
+        // Check if application is already submitted - if so, show Submitted page immediately
+        if (existingApplication && existingApplication.status === "submitted") {
+          setApplicationStatus("submitted");
+          setIsLoading(false);
+          return; // Don't allow editing a submitted application
+        }
+
         if (existingApplication) {
           // Pre-fill form with existing application data
           const formData = transformDatabaseDataToForm(existingApplication);
@@ -123,6 +148,37 @@ export default function ApplyPage() {
             email: user.email || "",
             name: fullName,
           });
+
+          // Restore localStorage values after form.reset() for fields that might be undefined in DB
+          // This ensures localStorage takes precedence for fields like hackathons_attended
+          setTimeout(() => {
+            const hackathonsKey = "cxc_form_hackathons_attended";
+            const savedHackathons = localStorage.getItem(hackathonsKey);
+            if (savedHackathons) {
+              const currentHackathons = form.getValues("hackathons_attended");
+              console.log("[apply/page] Restoring hackathons_attended:", {
+                saved: savedHackathons,
+                current: currentHackathons,
+              });
+              if (
+                currentHackathons === undefined ||
+                currentHackathons === null
+              ) {
+                form.setValue(
+                  "hackathons_attended",
+                  savedHackathons as AppFormValues["hackathons_attended"],
+                  {
+                    shouldDirty: false,
+                    shouldValidate: false,
+                  },
+                );
+                console.log(
+                  "[apply/page] Set hackathons_attended to:",
+                  form.getValues("hackathons_attended"),
+                );
+              }
+            }
+          }, 700);
         } else {
           // Create blank application entry for new user
           const resp = await createApplication(user.id);
@@ -141,6 +197,39 @@ export default function ApplyPage() {
             email: user.email || "",
             name: fullName,
           });
+
+          // Restore localStorage values after form.reset() for new applications
+          setTimeout(() => {
+            const hackathonsKey = "cxc_form_hackathons_attended";
+            const savedHackathons = localStorage.getItem(hackathonsKey);
+            if (savedHackathons) {
+              const currentHackathons = form.getValues("hackathons_attended");
+              console.log(
+                "[apply/page] Restoring hackathons_attended (new app):",
+                {
+                  saved: savedHackathons,
+                  current: currentHackathons,
+                },
+              );
+              if (
+                currentHackathons === undefined ||
+                currentHackathons === null
+              ) {
+                form.setValue(
+                  "hackathons_attended",
+                  savedHackathons as AppFormValues["hackathons_attended"],
+                  {
+                    shouldDirty: false,
+                    shouldValidate: false,
+                  },
+                );
+                console.log(
+                  "[apply/page] Set hackathons_attended to:",
+                  form.getValues("hackathons_attended"),
+                );
+              }
+            }
+          }, 700);
         }
         // Set application status
         setApplicationStatus(
@@ -155,6 +244,25 @@ export default function ApplyPage() {
 
     initializeApplication();
   }, [user, form]);
+
+  // Save step/page to localStorage whenever they change
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      localStorage.setItem(
+        STORAGE_KEY_DESKTOP_STEP,
+        currentDesktopStep.toString(),
+      );
+    }
+  }, [currentDesktopStep]);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      localStorage.setItem(
+        STORAGE_KEY_MOBILE_PAGE,
+        currentMobilePage.toString(),
+      );
+    }
+  }, [currentMobilePage]);
 
   // ========================================================================
   // Event Handlers
@@ -184,14 +292,45 @@ export default function ApplyPage() {
       }
 
       const transformedData = transformFormDataForDatabase(formData, user.id);
+
+      // If resume file is selected, upload it (resume is stored by user ID in storage)
+      if (formData.resume && formData.resume instanceof File) {
+        try {
+          const { uploadResume } = await import("@/lib/api/resume");
+          await uploadResume(formData.resume);
+        } catch (error) {
+          console.error("Failed to upload resume:", error);
+          // Continue even if upload fails
+        }
+      }
+
       const cleanedData = cleanFormData(transformedData);
       const response = await updateApplication(cleanedData);
 
+      // In handleSaveAndContinue, update the submit section:
       if (response.success) {
         if (isSubmit) {
           setApplicationStatus("submitted");
+          // Clear all localStorage autosave when application is submitted
+          const keysToRemove: string[] = [];
+          for (let i = 0; i < localStorage.length; i++) {
+            const key = localStorage.key(i);
+            if (
+              key &&
+              (key.startsWith("cxc_form_") ||
+                key === "q1_save" ||
+                key === "q2_save" ||
+                key === "resume_filename")
+            ) {
+              keysToRemove.push(key);
+            }
+          }
+          keysToRemove.forEach((key) => localStorage.removeItem(key));
+          localStorage.removeItem(STORAGE_KEY_DESKTOP_STEP);
+          localStorage.removeItem(STORAGE_KEY_MOBILE_PAGE);
+        } else {
+          onSuccess();
         }
-        onSuccess();
       } else {
         console.error("Failed to update application:", response.error);
       }
@@ -207,7 +346,12 @@ export default function ApplyPage() {
    */
   const handleDesktopStepChange = (newStep: number) => {
     setCurrentDesktopStep(newStep);
-    setCurrentMobilePage(stepToPage(newStep));
+    const newPage = stepToPage(newStep);
+    setCurrentMobilePage(newPage);
+    if (typeof window !== "undefined") {
+      localStorage.setItem(STORAGE_KEY_DESKTOP_STEP, newStep.toString());
+      localStorage.setItem(STORAGE_KEY_MOBILE_PAGE, newPage.toString());
+    }
   };
 
   /**
@@ -215,7 +359,12 @@ export default function ApplyPage() {
    */
   const handleMobilePageChange = (newPage: number) => {
     setCurrentMobilePage(newPage);
-    setCurrentDesktopStep(pageToStep(newPage));
+    const newStep = pageToStep(newPage);
+    setCurrentDesktopStep(newStep);
+    if (typeof window !== "undefined") {
+      localStorage.setItem(STORAGE_KEY_MOBILE_PAGE, newPage.toString());
+      localStorage.setItem(STORAGE_KEY_DESKTOP_STEP, newStep.toString());
+    }
   };
 
   // ========================================================================

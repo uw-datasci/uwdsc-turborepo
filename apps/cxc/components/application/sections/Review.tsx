@@ -1,6 +1,8 @@
 import { AppFormValues } from "@/lib/schemas/application";
 import AppSection from "../AppSection";
 import { UseFormReturn } from "react-hook-form";
+import React, { useState, useEffect } from "react";
+import { getResume, getUserEmails } from "@/lib/api";
 import {
   BookIcon,
   CalendarIcon,
@@ -27,7 +29,6 @@ import {
   CheckSquareIcon,
   SquareIcon,
 } from "@uwdsc/ui/index";
-import React from "react";
 import {
   APP_Q_FIELDS,
   CONTACT_INFO_FIELDS,
@@ -72,7 +73,7 @@ const UNIVERSITY_INFO_LABELS = ["University", "Program", "Year"];
 
 const PRIOR_HACK_EXP_LABELS = ["Experience", "Hackathons Attended"];
 
-const LINKS_LABELS = ["Github", "LinkedIn", "Website", "Other", "Resume"];
+const LINKS_LABELS = ["Github", "LinkedIn", "Website", "Other"];
 
 const APP_Q_LABEL = ["Question 1", "Question 2"];
 
@@ -253,7 +254,6 @@ const LinksIcons = [
   <LinkedinLogoIcon key="linkedin" size={24} />,
   <BrowserIcon key="x" size={24} />,
   <LinkIcon key="link" size={24} />,
-  <FileTextIcon key="resume" size={24} />,
 ];
 
 const CxCAppIcons = [
@@ -264,6 +264,72 @@ const CxCAppIcons = [
 const MLHIcons = [null, null, null];
 
 export function Review({ form }: ReviewProps) {
+  const [resumeUrl, setResumeUrl] = useState<string | null>(null);
+  const [resumeFileName, setResumeFileName] = useState<string | null>(null);
+  const [teamMembersWithNames, setTeamMembersWithNames] = useState<
+    Array<{ email: string; display_name: string | null }>
+  >([]);
+
+  // Fetch resume URL and filename
+  useEffect(() => {
+    const fetchResume = async () => {
+      try {
+        const result = await getResume();
+        if (result.url && result.resume) {
+          setResumeUrl(result.url);
+          setResumeFileName(result.resume.name);
+        }
+      } catch {
+        // No resume found - that's okay
+      }
+    };
+
+    fetchResume();
+  }, []);
+
+  // Fetch team member names
+  useEffect(() => {
+    const fetchTeamMemberNames = async () => {
+      const teamMembers = form.getValues("team_members");
+      if (
+        !teamMembers ||
+        !Array.isArray(teamMembers) ||
+        teamMembers.length === 0
+      ) {
+        return;
+      }
+
+      try {
+        const result = await getUserEmails();
+        const teamMemberEmails = teamMembers as string[];
+
+        // Match team member emails with user data
+        const matchedMembers = teamMemberEmails
+          .map((email) => {
+            const user = result.emails.find((u) => u.email === email);
+            return user
+              ? { email: user.email, display_name: user.display_name }
+              : { email, display_name: null };
+          })
+          .filter((member) => member !== null);
+
+        setTeamMembersWithNames(matchedMembers);
+      } catch (error) {
+        console.error("Failed to fetch team member names:", error);
+        // Fallback to just emails
+        const fallback = (teamMembers as string[]).map((email) => ({
+          email,
+          display_name: null,
+        }));
+        setTeamMembersWithNames(fallback);
+      }
+    };
+
+    fetchTeamMemberNames();
+  }, [form]);
+
+  const teamMembers = form.watch("team_members") || [];
+
   return (
     <div>
       <AppSection
@@ -297,9 +363,92 @@ export function Review({ form }: ReviewProps) {
         <SectionReviewCard
           form={form}
           iconArr={LinksIcons}
-          fieldArr={Object.values(LINKS_FIELDS)}
+          fieldArr={Object.values(LINKS_FIELDS).filter(
+            (field) => field !== "resume",
+          )}
           labelArr={LINKS_LABELS}
         />
+
+        {/* Resume Section */}
+        <div className="bg-cxc-input-bg p-4 flex flex-col gap-2">
+          <div className="flex flex-row gap-3 items-center min-w-0">
+            <div className="flex-shrink-0">
+              <FileTextIcon size={24} />
+            </div>
+            Resume:&nbsp;
+            {resumeUrl && resumeFileName ? (
+              <div className="min-w-0 flex-1">
+                <a
+                  className="underline decoration-1 break-words"
+                  href={resumeUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {resumeFileName} ↗
+                </a>
+              </div>
+            ) : (
+              "???"
+            )}
+          </div>
+        </div>
+
+        {/* Team Members Section */}
+        <div className="bg-cxc-input-bg p-4 flex flex-col gap-2">
+          <div className={`flex flex-row gap-3 min-w-0`}>
+            <div className="flex-shrink-0 pt-0.5">
+              <UsersIcon size={24} />
+            </div>
+            <div className="min-w-0 flex-1">
+              {Array.isArray(teamMembers) && teamMembers.length > 0 ? (
+                <>
+                  <div className="font-medium mb-2">Team Members:</div>
+                  <div className="flex flex-wrap gap-2 bg-cxc-input-bg">
+                    {teamMembersWithNames.length > 0
+                      ? // Display with names if available
+                        teamMembersWithNames.map((member, index) => (
+                          <div
+                            key={index}
+                            className="inline-flex items-center gap-2 px-3 py-1.5 bg-cxc-input-bg"
+                          >
+                            <span className="">
+                              {member.display_name ? (
+                                <>
+                                  <span className="font-medium">
+                                    {member.display_name}
+                                  </span>
+                                  <span className="text-muted-foreground">
+                                    {" "}
+                                    ({member.email})
+                                  </span>
+                                </>
+                              ) : (
+                                member.email
+                              )}
+                            </span>
+                          </div>
+                        ))
+                      : // Fallback to just emails if names not available
+                        (teamMembers as string[]).map((email, index) => (
+                          <div
+                            key={index}
+                            className="inline-flex items-center gap-2 px-3 py-1.5 bg-primary/10 rounded-md border border-primary/20"
+                          >
+                            <span className="text-sm">{email}</span>
+                          </div>
+                        ))}
+                  </div>
+                </>
+              ) : (
+                <div className="flex items-center gap-2">
+                  <span className="font-medium">Team Members:</span>
+                  <span className="text-muted-foreground">No Team Members</span>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+
         <SectionReviewCard
           form={form}
           iconArr={CxCAppIcons}

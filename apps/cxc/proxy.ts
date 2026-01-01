@@ -8,8 +8,8 @@ import { withProtected } from "./lib/middleware/withProtected";
 import { withAuth } from "./lib/middleware/withAuth";
 
 const APPLY_ROUTE = "/apply";
-const PROTECTED_ROUTES = new Set(["/admin"]);
-const AUTH_ROUTES = new Set(["/login", "/register"]);
+const PROTECTED_ROUTES = new Set(["/admin", "/review"]);
+const AUTH_ROUTES = new Set(["/login", "/register", "/start"]);
 
 /**
  * Main middleware dispatcher
@@ -36,7 +36,7 @@ export async function proxy(request: NextRequest) {
       return withApply(request, user);
     // 3. Handle Authenticated users trying to access protected routes
     case PROTECTED_ROUTES.has(pathname):
-      return withProtected(request, user);
+      return await withProtected(request, user);
   }
 
   // No specific middleware matched, continue with the request

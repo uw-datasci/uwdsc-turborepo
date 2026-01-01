@@ -13,12 +13,16 @@ import {
 } from "@/constants/application";
 import AppSection from "../AppSection";
 import { AppFormValues } from "@/lib/schemas/application";
+import { useFormFieldPersistence } from "@/hooks/useFormFieldPersistence";
 
 interface PriorHackExpProps {
   readonly form: UseFormReturn<AppFormValues>;
 }
 
 export function PriorHackExp({ form }: PriorHackExpProps) {
+  // Persist form fields to localStorage
+  useFormFieldPersistence(form, "prior_hackathon_experience");
+  useFormFieldPersistence(form, "hackathons_attended");
   return (
     <Form {...form}>
       <AppSection label="Prior hackathon experience">
