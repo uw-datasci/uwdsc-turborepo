@@ -4,12 +4,18 @@ import { Form, FormField } from "@uwdsc/ui/index";
 import AppSection from "../AppSection";
 import { renderCheckboxField } from "@/components/FormHelpers";
 import { UseFormReturn } from "react-hook-form";
+import { useFormFieldPersistence } from "@/hooks/useFormFieldPersistence";
 
 interface PriorHackExpProps {
   readonly form: UseFormReturn<AppFormValues>;
 }
 
 export default function MLHCheckboxes({ form }: PriorHackExpProps) {
+  // Persist MLH checkbox fields to localStorage
+  useFormFieldPersistence(form, "mlh_agreed_code_of_conduct");
+  useFormFieldPersistence(form, "mlh_authorize_info_sharing");
+  useFormFieldPersistence(form, "mlh_email_opt_in");
+
   return (
     <Form {...form}>
       <AppSection

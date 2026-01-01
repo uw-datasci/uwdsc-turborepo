@@ -25,6 +25,7 @@ import { AppNavigationButtons } from "./AppNavigationButtons";
 import { useApplicationProgressSync } from "@/hooks/useApplicationProgress";
 import { useEffect, useState } from "react";
 import MLHCheckboxes from "./sections/MLHCheckboxes";
+import { Teams } from "./sections/Teams";
 
 interface MobileApplicationProps {
   readonly form: UseFormReturn<AppFormValues>;
@@ -47,7 +48,8 @@ const PAGE_NAMES = [
   "Documents",
   "Question 1",
   "Question 2",
-  "Teams & MLH",
+  "Teams",
+  "MLH",
   "Complete application",
 ];
 
@@ -64,8 +66,9 @@ export default function MobileApplication({
     if (currentPage < 3) return 0; // Contact Info, About You, Optional About You
     if (currentPage < 6) return 1; // Education, Prior Hack Exp, Links & Docs
     if (currentPage < 8) return 2; // CXC Q1, Q2
-    if (currentPage < 9) return 3; // Teams & MLH
-    return 4; // Review
+    if (currentPage < 9) return 3; // Teams
+    if (currentPage < 10) return 4; // MLH
+    return 5; // Review
   };
 
   const currentStep = getCurrentStep();
@@ -111,8 +114,10 @@ export default function MobileApplication({
       case 7:
         return <CxcQ2 form={form} />;
       case 8:
-        return <MLHCheckboxes form={form} />;
+        return <Teams form={form} />;
       case 9:
+        return <MLHCheckboxes form={form} />;
+      case 10:
         return <Review form={form} />;
     }
   };

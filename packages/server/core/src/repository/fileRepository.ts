@@ -33,9 +33,7 @@ export class FileRepository {
         contentType,
       });
 
-    if (error) {
-      return { data: null, error };
-    }
+    if (error) return { data: null, error };
 
     return { data, error: null };
   }
@@ -49,6 +47,21 @@ export class FileRepository {
       .getPublicUrl(objectKey);
 
     return data.publicUrl;
+  }
+
+  /**
+   * Create a signed URL for a file (for private buckets)
+   * @param objectKey - The file path/key
+   * @param expiresIn - Expiration time in seconds (default: 3600 = 1 hour)
+   */
+  async createSignedUrl(objectKey: string, expiresIn: number = 3600) {
+    const { data, error } = await this.client.storage
+      .from(this.bucketName)
+      .createSignedUrl(objectKey, expiresIn);
+
+    if (error) throw error;
+
+    return data.signedUrl;
   }
 
   /**

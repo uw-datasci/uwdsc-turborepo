@@ -6,12 +6,16 @@ import { renderTextField } from "@/components/FormHelpers";
 import { CONTACT_INFO_FIELDS } from "@/constants/application";
 import AppSection from "../AppSection";
 import { AppFormValues } from "@/lib/schemas/application";
+import { useFormFieldPersistence } from "@/hooks/useFormFieldPersistence";
 
 interface ContactInfoProps {
   readonly form: UseFormReturn<AppFormValues>;
 }
 
 export function ContactInfo({ form }: ContactInfoProps) {
+  // Persist form fields to localStorage
+  useFormFieldPersistence(form, "phone");
+  useFormFieldPersistence(form, "discord");
   return (
     <Form {...form}>
       <AppSection

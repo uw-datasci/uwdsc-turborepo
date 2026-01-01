@@ -6,5 +6,6 @@ export * from "./PriorHackExp";
 export * from "./LinksAndDocs";
 export * from "./CxcQ1";
 export * from "./CxcQ2";
+export * from "./Teams";
 export * from "./Review";
 export * from "./Submitted";

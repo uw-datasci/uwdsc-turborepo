@@ -6,12 +6,16 @@ import { renderTextAreaField } from "@/components/FormHelpers";
 import AppSection from "../AppSection";
 import { AppFormValues } from "@/lib/schemas/application";
 import { APP_Q_FIELDS } from "@/constants/application";
+import { useFormFieldPersistence } from "@/hooks/useFormFieldPersistence";
 
 interface CxcQ2Props {
   readonly form: UseFormReturn<AppFormValues>;
 }
 
 export function CxcQ2({ form }: CxcQ2Props) {
+  // Persist form field to localStorage
+  useFormFieldPersistence(form, APP_Q_FIELDS.cxc_q2, "q2_save");
+
   return (
     <Form {...form}>
       <AppSection>
