@@ -158,6 +158,7 @@ ALTER TABLE "public"."event_attendance" ADD CONSTRAINT "event_attendance_profile
 -- Policies
 create policy "Admins can insert reviews"
 on "public"."reviews"
+as PERMISSIVE
 to public
 with check (
   ((EXISTS ( SELECT 1
@@ -168,6 +169,7 @@ with check (
 
 create policy "Admins can update their own reviews"
 on "public"."reviews"
+as PERMISSIVE
 to public
 using (
   ((EXISTS ( SELECT 1
@@ -177,6 +179,7 @@ using (
 
 create policy "Admins can view all reviews"
 on "public"."reviews"
+as PERMISSIVE
 to public
 using (
   (EXISTS ( SELECT 1
@@ -186,6 +189,7 @@ using (
 
 create policy "Reviewers can view their own reviews"
 on "public"."reviews"
+as PERMISSIVE
 to public
 using (
   (auth.uid() = reviewer_id)
