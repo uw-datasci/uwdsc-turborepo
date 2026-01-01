@@ -35,7 +35,7 @@ export function Teams({ form }: TeamsProps) {
   const watchedTeamMembers = form.watch("team_members");
   const teamMembers = useMemo(
     () => watchedTeamMembers || [],
-    [watchedTeamMembers]
+    [watchedTeamMembers],
   );
 
   // Debug: Log whenever teamMembers changes
@@ -43,7 +43,7 @@ export function Teams({ form }: TeamsProps) {
     console.log("[Teams] teamMembers changed:", teamMembers);
     console.log(
       "[Teams] Form value from getValues:",
-      form.getValues("team_members")
+      form.getValues("team_members"),
     );
   }, [teamMembers, form]);
 
@@ -100,7 +100,7 @@ export function Teams({ form }: TeamsProps) {
           "Fetched user emails:",
           result.emails.length,
           "First user:",
-          result.emails[0]
+          result.emails[0],
         );
         setUserEmails(result.emails);
       } catch (error) {
@@ -120,7 +120,7 @@ export function Teams({ form }: TeamsProps) {
     if (!searchQuery.trim()) {
       return userEmails.filter(
         (user) =>
-          !teamMembers.includes(user.email) && user.email !== currentUserEmail
+          !teamMembers.includes(user.email) && user.email !== currentUserEmail,
       );
     }
 
@@ -130,7 +130,7 @@ export function Teams({ form }: TeamsProps) {
         !teamMembers.includes(user.email) &&
         user.email !== currentUserEmail &&
         (user.email.toLowerCase().includes(query) ||
-          user.display_name?.toLowerCase().includes(query))
+          user.display_name?.toLowerCase().includes(query)),
     );
   }, [searchQuery, userEmails, teamMembers, form]);
 
@@ -142,7 +142,7 @@ export function Teams({ form }: TeamsProps) {
       "[Teams] Current team members:",
       current,
       "Current user email:",
-      currentUserEmail
+      currentUserEmail,
     );
 
     if (current.length >= 4) {
@@ -161,7 +161,7 @@ export function Teams({ form }: TeamsProps) {
       form.setValue("team_members", newMembers, { shouldDirty: true });
       console.log(
         "[Teams] After setValue, form value:",
-        form.getValues("team_members")
+        form.getValues("team_members"),
       );
     }
     setSearchQuery("");
@@ -177,7 +177,7 @@ export function Teams({ form }: TeamsProps) {
     form.setValue("team_members", newMembers, { shouldDirty: true });
     console.log(
       "[Teams] After setValue, form value:",
-      form.getValues("team_members")
+      form.getValues("team_members"),
     );
   };
 
@@ -283,7 +283,7 @@ export function Teams({ form }: TeamsProps) {
                               onClick={(e) => {
                                 console.log(
                                   "[Teams] Dropdown item clicked:",
-                                  user.email
+                                  user.email,
                                 );
                                 e.preventDefault();
                                 e.stopPropagation();

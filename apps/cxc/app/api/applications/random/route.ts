@@ -51,11 +51,10 @@ export async function GET() {
       }
     };
 
-    const application =
-      await adminReviewService.getNextApplicationForReview(
-        user.id,
-        getResumeUrl,
-      );
+    const application = await adminReviewService.getNextApplicationForReview(
+      user.id,
+      getResumeUrl,
+    );
 
     if (!application) {
       return NextResponse.json(

@@ -364,7 +364,7 @@ export function Review({ form }: ReviewProps) {
           form={form}
           iconArr={LinksIcons}
           fieldArr={Object.values(LINKS_FIELDS).filter(
-            (field) => field !== "resume"
+            (field) => field !== "resume",
           )}
           labelArr={LINKS_LABELS}
         />

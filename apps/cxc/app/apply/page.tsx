@@ -319,7 +319,8 @@ export default function ApplyPage() {
               key &&
               (key.startsWith("cxc_form_") ||
                 key === "q1_save" ||
-                key === "q2_save")
+                key === "q2_save" ||
+                key === "resume_filename")
             ) {
               keysToRemove.push(key);
             }
@@ -327,8 +328,9 @@ export default function ApplyPage() {
           keysToRemove.forEach((key) => localStorage.removeItem(key));
           localStorage.removeItem(STORAGE_KEY_DESKTOP_STEP);
           localStorage.removeItem(STORAGE_KEY_MOBILE_PAGE);
+        } else {
+          onSuccess();
         }
-        onSuccess();
       } else {
         console.error("Failed to update application:", response.error);
       }

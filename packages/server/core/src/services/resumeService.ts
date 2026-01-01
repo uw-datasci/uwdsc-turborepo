@@ -83,11 +83,11 @@ export class ResumeService extends FileService {
    */
   async getUserResume(userId: string): Promise<
     | {
-      success: true;
-      resume: FileObject | null;
-      url: string | null;
-      key: string | null;
-    }
+        success: true;
+        resume: FileObject | null;
+        url: string | null;
+        key: string | null;
+      }
     | { success: false; error: string }
   > {
     try {
@@ -155,11 +155,11 @@ export class ResumeService extends FileService {
     expiresIn: number = 3600,
   ): Promise<
     | {
-      success: true;
-      url: string;
-      resume: FileObject | null;
-      key: string | null;
-    }
+        success: true;
+        url: string;
+        resume: FileObject | null;
+        key: string | null;
+      }
     | { success: false; error: string }
   > {
     try {
