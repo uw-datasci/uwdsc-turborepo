@@ -1,13 +1,14 @@
 import { type ComboboxOption } from "@uwdsc/ui";
 
-export const MOBILE_STEP_TO_PAGE_MAP = [0, 3, 6, 8, 9];
-export const NUMBER_MOBILE_PAGES = 10;
+export const MOBILE_STEP_TO_PAGE_MAP = [0, 3, 6, 8, 9, 10];
+export const NUMBER_MOBILE_PAGES = 11;
 
 export const STEP_NAMES = [
   "Your Info",
   "Your Experience",
   "Application questions",
-  "Teams & MLH",
+  "Teams",
+  "MLH",
   "Submit!",
 ];
 
@@ -206,6 +207,7 @@ export const ETHNICITIES = [
 export const ETHNICITY_OTHER_LABEL = "Other (Please Specify)";
 
 export const COUNTRY_OPTIONS: ComboboxOption[] = [
+  { value: "Canada", label: "Canada" },
   { value: "Afghanistan", label: "Afghanistan" },
   { value: "Åland Islands", label: "Åland Islands" },
   { value: "Albania", label: "Albania" },
@@ -257,7 +259,6 @@ export const COUNTRY_OPTIONS: ComboboxOption[] = [
   { value: "Cabo Verde", label: "Cabo Verde" },
   { value: "Cambodia", label: "Cambodia" },
   { value: "Cameroon", label: "Cameroon" },
-  { value: "Canada", label: "Canada" },
   { value: "Cayman Islands", label: "Cayman Islands" },
   { value: "Central African Republic", label: "Central African Republic" },
   { value: "Chad", label: "Chad" },
@@ -528,6 +529,7 @@ export const COUNTRY_OPTIONS: ComboboxOption[] = [
   { value: "Yemen", label: "Yemen" },
   { value: "Zambia", label: "Zambia" },
   { value: "Zimbabwe", label: "Zimbabwe" },
+  { value: "Other", label: "Other" },
 ];
 
 // experience

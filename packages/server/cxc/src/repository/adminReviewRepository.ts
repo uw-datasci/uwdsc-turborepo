@@ -1,0 +1,223 @@
+import { BaseRepository } from "@uwdsc/server/core/repository/baseRepository";
+import { ApiError } from "../../../core/src/utils/errors";
+
+export interface ApplicationWithReviewCount {
+  id: string;
+  profile_id: string;
+  status: string;
+  team_members?: string | null;
+  review_count: number;
+  [key: string]: unknown;
+}
+
+export interface TeamMemberWithName {
+  email: string;
+  display_name: string | null;
+}
+
+export interface ReviewData {
+  id: string;
+  application_id: string;
+  reviewer_id: string;
+  basic_info_score: number;
+  q1_score: number;
+  q2_score: number;
+  reviewed_at: string;
+  [key: string]: unknown;
+}
+
+export class AdminReviewRepository extends BaseRepository {
+  /**
+   * Get the application with the least number of reviews
+   * Excludes applications already reviewed by the specified reviewer
+   * Ties broken lexicographically by application ID
+   */
+  async getApplicationWithLeastReviews(
+    reviewerId: string,
+  ): Promise<ApplicationWithReviewCount | null> {
+    try {
+      const applications = await this.sql<ApplicationWithReviewCount[]>`
+        SELECT 
+          a.*,
+          COALESCE(review_counts.review_count, 0)::int as review_count
+        FROM applications a
+        LEFT JOIN (
+          SELECT 
+            application_id,
+            COUNT(*)::int as review_count
+          FROM reviews
+          GROUP BY application_id
+        ) review_counts ON a.id = review_counts.application_id
+        WHERE a.status = 'submitted'
+          AND NOT EXISTS (
+            SELECT 1
+            FROM reviews r
+            WHERE r.application_id = a.id AND r.reviewer_id = ${reviewerId}
+          )
+        ORDER BY 
+          COALESCE(review_counts.review_count, 0) ASC,
+          a.id ASC
+        LIMIT 1
+      `;
+
+      if (applications.length === 0) return null;
+
+      return applications[0] ?? null;
+    } catch (error) {
+      throw new ApiError(
+        `Failed to fetch application with least reviews: ${(error as Error).message}`,
+        500,
+      );
+    }
+  }
+
+  /**
+   * Get user email by profile ID (user ID)
+   */
+  async getUserEmail(profileId: string): Promise<string | null> {
+    try {
+      const emailResults = await this.sql<Array<{ email: string }>>`
+        SELECT email 
+        FROM auth.users 
+        WHERE id = ${profileId} 
+        LIMIT 1
+      `;
+
+      if (emailResults.length === 0 || !emailResults[0]) return null;
+
+      return emailResults[0].email;
+    } catch (error) {
+      throw new ApiError(
+        `Failed to fetch user email: ${(error as Error).message}`,
+        500,
+      );
+    }
+  }
+
+  /**
+   * Get team member names by email addresses
+   */
+  async getTeamMembersByEmails(
+    emails: string[],
+  ): Promise<TeamMemberWithName[]> {
+    try {
+      if (emails.length === 0) return [];
+
+      const teamMemberResults = await this.sql<TeamMemberWithName[]>`
+        SELECT 
+          au.email,
+          CASE 
+            WHEN au.raw_user_meta_data->>'first_name' IS NOT NULL 
+              AND au.raw_user_meta_data->>'last_name' IS NOT NULL
+            THEN TRIM(
+              COALESCE(au.raw_user_meta_data->>'first_name', '') || ' ' || 
+              COALESCE(au.raw_user_meta_data->>'last_name', '')
+            )
+            WHEN au.raw_user_meta_data->>'first_name' IS NOT NULL
+            THEN au.raw_user_meta_data->>'first_name'
+            WHEN au.raw_user_meta_data->>'last_name' IS NOT NULL
+            THEN au.raw_user_meta_data->>'last_name'
+            ELSE NULL
+          END as display_name
+        FROM auth.users au
+        WHERE au.email = ANY(${emails})
+      `;
+
+      return teamMemberResults;
+    } catch (error) {
+      throw new ApiError(
+        `Failed to fetch team members: ${(error as Error).message}`,
+        500,
+      );
+    }
+  }
+
+  /**
+   * Check if a reviewer has already reviewed an application
+   */
+  async hasReviewerReviewedApplication(
+    applicationId: string,
+    reviewerId: string,
+  ): Promise<boolean> {
+    try {
+      const result = await this.sql<Array<{ id: string }>>`
+        SELECT id
+        FROM reviews
+        WHERE application_id = ${applicationId}
+          AND reviewer_id = ${reviewerId}
+        LIMIT 1
+      `;
+
+      return result.length > 0;
+    } catch (error) {
+      throw new ApiError(
+        `Failed to check existing review: ${(error as Error).message}`,
+        500,
+      );
+    }
+  }
+
+  /**
+   * Insert a new review
+   */
+  async createReview(reviewData: {
+    application_id: string;
+    reviewer_id: string;
+    basic_info_score: number;
+    q1_score: number;
+    q2_score: number;
+  }): Promise<ReviewData> {
+    try {
+      const result = await this.sql<ReviewData[]>`
+        INSERT INTO reviews (
+          application_id,
+          reviewer_id,
+          basic_info_score,
+          q1_score,
+          q2_score,
+          reviewed_at
+        )
+        VALUES (
+          ${reviewData.application_id},
+          ${reviewData.reviewer_id},
+          ${reviewData.basic_info_score},
+          ${reviewData.q1_score},
+          ${reviewData.q2_score},
+          NOW()
+        )
+        RETURNING *
+      `;
+
+      if (result.length === 0 || !result[0]) {
+        throw new Error("Failed to create review");
+      }
+
+      return result[0];
+    } catch (error) {
+      throw new ApiError(
+        `Failed to save review: ${(error as Error).message}`,
+        500,
+      );
+    }
+  }
+
+  /**
+   * Get total review count for a reviewer
+   */
+  async getReviewCountByReviewer(reviewerId: string): Promise<number> {
+    try {
+      const result = await this.sql<Array<{ count: number }>>`
+        SELECT COUNT(*)::int as count
+        FROM reviews
+        WHERE reviewer_id = ${reviewerId}
+      `;
+
+      return result[0]?.count ?? 0;
+    } catch (error) {
+      throw new ApiError(
+        `Failed to get review count: ${(error as Error).message}`,
+        500,
+      );
+    }
+  }
+}

@@ -16,12 +16,19 @@ import {
   UNIVERSITY_INFO_FIELDS,
   UNIVERSITY_OPTIONS,
 } from "@/constants/application";
+import { useFormFieldPersistence } from "@/hooks/useFormFieldPersistence";
 
 interface EducationProps {
   readonly form: UseFormReturn<AppFormValues>;
 }
 
 export function Education({ form }: EducationProps) {
+  // Persist form fields to localStorage
+  useFormFieldPersistence(form, "university_name");
+  useFormFieldPersistence(form, "university_name_other");
+  useFormFieldPersistence(form, "program");
+  useFormFieldPersistence(form, "program_other");
+  useFormFieldPersistence(form, "year_of_study");
   const universityName = form.watch("university_name");
   const programName = form.watch("program");
 

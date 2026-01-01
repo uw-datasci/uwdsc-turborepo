@@ -97,7 +97,11 @@ export const isDesktopStepValid = (
       return !errors.cxc_q1 && !!CxcQ1 && !errors.cxc_q2 && !!CxcQ2;
     }
     case 3: {
-      // Teams & MLH
+      // Teams (optional, no validation needed)
+      return true;
+    }
+    case 4: {
+      // MLH
       const mlh_agreed_code_of_conduct = form.watch(
         "mlh_agreed_code_of_conduct",
       );
@@ -228,7 +232,11 @@ export const isMobileStepValid = (
       return !errors.cxc_q2 && !!cxcQ2;
     }
     case 8: {
-      // Teams & MLH
+      // Teams (optional, no validation needed)
+      return true;
+    }
+    case 9: {
+      // MLH
       const mlh_agreed_code_of_conduct = form.watch(
         "mlh_agreed_code_of_conduct",
       );

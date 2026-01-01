@@ -12,7 +12,7 @@ import { useRouter } from "next/navigation";
 import { renderTextField } from "../FormHelpers";
 import { Loader2 } from "lucide-react";
 import { VerifyEmailModal } from "./VerifyEmailModal";
-import { login } from "@/lib/api/auth";
+import { login } from "@/lib/api";
 import { useAuth } from "@/contexts/AuthContext";
 import AppSection from "../application/AppSection";
 import Link from "next/link";

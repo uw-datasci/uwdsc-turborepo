@@ -1,4 +1,7 @@
-import { ApplicationRepository } from "../repository/applicationRepository";
+import {
+  ApplicationRepository,
+  UserEmailData,
+} from "../repository/applicationRepository";
 
 export interface ApplicationData {
   profile_id: string;
@@ -34,5 +37,12 @@ export class ApplicationService {
     data: Partial<ApplicationData>,
   ): Promise<void> {
     return this.repository.updateApplication(profileId, data);
+  }
+
+  /**
+   * Get all user emails with display names for team member selection
+   */
+  async getAllUserEmails(): Promise<UserEmailData[]> {
+    return this.repository.getAllUserEmails();
   }
 }
