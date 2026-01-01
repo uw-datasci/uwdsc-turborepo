@@ -4,6 +4,7 @@ import { signOut } from "@/lib/api";
 import { UserProfile } from "@/types/api";
 import { CountingNumber, GlassSurface } from "@uwdsc/ui";
 import { motion } from "framer-motion";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
@@ -88,14 +89,12 @@ export default function Hero({ profile, mutate }: Readonly<HeroProps>) {
             borderRadius={9999}
             className="px-3 py-1 md:px-6 md:py-3 overflow-visible! hover:cursor-pointer hover:scale-105 transition-transform duration-200"
           >
-            <button
+            <Link
+              href="/login"
               className="text-base md:text-xl font-medium flex items-center w-full justify-center hover:cursor-pointer"
-              onClick={() => {
-                router.push("/login");
-              }}
             >
               Log in →
-            </button>
+            </Link>
           </GlassSurface>
         </div>
       )}
@@ -108,15 +107,12 @@ export default function Hero({ profile, mutate }: Readonly<HeroProps>) {
           borderRadius={9999}
           className={`${profile ? "px-4 py-2" : "px-3 py-1"} md:px-6 md:py-3 overflow-visible! hover:cursor-pointer hover:scale-105 transition-transform duration-200`}
         >
-          <button
+          <Link
+            href={profile ? "/check-in" : "/register"}
             className="text-base md:text-xl font-medium flex items-center w-full justify-center hover:cursor-pointer"
-            onClick={() => {
-              if (profile) router.push("/check-in");
-              else router.push("/register");
-            }}
           >
             {profile ? "Check in for an event →" : "Sign up →"}
-          </button>
+          </Link>
         </GlassSurface>
       </div>
 
