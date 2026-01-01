@@ -19,7 +19,6 @@ export default function DSCLogo({
         alt="uwdsc logo"
         fill
         className="object-contain"
-        priority
       />
     </div>
   );
