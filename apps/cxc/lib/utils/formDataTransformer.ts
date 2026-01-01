@@ -74,8 +74,10 @@ export function transformFormDataForDatabase(
     profile_id: profileId,
     status: formData.status || "draft",
     submitted_at: formData.submitted_at || null,
-    phone_number: formData.phone,
-    discord: formData.discord,
+    // Truncate phone_number to 12 characters (database constraint: varchar(12))
+    phone_number: formData.phone ? formData.phone.slice(0, 12) : "",
+    // Truncate discord to 32 characters (database constraint: varchar(32))
+    discord: formData.discord ? formData.discord.slice(0, 32) : "",
     t_shirt: formData.tshirt_size,
     dietary_restrictions: dietaryRestrictions,
     age: formData.age,

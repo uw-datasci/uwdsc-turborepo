@@ -163,7 +163,7 @@ export const MLH_FIELDS = {
 } as const;
 
 // personal
-export const TSHIRT_OPTIONS = ["XS", "S", "M", "L", "XL", "XXL"];
+export const TSHIRT_OPTIONS = ["S", "M", "L", "XL"];
 
 export const DIETARY_OPTIONS = [
   "None",

@@ -5,7 +5,7 @@ CREATE TYPE "public"."role_enum" AS ENUM ('hacker', 'volunteer', 'admin', 'defau
 CREATE TYPE "public"."application_status_enum" AS ENUM ('draft', 'submitted', 'offered', 'accepted', 'rejected', 'waitlisted');
 
 -- CreateEnum
-CREATE TYPE "public"."size_options" AS ENUM ('XS', 'S', 'M', 'L', 'XL', 'XXL');
+CREATE TYPE "public"."size_options" AS ENUM ('S', 'M', 'L', 'XL');
 
 -- CreateEnum
 CREATE TYPE "public"."gender_options" AS ENUM ('Male', 'Female', 'Non-Binary', 'Other', 'Prefer not to say');

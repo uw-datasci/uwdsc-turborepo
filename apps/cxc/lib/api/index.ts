@@ -20,5 +20,17 @@ export { uploadResume, getResume } from "./resume";
 export { getRandomApplication, submitReview } from "./review";
 export type { SubmitReviewRequest, SubmitReviewResponse } from "./review";
 
+// Export all team functions
+export { createTeam, joinTeam, getMyTeam, leaveTeam } from "./teams";
+export type {
+  Team,
+  CreateTeamRequest,
+  CreateTeamResponse,
+  JoinTeamRequest,
+  JoinTeamResponse,
+  GetMyTeamResponse,
+  LeaveTeamResponse,
+} from "./teams";
+
 // Export all types
 export type * from "@/types/api";

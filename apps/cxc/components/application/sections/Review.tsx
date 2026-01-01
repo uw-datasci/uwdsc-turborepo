@@ -2,7 +2,7 @@ import { AppFormValues } from "@/lib/schemas/application";
 import AppSection from "../AppSection";
 import { UseFormReturn } from "react-hook-form";
 import React, { useState, useEffect } from "react";
-import { getResume, getUserEmails } from "@/lib/api";
+import { getResume, getUserEmails, getMyTeam, type Team } from "@/lib/api";
 import {
   BookIcon,
   CalendarIcon,
@@ -266,6 +266,7 @@ const MLHIcons = [null, null, null];
 export function Review({ form }: ReviewProps) {
   const [resumeUrl, setResumeUrl] = useState<string | null>(null);
   const [resumeFileName, setResumeFileName] = useState<string | null>(null);
+  const [team, setTeam] = useState<Team | null>(null);
   const [teamMembersWithNames, setTeamMembersWithNames] = useState<
     Array<{ email: string; display_name: string | null }>
   >([]);
@@ -287,45 +288,82 @@ export function Review({ form }: ReviewProps) {
     fetchResume();
   }, []);
 
-  // Fetch team member names
+  // Fetch team info and team member names
   useEffect(() => {
-    const fetchTeamMemberNames = async () => {
-      const teamMembers = form.getValues("team_members");
-      if (
-        !teamMembers ||
-        !Array.isArray(teamMembers) ||
-        teamMembers.length === 0
-      ) {
-        return;
-      }
-
+    const fetchTeamInfo = async () => {
       try {
-        const result = await getUserEmails();
-        const teamMemberEmails = teamMembers as string[];
+        // First, try to get team from API
+        const teamResult = await getMyTeam();
+        if (teamResult.team) {
+          setTeam(teamResult.team);
+          const teamMembers = [
+            teamResult.team.team_member_1,
+            teamResult.team.team_member_2,
+            teamResult.team.team_member_3,
+            teamResult.team.team_member_4,
+          ].filter((m): m is string => m !== null);
 
-        // Match team member emails with user data
-        const matchedMembers = teamMemberEmails
-          .map((email) => {
-            const user = result.emails.find((u) => u.email === email);
-            return user
-              ? { email: user.email, display_name: user.display_name }
-              : { email, display_name: null };
-          })
-          .filter((member) => member !== null);
+          // Fetch display names for team members
+          try {
+            const result = await getUserEmails();
+            const matchedMembers = teamMembers
+              .map((email) => {
+                const user = result.emails.find((u) => u.email === email);
+                return {
+                  email,
+                  display_name: user?.display_name || null,
+                };
+              })
+              .filter((m) => m.email);
 
-        setTeamMembersWithNames(matchedMembers);
+            setTeamMembersWithNames(matchedMembers);
+          } catch (error) {
+            console.error("Failed to fetch team member names:", error);
+            const fallback = teamMembers.map((email) => ({
+              email,
+              display_name: null,
+            }));
+            setTeamMembersWithNames(fallback);
+          }
+        } else {
+          // Fallback to form values if not in a team
+          const teamMembers = form.getValues("team_members");
+          if (
+            teamMembers &&
+            Array.isArray(teamMembers) &&
+            teamMembers.length > 0
+          ) {
+            try {
+              const result = await getUserEmails();
+              const teamMemberEmails = teamMembers as string[];
+
+              const matchedMembers = teamMemberEmails
+                .map((email) => {
+                  const user = result.emails.find((u) => u.email === email);
+                  return {
+                    email,
+                    display_name: user?.display_name || null,
+                  };
+                })
+                .filter((m) => m.email);
+
+              setTeamMembersWithNames(matchedMembers);
+            } catch (error) {
+              console.error("Failed to fetch team member names:", error);
+              const fallback = (teamMembers as string[]).map((email) => ({
+                email,
+                display_name: null,
+              }));
+              setTeamMembersWithNames(fallback);
+            }
+          }
+        }
       } catch (error) {
-        console.error("Failed to fetch team member names:", error);
-        // Fallback to just emails
-        const fallback = (teamMembers as string[]).map((email) => ({
-          email,
-          display_name: null,
-        }));
-        setTeamMembersWithNames(fallback);
+        console.error("Failed to fetch team info:", error);
       }
     };
 
-    fetchTeamMemberNames();
+    fetchTeamInfo();
   }, [form]);
 
   const teamMembers = form.watch("team_members") || [];
@@ -400,8 +438,13 @@ export function Review({ form }: ReviewProps) {
               <UsersIcon size={24} />
             </div>
             <div className="min-w-0 flex-1">
-              {Array.isArray(teamMembers) && teamMembers.length > 0 ? (
+              {(team || (Array.isArray(teamMembers) && teamMembers.length > 0)) ? (
                 <>
+                  {team && (
+                    <div className="font-medium mb-2">
+                      Team: <span className="text-foreground">{team.team_name}</span>
+                    </div>
+                  )}
                   <div className="font-medium mb-2">Team Members:</div>
                   <div className="flex flex-wrap gap-2 bg-cxc-input-bg">
                     {teamMembersWithNames.length > 0

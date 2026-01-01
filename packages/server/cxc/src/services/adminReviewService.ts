@@ -10,6 +10,7 @@ export interface ApplicationForReview {
   status: string;
   email: string | null;
   resume_url: string | null;
+  team_name: string | null;
   team_members_with_names: TeamMemberWithName[];
   [key: string]: unknown;
 }
@@ -70,8 +71,9 @@ export class AdminReviewService {
       console.error("Error fetching resume URL:", error);
     }
 
-    // Get team member details
+    // Get team member details and team name
     let teamMembersWithNames: TeamMemberWithName[] = [];
+    let teamName: string | null = null;
     try {
       const teamMembersStr = application.team_members;
       if (teamMembersStr) {
@@ -83,6 +85,9 @@ export class AdminReviewService {
         if (teamMemberEmails.length > 0) {
           teamMembersWithNames =
             await this.repository.getTeamMembersByEmails(teamMemberEmails);
+          
+          // Get team name from teams table
+          teamName = await this.repository.getTeamNameByMemberEmails(teamMemberEmails);
         }
       }
     } catch (error) {
@@ -94,6 +99,7 @@ export class AdminReviewService {
       email,
       resume_url: resumeUrl,
       team_members_with_names: teamMembersWithNames,
+      team_name: teamName,
     };
   }
 

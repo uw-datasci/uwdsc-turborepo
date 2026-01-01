@@ -133,6 +133,39 @@ export class AdminReviewRepository extends BaseRepository {
   }
 
   /**
+   * Get team name by member email addresses
+   * Returns the team name if any of the emails belong to a team
+   * (Since team members in an application should all be in the same team)
+   */
+  async getTeamNameByMemberEmails(emails: string[]): Promise<string | null> {
+    try {
+      if (emails.length === 0) return null;
+
+      // Find team where any of these emails are members
+      // Use the first email to find the team (all team members should be in the same team)
+      const firstEmail = emails[0];
+      if (!firstEmail) return null;
+
+      const teamResult = await this.sql<Array<{ team_name: string }>>`
+        SELECT t.team_name
+        FROM teams t
+        WHERE (
+          t.team_member_1 = ${firstEmail}
+          OR t.team_member_2 = ${firstEmail}
+          OR t.team_member_3 = ${firstEmail}
+          OR t.team_member_4 = ${firstEmail}
+        )
+        LIMIT 1
+      `;
+
+      return teamResult.length > 0 && teamResult[0] ? teamResult[0].team_name : null;
+    } catch (error) {
+      console.error("Error fetching team name:", error);
+      return null;
+    }
+  }
+
+  /**
    * Check if a reviewer has already reviewed an application
    */
   async hasReviewerReviewedApplication(
