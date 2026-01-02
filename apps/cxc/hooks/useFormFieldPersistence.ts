@@ -17,6 +17,8 @@ export function useFormFieldPersistence<T extends FieldPath<AppFormValues>>(
 ) {
   const fieldValue = form.watch(fieldName);
   const canPersistRef = useRef(false);
+  const wasClearedByUserRef = useRef(false);
+  const previousValueRef = useRef<unknown>(undefined);
   const key = storageKey || `cxc_form_${fieldName}`;
 
   // Helper function to restore from localStorage
@@ -134,58 +136,42 @@ export function useFormFieldPersistence<T extends FieldPath<AppFormValues>>(
     }
   }, [form, fieldName, key]);
 
-  // Restore from localStorage on mount
+  // Restore from localStorage ONLY on mount (page refresh)
+  // This should happen exactly once, not while user is typing
   useEffect(() => {
     // Use a longer timeout to ensure form.reset() has completed
     const timer = setTimeout(() => {
       restoreFromStorage();
       canPersistRef.current = true;
+      // Initialize previous value after restore
+      previousValueRef.current = form.getValues(fieldName);
     }, 500); // Increased timeout to allow form.reset() to complete
 
     return () => clearTimeout(timer);
-  }, [restoreFromStorage]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // Empty dependency array - only run on mount
 
-  // Also restore when field value becomes empty (handles form.reset() case)
-  // This is especially important for select fields that get reset to undefined
-  // BUT: For team_members, allow empty arrays (user can have 0 team members)
-  // AND: For string fields like phone, if user explicitly clears it, don't restore
+  // Track when user explicitly clears a field
   useEffect(() => {
     if (!canPersistRef.current) return;
 
     const currentValue = form.getValues(fieldName);
-    const fieldState = form.getFieldState(fieldName);
-    const isEmpty =
-      currentValue == null ||
-      currentValue === "" ||
-      currentValue === undefined ||
-      (Array.isArray(currentValue) && currentValue.length === 0);
+    const previousValue = previousValueRef.current;
 
-    // For team_members, if it's an empty array, don't restore - allow 0 team members
-    if (
-      fieldName === "team_members" &&
-      Array.isArray(currentValue) &&
-      currentValue.length === 0
-    ) {
-      // Clear localStorage when user explicitly sets team_members to empty
+    // If field had a value and now it's empty, user cleared it
+    const wasCleared =
+      previousValue !== undefined &&
+      previousValue !== null &&
+      previousValue !== "" &&
+      (currentValue === "" || currentValue === null || currentValue === undefined);
+
+    if (wasCleared) {
+      wasClearedByUserRef.current = true;
       localStorage.removeItem(key);
-      return;
     }
 
-    // If field is empty AND dirty, user explicitly cleared it - remove from localStorage
-    // Don't restore in this case
-    if (isEmpty && fieldState.isDirty) {
-      localStorage.removeItem(key);
-      return;
-    }
-
-    if (isEmpty) {
-      // Use a small delay to ensure form.reset() has fully completed
-      const timer = setTimeout(() => {
-        restoreFromStorage();
-      }, 100);
-      return () => clearTimeout(timer);
-    }
-  }, [fieldValue, restoreFromStorage, form, fieldName, key]);
+    previousValueRef.current = currentValue;
+  }, [fieldValue, form, fieldName, key]);
 
   // Save to localStorage on change (only if field is valid)
   useEffect(() => {
