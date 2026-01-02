@@ -51,7 +51,7 @@ export default function AboutCxC() {
         >
           <h2 className="text-3xl md:text-4xl font-semibold mb-6">About CXC</h2>
           <p className="text-base sm:text-base lg:text-xl text-gray-300 lg:max-w-2xl max-w-3xl mb-10">
-          Join us for the 5th year of Waterloo's largest student-run AI hackathon this February 6th to February 8th! 
+          Join us for the 5th year of Waterloo&apos;s largest student-run AI hackathon this February 6th to February 8th! 
           We are a beginner-friendly AI hackathon that brings together students and companies to build projects that 
           solve real-world problems. Join us again this year for a weekend of hacking and fun!
           </p>
