@@ -14,12 +14,10 @@ import { AppFormValues } from "@/lib/schemas/application";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { applicationSchema } from "@/lib/schemas/application";
-import { getMyTeam, type Team } from "@/lib/api";
 
 export default function ApplicationPage() {
   const { user } = useAuth();
   const [application, setApplication] = useState<AppFormValues | null>(null);
-  const [team, setTeam] = useState<Team | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   // Initialize form for Teams component
@@ -47,19 +45,7 @@ export default function ApplicationPage() {
       }
     }
 
-    async function loadTeam() {
-      try {
-        const result = await getMyTeam();
-        if (result.success && result.team) {
-          setTeam(result.team);
-        }
-      } catch (error) {
-        console.error("Error loading team:", error);
-      }
-    }
-
     loadApplication();
-    loadTeam();
   }, [user?.id, form]);
 
   if (isLoading) {
