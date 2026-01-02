@@ -1,0 +1,846 @@
+# Teams Feature
+
+Complete guide to the CxC hackathon Teams feature that allows users to create and join teams.
+
+## Overview
+
+The Teams feature enables hackathon participants to:
+
+- **Create teams** with a unique team name and password
+- **Join existing teams** by providing the team name and password
+- **View team members** in the dashboard and application pages
+- **Leave teams** if they change their mind
+- **Manage teams** with up to 4 members per team
+
+Teams are stored in a dedicated `teams` table in the database and integrate seamlessly with the application flow.
+
+## Architecture
+
+### Database Schema
+
+The Teams feature uses a simple `teams` table:
+
+```sql
+CREATE TABLE "public"."teams" (
+    "id" UUID NOT NULL DEFAULT gen_random_uuid(),
+    "team_name" TEXT NOT NULL,
+    "team_member_1" TEXT NULL,
+    "team_member_2" TEXT NULL,
+    "team_member_3" TEXT NULL,
+    "team_member_4" TEXT NULL,
+    "password" TEXT NOT NULL,
+    "created_at" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
+    CONSTRAINT "teams_pkey" PRIMARY KEY ("id")
+);
+```
+
+**Key Points**:
+- Teams have a unique name (`team_name`)
+- Teams are password-protected
+- Up to 4 members can join a team
+- Team members are identified by email addresses
+- Team creator becomes `team_member_1`
+
+### API Endpoints
+
+The Teams feature provides 5 API endpoints:
+
+| Endpoint | Method | Purpose |
+|----------|--------|---------|
+| `/api/teams/check` | GET | Check if a team name exists |
+| `/api/teams/create` | POST | Create a new team |
+| `/api/teams/join` | POST | Join an existing team |
+| `/api/teams/my-team` | GET | Get current user's team |
+| `/api/teams/leave` | POST | Leave current team |
+
+### Data Flow
+
+```
+┌─────────────────────┐
+│  React Component    │  Teams.tsx (Create/Join UI)
+└──────────┬──────────┘
+           │
+┌──────────▼──────────┐
+│   Client API Func   │  lib/api/teams.ts
+└──────────┬──────────┘
+           │
+┌──────────▼──────────┐
+│   Next.js Route     │  app/api/teams/*/route.ts
+└──────────┬──────────┘
+           │
+┌──────────▼──────────┐
+│     Database        │  Supabase teams table
+└─────────────────────┘
+```
+
+**Note**: Unlike other features, Teams API directly accesses the database via Supabase client without service/repository layers. This is because teams functionality is straightforward CRUD operations.
+
+## Implementation Guide
+
+### 1. Check Team Name Availability
+
+**Purpose**: Verify if a team name is already taken before creation.
+
+**API Route** (`apps/cxc/app/api/teams/check/route.ts`):
+
+```typescript
+export async function GET(request: NextRequest) {
+  const searchParams = request.nextUrl.searchParams;
+  const team_name = searchParams.get("team_name");
+
+  if (!team_name) {
+    return NextResponse.json(
+      { error: "Missing team_name parameter" },
+      { status: 400 }
+    );
+  }
+
+  const supabase = createSupabaseServerClient(/* ... */);
+
+  const { data: existingTeam, error } = await supabase
+    .from("teams")
+    .select("team_name")
+    .eq("team_name", team_name.trim())
+    .limit(1);
+
+  if (error) {
+    return NextResponse.json(
+      { error: "Failed to check team name" },
+      { status: 500 }
+    );
+  }
+
+  return NextResponse.json({
+    exists: existingTeam && existingTeam.length > 0,
+  });
+}
+```
+
+**Client API** (`apps/cxc/lib/api/teams.ts`):
+
+```typescript
+export async function checkTeamName(
+  teamName: string
+): Promise<CheckTeamNameResponse> {
+  const response = await fetch(
+    `/api/teams/check?team_name=${encodeURIComponent(teamName)}`,
+    { method: "GET" }
+  );
+
+  const result = await response.json();
+
+  if (!response.ok) {
+    throw createApiError(result, response.status);
+  }
+
+  return result;
+}
+```
+
+### 2. Create Team
+
+**Purpose**: Create a new team with the current user as the first member.
+
+**Validation**:
+- User must be authenticated
+- User cannot already be in a team
+- Team name must not exist
+- Team name and password are required
+
+**API Route** (`apps/cxc/app/api/teams/create/route.ts`):
+
+```typescript
+export async function POST(request: NextRequest) {
+  const body = await request.json();
+  const { team_name, password } = body;
+
+  if (!team_name || !password) {
+    return NextResponse.json(
+      { error: "Missing team_name or password" },
+      { status: 400 }
+    );
+  }
+
+  // Authenticate user
+  const authService = await createAuthService();
+  const { user, error: userErr } = await authService.getCurrentUser();
+
+  if (userErr || !user) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  // Get user's email
+  const supabase = createSupabaseServerClient(/* ... */);
+  const { data: userData } = await supabase.auth.getUser();
+  const userEmail = userData?.user?.email;
+
+  // Check if user is already in a team
+  const { data: existingTeams } = await supabase
+    .from("teams")
+    .select("*")
+    .or(
+      `team_member_1.eq.${userEmail},team_member_2.eq.${userEmail},team_member_3.eq.${userEmail},team_member_4.eq.${userEmail}`
+    );
+
+  if (existingTeams && existingTeams.length > 0) {
+    return NextResponse.json(
+      { error: "You are already in a team" },
+      { status: 400 }
+    );
+  }
+
+  // Check if team name already exists
+  const { data: existingTeamName } = await supabase
+    .from("teams")
+    .select("team_name")
+    .eq("team_name", team_name.trim())
+    .limit(1);
+
+  if (existingTeamName && existingTeamName.length > 0) {
+    return NextResponse.json(
+      { error: "Team name already exists" },
+      { status: 400 }
+    );
+  }
+
+  // Create new team
+  const { data: newTeam, error: createError } = await supabase
+    .from("teams")
+    .insert({
+      team_name: team_name.trim(),
+      password,
+      team_member_1: userEmail,
+      team_member_2: null,
+      team_member_3: null,
+      team_member_4: null,
+    })
+    .select()
+    .single();
+
+  if (createError) {
+    return NextResponse.json(
+      { error: "Failed to create team" },
+      { status: 500 }
+    );
+  }
+
+  return NextResponse.json({
+    success: true,
+    team: newTeam,
+  });
+}
+```
+
+**Client API**:
+
+```typescript
+export async function createTeam(
+  data: CreateTeamRequest
+): Promise<CreateTeamResponse> {
+  const response = await fetch("/api/teams/create", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+  });
+
+  const result = await response.json();
+
+  if (!response.ok) {
+    throw createApiError(result, response.status);
+  }
+
+  return result;
+}
+```
+
+### 3. Join Team
+
+**Purpose**: Join an existing team by providing the correct password.
+
+**Validation**:
+- User must be authenticated
+- User cannot already be in a team
+- Team must exist
+- Password must match
+- Team must have available slots (< 4 members)
+
+**API Route** (`apps/cxc/app/api/teams/join/route.ts`):
+
+```typescript
+export async function POST(request: NextRequest) {
+  const body = await request.json();
+  const { team_name, password } = body;
+
+  if (!team_name || !password) {
+    return NextResponse.json(
+      { error: "Missing team_name or password" },
+      { status: 400 }
+    );
+  }
+
+  // Authenticate user and get email
+  const authService = await createAuthService();
+  const { user } = await authService.getCurrentUser();
+  const supabase = createSupabaseServerClient(/* ... */);
+  const { data: userData } = await supabase.auth.getUser();
+  const userEmail = userData?.user?.email;
+
+  // Check if user is already in a team
+  const { data: existingTeams } = await supabase
+    .from("teams")
+    .select("*")
+    .or(
+      `team_member_1.eq.${userEmail},team_member_2.eq.${userEmail},team_member_3.eq.${userEmail},team_member_4.eq.${userEmail}`
+    );
+
+  if (existingTeams && existingTeams.length > 0) {
+    return NextResponse.json(
+      { error: "You are already in a team" },
+      { status: 400 }
+    );
+  }
+
+  // Find team by name
+  const { data: teams } = await supabase
+    .from("teams")
+    .select("*")
+    .eq("team_name", team_name)
+    .limit(1);
+
+  if (!teams || teams.length === 0) {
+    return NextResponse.json({ error: "Team not found" }, { status: 404 });
+  }
+
+  const team = teams[0];
+
+  // Verify password (case-sensitive)
+  if (team.password !== password) {
+    return NextResponse.json(
+      { error: "Incorrect password" },
+      { status: 401 }
+    );
+  }
+
+  // Find first available slot
+  const updateData: Record<string, string> = {};
+
+  if (!team.team_member_1) {
+    updateData.team_member_1 = userEmail;
+  } else if (!team.team_member_2) {
+    updateData.team_member_2 = userEmail;
+  } else if (!team.team_member_3) {
+    updateData.team_member_3 = userEmail;
+  } else if (!team.team_member_4) {
+    updateData.team_member_4 = userEmail;
+  } else {
+    return NextResponse.json(
+      { error: "Team is full (4 members)" },
+      { status: 400 }
+    );
+  }
+
+  // Update team
+  const { data: updatedTeam } = await supabase
+    .from("teams")
+    .update(updateData)
+    .eq("team_name", team_name)
+    .select()
+    .single();
+
+  return NextResponse.json({
+    success: true,
+    team: updatedTeam,
+  });
+}
+```
+
+### 4. Get My Team
+
+**Purpose**: Retrieve the current user's team information.
+
+**API Route** (`apps/cxc/app/api/teams/my-team/route.ts`):
+
+```typescript
+export async function GET() {
+  // Authenticate user
+  const authService = await createAuthService();
+  const { user } = await authService.getCurrentUser();
+
+  const supabase = createSupabaseServerClient(/* ... */);
+  const { data: userData } = await supabase.auth.getUser();
+  const userEmail = userData?.user?.email;
+
+  // Find team where user is a member
+  const { data: teams } = await supabase
+    .from("teams")
+    .select("*")
+    .or(
+      `team_member_1.eq.${userEmail},team_member_2.eq.${userEmail},team_member_3.eq.${userEmail},team_member_4.eq.${userEmail}`
+    )
+    .limit(1);
+
+  if (!teams || teams.length === 0) {
+    return NextResponse.json({
+      success: true,
+      team: null,
+    });
+  }
+
+  const team = teams[0];
+
+  // Don't return password
+  const { password: _, ...teamWithoutPassword } = team;
+
+  return NextResponse.json({
+    success: true,
+    team: teamWithoutPassword,
+  });
+}
+```
+
+### 5. Leave Team
+
+**Purpose**: Remove the current user from their team.
+
+**Behavior**:
+- Sets the user's team member slot to `null`
+- Team remains active even if all members leave
+- User can then create or join another team
+
+**API Route** (`apps/cxc/app/api/teams/leave/route.ts`):
+
+```typescript
+export async function POST() {
+  // Authenticate user
+  const authService = await createAuthService();
+  const { user } = await authService.getCurrentUser();
+
+  const supabase = createSupabaseServerClient(/* ... */);
+  const { data: userData } = await supabase.auth.getUser();
+  const userEmail = userData?.user?.email;
+
+  // Find team where user is a member
+  const { data: teams } = await supabase
+    .from("teams")
+    .select("*")
+    .or(
+      `team_member_1.eq.${userEmail},team_member_2.eq.${userEmail},team_member_3.eq.${userEmail},team_member_4.eq.${userEmail}`
+    )
+    .limit(1);
+
+  if (!teams || teams.length === 0) {
+    return NextResponse.json(
+      { error: "You are not in a team" },
+      { status: 400 }
+    );
+  }
+
+  const team = teams[0];
+
+  // Determine which slot the user is in
+  const updateData: Record<string, null> = {};
+
+  if (team.team_member_1 === userEmail) {
+    updateData.team_member_1 = null;
+  } else if (team.team_member_2 === userEmail) {
+    updateData.team_member_2 = null;
+  } else if (team.team_member_3 === userEmail) {
+    updateData.team_member_3 = null;
+  } else if (team.team_member_4 === userEmail) {
+    updateData.team_member_4 = null;
+  }
+
+  // Update team - use ID instead of team_name for reliability
+  await supabase
+    .from("teams")
+    .update(updateData)
+    .eq("id", team.id);
+
+  return NextResponse.json({
+    success: true,
+    message: "Successfully left team",
+  });
+}
+```
+
+## UI Components
+
+### Teams Component
+
+**Location**: `apps/cxc/components/application/sections/Teams.tsx`
+
+**Features**:
+- Displays team creation/join form when user has no team
+- Shows team name and members when user is in a team
+- Password visibility toggle for better UX
+- Error handling with clear error messages
+- Loading states for all async operations
+- Supports both standalone and card layouts
+
+**Key States**:
+
+```typescript
+const [team, setTeam] = useState<Team | null>(null);
+const [isLoadingTeam, setIsLoadingTeam] = useState(true);
+const [isCreating, setIsCreating] = useState(false);
+const [isJoining, setIsJoining] = useState(false);
+const [isLeaving, setIsLeaving] = useState(false);
+const [showPasswordDialog, setShowPasswordDialog] = useState(false);
+const [teamName, setTeamName] = useState("");
+const [passwordDialogPassword, setPasswordDialogPassword] = useState("");
+const [error, setError] = useState("");
+```
+
+**Usage**:
+
+```tsx
+// In application form (apply page)
+<Teams form={form} useCard={false} />
+
+// In dashboard (application page)
+<Teams form={form} useCard={true} />
+```
+
+### Password Dialog
+
+The component uses a modal dialog for password entry:
+
+```tsx
+<Dialog open={showPasswordDialog} onOpenChange={setShowPasswordDialog}>
+  <DialogContent>
+    <DialogHeader>
+      <DialogTitle>
+        {mode === "create" 
+          ? "Set Team Password" 
+          : "Enter Team Password"}
+      </DialogTitle>
+    </DialogHeader>
+    <div className="flex flex-col gap-4">
+      <FormItem>
+        <FormLabel>Password</FormLabel>
+        <FormControl>
+          <div className="relative">
+            <Input
+              type={showPassword ? "text" : "password"}
+              value={passwordDialogPassword}
+              onChange={(e) => setPasswordDialogPassword(e.target.value)}
+            />
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+            >
+              {showPassword ? <EyeOff /> : <Eye />}
+            </button>
+          </div>
+        </FormControl>
+      </FormItem>
+    </div>
+    <DialogFooter>
+      <Button onClick={handleSubmit}>
+        {mode === "create" ? "Create" : "Join"}
+      </Button>
+    </DialogFooter>
+  </DialogContent>
+</Dialog>
+```
+
+## Dashboard Integration
+
+### Application Dashboard
+
+**Location**: `apps/cxc/app/dashboard/application/page.tsx`
+
+The Teams section is displayed alongside the application summary:
+
+```tsx
+<ApplicationSummary application={application} />
+
+{/* Teams Section */}
+<motion.div
+  initial={{ opacity: 0, y: 20 }}
+  animate={{ opacity: 1, y: 0 }}
+  transition={{ duration: 0.4, delay: 0.2 }}
+>
+  <Teams form={form} useCard={true} />
+</motion.div>
+```
+
+### Main Dashboard
+
+**Location**: `apps/cxc/app/dashboard/page.tsx`
+
+The dashboard displays a `TeamSection` component that shows team information:
+
+```tsx
+const [team, setTeam] = useState<Team | null>(null);
+
+useEffect(() => {
+  async function loadTeam() {
+    const result = await getMyTeam();
+    if (result.success && result.team) {
+      setTeam(result.team);
+    }
+  }
+  loadTeam();
+}, []);
+
+<TeamSection team={team} />
+```
+
+## Admin Review Integration
+
+The admin review system displays team information when reviewing applications:
+
+**Service** (`packages/server/cxc/src/services/adminReviewService.ts`):
+
+```typescript
+// Get team member details and team name
+let teamMembersWithNames: TeamMemberWithName[] = [];
+let teamName: string | null = null;
+
+const teamMembersStr = application.team_members;
+if (teamMembersStr) {
+  const teamMemberEmails = teamMembersStr
+    .split(",")
+    .map((m: string) => m.trim())
+    .filter(Boolean);
+
+  if (teamMemberEmails.length > 0) {
+    teamMembersWithNames =
+      await this.repository.getTeamMembersByEmails(teamMemberEmails);
+
+    // Get team name from teams table
+    teamName =
+      await this.repository.getTeamNameByMemberEmails(teamMemberEmails);
+  }
+}
+
+return {
+  ...application,
+  team_name: teamName,
+  team_members_with_names: teamMembersWithNames,
+};
+```
+
+**Repository** (`packages/server/cxc/src/repository/adminReviewRepository.ts`):
+
+```typescript
+async getTeamNameByMemberEmails(emails: string[]): Promise<string | null> {
+  if (emails.length === 0) return null;
+
+  const firstEmail = emails[0];
+
+  const teamResult = await this.sql<Array<{ team_name: string }>>`
+    SELECT t.team_name
+    FROM teams t
+    WHERE (
+      t.team_member_1 = ${firstEmail}
+      OR t.team_member_2 = ${firstEmail}
+      OR t.team_member_3 = ${firstEmail}
+      OR t.team_member_4 = ${firstEmail}
+    )
+    LIMIT 1
+  `;
+
+  return teamResult.length > 0 ? teamResult[0].team_name : null;
+}
+```
+
+**Review Page** (`apps/cxc/app/review/page.tsx`):
+
+```tsx
+{application.team_name && (
+  <div className="mb-3">
+    <span className="font-medium text-lg">
+      Team Name: <span className="font-semibold">{application.team_name}</span>
+    </span>
+  </div>
+)}
+```
+
+## Best Practices
+
+### ✅ Do
+
+- **Validate team name availability** before showing password dialog
+- **Check user authentication** on all team endpoints
+- **Verify user is not already in a team** before create/join
+- **Use case-sensitive password comparison** for security
+- **Show clear error messages** for better UX
+- **Provide password visibility toggle** for accessibility
+- **Update form values** when team changes
+- **Handle loading states** for all async operations
+
+### ❌ Don't
+
+- **Don't expose passwords** in API responses
+- **Don't allow users in multiple teams** simultaneously
+- **Don't skip validation** on team name or password
+- **Don't use team name as primary key** - use UUID `id` instead
+- **Don't forget to refresh team data** after create/join/leave
+
+## Security Considerations
+
+### Password Storage
+
+**Note**: Team passwords are stored in **plain text** in the database. This is intentional for the following reasons:
+
+1. **Team passwords are meant to be shared** among team members
+2. **Teams are temporary** - only valid for the duration of the hackathon
+3. **Low security risk** - worst case is someone joins the wrong team
+4. **User experience** - team creators need to share passwords with members
+
+**Important**: Do NOT use this pattern for user authentication passwords.
+
+### Authentication
+
+All team endpoints require authentication:
+
+```typescript
+const authService = await createAuthService();
+const { user, error } = await authService.getCurrentUser();
+
+if (error || !user) {
+  return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+}
+```
+
+### Input Validation
+
+- Team names are trimmed before storage
+- Both team name and password are required
+- Email addresses are validated through Supabase auth
+
+## Common Use Cases
+
+### Scenario 1: Creating a Team
+
+1. User fills in team name
+2. System checks if name exists (prevents duplicate check)
+3. User enters password in dialog
+4. Team is created with user as first member
+5. UI updates to show team information
+
+### Scenario 2: Joining a Team
+
+1. User enters team name
+2. User enters password in dialog
+3. System validates password
+4. System finds first available slot
+5. User is added to team
+6. UI updates to show team information
+
+### Scenario 3: Leaving a Team
+
+1. User clicks "Leave Team" button
+2. System finds user's team and slot
+3. User's slot is set to `null`
+4. Team remains active
+5. UI updates to show team creation/join form
+
+### Scenario 4: Team Full
+
+1. User tries to join a team with 4 members
+2. System returns "Team is full" error
+3. UI displays error message
+4. User can try a different team
+
+## Troubleshooting
+
+### Issue: "You are already in a team"
+
+**Cause**: User is already a member of another team
+
+**Solution**: User must leave current team before creating/joining another
+
+### Issue: "Team name already exists"
+
+**Cause**: Another team with the same name was already created
+
+**Solution**: Choose a different team name
+
+### Issue: "Incorrect password"
+
+**Cause**: Password does not match team's password
+
+**Solution**: Get correct password from team creator
+
+### Issue: "Team is full"
+
+**Cause**: Team already has 4 members
+
+**Solution**: Join a different team or create a new one
+
+### Issue: Team not showing in dashboard
+
+**Cause**: Team data not refreshed after create/join
+
+**Solution**: Refresh the page or check if `getMyTeam()` is called on mount
+
+## Testing
+
+### Manual Testing
+
+```bash
+# Start dev server
+pnpm dev:cxc
+
+# Test create team
+curl -X POST http://localhost:3001/api/teams/create \
+  -H "Content-Type: application/json" \
+  -d '{"team_name":"Team Alpha","password":"secret123"}'
+
+# Test check team name
+curl http://localhost:3001/api/teams/check?team_name=Team%20Alpha
+
+# Test join team
+curl -X POST http://localhost:3001/api/teams/join \
+  -H "Content-Type: application/json" \
+  -d '{"team_name":"Team Alpha","password":"secret123"}'
+
+# Test get my team
+curl http://localhost:3001/api/teams/my-team
+
+# Test leave team
+curl -X POST http://localhost:3001/api/teams/leave
+```
+
+### Integration Testing
+
+Test the complete flow:
+
+1. User A creates team "Test Team"
+2. User B joins "Test Team" with correct password
+3. User C tries to join with wrong password (should fail)
+4. User D joins "Test Team"
+5. User A, B, D all see each other in team
+6. User B leaves team
+7. User B can now create/join another team
+
+## Future Enhancements
+
+### Potential Improvements
+
+- **Team invitations** - Send invites instead of sharing passwords
+- **Team roles** - Designate team leader with special permissions
+- **Team size limits** - Allow configurable max team size
+- **Team descriptions** - Add optional team description/bio
+- **Team tags** - Allow teams to specify interests/skills
+- **Public teams** - Option to make team joinable without password
+- **Team chat** - In-app messaging for team members
+
+### Migration Path
+
+If moving to a more robust team system:
+
+1. Add new columns to `teams` table
+2. Create migration script
+3. Update API endpoints
+4. Update UI components
+5. Write migration guide for admins
+
+## Related Documentation
+
+- [Creating API Endpoints](/guides/creating-api) - Learn to create APIs like Teams
+- [Database Setup](/guides/database) - Database schema and migrations
+- [API Architecture](/architecture/api-flow) - Understanding API patterns
