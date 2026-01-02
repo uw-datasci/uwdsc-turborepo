@@ -144,7 +144,7 @@ export default function ApplicationPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4, delay: 0.2 }}
           >
-            <Teams form={form} />
+            <Teams form={form} useCard={true} />
           </motion.div>
         </div>
       </div>
@@ -211,7 +211,7 @@ export default function ApplicationPage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: 0.2 }}
         >
-          <Teams form={form} />
+          <Teams form={form} useCard={true} />
         </motion.div>
       </div>
     </div>
