@@ -11,7 +11,7 @@ import {
   UsersIcon,
   ArrowLeftIcon,
 } from "@uwdsc/ui";
-import DSCLogo from "../DSCLogo";
+import Image from "next/image";
 
 interface NavItem {
   href: string;
@@ -56,7 +56,17 @@ export function DashboardSidebar({
   return (
     <nav className={cn("flex flex-col gap-2 p-6", className)}>
       <div className="mb-8">
-        <DSCLogo size={20} href="/" />
+        <Link href="/">
+          <div className="relative w-20 h-8 md:w-36 md:h-16 cursor-pointer">
+            <Image
+              src="/logos/cxc_logo.svg"
+              alt="CXC"
+              fill
+              className="object-contain"
+              priority
+            />
+          </div>
+        </Link>
         <p className="text-white/60 text-sm mt-2 uppercase tracking-wider">
           Hacker Dashboard
         </p>
