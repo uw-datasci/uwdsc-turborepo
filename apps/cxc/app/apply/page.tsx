@@ -46,7 +46,7 @@ import {
 const FINAL_STEP_COUNT = STEP_NAMES.length;
 
 // Application availability dates (January 2-12, 2026)
-const APPLICATION_START_DATE = new Date("2026-01-02T00:00:00");
+const APPLICATION_START_DATE = new Date("2026-01-01T00:00:00");
 const APPLICATION_END_DATE = new Date("2026-01-12T23:59:59");
 
 const STORAGE_KEY_DESKTOP_STEP = "desktop_step";

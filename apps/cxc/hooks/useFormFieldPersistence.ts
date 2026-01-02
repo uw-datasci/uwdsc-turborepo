@@ -148,10 +148,12 @@ export function useFormFieldPersistence<T extends FieldPath<AppFormValues>>(
   // Also restore when field value becomes empty (handles form.reset() case)
   // This is especially important for select fields that get reset to undefined
   // BUT: For team_members, allow empty arrays (user can have 0 team members)
+  // AND: For string fields like phone, if user explicitly clears it, don't restore
   useEffect(() => {
     if (!canPersistRef.current) return;
 
     const currentValue = form.getValues(fieldName);
+    const fieldState = form.getFieldState(fieldName);
     const isEmpty =
       currentValue == null ||
       currentValue === "" ||
@@ -165,6 +167,13 @@ export function useFormFieldPersistence<T extends FieldPath<AppFormValues>>(
       currentValue.length === 0
     ) {
       // Clear localStorage when user explicitly sets team_members to empty
+      localStorage.removeItem(key);
+      return;
+    }
+
+    // If field is empty AND dirty, user explicitly cleared it - remove from localStorage
+    // Don't restore in this case
+    if (isEmpty && fieldState.isDirty) {
       localStorage.removeItem(key);
       return;
     }
