@@ -53,6 +53,7 @@ export function Teams({ form, useCard = false }: TeamsProps) {
   const [passwordDialogPassword, setPasswordDialogPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
+  const [modalError, setModalError] = useState("");
 
   // Fetch user's team on mount
   useEffect(() => {
@@ -152,6 +153,7 @@ export function Teams({ form, useCard = false }: TeamsProps) {
 
     // Team name is available, show password dialog
     setError("");
+    setModalError("");
     setPasswordDialogPassword("");
     setPasswordDialogMode("create");
     setShowPasswordDialog(true);
@@ -168,6 +170,8 @@ export function Teams({ form, useCard = false }: TeamsProps) {
     }
 
     // ALWAYS show password dialog when joining - clear password first
+    setError("");
+    setModalError("");
     setPasswordDialogPassword("");
     setPasswordDialogMode("join");
     setShowPasswordDialog(true);
@@ -250,18 +254,38 @@ export function Teams({ form, useCard = false }: TeamsProps) {
         }
       } catch (err: unknown) {
         console.error("[Teams] Join team error:", err);
-        const errorMessage =
-          err instanceof Error ? err.message : "Failed to join team";
-        // Check if it's an incorrect password error
+        // Get error message - also check for 'error' property on the error object
+        let errorMessage = "Failed to join team";
+        if (err instanceof Error) {
+          errorMessage = err.message;
+          // Also check if there's an 'error' property (from createApiError)
+          const apiError = err as Error & { error?: string };
+          if (apiError.error) {
+            errorMessage = apiError.error;
+          }
+        }
+
+        const lowerMessage = errorMessage.toLowerCase();
+
         if (
-          err instanceof Error &&
-          (err.message.includes("Incorrect password") ||
-            err.message.includes("incorrect password") ||
-            err.message.includes("401"))
+          lowerMessage.includes("incorrect password") ||
+          lowerMessage.includes("401")
         ) {
-          setError("Incorrect password");
+          setModalError("Incorrect password");
+        } else if (
+          lowerMessage.includes("not found") ||
+          lowerMessage.includes("404")
+        ) {
+          setModalError(
+            "Team not found. Please check the team name and try again.",
+          );
+        } else if (
+          lowerMessage.includes("full") ||
+          lowerMessage.includes("4 members")
+        ) {
+          setModalError("Team is full (maximum 4 members)");
         } else {
-          setError(errorMessage);
+          setModalError(errorMessage);
         }
       } finally {
         setIsJoining(false);
@@ -373,7 +397,7 @@ export function Teams({ form, useCard = false }: TeamsProps) {
                 value={teamName}
                 onChange={(e) => {
                   setTeamName(e.target.value);
-                  // Don't clear error when typing - let it persist
+                  setError(""); // Clear error when typing
                 }}
                 placeholder="Enter team name"
                 className="!h-auto !border-0 !px-4.5 !py-4 !text-base !border-b-[2px] !bg-cxc-input-bg !rounded-none !shadow-none"
@@ -405,10 +429,7 @@ export function Teams({ form, useCard = false }: TeamsProps) {
       )}
 
       {/* Password Dialog */}
-      <Dialog
-        open={showPasswordDialog}
-        onOpenChange={setShowPasswordDialog}
-      >
+      <Dialog open={showPasswordDialog} onOpenChange={setShowPasswordDialog}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
             <DialogTitle>
@@ -432,7 +453,7 @@ export function Teams({ form, useCard = false }: TeamsProps) {
                     value={passwordDialogPassword}
                     onChange={(e) => {
                       setPasswordDialogPassword(e.target.value);
-                      setError("");
+                      setModalError("");
                     }}
                     placeholder="Enter password"
                     onKeyDown={(e) => {
@@ -456,7 +477,9 @@ export function Teams({ form, useCard = false }: TeamsProps) {
                 </div>
               </FormControl>
             </FormItem>
-            {error && <p className="text-sm text-destructive">{error}</p>}
+            {modalError && (
+              <p className="text-sm text-destructive">{modalError}</p>
+            )}
           </div>
           <DialogFooter>
             <Button
@@ -505,7 +528,6 @@ export function Teams({ form, useCard = false }: TeamsProps) {
         </Card>
       ) : (
         <AppSection
-          
           description={
             !team
               ? "Create a new team or join an existing team. Teams can have up to 4 members."
