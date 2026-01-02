@@ -107,8 +107,8 @@ export const BLANK_APPLICATION = {
   status: "draft",
 };
 
-export const APPLICATION_RELEASE_DATE = new Date(); // Set actual release date here
-export const APPLICATION_DEADLINE = new Date(); // Set actual deadline here
+export const APPLICATION_RELEASE_DATE = new Date("2026-01-02T08:00:00");
+export const APPLICATION_DEADLINE = new Date("2026-01-12T23:59:59");
 
 // field names
 export const CONTACT_INFO_FIELDS = {
@@ -163,7 +163,7 @@ export const MLH_FIELDS = {
 } as const;
 
 // personal
-export const TSHIRT_OPTIONS = ["XS", "S", "M", "L", "XL", "XXL"];
+export const TSHIRT_OPTIONS = ["S", "M", "L", "XL"];
 
 export const DIETARY_OPTIONS = [
   "None",

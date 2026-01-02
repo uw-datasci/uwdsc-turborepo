@@ -34,6 +34,7 @@ interface Application {
   cxc_q2?: string;
   // Team members
   team_members?: string;
+  team_name?: string | null;
   team_members_with_names?: Array<{
     email: string;
     display_name: string | null;
@@ -387,6 +388,16 @@ export default function ReviewPage() {
                 {application.team_members &&
                   application.team_members.trim() && (
                     <div className="pt-2">
+                      {application.team_name && (
+                        <div className="mb-3">
+                          <span className="font-medium text-lg">
+                            Team Name:{" "}
+                            <span className="font-semibold">
+                              {application.team_name}
+                            </span>
+                          </span>
+                        </div>
+                      )}
                       <span className="font-medium block mb-2">
                         Team Members:
                       </span>

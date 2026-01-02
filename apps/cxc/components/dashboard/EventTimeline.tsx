@@ -6,7 +6,6 @@ import {
   CardContent,
   CardHeader,
   CardTitle,
-  Badge,
   cn,
   MapPinIcon,
   CalendarIcon,
@@ -149,14 +148,14 @@ export function EventTimeline({
       variants={container}
       initial="hidden"
       animate="show"
-      className={cn("space-y-6", className)}
+      className={cn("space-y-4", className)}
     >
       {/* Notice about mock data */}
       <motion.div variants={item}>
-        <Card className="bg-yellow-500/10 border-yellow-500/20 backdrop-blur-sm">
+        <Card className="bg-black border border-yellow-400/40 rounded-none">
           <CardContent className="py-4">
-            <p className="text-yellow-400/80 text-sm">
-              📅 Schedule data will be available closer to the event. Check back
+            <p className="text-yellow-400/80 text-sm font-mono">
+              ▶ Schedule data will be available closer to the event. Check back
               soon!
             </p>
           </CardContent>
@@ -165,15 +164,15 @@ export function EventTimeline({
 
       {Object.entries(groupedEvents).map(([date, dayEvents]) => (
         <motion.div key={date} variants={item}>
-          <Card className="bg-white/5 border-white/10 backdrop-blur-sm overflow-hidden">
+          <Card className="bg-black border border-white/20 rounded-none overflow-hidden">
             <CardHeader className="bg-white/5 border-b border-white/10">
-              <CardTitle className="text-white flex items-center gap-2">
+              <CardTitle className="text-white flex items-center gap-2 uppercase tracking-wider text-sm">
                 <CalendarIcon className="w-5 h-5" />
                 {date}
               </CardTitle>
             </CardHeader>
             <CardContent className="p-0">
-              <div className="divide-y divide-white/5">
+              <div className="divide-y divide-white/10">
                 {dayEvents.map((event, index) => (
                   <motion.div
                     key={event.id}
@@ -184,7 +183,7 @@ export function EventTimeline({
                   >
                     <div className="flex flex-col sm:flex-row sm:items-start gap-3">
                       {/* Time */}
-                      <div className="flex items-center gap-2 text-white/40 text-sm min-w-[120px]">
+                      <div className="flex items-center gap-2 text-white/40 text-sm min-w-[120px] font-mono">
                         <Clock className="w-4 h-4" />
                         <span>{formatTime(event.start_time)}</span>
                       </div>
@@ -196,9 +195,9 @@ export function EventTimeline({
                             {event.name}
                           </h4>
                           {event.checked_in && (
-                            <Badge className="bg-emerald-500/20 text-emerald-400 border-emerald-500/30 text-xs">
-                              Checked In
-                            </Badge>
+                            <span className="text-emerald-400 text-xs font-mono border border-emerald-400 px-2 py-0.5">
+                              CHECKED IN
+                            </span>
                           )}
                         </div>
 
@@ -210,7 +209,7 @@ export function EventTimeline({
 
                         {event.location && (
                           <div className="flex items-center gap-1 text-white/40 text-sm">
-                            <MapPinIcon className="w-3 h-3" />
+                            <MapPinIcon className="w-4 h-4" />
                             <span>{event.location}</span>
                           </div>
                         )}

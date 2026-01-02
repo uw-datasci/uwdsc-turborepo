@@ -7,7 +7,6 @@ import {
   CardContent,
   CardHeader,
   CardTitle,
-  Badge,
   Separator,
   cn,
   GithubLogoIcon,
@@ -19,6 +18,7 @@ import {
 
 import { AppFormValues } from "@/lib/schemas/application";
 import { getResume } from "@/lib/api/resume";
+import { ETHNICITY_OTHER_LABEL } from "@/constants/application";
 
 interface ApplicationSummaryProps {
   application: AppFormValues;
@@ -48,12 +48,16 @@ function InfoRow({ label, value, className }: Readonly<InfoRowProps>) {
   return (
     <div
       className={cn(
-        "flex flex-col sm:flex-row sm:justify-between gap-1",
+        "flex flex-col sm:flex-row sm:justify-between gap-1 py-2 border-b border-white/5 last:border-0",
         className,
       )}
     >
-      <span className="text-white/40 text-sm">{label}</span>
-      <span className="text-white text-sm sm:text-right">{value}</span>
+      <span className="text-white/40 text-sm uppercase tracking-wider">
+        {label}
+      </span>
+      <span className="text-white text-sm sm:text-right font-mono">
+        {value}
+      </span>
     </div>
   );
 }
@@ -91,20 +95,37 @@ export function ApplicationSummary({
     >
       {/* Personal Information */}
       <motion.div variants={item}>
-        <Card className="bg-white/5 border-white/10 backdrop-blur-sm">
-          <CardHeader>
-            <CardTitle className="text-white text-lg">
+        <Card className="bg-black border border-white/20 rounded-none">
+          <CardHeader className="border-b border-white/10">
+            <CardTitle className="text-white text-sm uppercase tracking-wider">
               Personal Information
             </CardTitle>
           </CardHeader>
-          <CardContent className="space-y-3">
+          <CardContent className="pt-4">
             <InfoRow label="Phone" value={application.phone || "—"} />
             <InfoRow label="Discord" value={application.discord || "—"} />
             <InfoRow label="Age" value={application.age || "—"} />
             <InfoRow label="Gender" value={application.gender || "—"} />
             <InfoRow
+              label="Ethnicity"
+              value={
+                application.ethnicity
+                  ? Array.isArray(application.ethnicity) &&
+                    application.ethnicity.includes(ETHNICITY_OTHER_LABEL)
+                    ? application.ethnicity_other || "—"
+                    : Array.isArray(application.ethnicity)
+                      ? application.ethnicity.join(", ")
+                      : "—"
+                  : "—"
+              }
+            />
+            <InfoRow
               label="Country"
-              value={application.country_of_residence || "—"}
+              value={
+                application.country_of_residence !== "Other"
+                  ? application.country_of_residence
+                  : application.country_of_residence_other || "—"
+              }
             />
             <InfoRow
               label="T-Shirt Size"
@@ -112,7 +133,11 @@ export function ApplicationSummary({
             />
             <InfoRow
               label="Dietary Restrictions"
-              value={application.dietary_restrictions || "None"}
+              value={
+                application.dietary_restrictions !== "Other"
+                  ? application.dietary_restrictions
+                  : application.dietary_restrictions_other || "—"
+              }
             />
           </CardContent>
         </Card>
@@ -120,22 +145,28 @@ export function ApplicationSummary({
 
       {/* Education */}
       <motion.div variants={item}>
-        <Card className="bg-white/5 border-white/10 backdrop-blur-sm">
-          <CardHeader>
-            <CardTitle className="text-white text-lg">Education</CardTitle>
+        <Card className="bg-black border border-white/20 rounded-none">
+          <CardHeader className="border-b border-white/10">
+            <CardTitle className="text-white text-sm uppercase tracking-wider">
+              Education
+            </CardTitle>
           </CardHeader>
-          <CardContent className="space-y-3">
+          <CardContent className="pt-4">
             <InfoRow
               label="University"
               value={
-                application.university_name ||
-                application.university_name_other ||
-                "—"
+                application.university_name !== "Other"
+                  ? application.university_name
+                  : application.university_name_other || "—"
               }
             />
             <InfoRow
               label="Program"
-              value={application.program || application.program_other || "—"}
+              value={
+                application.program !== "Other"
+                  ? application.program
+                  : application.program_other || "—"
+              }
             />
             <InfoRow
               label="Year of Study"
@@ -147,26 +178,30 @@ export function ApplicationSummary({
 
       {/* Experience */}
       <motion.div variants={item}>
-        <Card className="bg-white/5 border-white/10 backdrop-blur-sm">
-          <CardHeader>
-            <CardTitle className="text-white text-lg">Experience</CardTitle>
+        <Card className="bg-black border border-white/20 rounded-none">
+          <CardHeader className="border-b border-white/10">
+            <CardTitle className="text-white text-sm uppercase tracking-wider">
+              Experience
+            </CardTitle>
           </CardHeader>
-          <CardContent className="space-y-3">
+          <CardContent className="pt-4">
             <InfoRow
               label="Hackathons Attended"
               value={application.hackathons_attended || "0"}
             />
-            <div className="flex flex-col gap-2">
-              <span className="text-white/40 text-sm">Prior Experience</span>
-              <div className="flex flex-wrap gap-2">
+            <div className="py-2">
+              <span className="text-white/40 text-sm uppercase tracking-wider">
+                Prior Experience
+              </span>
+              <div className="flex flex-wrap gap-2 mt-2">
                 {application.prior_hackathon_experience?.length > 0 ? (
                   application.prior_hackathon_experience.map((exp) => (
-                    <Badge
+                    <span
                       key={exp}
-                      className="bg-white/10 text-white/80 border-white/20"
+                      className="text-white/80 text-sm border border-white/20 px-2 py-1 font-mono"
                     >
                       {exp}
-                    </Badge>
+                    </span>
                   ))
                 ) : (
                   <span className="text-white/60 text-sm">None specified</span>
@@ -179,18 +214,20 @@ export function ApplicationSummary({
 
       {/* Links */}
       <motion.div variants={item}>
-        <Card className="bg-white/5 border-white/10 backdrop-blur-sm">
-          <CardHeader>
-            <CardTitle className="text-white text-lg">Links</CardTitle>
+        <Card className="bg-black border border-white/20 rounded-none">
+          <CardHeader className="border-b border-white/10">
+            <CardTitle className="text-white text-sm uppercase tracking-wider">
+              Links
+            </CardTitle>
           </CardHeader>
-          <CardContent>
+          <CardContent className="pt-4">
             <div className="flex flex-wrap gap-3">
               {application.github && (
                 <a
                   href={application.github}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-2 px-3 py-2 bg-white/10 rounded-lg text-white/80 hover:bg-white/20 transition-colors"
+                  className="flex items-center gap-2 px-3 py-2 border border-white/20 text-white hover:bg-white hover:text-black transition-colors"
                 >
                   <GithubLogoIcon className="w-4 h-4" />
                   <span className="text-sm">GitHub</span>
@@ -201,7 +238,7 @@ export function ApplicationSummary({
                   href={application.linkedin}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-2 px-3 py-2 bg-white/10 rounded-lg text-white/80 hover:bg-white/20 transition-colors"
+                  className="flex items-center gap-2 px-3 py-2 border border-white/20 text-white hover:bg-white hover:text-black transition-colors"
                 >
                   <LinkedinLogoIcon className="w-4 h-4" />
                   <span className="text-sm">LinkedIn</span>
@@ -212,7 +249,7 @@ export function ApplicationSummary({
                   href={application.website_url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-2 px-3 py-2 bg-white/10 rounded-lg text-white/80 hover:bg-white/20 transition-colors"
+                  className="flex items-center gap-2 px-3 py-2 border border-white/20 text-white hover:bg-white hover:text-black transition-colors"
                 >
                   <BrowserIcon className="w-4 h-4" />
                   <span className="text-sm">Website</span>
@@ -223,7 +260,7 @@ export function ApplicationSummary({
                   href={application.other_link}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-2 px-3 py-2 bg-white/10 rounded-lg text-white/80 hover:bg-white/20 transition-colors"
+                  className="flex items-center gap-2 px-3 py-2 border border-white/20 text-white hover:bg-white hover:text-black transition-colors"
                 >
                   <LinkIcon className="w-4 h-4" />
                   <span className="text-sm">Other</span>
@@ -234,7 +271,7 @@ export function ApplicationSummary({
                   href={resumeUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-2 px-3 py-2 bg-white/10 rounded-lg text-white/80 hover:bg-white/20 transition-colors"
+                  className="flex items-center gap-2 px-3 py-2 border border-white/20 text-white hover:bg-white hover:text-black transition-colors"
                 >
                   <FileTextIcon className="w-4 h-4" />
                   <span className="text-sm">Resume</span>
@@ -256,16 +293,17 @@ export function ApplicationSummary({
 
       {/* Short Answer Responses */}
       <motion.div variants={item}>
-        <Card className="bg-white/5 border-white/10 backdrop-blur-sm">
-          <CardHeader>
-            <CardTitle className="text-white text-lg">
-              Short Answer Responses
+        <Card className="bg-black border border-white/20 rounded-none">
+          <CardHeader className="border-b border-white/10">
+            <CardTitle className="text-white text-sm uppercase tracking-wider">
+              Short Answers
             </CardTitle>
           </CardHeader>
-          <CardContent className="space-y-6">
+          <CardContent className="pt-4 space-y-6">
             <div>
-              <p className="text-white/40 text-sm mb-2">
-                Why do you want to participate in CxC?
+              <p className="text-white/40 text-sm mb-2 tracking-wider">
+                Tell us about a technical project that you have worked on. What
+                did you learn? What challenges did you face?
               </p>
               <p className="text-white/80 text-sm leading-relaxed">
                 {application.cxc_q1 || "No response provided"}
@@ -273,8 +311,8 @@ export function ApplicationSummary({
             </div>
             <Separator className="bg-white/10" />
             <div>
-              <p className="text-white/40 text-sm mb-2">
-                What project idea are you excited to work on?
+              <p className="text-white/40 text-sm mb-2 tracking-wider">
+                Write us a Haiku
               </p>
               <p className="text-white/80 text-sm leading-relaxed">
                 {application.cxc_q2 || "No response provided"}
@@ -283,29 +321,6 @@ export function ApplicationSummary({
           </CardContent>
         </Card>
       </motion.div>
-
-      {/* Team Members */}
-      {application.team_members && application.team_members.length > 0 && (
-        <motion.div variants={item}>
-          <Card className="bg-white/5 border-white/10 backdrop-blur-sm">
-            <CardHeader>
-              <CardTitle className="text-white text-lg">Team Members</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="flex flex-wrap gap-2">
-                {application.team_members.map((member) => (
-                  <Badge
-                    key={member}
-                    className="bg-white/10 text-white/80 border-white/20"
-                  >
-                    {member}
-                  </Badge>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-        </motion.div>
-      )}
     </motion.div>
   );
 }
