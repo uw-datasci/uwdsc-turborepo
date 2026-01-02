@@ -98,7 +98,7 @@ export function Sponsors() {
         {/* TODO: add back mt-20 when uncommenting sponsor orbits */}
         <div className="flex flex-col items-center gap-6">
           <p className="text-lg md:text-xl text-white max-w-2xl mx-auto">
-            Interested in sponsoring CxC? Click the button to get in touch.
+            Interested in sponsoring CXC? Click the button to get in touch.
           </p>
 
           <ShimmerButton
