@@ -2,13 +2,12 @@
 
 import { AnimatePresence, motion } from "framer-motion";
 import { PartyPopper } from "lucide-react";
-import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import ConfettiEffect from "../Confetti";
 import CxCButton from "@/components/CxCButton";
 
 export function Submitted() {
-  const router = useRouter();
   const [showConfetti, setShowConfetti] = useState(false);
 
   useEffect(() => {
@@ -74,9 +73,13 @@ export function Submitted() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 1.8 }}
+          className="flex flex-row gap-4 items-center justify-center"
         >
-          <CxCButton className="py-3" onClick={() => router.push("/")}>
-            Return Home
+          <CxCButton asChild className="py-3 hover:scale-105">
+            <Link href="/">Return Home</Link>
+          </CxCButton>
+          <CxCButton asChild className="py-3 hover:scale-105">
+            <Link href="/dashboard/application">Review Application</Link>
           </CxCButton>
         </motion.div>
       </motion.div>

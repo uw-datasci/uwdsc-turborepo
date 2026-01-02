@@ -9,7 +9,7 @@ export type AppStatus =
   | "rejected"
   | "waitlisted";
 
-export type SizeOption = "XS" | "S" | "M" | "L" | "XL" | "XXL";
+export type SizeOption = "S" | "M" | "L" | "XL";
 
 export type GenderOption =
   | "Male"

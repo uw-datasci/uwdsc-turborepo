@@ -4,19 +4,14 @@ import {
   DesktopAppWormhole,
   MobileAppWormhole,
 } from "@/components/application/AppWormhole";
-import { useRouter } from "next/navigation";
+import Link from "next/link";
 import CxCButton from "@/components/CxCButton";
 import { motion } from "framer-motion";
 import { ArrowRightIcon } from "@uwdsc/ui/index";
-import Navbar from "@/components/nav/Navbar";
 
 export default function StartPage() {
-  const router = useRouter();
   return (
     <div className="min-h-screen h-full cxc-app-font w-full">
-      <div className="fixed z-50 w-full">
-        <Navbar showAuthButtons={false} />
-      </div>
       {/* Desktop View */}
       <div className="hidden md:flex flex-col md:flex-row justify-between min-h-screen h-full">
         <div className="block border-r border-white/50 md:w-2/5 relative">
@@ -43,32 +38,32 @@ export default function StartPage() {
           </h1>
           <div className="flex flex-wrap gap-8 font-normal">
             <CxCButton
-              onClick={() => router.push("/login")}
+              asChild
               className="group px-5 py-3 text-xl inline-flex items-center font-normal"
             >
-              <span>Login</span>
-              <motion.div
-                className="group-hover:translate-x-2 duration-200"
-                transition={{
-                  ease: "easeInOut",
-                }}
-              >
-                <ArrowRightIcon weight="bold" className="ml-10 !w-5 !h-5" />
-              </motion.div>
+              <Link href="/login">
+                <span>Login</span>
+                <motion.div
+                  className="group-hover:translate-x-2 duration-200"
+                  transition={{ ease: "easeInOut" }}
+                >
+                  <ArrowRightIcon weight="bold" className="ml-10 !w-5 !h-5" />
+                </motion.div>
+              </Link>
             </CxCButton>
             <CxCButton
-              onClick={() => router.push("/register?callbackUrl=/apply")}
+              asChild
               className="group px-5 py-3 text-xl inline-flex items-center font-normal"
             >
-              <span>Register</span>
-              <motion.div
-                className="group-hover:translate-x-2 duration-200"
-                transition={{
-                  ease: "easeInOut",
-                }}
-              >
-                <ArrowRightIcon weight="bold" className="ml-10 !w-5 !h-5" />
-              </motion.div>
+              <Link href="/register?callbackUrl=/apply">
+                <span>Register</span>
+                <motion.div
+                  className="group-hover:translate-x-2 duration-200"
+                  transition={{ ease: "easeInOut" }}
+                >
+                  <ArrowRightIcon weight="bold" className="ml-10 !w-5 !h-5" />
+                </motion.div>
+              </Link>
             </CxCButton>
           </div>
         </div>
@@ -89,32 +84,32 @@ export default function StartPage() {
           </div>
           <div className="flex flex-wrap gap-6 font-normal">
             <CxCButton
-              onClick={() => router.push("/login")}
+              asChild
               className="group px-4 py-3 text-base inline-flex items-center font-normal"
             >
-              <span>Login</span>
-              <motion.div
-                className="group-hover:translate-x-2 duration-200"
-                transition={{
-                  ease: "easeInOut",
-                }}
-              >
-                <ArrowRightIcon weight="bold" className="ml-5" />
-              </motion.div>
+              <Link href="/login">
+                <span>Login</span>
+                <motion.div
+                  className="group-hover:translate-x-2 duration-200"
+                  transition={{ ease: "easeInOut" }}
+                >
+                  <ArrowRightIcon weight="bold" className="ml-5" />
+                </motion.div>
+              </Link>
             </CxCButton>
             <CxCButton
-              onClick={() => router.push("/register?callbackUrl=/apply")}
+              asChild
               className="group px-4 py-3 text-base inline-flex items-center font-normal"
             >
-              <span>Register</span>
-              <motion.div
-                className="group-hover:translate-x-2 duration-200"
-                transition={{
-                  ease: "easeInOut",
-                }}
-              >
-                <ArrowRightIcon weight="bold" className="ml-5" />
-              </motion.div>
+              <Link href="/register?callbackUrl=/apply">
+                <span>Register</span>
+                <motion.div
+                  className="group-hover:translate-x-2 duration-200"
+                  transition={{ ease: "easeInOut" }}
+                >
+                  <ArrowRightIcon weight="bold" className="ml-5" />
+                </motion.div>
+              </Link>
             </CxCButton>
           </div>
         </div>

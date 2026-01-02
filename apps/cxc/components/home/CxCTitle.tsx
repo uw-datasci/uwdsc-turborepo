@@ -2,16 +2,16 @@
 
 import { CountdownClock } from "../CountdownClock";
 import CxCButton from "../CxCButton";
-import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Badge, Meteors, WarpBackground } from "@uwdsc/ui/index";
 import Image from "next/image";
 import { useIsMobile } from "@/hooks/useIsMobile";
+import { APPLICATION_RELEASE_DATE } from "@/constants/application";
 
 export default function CxCTitle() {
-  const router = useRouter();
-  const eventDate = useMemo(() => new Date("2026-01-02T00:00:00"), []);
+  const eventDate = useMemo(() => APPLICATION_RELEASE_DATE, []);
   const [mounted, setMounted] = useState(false);
   const [countdownOver, setCountdownOver] = useState(false);
   const isMobile = useIsMobile(640);
@@ -132,10 +132,10 @@ export default function CxCTitle() {
                     </div> */}
                   </div>
                   <CxCButton
-                    onClick={() => router.push("/apply")}
+                    asChild
                     className="text-base md:text-2xl py-2 md:py-3 px-10 md:px-14 hover:scale-105"
                   >
-                    Apply
+                    <Link href="/apply">Apply</Link>
                   </CxCButton>
                 </div>
               </motion.div>
