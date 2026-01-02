@@ -10,7 +10,7 @@ import Image from "next/image";
 import { useIsMobile } from "@/hooks/useIsMobile";
 
 export default function CxCTitle() {
-  const eventDate = useMemo(() => new Date("2026-01-02T00:00:00"), []);
+  const eventDate = useMemo(() => new Date("2026-01-02T02:00:00"), []);
   const [mounted, setMounted] = useState(false);
   const [countdownOver, setCountdownOver] = useState(false);
   const isMobile = useIsMobile(640);
