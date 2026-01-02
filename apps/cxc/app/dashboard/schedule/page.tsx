@@ -12,8 +12,9 @@ export default function SchedulePage() {
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4 }}
+          className="border-b border-white/10 pb-6"
         >
-          <h1 className="text-2xl lg:text-3xl font-bold text-white">
+          <h1 className="text-2xl lg:text-3xl font-bold text-white uppercase tracking-wider">
             Event Schedule
           </h1>
           <p className="text-white/60 mt-1">

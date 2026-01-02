@@ -8,9 +8,10 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Badge, Meteors, WarpBackground } from "@uwdsc/ui/index";
 import Image from "next/image";
 import { useIsMobile } from "@/hooks/useIsMobile";
+import { APPLICATION_RELEASE_DATE } from "@/constants/application";
 
 export default function CxCTitle() {
-  const eventDate = useMemo(() => new Date("2026-01-02T10:00:00"), []);
+  const eventDate = useMemo(() => APPLICATION_RELEASE_DATE, []);
   const [mounted, setMounted] = useState(false);
   const [countdownOver, setCountdownOver] = useState(false);
   const isMobile = useIsMobile(640);

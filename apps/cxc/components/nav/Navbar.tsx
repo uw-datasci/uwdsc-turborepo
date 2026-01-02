@@ -21,7 +21,6 @@ import DSCLogo from "../DSCLogo";
 const navLinks = [
   { href: "/", label: "Home" },
   { href: "/dashboard", label: "Dashboard" },
-  { href: "/calendar", label: "Calendar" },
 ];
 
 export default function Navbar() {

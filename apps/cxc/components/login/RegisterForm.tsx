@@ -3,9 +3,19 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Form, Button, FormField } from "@uwdsc/ui";
+import {
+  Form,
+  Button,
+  FormField,
+  Input,
+  FormItem,
+  FormLabel,
+  FormControl,
+  FormMessage,
+  cn,
+} from "@uwdsc/ui";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Loader2 } from "lucide-react";
+import { Loader2, Eye, EyeOff } from "lucide-react";
 import { renderTextField } from "@/components/FormHelpers";
 import { register } from "@/lib/api";
 import AppSection from "@/components/application/AppSection";
@@ -21,6 +31,8 @@ import Link from "next/link";
 export function RegisterForm() {
   const [isLoading, setIsLoading] = useState(false);
   const [authError, setAuthError] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const router = useRouter();
   const searchParams = useSearchParams();
   const { mutate } = useAuth();
@@ -111,10 +123,27 @@ export function RegisterForm() {
                     <FormField
                       control={form.control}
                       name="email"
-                      render={renderTextField("Email", {
-                        variant: "application",
-                        inputProps: { type: "email" },
-                      })}
+                      render={({ field, fieldState }) => (
+                        <FormItem>
+                          <FormLabel className="font-normal mb-1">
+                            Email
+                          </FormLabel>
+                          <FormControl>
+                            <Input
+                              {...field}
+                              type="email"
+                              placeholder="Email"
+                              value={field.value ?? ""}
+                              className={cn(
+                                "!h-auto !border-0 !px-4.5 !py-4 !text-base !border-b-[2px] !bg-cxc-input-bg !rounded-none !shadow-none transition-colors",
+                                !fieldState.error &&
+                                  "focus-visible:ring-white/30 focus-visible:border-white",
+                              )}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
                     />
                   </div>
                   {/* Password */}
@@ -122,13 +151,41 @@ export function RegisterForm() {
                     <FormField
                       control={form.control}
                       name="password"
-                      render={renderTextField("Password", {
-                        variant: "application",
-                        inputProps: {
-                          type: "password",
-                          autoComplete: "new-password",
-                        },
-                      })}
+                      render={({ field, fieldState }) => (
+                        <FormItem>
+                          <FormLabel className="font-normal mb-1">
+                            Password
+                          </FormLabel>
+                          <FormControl>
+                            <div className="relative">
+                              <Input
+                                {...field}
+                                type={showPassword ? "text" : "password"}
+                                autoComplete="new-password"
+                                placeholder="Password"
+                                value={field.value ?? ""}
+                                className={cn(
+                                  "!h-auto !border-0 !px-4.5 !py-4 !pr-12 !text-base !border-b-[2px] !bg-cxc-input-bg !rounded-none !shadow-none transition-colors",
+                                  !fieldState.error &&
+                                    "focus-visible:ring-white/30 focus-visible:border-white",
+                                )}
+                              />
+                              <button
+                                type="button"
+                                onClick={() => setShowPassword(!showPassword)}
+                                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                              >
+                                {showPassword ? (
+                                  <EyeOff className="w-5 h-5" />
+                                ) : (
+                                  <Eye className="w-5 h-5" />
+                                )}
+                              </button>
+                            </div>
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
                     />
                   </div>
                   {/* Confirm password */}
@@ -136,13 +193,43 @@ export function RegisterForm() {
                     <FormField
                       control={form.control}
                       name="confirmPassword"
-                      render={renderTextField("Confirm your password", {
-                        variant: "application",
-                        inputProps: {
-                          type: "password",
-                          autoComplete: "new-password",
-                        },
-                      })}
+                      render={({ field, fieldState }) => (
+                        <FormItem>
+                          <FormLabel className="font-normal mb-1">
+                            Confirm your password
+                          </FormLabel>
+                          <FormControl>
+                            <div className="relative">
+                              <Input
+                                {...field}
+                                type={showConfirmPassword ? "text" : "password"}
+                                autoComplete="new-password"
+                                placeholder="Confirm your password"
+                                value={field.value ?? ""}
+                                className={cn(
+                                  "!h-auto !border-0 !px-4.5 !py-4 !pr-12 !text-base !border-b-[2px] !bg-cxc-input-bg !rounded-none !shadow-none transition-colors",
+                                  !fieldState.error &&
+                                    "focus-visible:ring-white/30 focus-visible:border-white",
+                                )}
+                              />
+                              <button
+                                type="button"
+                                onClick={() =>
+                                  setShowConfirmPassword(!showConfirmPassword)
+                                }
+                                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                              >
+                                {showConfirmPassword ? (
+                                  <EyeOff className="w-5 h-5" />
+                                ) : (
+                                  <Eye className="w-5 h-5" />
+                                )}
+                              </button>
+                            </div>
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
                     />
                   </div>
                 </div>

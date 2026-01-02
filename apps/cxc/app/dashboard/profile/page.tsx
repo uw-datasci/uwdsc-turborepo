@@ -9,7 +9,6 @@ import {
   CardContent,
   CardHeader,
   CardTitle,
-  Badge,
   Avatar,
   AvatarFallback,
   Separator,
@@ -55,9 +54,9 @@ export default function ProfilePage() {
     return (
       <div className="p-6 lg:p-8">
         <div className="max-w-4xl mx-auto space-y-6">
-          <div className="h-8 w-48 bg-white/10 rounded animate-pulse" />
-          <div className="h-64 bg-white/5 rounded-lg animate-pulse" />
-          <div className="h-48 bg-white/5 rounded-lg animate-pulse" />
+          <div className="h-8 w-48 bg-white/10 animate-pulse" />
+          <div className="h-64 bg-white/5 border border-white/10 animate-pulse" />
+          <div className="h-48 bg-white/5 border border-white/10 animate-pulse" />
         </div>
       </div>
     );
@@ -81,8 +80,9 @@ export default function ProfilePage() {
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4 }}
+          className="border-b border-white/10 pb-6"
         >
-          <h1 className="text-2xl lg:text-3xl font-bold text-white">
+          <h1 className="text-2xl lg:text-3xl font-bold text-white uppercase tracking-wider">
             Your Profile
           </h1>
           <p className="text-white/60 mt-1">
@@ -96,12 +96,12 @@ export default function ProfilePage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: 0.1 }}
         >
-          <Card className="bg-white/5 border-white/10 backdrop-blur-sm overflow-hidden">
+          <Card className="bg-black border border-white/20 rounded-none overflow-hidden">
             {/* Profile Header */}
-            <div className="bg-gradient-to-r from-white/10 to-white/5 p-6">
+            <div className="bg-white/5 border-b border-white/10 p-6">
               <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
-                <Avatar className="w-20 h-20 bg-white/10 border-2 border-white/20">
-                  <AvatarFallback className="bg-white/10 text-white text-2xl">
+                <Avatar className="w-20 h-20 bg-white/10 border border-white/20 rounded-none">
+                  <AvatarFallback className="bg-white/10 text-white text-2xl rounded-none">
                     {initials}
                   </AvatarFallback>
                 </Avatar>
@@ -111,20 +111,20 @@ export default function ProfilePage() {
                       {fullName}
                     </h2>
                   )}
-                  <p className="text-white/60">{user.email}</p>
+                  <p className="text-white/60 font-mono">{user.email}</p>
                   <div className="flex flex-wrap gap-2 mt-2">
-                    <Badge className="bg-white/10 text-white/80 border-white/20 capitalize">
+                    <span className="text-white/80 text-sm border border-white/20 px-2 py-1 font-mono uppercase">
                       {user.role}
-                    </Badge>
+                    </span>
                     {user.nfc_id && (
-                      <Badge className="bg-emerald-500/20 text-emerald-400 border-emerald-500/30">
+                      <span className="text-emerald-400 text-sm border border-emerald-400 px-2 py-1 font-mono">
                         NFC: {user.nfc_id}
-                      </Badge>
+                      </span>
                     )}
                     {application?.status && (
-                      <Badge className="bg-blue-500/20 text-blue-400 border-blue-500/30 capitalize">
+                      <span className="text-blue-400 text-sm border border-blue-400 px-2 py-1 font-mono uppercase">
                         {application.status}
-                      </Badge>
+                      </span>
                     )}
                   </div>
                 </div>
@@ -134,46 +134,58 @@ export default function ProfilePage() {
             <CardContent className="p-6 space-y-6">
               {/* Contact Information */}
               <div>
-                <h3 className="text-white font-medium mb-4">
+                <h3 className="text-white font-medium mb-4 uppercase tracking-wider text-sm">
                   Contact Information
                 </h3>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div className="flex items-center gap-3 p-3 bg-white/5 rounded-lg">
+                  <div className="flex items-center gap-3 p-3 border border-white/10">
                     <EnvelopeSimpleIcon className="w-5 h-5 text-white/40" />
                     <div>
-                      <p className="text-white/40 text-xs">Email</p>
-                      <p className="text-white text-sm">{user.email}</p>
+                      <p className="text-white/40 text-xs uppercase tracking-wider">
+                        Email
+                      </p>
+                      <p className="text-white text-sm font-mono">
+                        {user.email}
+                      </p>
                     </div>
                   </div>
                   {application?.phone && (
-                    <div className="flex items-center gap-3 p-3 bg-white/5 rounded-lg">
+                    <div className="flex items-center gap-3 p-3 border border-white/10">
                       <PhoneIcon className="w-5 h-5 text-white/40" />
                       <div>
-                        <p className="text-white/40 text-xs">Phone</p>
-                        <p className="text-white text-sm">
+                        <p className="text-white/40 text-xs uppercase tracking-wider">
+                          Phone
+                        </p>
+                        <p className="text-white text-sm font-mono">
                           {application.phone}
                         </p>
                       </div>
                     </div>
                   )}
                   {application?.discord && (
-                    <div className="flex items-center gap-3 p-3 bg-white/5 rounded-lg">
+                    <div className="flex items-center gap-3 p-3 border border-white/10">
                       <DiscordLogoIcon className="w-5 h-5 text-white/40" />
                       <div>
-                        <p className="text-white/40 text-xs">Discord</p>
-                        <p className="text-white text-sm">
+                        <p className="text-white/40 text-xs uppercase tracking-wider">
+                          Discord
+                        </p>
+                        <p className="text-white text-sm font-mono">
                           {application.discord}
                         </p>
                       </div>
                     </div>
                   )}
                   {application?.country_of_residence && (
-                    <div className="flex items-center gap-3 p-3 bg-white/5 rounded-lg">
+                    <div className="flex items-center gap-3 p-3 border border-white/10">
                       <GlobeIcon className="w-5 h-5 text-white/40" />
                       <div>
-                        <p className="text-white/40 text-xs">Country</p>
-                        <p className="text-white text-sm">
-                          {application.country_of_residence}
+                        <p className="text-white/40 text-xs uppercase tracking-wider">
+                          Country
+                        </p>
+                        <p className="text-white text-sm font-mono">
+                          {application.country_of_residence !== "Other"
+                            ? application.country_of_residence
+                            : application.country_of_residence_other}
                         </p>
                       </div>
                     </div>
@@ -186,22 +198,25 @@ export default function ProfilePage() {
               {/* Education */}
               {application && (
                 <div>
-                  <h3 className="text-white font-medium mb-4">Education</h3>
-                  <div className="flex items-start gap-3 p-4 bg-white/5 rounded-lg">
+                  <h3 className="text-white font-medium mb-4 uppercase tracking-wider text-sm">
+                    Education
+                  </h3>
+                  <div className="flex items-start gap-3 p-4 border border-white/10">
                     <GraduationCapIcon className="w-6 h-6 text-white/40 mt-0.5" />
                     <div className="space-y-1">
                       <p className="text-white font-medium">
-                        {application.university_name ||
-                          application.university_name_other ||
-                          "University not specified"}
+                        {application.university_name !== "Other"
+                          ? application.university_name
+                          : application.university_name_other ||
+                            "University not specified"}
                       </p>
-                      <p className="text-white/60 text-sm">
-                        {application.program ||
-                          application.program_other ||
-                          "Program not specified"}
+                      <p className="text-white/60 text-sm font-mono">
+                        {application.program !== "Other"
+                          ? application.program
+                          : application.program_other || "—"}
                       </p>
-                      <p className="text-white/40 text-sm">
-                        {application.year_of_study || "Year not specified"}
+                      <p className="text-white/40 text-sm font-mono">
+                        {application.year_of_study || "—"}
                       </p>
                     </div>
                   </div>
@@ -212,14 +227,16 @@ export default function ProfilePage() {
 
               {/* Social Links */}
               <div>
-                <h3 className="text-white font-medium mb-4">Social Links</h3>
+                <h3 className="text-white font-medium mb-4 uppercase tracking-wider text-sm">
+                  Links
+                </h3>
                 <div className="flex flex-wrap gap-3">
                   {application?.github && (
                     <a
                       href={application.github}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center gap-2 px-4 py-2 bg-white/10 rounded-lg text-white hover:bg-white/20 transition-colors"
+                      className="flex items-center gap-2 px-4 py-2 border border-white/20 text-white hover:bg-white hover:text-black transition-colors"
                     >
                       <GithubLogoIcon className="w-5 h-5" />
                       <span>GitHub</span>
@@ -230,7 +247,7 @@ export default function ProfilePage() {
                       href={application.linkedin}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center gap-2 px-4 py-2 bg-white/10 rounded-lg text-white hover:bg-white/20 transition-colors"
+                      className="flex items-center gap-2 px-4 py-2 border border-white/20 text-white hover:bg-white hover:text-black transition-colors"
                     >
                       <LinkedinLogoIcon className="w-5 h-5" />
                       <span>LinkedIn</span>
@@ -241,7 +258,7 @@ export default function ProfilePage() {
                       href={application.website_url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center gap-2 px-4 py-2 bg-white/10 rounded-lg text-white hover:bg-white/20 transition-colors"
+                      className="flex items-center gap-2 px-4 py-2 border border-white/20 text-white hover:bg-white hover:text-black transition-colors"
                     >
                       <BrowserIcon className="w-5 h-5" />
                       <span>Website</span>
@@ -251,7 +268,7 @@ export default function ProfilePage() {
                     !application?.linkedin &&
                     !application?.website_url && (
                       <p className="text-white/40 text-sm">
-                        No social links added to your application.
+                        No links added to your application.
                       </p>
                     )}
                 </div>
@@ -266,31 +283,41 @@ export default function ProfilePage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: 0.2 }}
         >
-          <Card className="bg-white/5 border-white/10 backdrop-blur-sm">
-            <CardHeader>
-              <CardTitle className="text-white">Hackathon Stats</CardTitle>
+          <Card className="bg-black border border-white/20 rounded-none">
+            <CardHeader className="border-b border-white/10">
+              <CardTitle className="text-white uppercase tracking-wider text-sm">
+                Hackathon Stats
+              </CardTitle>
             </CardHeader>
-            <CardContent>
+            <CardContent className="pt-6">
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                <div className="text-center p-4 bg-white/5 rounded-lg">
-                  <p className="text-3xl font-bold text-white">
+                <div className="text-center p-4 border border-white/10">
+                  <p className="text-3xl font-bold text-white font-mono">
                     {application?.hackathons_attended || "—"}
                   </p>
-                  <p className="text-white/40 text-sm mt-1">Prior Hackathons</p>
+                  <p className="text-white/40 text-xs mt-1 uppercase tracking-wider">
+                    Prior Hackathons
+                  </p>
                 </div>
-                <div className="text-center p-4 bg-white/5 rounded-lg">
-                  <p className="text-3xl font-bold text-white">
+                <div className="text-center p-4 border border-white/10">
+                  <p className="text-3xl font-bold text-white font-mono">
                     {application?.team_members?.length || 0}
                   </p>
-                  <p className="text-white/40 text-sm mt-1">Team Members</p>
+                  <p className="text-white/40 text-xs mt-1 uppercase tracking-wider">
+                    Team Members
+                  </p>
                 </div>
-                <div className="text-center p-4 bg-white/5 rounded-lg">
-                  <p className="text-3xl font-bold text-white">0</p>
-                  <p className="text-white/40 text-sm mt-1">Events Attended</p>
+                <div className="text-center p-4 border border-white/10">
+                  <p className="text-3xl font-bold text-white font-mono">0</p>
+                  <p className="text-white/40 text-xs mt-1 uppercase tracking-wider">
+                    Events Attended
+                  </p>
                 </div>
-                <div className="text-center p-4 bg-white/5 rounded-lg">
-                  <p className="text-3xl font-bold text-white">—</p>
-                  <p className="text-white/40 text-sm mt-1">Check-ins</p>
+                <div className="text-center p-4 border border-white/10">
+                  <p className="text-3xl font-bold text-white font-mono">—</p>
+                  <p className="text-white/40 text-xs mt-1 uppercase tracking-wider">
+                    Check-ins
+                  </p>
                 </div>
               </div>
             </CardContent>

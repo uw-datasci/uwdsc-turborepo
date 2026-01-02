@@ -5,7 +5,7 @@ CREATE TYPE "public"."role_enum" AS ENUM ('hacker', 'volunteer', 'admin', 'defau
 CREATE TYPE "public"."application_status_enum" AS ENUM ('draft', 'submitted', 'offered', 'accepted', 'rejected', 'waitlisted');
 
 -- CreateEnum
-CREATE TYPE "public"."size_options" AS ENUM ('XS', 'S', 'M', 'L', 'XL', 'XXL');
+CREATE TYPE "public"."size_options" AS ENUM ('S', 'M', 'L', 'XL');
 
 -- CreateEnum
 CREATE TYPE "public"."gender_options" AS ENUM ('Male', 'Female', 'Non-Binary', 'Other', 'Prefer not to say');
@@ -133,6 +133,21 @@ CREATE TABLE "public"."reviews" (
     )
   )
 );
+
+-- CreateTable
+CREATE TABLE "public"."teams" (
+    "id" UUID NOT NULL DEFAULT gen_random_uuid(),
+    "team_name" TEXT NOT NULL,
+    "team_member_1" TEXT NULL,
+    "team_member_2" TEXT NULL,
+    "team_member_3" TEXT NULL,
+    "team_member_4" TEXT NULL,
+    "password" TEXT NOT NULL,
+    "created_at" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
+
+    CONSTRAINT "teams_pkey" PRIMARY KEY ("id")
+);
+
 
 -- CreateIndex
 CREATE UNIQUE INDEX IF NOT EXISTS "idx_reviews_application_id" ON "public"."reviews"("application_id");
