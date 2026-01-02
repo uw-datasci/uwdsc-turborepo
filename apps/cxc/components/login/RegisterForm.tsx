@@ -113,10 +113,25 @@ export function RegisterForm() {
                     <FormField
                       control={form.control}
                       name="email"
-                      render={renderTextField("Email", {
-                        variant: "application",
-                        inputProps: { type: "email" },
-                      })}
+                      render={({ field, fieldState }) => (
+                        <FormItem>
+                          <FormLabel className="font-normal mb-1">Email</FormLabel>
+                          <FormControl>
+                            <Input
+                              {...field}
+                              type="email"
+                              placeholder="Email"
+                              value={field.value ?? ""}
+                              className={cn(
+                                "!h-auto !border-0 !px-4.5 !py-4 !text-base !border-b-[2px] !bg-cxc-input-bg !rounded-none !shadow-none transition-colors",
+                                !fieldState.error &&
+                                  "focus-visible:ring-white/30 focus-visible:border-white",
+                              )}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
                     />
                   </div>
                   {/* Password */}
