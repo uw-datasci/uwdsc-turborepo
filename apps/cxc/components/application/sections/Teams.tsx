@@ -12,7 +12,10 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
+  FormItem,
+  FormControl,
 } from "@uwdsc/ui";
+import { Eye, EyeOff } from "lucide-react";
 import { UseFormReturn } from "react-hook-form";
 import AppSection from "../AppSection";
 import { AppFormValues } from "@/lib/schemas/application";
@@ -32,6 +35,7 @@ export function Teams({ form }: TeamsProps) {
   const [passwordDialogMode, setPasswordDialogMode] = useState<"create" | "join">("create");
   const [teamName, setTeamName] = useState("");
   const [passwordDialogPassword, setPasswordDialogPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
 
   // Fetch user's team on mount
@@ -383,23 +387,39 @@ export function Teams({ form }: TeamsProps) {
                 </DialogDescription>
               </DialogHeader>
               <div className="flex flex-col gap-4 py-4">
-                <div className="flex flex-col gap-2">
-                  <FormLabel>Password</FormLabel>
-                  <Input
-                    type="password"
-                    value={passwordDialogPassword}
-                    onChange={(e) => {
-                      setPasswordDialogPassword(e.target.value);
-                      setError("");
-                    }}
-                    placeholder="Enter password"
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter") {
-                        handlePasswordDialogSubmit();
-                      }
-                    }}
-                  />
-                </div>
+                <FormItem>
+                  <FormLabel className="font-normal mb-1">Password</FormLabel>
+                  <FormControl>
+                    <div className="relative">
+                      <Input
+                        type={showPassword ? "text" : "password"}
+                        value={passwordDialogPassword}
+                        onChange={(e) => {
+                          setPasswordDialogPassword(e.target.value);
+                          setError("");
+                        }}
+                        placeholder="Enter password"
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter") {
+                            handlePasswordDialogSubmit();
+                          }
+                        }}
+                        className="!h-auto !border-0 !px-4.5 !py-4 !pr-12 !text-base !border-b-[2px] !bg-cxc-input-bg !rounded-none !shadow-none transition-colors"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowPassword(!showPassword)}
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                      >
+                        {showPassword ? (
+                          <EyeOff className="w-5 h-5" />
+                        ) : (
+                          <Eye className="w-5 h-5" />
+                        )}
+                      </button>
+                    </div>
+                  </FormControl>
+                </FormItem>
                 {error && (
                   <p className="text-sm text-destructive">{error}</p>
                 )}

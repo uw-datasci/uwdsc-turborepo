@@ -71,11 +71,33 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Check if team name already exists
+    const { data: existingTeamName, error: nameCheckError } = await supabase
+      .from("teams")
+      .select("team_name")
+      .eq("team_name", team_name.trim())
+      .limit(1);
+
+    if (nameCheckError) {
+      console.error("Error checking team name:", nameCheckError);
+      return NextResponse.json(
+        { error: "Failed to check team name" },
+        { status: 500 },
+      );
+    }
+
+    if (existingTeamName && existingTeamName.length > 0) {
+      return NextResponse.json(
+        { error: "Team name already exists" },
+        { status: 400 },
+      );
+    }
+
     // Create new team with creator as first member
     const { data: newTeam, error: createError } = await supabase
       .from("teams")
       .insert({
-        team_name,
+        team_name: team_name.trim(),
         password,
         team_member_1: userEmail,
         team_member_2: null,

@@ -10,19 +10,22 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { renderTextField } from "../FormHelpers";
-import { Loader2 } from "lucide-react";
+import { Loader2, Eye, EyeOff } from "lucide-react";
 import { VerifyEmailModal } from "./VerifyEmailModal";
 import { login } from "@/lib/api";
 import { useAuth } from "@/contexts/AuthContext";
 import AppSection from "../application/AppSection";
 import Link from "next/link";
 import CxCButton from "../CxCButton";
+import { Input } from "@uwdsc/ui";
+import { FormItem, FormLabel, FormControl, FormMessage } from "@uwdsc/ui";
 
 export function LoginForm() {
   const [authError, setAuthError] = useState<string>("");
   const [isLoading, setIsLoading] = useState(false);
   const [showVerifyModal, setShowVerifyModal] = useState(false);
   const [userEmail, setUserEmail] = useState<string>("");
+  const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
   const { mutate } = useAuth();
 
@@ -101,10 +104,34 @@ export function LoginForm() {
                     <FormField
                       control={form.control}
                       name="password"
-                      render={renderTextField("Password", {
-                        variant: "application",
-                        inputProps: { type: "password", autoComplete: "off" },
-                      })}
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="font-normal mb-1">Password</FormLabel>
+                          <FormControl>
+                            <div className="relative">
+                              <Input
+                                {...field}
+                                type={showPassword ? "text" : "password"}
+                                autoComplete="off"
+                                placeholder="Password"
+                                className="!h-auto !border-0 !px-4.5 !py-4 !pr-12 !text-base !border-b-[2px] !bg-cxc-input-bg !rounded-none !shadow-none transition-colors"
+                              />
+                              <button
+                                type="button"
+                                onClick={() => setShowPassword(!showPassword)}
+                                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                              >
+                                {showPassword ? (
+                                  <EyeOff className="w-5 h-5" />
+                                ) : (
+                                  <Eye className="w-5 h-5" />
+                                )}
+                              </button>
+                            </div>
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
                     />
                   </div>
                 </div>
@@ -137,14 +164,7 @@ export function LoginForm() {
             </CxCButton>
 
             <div className="flex flex-col sm:flex-row justify-between">
-              <Button
-                variant="link"
-                onClick={() => {}} // TODO: implement logic for forgot password
-                className="text-gray-400/60 hover:text-gray-200 transition-colors text-sm font-medium p-0 w-fit"
-                type="button"
-              >
-                Forgot password?
-              </Button>
+              
               <Button
                 variant="link"
                 asChild
