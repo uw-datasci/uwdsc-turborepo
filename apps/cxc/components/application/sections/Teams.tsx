@@ -19,7 +19,8 @@ import { Eye, EyeOff } from "lucide-react";
 import { UseFormReturn } from "react-hook-form";
 import AppSection from "../AppSection";
 import { AppFormValues } from "@/lib/schemas/application";
-import { getUserEmails, createTeam, joinTeam, getMyTeam, leaveTeam, type Team } from "@/lib/api";
+import { getUserEmails, createTeam, joinTeam, getMyTeam, leaveTeam, checkTeamName, type Team } from "@/lib/api";
+import CxCButton from "../../CxCButton";
 
 interface TeamsProps {
   readonly form: UseFormReturn<AppFormValues>;
@@ -116,7 +117,21 @@ export function Teams({ form }: TeamsProps) {
       return;
     }
 
-    // ALWAYS show password dialog when creating - clear password first
+    // Check if team name already exists BEFORE showing password dialog
+    try {
+      const checkResult = await checkTeamName(teamName.trim());
+      if (checkResult.exists) {
+        setError("Cannot create team that already exists");
+        return;
+      }
+    } catch (err) {
+      console.error("[Teams] Error checking team name:", err);
+      setError("Failed to check team name. Please try again.");
+      return;
+    }
+
+    // Team name is available, show password dialog
+    setError("");
     setPasswordDialogPassword("");
     setPasswordDialogMode("create");
     setShowPasswordDialog(true);
@@ -151,10 +166,6 @@ export function Teams({ form }: TeamsProps) {
       return;
     }
 
-    // Close dialog first
-    setShowPasswordDialog(false);
-    setError("");
-
     // Continue with create or join directly (don't call handleCreateTeam/handleJoinTeam as they check hasShownPasswordDialog)
     if (passwordDialogMode === "create") {
       console.log("[Teams] Creating team directly after password dialog");
@@ -175,11 +186,16 @@ export function Teams({ form }: TeamsProps) {
         form.setValue("team_members", members);
         setTeamName("");
         setPasswordDialogPassword("");
+        setError(""); // Clear error on success
+        setShowPasswordDialog(false); // Close dialog on success
       } catch (err: unknown) {
         console.error("[Teams] Create team error:", err);
-        const errorMessage =
-          err instanceof Error ? err.message : "Failed to create team";
+        let errorMessage = "Failed to create team";
+        if (err instanceof Error) {
+          errorMessage = err.message;
+        }
         setError(errorMessage);
+        // Keep dialog open on error so user can see the error and try again
       } finally {
         setIsCreating(false);
       }
@@ -202,13 +218,25 @@ export function Teams({ form }: TeamsProps) {
         form.setValue("team_members", members);
         setTeamName("");
         setPasswordDialogPassword("");
+        setError(""); // Clear error on success
+        setShowPasswordDialog(false); // Close dialog on success
       } catch (err: unknown) {
         console.error("[Teams] Join team error:", err);
-        const errorMessage =
-          err instanceof Error ? err.message : "Failed to join team";
+        let errorMessage = "Failed to join team";
+        if (err instanceof Error) {
+          // Check if it's an incorrect password error (401 status)
+          const errorWithStatus = err as Error & { status?: number; error?: string };
+          
+          // Check for 401 status (incorrect password)
+          if (errorWithStatus.status === 401) {
+            errorMessage = "Incorrect password";
+          } else {
+            // Use the error message from the API
+            errorMessage = errorWithStatus.error || err.message || "Failed to join team";
+          }
+        }
         setError(errorMessage);
-        // Re-open dialog on error so user can try again
-        setShowPasswordDialog(true);
+        // Keep dialog open on error so user can see the error and try again
       } finally {
         setIsJoining(false);
       }
@@ -317,15 +345,14 @@ export function Teams({ form }: TeamsProps) {
                   ))}
                 </div>
               </div>
-              <Button
+              <CxCButton
                 type="button"
-                variant="destructive"
                 onClick={handleLeaveTeam}
                 disabled={isLeaving}
                 className="mt-4"
               >
                 {isLeaving ? "Leaving..." : "Leave Team"}
-              </Button>
+              </CxCButton>
             </>
           ) : (
             <>
@@ -337,7 +364,7 @@ export function Teams({ form }: TeamsProps) {
                     value={teamName}
                     onChange={(e) => {
                       setTeamName(e.target.value);
-                      setError("");
+                      // Don't clear error when typing - let it persist
                     }}
                     placeholder="Enter team name"
                     className="!h-auto !border-0 !px-4.5 !py-4 !text-base !border-b-[2px] !bg-cxc-input-bg !rounded-none !shadow-none"
@@ -349,23 +376,22 @@ export function Teams({ form }: TeamsProps) {
                 )}
 
                 <div className="flex gap-4">
-                  <Button
+                  <CxCButton
                     type="button"
                     onClick={handleCreateTeam}
                     disabled={isCreating || isJoining}
                     className="flex-1"
                   >
                     {isCreating ? "Creating..." : "Create Team"}
-                  </Button>
-                  <Button
+                  </CxCButton>
+                  <CxCButton
                     type="button"
-                    variant="outline"
                     onClick={handleJoinTeam}
                     disabled={isCreating || isJoining}
                     className="flex-1"
                   >
                     {isJoining ? "Joining..." : "Join Team"}
-                  </Button>
+                  </CxCButton>
                 </div>
               </div>
             </>
@@ -431,7 +457,7 @@ export function Teams({ form }: TeamsProps) {
                   onClick={() => {
                     setShowPasswordDialog(false);
                     setPasswordDialogPassword("");
-                    setError("");
+                    // Don't clear error - let it persist in the main form
                   }}
                 >
                   Cancel

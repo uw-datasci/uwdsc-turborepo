@@ -21,7 +21,7 @@ export { getRandomApplication, submitReview } from "./review";
 export type { SubmitReviewRequest, SubmitReviewResponse } from "./review";
 
 // Export all team functions
-export { createTeam, joinTeam, getMyTeam, leaveTeam } from "./teams";
+export { createTeam, joinTeam, getMyTeam, leaveTeam, checkTeamName } from "./teams";
 export type {
   Team,
   CreateTeamRequest,
@@ -30,6 +30,7 @@ export type {
   JoinTeamResponse,
   GetMyTeamResponse,
   LeaveTeamResponse,
+  CheckTeamNameResponse,
 } from "./teams";
 
 // Export all types

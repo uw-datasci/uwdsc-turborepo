@@ -18,7 +18,7 @@ import AppSection from "../application/AppSection";
 import Link from "next/link";
 import CxCButton from "../CxCButton";
 import { Input } from "@uwdsc/ui";
-import { FormItem, FormLabel, FormControl, FormMessage } from "@uwdsc/ui";
+import { FormItem, FormLabel, FormControl, FormMessage, cn } from "@uwdsc/ui";
 
 export function LoginForm() {
   const [authError, setAuthError] = useState<string>("");
@@ -94,6 +94,7 @@ export function LoginForm() {
                       control={form.control}
                       name="email"
                       render={renderTextField("Email", {
+                        label: "Email",
                         variant: "application",
                         inputProps: { type: "email" },
                       })}
@@ -104,7 +105,7 @@ export function LoginForm() {
                     <FormField
                       control={form.control}
                       name="password"
-                      render={({ field }) => (
+                      render={({ field, fieldState }) => (
                         <FormItem>
                           <FormLabel className="font-normal mb-1">Password</FormLabel>
                           <FormControl>
@@ -114,7 +115,12 @@ export function LoginForm() {
                                 type={showPassword ? "text" : "password"}
                                 autoComplete="off"
                                 placeholder="Password"
-                                className="!h-auto !border-0 !px-4.5 !py-4 !pr-12 !text-base !border-b-[2px] !bg-cxc-input-bg !rounded-none !shadow-none transition-colors"
+                                value={field.value ?? ""}
+                                className={cn(
+                                  "!h-auto !border-0 !px-4.5 !py-4 !pr-12 !text-base !border-b-[2px] !bg-cxc-input-bg !rounded-none !shadow-none transition-colors",
+                                  !fieldState.error &&
+                                    "focus-visible:ring-white/30 focus-visible:border-white",
+                                )}
                               />
                               <button
                                 type="button"

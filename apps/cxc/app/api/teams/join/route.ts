@@ -128,7 +128,13 @@ export async function POST(request: NextRequest) {
 
     const team = teams[0];
 
-    console.log("[Join Team API] Verifying password...");
+    console.log("[Join Team API] Verifying password...", {
+      teamPassword: team.password,
+      providedPassword: password,
+      match: team.password === password,
+    });
+    
+    // Compare passwords exactly (case-sensitive, no trimming)
     if (team.password !== password) {
       console.log("[Join Team API] Password mismatch");
       return NextResponse.json(

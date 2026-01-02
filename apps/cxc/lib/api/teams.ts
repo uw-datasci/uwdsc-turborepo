@@ -49,9 +49,35 @@ export interface LeaveTeamResponse {
   message: string;
 }
 
+export interface CheckTeamNameResponse {
+  exists: boolean;
+}
+
 // ============================================================================
 // Teams API Functions
 // ============================================================================
+
+/**
+ * Check if a team name already exists
+ */
+export async function checkTeamName(
+  teamName: string,
+): Promise<CheckTeamNameResponse> {
+  const response = await fetch(
+    `/api/teams/check?team_name=${encodeURIComponent(teamName)}`,
+    {
+      method: "GET",
+    },
+  );
+
+  const result = await response.json();
+
+  if (!response.ok) {
+    throw createApiError(result, response.status);
+  }
+
+  return result;
+}
 
 /**
  * Create a new team
