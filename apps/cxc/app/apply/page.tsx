@@ -34,6 +34,8 @@ import MobileApplication from "@/components/application/MobileApplication";
 import { Submitted } from "@/components/application/sections";
 import { ApplicationClosed } from "@/components/application/ApplicationClosed";
 import {
+  APPLICATION_DEADLINE,
+  APPLICATION_RELEASE_DATE,
   MOBILE_STEP_TO_PAGE_MAP,
   NUMBER_MOBILE_PAGES,
   STEP_NAMES,
@@ -44,10 +46,6 @@ import {
 // ============================================================================
 
 const FINAL_STEP_COUNT = STEP_NAMES.length;
-
-// Application availability dates (January 2-12, 2026)
-const APPLICATION_START_DATE = new Date("2026-01-02T00:00:00");
-const APPLICATION_END_DATE = new Date("2026-01-12T23:59:59");
 
 const STORAGE_KEY_DESKTOP_STEP = "desktop_step";
 const STORAGE_KEY_MOBILE_PAGE = "mobile_page";
@@ -84,7 +82,7 @@ export default function ApplyPage() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isApplicationOpen, setIsApplicationOpen] = useState<boolean>(() => {
     const now = new Date();
-    return now >= APPLICATION_START_DATE && now <= APPLICATION_END_DATE;
+    return now >= APPLICATION_RELEASE_DATE && now <= APPLICATION_DEADLINE;
   });
   const [currentDesktopStep, setCurrentDesktopStep] = useState<number>(() => {
     if (typeof window !== "undefined") {
@@ -128,7 +126,7 @@ export default function ApplyPage() {
     const checkApplicationStatus = () => {
       const now = new Date();
       const isOpen =
-        now >= APPLICATION_START_DATE && now <= APPLICATION_END_DATE;
+        now >= APPLICATION_RELEASE_DATE && now <= APPLICATION_DEADLINE;
       setIsApplicationOpen(isOpen);
     };
 

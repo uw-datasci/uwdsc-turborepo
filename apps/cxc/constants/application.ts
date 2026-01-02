@@ -107,8 +107,8 @@ export const BLANK_APPLICATION = {
   status: "draft",
 };
 
-export const APPLICATION_RELEASE_DATE = new Date(); // Set actual release date here
-export const APPLICATION_DEADLINE = new Date(); // Set actual deadline here
+export const APPLICATION_RELEASE_DATE = new Date("2026-01-02T08:00:00");
+export const APPLICATION_DEADLINE = new Date("2026-01-12T23:59:59");
 
 // field names
 export const CONTACT_INFO_FIELDS = {
