@@ -28,35 +28,44 @@ export interface ReviewData {
 
 export class AdminReviewRepository extends BaseRepository {
   /**
-   * Get the application with the least number of reviews
+   * Get a random application with the least number of reviews
    * Excludes applications already reviewed by the specified reviewer
-   * Ties broken lexicographically by application ID
+   * Randomly selects from all applications with the minimum review count
    */
   async getApplicationWithLeastReviews(
     reviewerId: string,
   ): Promise<ApplicationWithReviewCount | null> {
     try {
+      // First, get all applications with the minimum review count
       const applications = await this.sql<ApplicationWithReviewCount[]>`
-        SELECT 
-          a.*,
-          COALESCE(review_counts.review_count, 0)::int as review_count
-        FROM applications a
-        LEFT JOIN (
+        WITH review_counts AS (
           SELECT 
             application_id,
             COUNT(*)::int as review_count
           FROM reviews
           GROUP BY application_id
-        ) review_counts ON a.id = review_counts.application_id
-        WHERE a.status = 'submitted'
-          AND NOT EXISTS (
-            SELECT 1
-            FROM reviews r
-            WHERE r.application_id = a.id AND r.reviewer_id = ${reviewerId}
-          )
-        ORDER BY 
-          COALESCE(review_counts.review_count, 0) ASC,
-          a.id ASC
+        ),
+        applications_with_counts AS (
+          SELECT 
+            a.*,
+            COALESCE(rc.review_count, 0)::int as review_count
+          FROM applications a
+          LEFT JOIN review_counts rc ON a.id = rc.application_id
+          WHERE a.status = 'submitted'
+            AND NOT EXISTS (
+              SELECT 1
+              FROM reviews r
+              WHERE r.application_id = a.id AND r.reviewer_id = ${reviewerId}
+            )
+        ),
+        min_review_count AS (
+          SELECT MIN(review_count) as min_count
+          FROM applications_with_counts
+        )
+        SELECT *
+        FROM applications_with_counts
+        WHERE review_count = (SELECT min_count FROM min_review_count)
+        ORDER BY RANDOM()
         LIMIT 1
       `;
 
@@ -129,6 +138,41 @@ export class AdminReviewRepository extends BaseRepository {
         `Failed to fetch team members: ${(error as Error).message}`,
         500,
       );
+    }
+  }
+
+  /**
+   * Get team name by member email addresses
+   * Returns the team name if any of the emails belong to a team
+   * (Since team members in an application should all be in the same team)
+   */
+  async getTeamNameByMemberEmails(emails: string[]): Promise<string | null> {
+    try {
+      if (emails.length === 0) return null;
+
+      // Find team where any of these emails are members
+      // Use the first email to find the team (all team members should be in the same team)
+      const firstEmail = emails[0];
+      if (!firstEmail) return null;
+
+      const teamResult = await this.sql<Array<{ team_name: string }>>`
+        SELECT t.team_name
+        FROM teams t
+        WHERE (
+          t.team_member_1 = ${firstEmail}
+          OR t.team_member_2 = ${firstEmail}
+          OR t.team_member_3 = ${firstEmail}
+          OR t.team_member_4 = ${firstEmail}
+        )
+        LIMIT 1
+      `;
+
+      return teamResult.length > 0 && teamResult[0]
+        ? teamResult[0].team_name
+        : null;
+    } catch (error) {
+      console.error("Error fetching team name:", error);
+      return null;
     }
   }
 
