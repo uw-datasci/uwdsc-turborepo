@@ -380,18 +380,18 @@ export function Teams({ form }: TeamsProps) {
                     type="button"
                     onClick={handleCreateTeam}
                     disabled={isCreating || isJoining}
-                    className="flex-1"
+                    className="flex-1 text-lg"
                   >
                     {isCreating ? "Creating..." : "Create Team"}
                   </CxCButton>
-                  <CxCButton
+                  <Button
                     type="button"
                     onClick={handleJoinTeam}
                     disabled={isCreating || isJoining}
-                    className="flex-1"
+                    className="flex-1 !bg-black !text-white !border-white !border-2 font-normal rounded-none !h-auto hover:!bg-black text-lg"
                   >
                     {isJoining ? "Joining..." : "Join Team"}
-                  </CxCButton>
+                  </Button>
                 </div>
               </div>
             </>
@@ -453,12 +453,12 @@ export function Teams({ form }: TeamsProps) {
               <DialogFooter>
                 <Button
                   type="button"
-                  variant="outline"
                   onClick={() => {
                     setShowPasswordDialog(false);
                     setPasswordDialogPassword("");
                     // Don't clear error - let it persist in the main form
                   }}
+                  className="!bg-white !text-black !border-black !border-2 font-normal rounded-none !h-auto hover:!bg-white"
                 >
                   Cancel
                 </Button>
@@ -466,6 +466,7 @@ export function Teams({ form }: TeamsProps) {
                   type="button"
                   onClick={handlePasswordDialogSubmit}
                   disabled={!passwordDialogPassword.trim()}
+                  className="!bg-black !text-white !border-white !border-2 font-normal rounded-none !h-auto hover:!bg-black"
                 >
                   {passwordDialogMode === "create" ? "Create" : "Join"}
                 </Button>
