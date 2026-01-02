@@ -12,7 +12,10 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const { team_name, password } = body;
 
-    console.log("[Join Team API] Request received:", { team_name, hasPassword: !!password });
+    console.log("[Join Team API] Request received:", {
+      team_name,
+      hasPassword: !!password,
+    });
 
     if (!team_name || !password) {
       console.log("[Join Team API] Missing team_name or password");
@@ -52,7 +55,10 @@ export async function POST(request: NextRequest) {
     }
 
     // Check if user is already in a team
-    console.log("[Join Team API] Checking if user is already in a team:", userEmail);
+    console.log(
+      "[Join Team API] Checking if user is already in a team:",
+      userEmail,
+    );
     const { data: existingTeams, error: checkError } = await supabase
       .from("teams")
       .select("*")
@@ -68,7 +74,10 @@ export async function POST(request: NextRequest) {
     });
 
     if (checkError) {
-      console.error("[Join Team API] Error checking existing team:", checkError);
+      console.error(
+        "[Join Team API] Error checking existing team:",
+        checkError,
+      );
       return NextResponse.json(
         { error: "Failed to check existing team" },
         { status: 500 },
@@ -78,20 +87,25 @@ export async function POST(request: NextRequest) {
     if (existingTeams && existingTeams.length > 0) {
       const existingTeam = existingTeams[0];
       // Double-check: verify user is actually in one of the slots
-      const isInTeam = 
+      const isInTeam =
         existingTeam.team_member_1 === userEmail ||
         existingTeam.team_member_2 === userEmail ||
         existingTeam.team_member_3 === userEmail ||
         existingTeam.team_member_4 === userEmail;
-      
+
       if (isInTeam) {
-        console.log("[Join Team API] User is confirmed to be in team:", existingTeam.team_name);
+        console.log(
+          "[Join Team API] User is confirmed to be in team:",
+          existingTeam.team_name,
+        );
         return NextResponse.json(
           { error: "You are already in a team" },
           { status: 400 },
         );
       } else {
-        console.log("[Join Team API] User not actually in team (stale data?), proceeding...");
+        console.log(
+          "[Join Team API] User not actually in team (stale data?), proceeding...",
+        );
         // If somehow the query returned a team but user isn't in it, proceed
       }
     }
@@ -104,10 +118,10 @@ export async function POST(request: NextRequest) {
       .eq("team_name", team_name)
       .limit(1);
 
-    console.log("[Join Team API] Team search result:", { 
-      found: teams?.length || 0, 
+    console.log("[Join Team API] Team search result:", {
+      found: teams?.length || 0,
       error: findError?.message,
-      teamName: teams?.[0]?.team_name 
+      teamName: teams?.[0]?.team_name,
     });
 
     if (findError) {
@@ -120,10 +134,7 @@ export async function POST(request: NextRequest) {
 
     if (!teams || teams.length === 0) {
       console.log("[Join Team API] Team not found");
-      return NextResponse.json(
-        { error: "Team not found" },
-        { status: 404 },
-      );
+      return NextResponse.json({ error: "Team not found" }, { status: 404 });
     }
 
     const team = teams[0];
@@ -133,7 +144,7 @@ export async function POST(request: NextRequest) {
       providedPassword: password,
       match: team.password === password,
     });
-    
+
     // Compare passwords exactly (case-sensitive, no trimming)
     if (team.password !== password) {
       console.log("[Join Team API] Password mismatch");
@@ -197,7 +208,10 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    console.log("[Join Team API] Successfully joined team:", updatedTeam?.team_name);
+    console.log(
+      "[Join Team API] Successfully joined team:",
+      updatedTeam?.team_name,
+    );
     return NextResponse.json({
       success: true,
       team: updatedTeam,
@@ -210,4 +224,3 @@ export async function POST(request: NextRequest) {
     );
   }
 }
-

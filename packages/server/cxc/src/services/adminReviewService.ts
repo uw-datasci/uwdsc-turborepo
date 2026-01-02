@@ -85,9 +85,10 @@ export class AdminReviewService {
         if (teamMemberEmails.length > 0) {
           teamMembersWithNames =
             await this.repository.getTeamMembersByEmails(teamMemberEmails);
-          
+
           // Get team name from teams table
-          teamName = await this.repository.getTeamNameByMemberEmails(teamMemberEmails);
+          teamName =
+            await this.repository.getTeamNameByMemberEmails(teamMemberEmails);
         }
       }
     } catch (error) {

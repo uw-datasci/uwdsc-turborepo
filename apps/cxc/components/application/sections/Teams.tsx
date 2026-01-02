@@ -19,7 +19,15 @@ import { Eye, EyeOff } from "lucide-react";
 import { UseFormReturn } from "react-hook-form";
 import AppSection from "../AppSection";
 import { AppFormValues } from "@/lib/schemas/application";
-import { getUserEmails, createTeam, joinTeam, getMyTeam, leaveTeam, checkTeamName, type Team } from "@/lib/api";
+import {
+  getUserEmails,
+  createTeam,
+  joinTeam,
+  getMyTeam,
+  leaveTeam,
+  checkTeamName,
+  type Team,
+} from "@/lib/api";
 import CxCButton from "../../CxCButton";
 
 interface TeamsProps {
@@ -33,7 +41,9 @@ export function Teams({ form }: TeamsProps) {
   const [isJoining, setIsJoining] = useState(false);
   const [isLeaving, setIsLeaving] = useState(false);
   const [showPasswordDialog, setShowPasswordDialog] = useState(false);
-  const [passwordDialogMode, setPasswordDialogMode] = useState<"create" | "join">("create");
+  const [passwordDialogMode, setPasswordDialogMode] = useState<
+    "create" | "join"
+  >("create");
   const [teamName, setTeamName] = useState("");
   const [passwordDialogPassword, setPasswordDialogPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -46,12 +56,12 @@ export function Teams({ form }: TeamsProps) {
       try {
         console.log("[Teams] Fetching user's team on mount...");
         const result = await getMyTeam();
-        console.log("[Teams] Team fetch result:", { 
-          success: result.success, 
+        console.log("[Teams] Team fetch result:", {
+          success: result.success,
           hasTeam: !!result.team,
-          teamName: result.team?.team_name 
+          teamName: result.team?.team_name,
         });
-        
+
         if (result.success && result.team) {
           setTeam(result.team);
           // Get team members as array
@@ -62,7 +72,12 @@ export function Teams({ form }: TeamsProps) {
             result.team.team_member_4,
           ].filter((m): m is string => m !== null);
           form.setValue("team_members", members);
-          console.log("[Teams] Set team state:", result.team.team_name, "Members:", members);
+          console.log(
+            "[Teams] Set team state:",
+            result.team.team_name,
+            "Members:",
+            members,
+          );
         } else {
           // Explicitly set to null if no team found
           setTeam(null);
@@ -225,14 +240,18 @@ export function Teams({ form }: TeamsProps) {
         let errorMessage = "Failed to join team";
         if (err instanceof Error) {
           // Check if it's an incorrect password error (401 status)
-          const errorWithStatus = err as Error & { status?: number; error?: string };
-          
+          const errorWithStatus = err as Error & {
+            status?: number;
+            error?: string;
+          };
+
           // Check for 401 status (incorrect password)
           if (errorWithStatus.status === 401) {
             errorMessage = "Incorrect password";
           } else {
             // Use the error message from the API
-            errorMessage = errorWithStatus.error || err.message || "Failed to join team";
+            errorMessage =
+              errorWithStatus.error || err.message || "Failed to join team";
           }
         }
         setError(errorMessage);
@@ -253,19 +272,19 @@ export function Teams({ form }: TeamsProps) {
       console.log("[Teams] Leaving team:", team.team_name);
       const result = await leaveTeam();
       console.log("[Teams] Leave team result:", result);
-      
+
       // Clear local state immediately
       setTeam(null);
       form.setValue("team_members", []);
       setPasswordDialogPassword("");
-      
+
       // Refetch to ensure state is correct (double-check)
       const verifyResult = await getMyTeam();
-      console.log("[Teams] Verification after leave:", { 
+      console.log("[Teams] Verification after leave:", {
         hasTeam: !!verifyResult.team,
-        teamName: verifyResult.team?.team_name 
+        teamName: verifyResult.team?.team_name,
       });
-      
+
       if (verifyResult.success) {
         if (verifyResult.team) {
           // If somehow still in a team, update state
@@ -296,9 +315,7 @@ export function Teams({ form }: TeamsProps) {
   // Helper to format user display name
   const formatUserName = (email: string) => {
     const user = userEmails.find((u) => u.email === email);
-    return user?.display_name
-      ? `${user.display_name} (${email})`
-      : email;
+    return user?.display_name ? `${user.display_name} (${email})` : email;
   };
 
   if (isLoadingTeam) {
@@ -331,7 +348,9 @@ export function Teams({ form }: TeamsProps) {
                 </div>
               )}
               <div className="flex flex-col gap-2">
-                <p className="text-lg font-medium text-foreground">Team Members:</p>
+                <p className="text-lg font-medium text-foreground">
+                  Team Members:
+                </p>
                 <div className="flex flex-wrap gap-2">
                   {teamMembers.map((email) => (
                     <div
@@ -371,9 +390,7 @@ export function Teams({ form }: TeamsProps) {
                   />
                 </div>
 
-                {error && (
-                  <p className="text-sm text-destructive">{error}</p>
-                )}
+                {error && <p className="text-sm text-destructive">{error}</p>}
 
                 <div className="flex gap-4">
                   <CxCButton
@@ -388,7 +405,7 @@ export function Teams({ form }: TeamsProps) {
                     type="button"
                     onClick={handleJoinTeam}
                     disabled={isCreating || isJoining}
-                    className="flex-1 !bg-black !text-white !border-white !border-2 font-normal rounded-none !h-auto hover:!bg-black text-lg"
+                    className="flex-1 !bg-black !text-white !border-white !border-[1px] font-normal rounded-none !h-auto hover:!bg-black text-lg"
                   >
                     {isJoining ? "Joining..." : "Join Team"}
                   </Button>
@@ -398,7 +415,10 @@ export function Teams({ form }: TeamsProps) {
           )}
 
           {/* Password Dialog */}
-          <Dialog open={showPasswordDialog} onOpenChange={setShowPasswordDialog}>
+          <Dialog
+            open={showPasswordDialog}
+            onOpenChange={setShowPasswordDialog}
+          >
             <DialogContent className="sm:max-w-md">
               <DialogHeader>
                 <DialogTitle>
@@ -446,9 +466,7 @@ export function Teams({ form }: TeamsProps) {
                     </div>
                   </FormControl>
                 </FormItem>
-                {error && (
-                  <p className="text-sm text-destructive">{error}</p>
-                )}
+                {error && <p className="text-sm text-destructive">{error}</p>}
               </div>
               <DialogFooter>
                 <Button
@@ -458,7 +476,7 @@ export function Teams({ form }: TeamsProps) {
                     setPasswordDialogPassword("");
                     // Don't clear error - let it persist in the main form
                   }}
-                  className="!bg-white !text-black !border-black !border-2 font-normal rounded-none !h-auto hover:!bg-white"
+                  className="!bg-white !text-black !border-black !border-[1px] font-normal rounded-none !h-auto hover:!bg-white"
                 >
                   Cancel
                 </Button>
@@ -466,7 +484,7 @@ export function Teams({ form }: TeamsProps) {
                   type="button"
                   onClick={handlePasswordDialogSubmit}
                   disabled={!passwordDialogPassword.trim()}
-                  className="!bg-black !text-white !border-white !border-2 font-normal rounded-none !h-auto hover:!bg-black"
+                  className="!bg-black !text-white !border-white !border-[1px] font-normal rounded-none !h-auto hover:!bg-black"
                 >
                   {passwordDialogMode === "create" ? "Create" : "Join"}
                 </Button>

@@ -107,7 +107,9 @@ export function LoginForm() {
                       name="password"
                       render={({ field, fieldState }) => (
                         <FormItem>
-                          <FormLabel className="font-normal mb-1">Password</FormLabel>
+                          <FormLabel className="font-normal mb-1">
+                            Password
+                          </FormLabel>
                           <FormControl>
                             <div className="relative">
                               <Input
@@ -170,7 +172,6 @@ export function LoginForm() {
             </CxCButton>
 
             <div className="flex flex-col sm:flex-row justify-between">
-              
               <Button
                 variant="link"
                 asChild

@@ -8,7 +8,6 @@ import {
   CardTitle,
   Avatar,
   AvatarFallback,
-  Badge,
   GithubLogoIcon,
   LinkedinLogoIcon,
   BrowserIcon,
@@ -44,47 +43,59 @@ export function ProfileCard({
       transition={{ duration: 0.4, delay: 0.1 }}
       className={className}
     >
-      <Card className="bg-white/5 border-white/10 backdrop-blur-sm">
-        <CardHeader>
-          <CardTitle className="text-white">Profile</CardTitle>
+      <Card className="bg-black border border-white/20 rounded-none">
+        <CardHeader className="border-b border-white/10">
+          <CardTitle className="text-white uppercase tracking-wider text-sm">
+            Profile
+          </CardTitle>
         </CardHeader>
-        <CardContent>
+        <CardContent className="pt-6">
           <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
-            <Avatar className="w-16 h-16 bg-white/10 border-2 border-white/20">
-              <AvatarFallback className="bg-white/10 text-white text-xl">
+            <Avatar className="w-16 h-16 bg-white/10 border border-white/20 rounded-none">
+              <AvatarFallback className="bg-white/10 text-white text-xl rounded-none">
                 {initials}
               </AvatarFallback>
             </Avatar>
 
-            <div className="flex-1 space-y-2">
+            <div className="flex-1">
               {fullName && (
-                <h3 className="text-white text-lg font-medium">{fullName}</h3>
+                <p className="text-white text-lg font-medium">{fullName}</p>
               )}
-              <p className="text-white/60 text-sm">{user.email}</p>
-              <div className="flex flex-wrap gap-2">
-                <Badge className="bg-white/10 text-white/80 border-white/20 capitalize">
-                  {user.role}
-                </Badge>
-                {user.nfc_id && (
-                  <Badge className="bg-emerald-500/20 text-emerald-400 border-emerald-500/30">
-                    NFC Registered
-                  </Badge>
-                )}
-              </div>
+              <p className="text-white/60 text-sm font-mono">{user.email}</p>
+              {(application?.university_name ||
+                application?.university_name_other) && (
+                <p className="text-white/40 text-sm mt-1">
+                  {application.university_name !== "Other"
+                    ? application.university_name
+                    : application.university_name_other}{" "}
+                  ·{" "}
+                  {application.program !== "Other"
+                    ? application.program
+                    : application.program_other}
+                </p>
+              )}
+            </div>
+            <div className="text-right">
+              <span className="text-white/40 text-xs uppercase tracking-wider">
+                Role
+              </span>
+              <p className="text-white font-mono uppercase">{user.role}</p>
             </div>
           </div>
 
           {/* Social Links */}
           {application && (
             <div className="mt-6 pt-4 border-t border-white/10">
-              <p className="text-white/40 text-sm mb-3">Social Links</p>
+              <p className="text-white/40 text-sm mb-3 uppercase tracking-wider">
+                Links
+              </p>
               <div className="flex flex-wrap gap-3">
                 {application.github && (
                   <a
                     href={application.github}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center gap-2 px-3 py-2 bg-white/10 rounded-lg text-white/80 hover:bg-white/20 transition-colors"
+                    className="flex items-center gap-2 px-3 py-2 border border-white/20 text-white hover:bg-white hover:text-black transition-colors"
                   >
                     <GithubLogoIcon className="w-4 h-4" />
                     <span className="text-sm">GitHub</span>
@@ -95,7 +106,7 @@ export function ProfileCard({
                     href={application.linkedin}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center gap-2 px-3 py-2 bg-white/10 rounded-lg text-white/80 hover:bg-white/20 transition-colors"
+                    className="flex items-center gap-2 px-3 py-2 border border-white/20 text-white hover:bg-white hover:text-black transition-colors"
                   >
                     <LinkedinLogoIcon className="w-4 h-4" />
                     <span className="text-sm">LinkedIn</span>
@@ -106,7 +117,7 @@ export function ProfileCard({
                     href={application.website_url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center gap-2 px-3 py-2 bg-white/10 rounded-lg text-white/80 hover:bg-white/20 transition-colors"
+                    className="flex items-center gap-2 px-3 py-2 border border-white/20 text-white hover:bg-white hover:text-black transition-colors"
                   >
                     <BrowserIcon className="w-4 h-4" />
                     <span className="text-sm">Website</span>
@@ -116,7 +127,7 @@ export function ProfileCard({
                   !application.linkedin &&
                   !application.website_url && (
                     <span className="text-white/40 text-sm">
-                      No social links added
+                      No links added
                     </span>
                   )}
               </div>

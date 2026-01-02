@@ -30,8 +30,8 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
           animate={{ opacity: 1 }}
           className="flex flex-col items-center gap-4"
         >
-          <div className="w-8 h-8 border-2 border-white/20 border-t-white rounded-full animate-spin" />
-          <p className="text-white/60 text-sm">Loading...</p>
+          <div className="w-8 h-8 border-2 border-white/20 border-t-white animate-spin" />
+          <p className="text-white/60 text-sm font-mono">LOADING...</p>
         </motion.div>
       </div>
     );
@@ -43,25 +43,27 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
   }
 
   return (
-    <div className="min-h-screen bg-black">
+    <div className="min-h-screen bg-black cxc-app-font">
       {/* Desktop Sidebar */}
-      <aside className="hidden lg:fixed lg:inset-y-0 lg:left-0 lg:flex lg:w-64 lg:flex-col border-r border-white/10 bg-black/50 backdrop-blur-xl">
+      <aside className="hidden lg:fixed lg:inset-y-0 lg:left-0 lg:flex lg:w-64 lg:flex-col border-r border-white/20 bg-black">
         <DashboardSidebar />
       </aside>
 
       {/* Mobile Header */}
-      <header className="lg:hidden fixed top-0 left-0 right-0 z-50 h-16 border-b border-white/10 bg-black/80 backdrop-blur-xl">
+      <header className="lg:hidden fixed top-0 left-0 right-0 z-50 h-16 border-b border-white/20 bg-black">
         <div className="flex items-center justify-between h-full px-4">
-          <span className="text-xl font-bold text-white">CxC Dashboard</span>
+          <span className="text-lg font-medium text-white uppercase tracking-wider">
+            CxC Dashboard
+          </span>
           <Sheet open={sidebarOpen} onOpenChange={setSidebarOpen}>
             <SheetTrigger asChild>
-              <button className="p-2 text-white hover:bg-white/10 rounded-lg transition-colors">
+              <button className="p-2 text-white hover:bg-white/10 transition-colors">
                 <HamburgerIcon className="w-6 h-6" />
               </button>
             </SheetTrigger>
             <SheetContent
               side="left"
-              className="w-64 p-0 bg-black border-white/10"
+              className="w-64 p-0 bg-black border-white/20 rounded-none"
             >
               <DashboardSidebar onNavClick={() => setSidebarOpen(false)} />
             </SheetContent>

@@ -3,7 +3,17 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Form, Button, FormField, Input, FormItem, FormLabel, FormControl, FormMessage, cn } from "@uwdsc/ui";
+import {
+  Form,
+  Button,
+  FormField,
+  Input,
+  FormItem,
+  FormLabel,
+  FormControl,
+  FormMessage,
+  cn,
+} from "@uwdsc/ui";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Loader2, Eye, EyeOff } from "lucide-react";
 import { renderTextField } from "@/components/FormHelpers";
@@ -115,7 +125,9 @@ export function RegisterForm() {
                       name="email"
                       render={({ field, fieldState }) => (
                         <FormItem>
-                          <FormLabel className="font-normal mb-1">Email</FormLabel>
+                          <FormLabel className="font-normal mb-1">
+                            Email
+                          </FormLabel>
                           <FormControl>
                             <Input
                               {...field}
@@ -141,7 +153,9 @@ export function RegisterForm() {
                       name="password"
                       render={({ field, fieldState }) => (
                         <FormItem>
-                          <FormLabel className="font-normal mb-1">Password</FormLabel>
+                          <FormLabel className="font-normal mb-1">
+                            Password
+                          </FormLabel>
                           <FormControl>
                             <div className="relative">
                               <Input
@@ -181,7 +195,9 @@ export function RegisterForm() {
                       name="confirmPassword"
                       render={({ field, fieldState }) => (
                         <FormItem>
-                          <FormLabel className="font-normal mb-1">Confirm your password</FormLabel>
+                          <FormLabel className="font-normal mb-1">
+                            Confirm your password
+                          </FormLabel>
                           <FormControl>
                             <div className="relative">
                               <Input
@@ -198,7 +214,9 @@ export function RegisterForm() {
                               />
                               <button
                                 type="button"
-                                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                                onClick={() =>
+                                  setShowConfirmPassword(!showConfirmPassword)
+                                }
                                 className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
                               >
                                 {showConfirmPassword ? (

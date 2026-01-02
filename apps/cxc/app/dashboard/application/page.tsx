@@ -41,10 +41,10 @@ export default function ApplicationPage() {
     return (
       <div className="p-6 lg:p-8">
         <div className="max-w-4xl mx-auto space-y-6">
-          <div className="h-8 w-64 bg-white/10 rounded animate-pulse" />
-          <div className="h-48 bg-white/5 rounded-lg animate-pulse" />
-          <div className="h-48 bg-white/5 rounded-lg animate-pulse" />
-          <div className="h-48 bg-white/5 rounded-lg animate-pulse" />
+          <div className="h-8 w-64 bg-white/10 animate-pulse" />
+          <div className="h-48 bg-white/5 border border-white/10 animate-pulse" />
+          <div className="h-48 bg-white/5 border border-white/10 animate-pulse" />
+          <div className="h-48 bg-white/5 border border-white/10 animate-pulse" />
         </div>
       </div>
     );
@@ -59,12 +59,10 @@ export default function ApplicationPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4 }}
           >
-            <Card className="bg-white/5 border-white/10 backdrop-blur-sm">
+            <Card className="bg-black border border-white/20 rounded-none">
               <CardContent className="py-12 flex flex-col items-center text-center">
-                <div className="p-4 bg-white/10 rounded-full mb-6">
-                  <FileTextIcon className="w-12 h-12 text-white/60" />
-                </div>
-                <h2 className="text-xl font-semibold text-white mb-2">
+                <FileTextIcon className="w-12 h-12 text-white/20 mb-6" />
+                <h2 className="text-xl font-semibold text-white mb-2 uppercase tracking-wider">
                   No Application Found
                 </h2>
                 <p className="text-white/60 mb-6 max-w-md">
@@ -72,7 +70,7 @@ export default function ApplicationPage() {
                   join CxC and be part of an amazing hackathon experience!
                 </p>
                 <Link href="/apply">
-                  <CxCButton>Start Your Application</CxCButton>
+                  <CxCButton>Start Application →</CxCButton>
                 </Link>
               </CardContent>
             </Card>
@@ -91,8 +89,9 @@ export default function ApplicationPage() {
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4 }}
+            className="border-b border-white/10 pb-6"
           >
-            <h1 className="text-2xl lg:text-3xl font-bold text-white">
+            <h1 className="text-2xl lg:text-3xl font-bold text-white uppercase tracking-wider">
               Your Application
             </h1>
             <p className="text-white/60 mt-1">
@@ -105,26 +104,24 @@ export default function ApplicationPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4, delay: 0.1 }}
           >
-            <Card className="bg-yellow-500/10 border-yellow-500/20 backdrop-blur-sm">
-              <CardContent className="py-6">
-                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-                  <div>
-                    <h3 className="text-yellow-400 font-medium mb-1">
-                      Application In Progress
-                    </h3>
-                    <p className="text-yellow-400/70 text-sm">
-                      Your application hasn&apos;t been submitted yet. Continue
-                      where you left off to complete it.
-                    </p>
-                  </div>
-                  <Link href="/apply">
-                    <CxCButton className="whitespace-nowrap">
-                      Continue Application
-                    </CxCButton>
-                  </Link>
+            <div className="border border-yellow-400/40 p-4">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                <div>
+                  <h3 className="text-yellow-400 font-medium mb-1 font-mono">
+                    APPLICATION IN PROGRESS
+                  </h3>
+                  <p className="text-yellow-400/70 text-sm">
+                    Your application hasn&apos;t been submitted yet. Continue
+                    where you left off to complete it.
+                  </p>
                 </div>
-              </CardContent>
-            </Card>
+                <Link href="/apply">
+                  <CxCButton className="whitespace-nowrap">
+                    Continue Application →
+                  </CxCButton>
+                </Link>
+              </div>
+            </div>
           </motion.div>
 
           {/* Show partial application data */}
@@ -142,8 +139,9 @@ export default function ApplicationPage() {
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4 }}
+          className="border-b border-white/10 pb-6"
         >
-          <h1 className="text-2xl lg:text-3xl font-bold text-white">
+          <h1 className="text-2xl lg:text-3xl font-bold text-white uppercase tracking-wider">
             Your Application
           </h1>
           <p className="text-white/60 mt-1">
@@ -157,47 +155,31 @@ export default function ApplicationPage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: 0.1 }}
         >
-          <Card className="bg-blue-500/10 border-blue-500/20 backdrop-blur-sm">
-            <CardContent className="py-4">
-              <div className="flex items-center gap-3">
-                <div className="p-2 bg-blue-500/20 rounded-lg">
-                  <svg
-                    className="w-5 h-5 text-blue-400"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-                    />
-                  </svg>
-                </div>
-                <div>
-                  <p className="text-blue-400 font-medium">
-                    Application Submitted
+          <div className="border border-blue-400 p-4">
+            <div className="flex items-center gap-3">
+              <div className="w-2 h-2 bg-blue-400" />
+              <div>
+                <p className="text-blue-400 font-medium font-mono">
+                  APPLICATION SUBMITTED
+                </p>
+                {application.submitted_at && (
+                  <p className="text-blue-400/70 text-sm font-mono">
+                    Submitted:{" "}
+                    {new Date(application.submitted_at).toLocaleDateString(
+                      "en-US",
+                      {
+                        month: "short",
+                        day: "numeric",
+                        year: "numeric",
+                        hour: "numeric",
+                        minute: "2-digit",
+                      },
+                    )}
                   </p>
-                  {application.submitted_at && (
-                    <p className="text-blue-400/70 text-sm">
-                      Submitted on{" "}
-                      {new Date(application.submitted_at).toLocaleDateString(
-                        "en-US",
-                        {
-                          month: "long",
-                          day: "numeric",
-                          year: "numeric",
-                          hour: "numeric",
-                          minute: "2-digit",
-                        },
-                      )}
-                    </p>
-                  )}
-                </div>
+                )}
               </div>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
         </motion.div>
 
         {/* Full application summary */}

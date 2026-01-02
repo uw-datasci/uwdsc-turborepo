@@ -391,7 +391,10 @@ export default function ReviewPage() {
                       {application.team_name && (
                         <div className="mb-3">
                           <span className="font-medium text-lg">
-                            Team Name: <span className="font-semibold">{application.team_name}</span>
+                            Team Name:{" "}
+                            <span className="font-semibold">
+                              {application.team_name}
+                            </span>
                           </span>
                         </div>
                       )}

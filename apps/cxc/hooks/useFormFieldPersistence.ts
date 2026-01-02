@@ -163,7 +163,9 @@ export function useFormFieldPersistence<T extends FieldPath<AppFormValues>>(
       previousValue !== undefined &&
       previousValue !== null &&
       previousValue !== "" &&
-      (currentValue === "" || currentValue === null || currentValue === undefined);
+      (currentValue === "" ||
+        currentValue === null ||
+        currentValue === undefined);
 
     if (wasCleared) {
       wasClearedByUserRef.current = true;

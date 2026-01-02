@@ -438,11 +438,13 @@ export function Review({ form }: ReviewProps) {
               <UsersIcon size={24} />
             </div>
             <div className="min-w-0 flex-1">
-              {(team || (Array.isArray(teamMembers) && teamMembers.length > 0)) ? (
+              {team ||
+              (Array.isArray(teamMembers) && teamMembers.length > 0) ? (
                 <>
                   {team && (
                     <div className="font-medium mb-2">
-                      Team: <span className="text-foreground">{team.team_name}</span>
+                      Team:{" "}
+                      <span className="text-foreground">{team.team_name}</span>
                     </div>
                   )}
                   <div className="font-medium mb-2">Team Members:</div>

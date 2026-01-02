@@ -50,44 +50,46 @@ export function TeamSection({
       transition={{ duration: 0.4, delay: 0.2 }}
       className={className}
     >
-      <Card className="bg-white/5 border-white/10 backdrop-blur-sm">
-        <CardHeader>
-          <CardTitle className="text-white flex items-center gap-2">
+      <Card className="bg-black border border-white/20 rounded-none">
+        <CardHeader className="border-b border-white/10">
+          <CardTitle className="text-white flex items-center gap-2 uppercase tracking-wider text-sm">
             <UsersIcon className="w-5 h-5" />
             Team
           </CardTitle>
         </CardHeader>
-        <CardContent>
+        <CardContent className="pt-6">
           {hasTeam ? (
             <div className="space-y-4">
               {teamName && (
                 <div className="mb-3">
-                  <p className="text-white font-medium text-lg">
-                    Team Name: <span className="font-semibold">{teamName}</span>
+                  <p className="text-white font-medium">
+                    Team: <span className="font-mono">{teamName}</span>
                   </p>
                 </div>
               )}
               <p className="text-white/60 text-sm">
-                You&apos;re teaming up with {otherMembers.length} other{" "}
-                {otherMembers.length === 1 ? "person" : "people"}!
+                {otherMembers.length} team member
+                {otherMembers.length > 1 ? "s" : ""}
               </p>
               <div className="flex flex-wrap gap-3">
                 {otherMembers.map((member, index) => (
                   <motion.div
                     key={member}
-                    initial={{ opacity: 0, scale: 0.8 }}
+                    initial={{ opacity: 0, scale: 0.9 }}
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ delay: index * 0.1 }}
-                    className="flex items-center gap-2 px-3 py-2 bg-white/10 rounded-lg"
+                    className="flex items-center gap-2 px-3 py-2 border border-white/20"
                   >
-                    <Avatar className="w-6 h-6 bg-white/10">
-                      <AvatarFallback className="bg-white/20 text-white text-xs">
+                    <Avatar className="w-6 h-6 rounded-none">
+                      <AvatarFallback className="bg-white/10 text-white text-xs rounded-none">
                         {(member.split("@")[0] || member)
                           .substring(0, 2)
                           .toUpperCase()}
                       </AvatarFallback>
                     </Avatar>
-                    <span className="text-white/80 text-sm">{member}</span>
+                    <span className="text-white/80 text-sm font-mono">
+                      {member}
+                    </span>
                   </motion.div>
                 ))}
               </div>
@@ -98,7 +100,7 @@ export function TeamSection({
                 You haven&apos;t added any team members yet. You can add
                 teammates through your application.
               </p>
-              <div className="p-4 bg-white/5 rounded-lg border border-dashed border-white/20">
+              <div className="p-4 border border-dashed border-white/20">
                 <div className="flex items-center gap-3 text-white/40">
                   <UsersIcon className="w-8 h-8" />
                   <div>

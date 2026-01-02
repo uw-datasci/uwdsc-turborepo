@@ -154,4 +154,3 @@ export async function leaveTeam(): Promise<LeaveTeamResponse> {
 
   return result;
 }
-

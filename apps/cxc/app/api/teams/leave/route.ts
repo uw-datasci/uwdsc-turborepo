@@ -106,10 +106,14 @@ export async function POST() {
 
     console.log("[Leave Team API] Updating team with:", updateData);
     console.log("[Leave Team API] Team ID:", team.id);
-    
+
     // Update team to remove user - use ID instead of team_name for reliability
     // Get the updated row count to verify the update worked
-    const { data: updatedData, error: updateError, count } = await supabase
+    const {
+      data: updatedData,
+      error: updateError,
+      count,
+    } = await supabase
       .from("teams")
       .update(updateData)
       .eq("id", team.id)
@@ -132,10 +136,7 @@ export async function POST() {
 
     if (!updatedData || updatedData.length === 0) {
       console.warn("[Leave Team API] No rows updated - team might not exist");
-      return NextResponse.json(
-        { error: "Team not found" },
-        { status: 404 },
-      );
+      return NextResponse.json({ error: "Team not found" }, { status: 404 });
     }
 
     const updatedTeam = updatedData[0];
@@ -151,22 +152,28 @@ export async function POST() {
     });
 
     // Check the returned data first - this is the actual updated state
-    const userStillInReturnedData = 
+    const userStillInReturnedData =
       updatedTeam.team_member_1 === userEmail ||
       updatedTeam.team_member_2 === userEmail ||
       updatedTeam.team_member_3 === userEmail ||
       updatedTeam.team_member_4 === userEmail;
 
     if (userStillInReturnedData) {
-      console.error("[Leave Team API] Update failed - user still in returned team data!");
-      console.error("[Leave Team API] This suggests the update query did not work");
+      console.error(
+        "[Leave Team API] Update failed - user still in returned team data!",
+      );
+      console.error(
+        "[Leave Team API] This suggests the update query did not work",
+      );
       return NextResponse.json(
         { error: "Failed to leave team - update did not take effect" },
         { status: 500 },
       );
     }
 
-    console.log("[Leave Team API] Update successful - user removed from returned data");
+    console.log(
+      "[Leave Team API] Update successful - user removed from returned data",
+    );
 
     // Additional verification: fetch the team again to double-check
     const { data: verifyTeams, error: verifyError } = await supabase
@@ -179,28 +186,33 @@ export async function POST() {
       console.error("[Leave Team API] Error verifying update:", verifyError);
       // Still return success since the update query returned correct data
     } else if (verifyTeams) {
-      const stillInTeam = 
+      const stillInTeam =
         verifyTeams.team_member_1 === userEmail ||
         verifyTeams.team_member_2 === userEmail ||
         verifyTeams.team_member_3 === userEmail ||
         verifyTeams.team_member_4 === userEmail;
-      
+
       if (stillInTeam) {
-        console.error("[Leave Team API] Verification query shows user still in team! Team data:", {
-          id: verifyTeams.id,
-          members: {
-            m1: verifyTeams.team_member_1,
-            m2: verifyTeams.team_member_2,
-            m3: verifyTeams.team_member_3,
-            m4: verifyTeams.team_member_4,
+        console.error(
+          "[Leave Team API] Verification query shows user still in team! Team data:",
+          {
+            id: verifyTeams.id,
+            members: {
+              m1: verifyTeams.team_member_1,
+              m2: verifyTeams.team_member_2,
+              m3: verifyTeams.team_member_3,
+              m4: verifyTeams.team_member_4,
+            },
           },
-        });
+        );
         return NextResponse.json(
           { error: "Failed to leave team - verification failed" },
           { status: 500 },
         );
       } else {
-        console.log("[Leave Team API] Verification successful - user not in team");
+        console.log(
+          "[Leave Team API] Verification successful - user not in team",
+        );
       }
     }
 
@@ -216,4 +228,3 @@ export async function POST() {
     );
   }
 }
-

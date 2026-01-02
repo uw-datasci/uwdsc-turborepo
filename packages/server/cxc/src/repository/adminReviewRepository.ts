@@ -167,7 +167,9 @@ export class AdminReviewRepository extends BaseRepository {
         LIMIT 1
       `;
 
-      return teamResult.length > 0 && teamResult[0] ? teamResult[0].team_name : null;
+      return teamResult.length > 0 && teamResult[0]
+        ? teamResult[0].team_name
+        : null;
     } catch (error) {
       console.error("Error fetching team name:", error);
       return null;
