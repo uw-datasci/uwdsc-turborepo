@@ -70,14 +70,22 @@ export function transformFormDataForDatabase(
     }
   }
 
+  // Convert phone to string and truncate only if longer than 12 characters
+  const phoneStr = formData.phone ? String(formData.phone) : "";
+  const phone_number = phoneStr.length > 12 ? phoneStr.slice(0, 12) : phoneStr;
+
+  // Convert discord to string and truncate only if longer than 32 characters
+  const discordStr = formData.discord ? String(formData.discord) : "";
+  const discord = discordStr.length > 32 ? discordStr.slice(0, 32) : discordStr;
+
   return {
     profile_id: profileId,
     status: formData.status || "draft",
     submitted_at: formData.submitted_at || null,
     // Truncate phone_number to 12 characters (database constraint: varchar(12))
-    phone_number: formData.phone ? formData.phone.slice(0, 12) : "",
+    phone_number,
     // Truncate discord to 32 characters (database constraint: varchar(32))
-    discord: formData.discord ? formData.discord.slice(0, 32) : "",
+    discord,
     t_shirt: formData.tshirt_size,
     dietary_restrictions: dietaryRestrictions,
     age: formData.age,
