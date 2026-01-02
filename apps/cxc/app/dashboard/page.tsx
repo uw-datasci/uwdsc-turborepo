@@ -86,10 +86,7 @@ export default function DashboardPage() {
         {user && <ProfileCard user={user} application={application} />}
 
         {/* Team Section */}
-        <TeamSection
-          teamMembers={application?.team_members}
-          teamName={team?.team_name}
-        />
+        <TeamSection team={team} />
 
         {/* Quick Links */}
         <motion.div

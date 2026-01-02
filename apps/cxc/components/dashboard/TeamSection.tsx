@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useEffect, useMemo } from "react";
 import { motion } from "framer-motion";
 import {
   Card,
@@ -11,38 +12,64 @@ import {
   UsersIcon,
 } from "@uwdsc/ui";
 import { useAuth } from "@/contexts/AuthContext";
+import { getUserEmails, type Team } from "@/lib/api";
 
 interface TeamSectionProps {
-  teamMembers?: string[] | string;
-  teamName?: string | null;
+  team?: Team | null;
   className?: string;
 }
 
 export function TeamSection({
-  teamMembers = [],
-  teamName,
+  team,
   className,
 }: Readonly<TeamSectionProps>) {
   const { user } = useAuth();
   const currentUserEmail = user?.email?.toLowerCase();
 
-  const normalizedMembers: string[] = Array.isArray(teamMembers)
-    ? teamMembers
-    : typeof teamMembers === "string" && teamMembers.trim() !== ""
-      ? teamMembers
-          .split(",")
-          .map((m) => m.trim())
-          .filter(Boolean)
-      : [];
+  // Get team members from team object
+  const teamMembers = useMemo(() => {
+    if (!team) return [];
+    return [
+      team.team_member_1,
+      team.team_member_2,
+      team.team_member_3,
+      team.team_member_4,
+    ].filter((m): m is string => m !== null);
+  }, [team]);
 
-  // Filter out the current user from the team members list
-  const otherMembers = currentUserEmail
-    ? normalizedMembers.filter(
+  // Fetch user emails for display names
+  const [userEmails, setUserEmails] = useState<
+    Array<{ id: string; email: string; display_name: string | null }>
+  >([]);
+
+  useEffect(() => {
+    const fetchEmails = async () => {
+      try {
+        const result = await getUserEmails();
+        setUserEmails(result.emails);
+      } catch (error) {
+        console.error("Failed to fetch user emails:", error);
+      }
+    };
+
+    fetchEmails();
+  }, []);
+
+  // Format user display name
+  const formatUserName = (email: string) => {
+    const user = userEmails.find((u) => u.email === email);
+    return user?.display_name ? `${user.display_name} (${email})` : email;
+  };
+
+  // Filter out current user from display
+  const displayMembers = currentUserEmail
+    ? teamMembers.filter(
         (member) => member.toLowerCase() !== currentUserEmail,
       )
-    : normalizedMembers;
+    : teamMembers;
 
-  const hasTeam = otherMembers.length > 0;
+  const hasTeam = displayMembers.length > 0;
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -58,21 +85,22 @@ export function TeamSection({
           </CardTitle>
         </CardHeader>
         <CardContent className="pt-6">
+          {team?.team_name && (
+            <div className="mb-4">
+              <p className="text-white font-medium">
+                Team: <span className="font-mono">{team.team_name}</span>
+              </p>
+            </div>
+          )}
+
           {hasTeam ? (
             <div className="space-y-4">
-              {teamName && (
-                <div className="mb-3">
-                  <p className="text-white font-medium">
-                    Team: <span className="font-mono">{teamName}</span>
-                  </p>
-                </div>
-              )}
               <p className="text-white/60 text-sm">
-                {otherMembers.length} team member
-                {otherMembers.length > 1 ? "s" : ""}
+                {displayMembers.length} team member
+                {displayMembers.length > 1 ? "s" : ""}
               </p>
               <div className="flex flex-wrap gap-3">
-                {otherMembers.map((member, index) => (
+                {displayMembers.map((member, index) => (
                   <motion.div
                     key={member}
                     initial={{ opacity: 0, scale: 0.9 }}
@@ -88,7 +116,7 @@ export function TeamSection({
                       </AvatarFallback>
                     </Avatar>
                     <span className="text-white/80 text-sm font-mono">
-                      {member}
+                      {formatUserName(member)}
                     </span>
                   </motion.div>
                 ))}
@@ -97,8 +125,8 @@ export function TeamSection({
           ) : (
             <div className="space-y-4">
               <p className="text-white/60 text-sm">
-                You haven&apos;t added any team members yet. You can add
-                teammates through your application.
+                You haven&apos;t joined a team yet. You can create or join a
+                team through your application.
               </p>
               <div className="p-4 border border-dashed border-white/20">
                 <div className="flex items-center gap-3 text-white/40">

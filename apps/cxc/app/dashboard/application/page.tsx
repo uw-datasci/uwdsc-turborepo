@@ -6,15 +6,27 @@ import Link from "next/link";
 import { useAuth } from "@/contexts/AuthContext";
 import { getApplication } from "@/lib/api/application";
 import { ApplicationSummary } from "@/components/dashboard";
+import { Teams } from "@/components/application/sections/Teams";
 import CxCButton from "@/components/CxCButton";
 import { Card, CardContent, FileTextIcon } from "@uwdsc/ui";
 import { transformDatabaseDataToForm } from "@/lib/utils/formDataTransformer";
 import { AppFormValues } from "@/lib/schemas/application";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { applicationSchema } from "@/lib/schemas/application";
+import { getMyTeam, type Team } from "@/lib/api";
 
 export default function ApplicationPage() {
   const { user } = useAuth();
   const [application, setApplication] = useState<AppFormValues | null>(null);
+  const [team, setTeam] = useState<Team | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+
+  // Initialize form for Teams component
+  const form = useForm<AppFormValues>({
+    resolver: zodResolver(applicationSchema),
+    defaultValues: {},
+  });
 
   useEffect(() => {
     async function loadApplication() {
@@ -24,9 +36,10 @@ export default function ApplicationPage() {
         const data = await getApplication(user.id);
         if (!data) return;
 
-        setApplication(
-          transformDatabaseDataToForm(data) as AppFormValues | null,
-        );
+        const formData = transformDatabaseDataToForm(data) as AppFormValues;
+        setApplication(formData);
+        // Update form with application data
+        form.reset(formData);
       } catch (error) {
         console.error("Error loading application:", error);
       } finally {
@@ -34,8 +47,20 @@ export default function ApplicationPage() {
       }
     }
 
+    async function loadTeam() {
+      try {
+        const result = await getMyTeam();
+        if (result.success && result.team) {
+          setTeam(result.team);
+        }
+      } catch (error) {
+        console.error("Error loading team:", error);
+      }
+    }
+
     loadApplication();
-  }, [user?.id]);
+    loadTeam();
+  }, [user?.id, form]);
 
   if (isLoading) {
     return (
@@ -125,7 +150,16 @@ export default function ApplicationPage() {
           </motion.div>
 
           {/* Show partial application data */}
-          <ApplicationSummary application={application} />
+          <ApplicationSummary application={application} team={team} />
+
+          {/* Teams Section */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, delay: 0.2 }}
+          >
+            <Teams form={form} />
+          </motion.div>
         </div>
       </div>
     );
@@ -183,7 +217,16 @@ export default function ApplicationPage() {
         </motion.div>
 
         {/* Full application summary */}
-        <ApplicationSummary application={application} />
+        <ApplicationSummary application={application} team={team} />
+
+        {/* Teams Section */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, delay: 0.2 }}
+        >
+          <Teams form={form} />
+        </motion.div>
       </div>
     </div>
   );

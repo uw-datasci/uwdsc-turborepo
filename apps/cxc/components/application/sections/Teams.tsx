@@ -14,10 +14,13 @@ import {
   DialogTitle,
   FormItem,
   FormControl,
+  Card,
+  CardHeader,
+  CardTitle,
+  CardContent,
 } from "@uwdsc/ui";
 import { Eye, EyeOff } from "lucide-react";
 import { UseFormReturn } from "react-hook-form";
-import AppSection from "../AppSection";
 import { AppFormValues } from "@/lib/schemas/application";
 import {
   getUserEmails,
@@ -320,23 +323,35 @@ export function Teams({ form }: TeamsProps) {
 
   if (isLoadingTeam) {
     return (
-      <AppSection label="Team Members (optional)">
-        <p className="text-muted-foreground">Loading team information...</p>
-      </AppSection>
+      <Card className="bg-black border border-white/20 rounded-none">
+        <CardHeader className="border-b border-white/10">
+          <CardTitle className="text-white text-sm uppercase tracking-wider">
+            Team Members
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="pt-4">
+          <p className="text-white/60">Loading team information...</p>
+        </CardContent>
+      </Card>
     );
   }
 
   return (
     <Form {...form}>
-      <AppSection
-        label=""
-        description={
-          !team
-            ? "Create a new team or join an existing team. Teams can have up to 4 members."
-            : undefined
-        }
-      >
-        <div className="flex flex-col gap-4">
+      <Card className="bg-black border border-white/20 rounded-none">
+        <CardHeader className="border-b border-white/10">
+          <CardTitle className="text-white text-sm uppercase tracking-wider">
+            Team Members
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="pt-4">
+          {!team && (
+            <p className="text-white/60 text-sm mb-4">
+              Create a new team or join an existing team. Teams can have up to 4
+              members.
+            </p>
+          )}
+          <div className="flex flex-col gap-4">
           {team ? (
             <>
               {/* Display team name and members when in a team */}
@@ -491,8 +506,9 @@ export function Teams({ form }: TeamsProps) {
               </DialogFooter>
             </DialogContent>
           </Dialog>
-        </div>
-      </AppSection>
+          </div>
+        </CardContent>
+      </Card>
     </Form>
   );
 }

@@ -19,9 +19,11 @@ import {
 import { AppFormValues } from "@/lib/schemas/application";
 import { getResume } from "@/lib/api/resume";
 import { ETHNICITY_OTHER_LABEL } from "@/constants/application";
+import { type Team } from "@/lib/api";
 
 interface ApplicationSummaryProps {
   application: AppFormValues;
+  team?: Team | null;
   className?: string;
 }
 
@@ -64,6 +66,7 @@ function InfoRow({ label, value, className }: Readonly<InfoRowProps>) {
 
 export function ApplicationSummary({
   application,
+  team,
   className,
 }: Readonly<ApplicationSummaryProps>) {
   const [resumeUrl, setResumeUrl] = useState<string | null>(null);
@@ -318,30 +321,6 @@ export function ApplicationSummary({
         </Card>
       </motion.div>
 
-      {/* Team Members */}
-      {application.team_members && application.team_members.length > 0 && (
-        <motion.div variants={item}>
-          <Card className="bg-black border border-white/20 rounded-none">
-            <CardHeader className="border-b border-white/10">
-              <CardTitle className="text-white text-sm uppercase tracking-wider">
-                Team Members
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="pt-4">
-              <div className="flex flex-wrap gap-2">
-                {application.team_members.map((member) => (
-                  <span
-                    key={member}
-                    className="text-white/80 text-sm border border-white/20 px-3 py-1 font-mono"
-                  >
-                    {member}
-                  </span>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-        </motion.div>
-      )}
     </motion.div>
   );
 }
