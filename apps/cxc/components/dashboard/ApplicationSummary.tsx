@@ -19,11 +19,9 @@ import {
 import { AppFormValues } from "@/lib/schemas/application";
 import { getResume } from "@/lib/api/resume";
 import { ETHNICITY_OTHER_LABEL } from "@/constants/application";
-import { type Team } from "@/lib/api";
 
 interface ApplicationSummaryProps {
   application: AppFormValues;
-  team?: Team | null;
   className?: string;
 }
 
@@ -66,7 +64,6 @@ function InfoRow({ label, value, className }: Readonly<InfoRowProps>) {
 
 export function ApplicationSummary({
   application,
-  team,
   className,
 }: Readonly<ApplicationSummaryProps>) {
   const [resumeUrl, setResumeUrl] = useState<string | null>(null);
@@ -113,9 +110,12 @@ export function ApplicationSummary({
               label="Ethnicity"
               value={
                 application.ethnicity
-                  ? application.ethnicity == ETHNICITY_OTHER_LABEL
+                  ? Array.isArray(application.ethnicity) &&
+                      application.ethnicity.includes(ETHNICITY_OTHER_LABEL)
                     ? application.ethnicity_other || "—"
-                    : application.ethnicity.join(", ")
+                    : Array.isArray(application.ethnicity)
+                      ? application.ethnicity.join(", ")
+                      : "—"
                   : "—"
               }
             />
@@ -301,8 +301,9 @@ export function ApplicationSummary({
           </CardHeader>
           <CardContent className="pt-4 space-y-6">
             <div>
-              <p className="text-white/40 text-sm mb-2 uppercase tracking-wider">
-                Why do you want to participate in CxC?
+              <p className="text-white/40 text-sm mb-2 tracking-wider">
+                Tell us about a technical project that you have worked on. What
+                did you learn? What challenges did you face?
               </p>
               <p className="text-white/80 text-sm leading-relaxed">
                 {application.cxc_q1 || "No response provided"}
@@ -310,8 +311,8 @@ export function ApplicationSummary({
             </div>
             <Separator className="bg-white/10" />
             <div>
-              <p className="text-white/40 text-sm mb-2 uppercase tracking-wider">
-                What project idea are you excited to work on?
+              <p className="text-white/40 text-sm mb-2 tracking-wider">
+                Write us a Haiku
               </p>
               <p className="text-white/80 text-sm leading-relaxed">
                 {application.cxc_q2 || "No response provided"}

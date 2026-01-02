@@ -150,7 +150,7 @@ export default function ApplicationPage() {
           </motion.div>
 
           {/* Show partial application data */}
-          <ApplicationSummary application={application} team={team} />
+          <ApplicationSummary application={application} />
 
           {/* Teams Section */}
           <motion.div
@@ -217,7 +217,7 @@ export default function ApplicationPage() {
         </motion.div>
 
         {/* Full application summary */}
-        <ApplicationSummary application={application} team={team} />
+        <ApplicationSummary application={application} />
 
         {/* Teams Section */}
         <motion.div
