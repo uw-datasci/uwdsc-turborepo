@@ -352,160 +352,160 @@ export function Teams({ form }: TeamsProps) {
             </p>
           )}
           <div className="flex flex-col gap-4">
-          {team ? (
-            <>
-              {/* Display team name and members when in a team */}
-              {team.team_name && (
-                <div className="flex flex-col gap-1">
-                  <p className="font-lg text-foreground">
-                    Team Name: <span className="">{team.team_name}</span>
-                  </p>
-                </div>
-              )}
-              <div className="flex flex-col gap-2">
-                <p className="text-lg font-medium text-foreground">
-                  Team Members:
-                </p>
-                <div className="flex flex-wrap gap-2">
-                  {teamMembers.map((email) => (
-                    <div
-                      key={email}
-                      className="flex items-center gap-2 px-3 py-1.5 bg-cxc-input-bg"
-                    >
-                      <span className="text-foreground">
-                        {formatUserName(email)}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-              <CxCButton
-                type="button"
-                onClick={handleLeaveTeam}
-                disabled={isLeaving}
-                className="mt-4"
-              >
-                {isLeaving ? "Leaving..." : "Leave Team"}
-              </CxCButton>
-            </>
-          ) : (
-            <>
-              {/* Create/Join team UI */}
-              <div className="flex flex-col gap-4">
+            {team ? (
+              <>
+                {/* Display team name and members when in a team */}
+                {team.team_name && (
+                  <div className="flex flex-col gap-1">
+                    <p className="font-lg text-foreground">
+                      Team Name: <span className="">{team.team_name}</span>
+                    </p>
+                  </div>
+                )}
                 <div className="flex flex-col gap-2">
-                  <FormLabel>Team Name</FormLabel>
-                  <Input
-                    value={teamName}
-                    onChange={(e) => {
-                      setTeamName(e.target.value);
-                      // Don't clear error when typing - let it persist
-                    }}
-                    placeholder="Enter team name"
-                    className="!h-auto !border-0 !px-4.5 !py-4 !text-base !border-b-[2px] !bg-cxc-input-bg !rounded-none !shadow-none"
-                  />
+                  <p className="text-lg font-medium text-foreground">
+                    Team Members:
+                  </p>
+                  <div className="flex flex-wrap gap-2">
+                    {teamMembers.map((email) => (
+                      <div
+                        key={email}
+                        className="flex items-center gap-2 px-3 py-1.5 bg-cxc-input-bg"
+                      >
+                        <span className="text-foreground">
+                          {formatUserName(email)}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
                 </div>
+                <CxCButton
+                  type="button"
+                  onClick={handleLeaveTeam}
+                  disabled={isLeaving}
+                  className="mt-4"
+                >
+                  {isLeaving ? "Leaving..." : "Leave Team"}
+                </CxCButton>
+              </>
+            ) : (
+              <>
+                {/* Create/Join team UI */}
+                <div className="flex flex-col gap-4">
+                  <div className="flex flex-col gap-2">
+                    <FormLabel>Team Name</FormLabel>
+                    <Input
+                      value={teamName}
+                      onChange={(e) => {
+                        setTeamName(e.target.value);
+                        // Don't clear error when typing - let it persist
+                      }}
+                      placeholder="Enter team name"
+                      className="!h-auto !border-0 !px-4.5 !py-4 !text-base !border-b-[2px] !bg-cxc-input-bg !rounded-none !shadow-none"
+                    />
+                  </div>
 
-                {error && <p className="text-sm text-destructive">{error}</p>}
+                  {error && <p className="text-sm text-destructive">{error}</p>}
 
-                <div className="flex gap-4">
-                  <CxCButton
-                    type="button"
-                    onClick={handleCreateTeam}
-                    disabled={isCreating || isJoining}
-                    className="flex-1 text-lg"
-                  >
-                    {isCreating ? "Creating..." : "Create Team"}
-                  </CxCButton>
+                  <div className="flex gap-4">
+                    <CxCButton
+                      type="button"
+                      onClick={handleCreateTeam}
+                      disabled={isCreating || isJoining}
+                      className="flex-1 text-lg"
+                    >
+                      {isCreating ? "Creating..." : "Create Team"}
+                    </CxCButton>
+                    <Button
+                      type="button"
+                      onClick={handleJoinTeam}
+                      disabled={isCreating || isJoining}
+                      className="flex-1 !bg-black !text-white !border-white !border-[1px] font-normal rounded-none !h-auto hover:!bg-black text-lg"
+                    >
+                      {isJoining ? "Joining..." : "Join Team"}
+                    </Button>
+                  </div>
+                </div>
+              </>
+            )}
+
+            {/* Password Dialog */}
+            <Dialog
+              open={showPasswordDialog}
+              onOpenChange={setShowPasswordDialog}
+            >
+              <DialogContent className="sm:max-w-md">
+                <DialogHeader>
+                  <DialogTitle>
+                    {passwordDialogMode === "create"
+                      ? "Set Team Password"
+                      : "Enter Team Password"}
+                  </DialogTitle>
+                  <DialogDescription>
+                    {passwordDialogMode === "create"
+                      ? "Set a password for your team. Share this with members who want to join."
+                      : "Enter the password for the team you want to join."}
+                  </DialogDescription>
+                </DialogHeader>
+                <div className="flex flex-col gap-4 py-4">
+                  <FormItem>
+                    <FormLabel className="font-normal mb-1">Password</FormLabel>
+                    <FormControl>
+                      <div className="relative">
+                        <Input
+                          type={showPassword ? "text" : "password"}
+                          value={passwordDialogPassword}
+                          onChange={(e) => {
+                            setPasswordDialogPassword(e.target.value);
+                            setError("");
+                          }}
+                          placeholder="Enter password"
+                          onKeyDown={(e) => {
+                            if (e.key === "Enter") {
+                              handlePasswordDialogSubmit();
+                            }
+                          }}
+                          className="!h-auto !border-0 !px-4.5 !py-4 !pr-12 !text-base !border-b-[2px] !bg-cxc-input-bg !rounded-none !shadow-none transition-colors"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => setShowPassword(!showPassword)}
+                          className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                        >
+                          {showPassword ? (
+                            <EyeOff className="w-5 h-5" />
+                          ) : (
+                            <Eye className="w-5 h-5" />
+                          )}
+                        </button>
+                      </div>
+                    </FormControl>
+                  </FormItem>
+                  {error && <p className="text-sm text-destructive">{error}</p>}
+                </div>
+                <DialogFooter>
                   <Button
                     type="button"
-                    onClick={handleJoinTeam}
-                    disabled={isCreating || isJoining}
-                    className="flex-1 !bg-black !text-white !border-white !border-[1px] font-normal rounded-none !h-auto hover:!bg-black text-lg"
+                    onClick={() => {
+                      setShowPasswordDialog(false);
+                      setPasswordDialogPassword("");
+                      // Don't clear error - let it persist in the main form
+                    }}
+                    className="!bg-white !text-black !border-black !border-[1px] font-normal rounded-none !h-auto hover:!bg-white"
                   >
-                    {isJoining ? "Joining..." : "Join Team"}
+                    Cancel
                   </Button>
-                </div>
-              </div>
-            </>
-          )}
-
-          {/* Password Dialog */}
-          <Dialog
-            open={showPasswordDialog}
-            onOpenChange={setShowPasswordDialog}
-          >
-            <DialogContent className="sm:max-w-md">
-              <DialogHeader>
-                <DialogTitle>
-                  {passwordDialogMode === "create"
-                    ? "Set Team Password"
-                    : "Enter Team Password"}
-                </DialogTitle>
-                <DialogDescription>
-                  {passwordDialogMode === "create"
-                    ? "Set a password for your team. Share this with members who want to join."
-                    : "Enter the password for the team you want to join."}
-                </DialogDescription>
-              </DialogHeader>
-              <div className="flex flex-col gap-4 py-4">
-                <FormItem>
-                  <FormLabel className="font-normal mb-1">Password</FormLabel>
-                  <FormControl>
-                    <div className="relative">
-                      <Input
-                        type={showPassword ? "text" : "password"}
-                        value={passwordDialogPassword}
-                        onChange={(e) => {
-                          setPasswordDialogPassword(e.target.value);
-                          setError("");
-                        }}
-                        placeholder="Enter password"
-                        onKeyDown={(e) => {
-                          if (e.key === "Enter") {
-                            handlePasswordDialogSubmit();
-                          }
-                        }}
-                        className="!h-auto !border-0 !px-4.5 !py-4 !pr-12 !text-base !border-b-[2px] !bg-cxc-input-bg !rounded-none !shadow-none transition-colors"
-                      />
-                      <button
-                        type="button"
-                        onClick={() => setShowPassword(!showPassword)}
-                        className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
-                      >
-                        {showPassword ? (
-                          <EyeOff className="w-5 h-5" />
-                        ) : (
-                          <Eye className="w-5 h-5" />
-                        )}
-                      </button>
-                    </div>
-                  </FormControl>
-                </FormItem>
-                {error && <p className="text-sm text-destructive">{error}</p>}
-              </div>
-              <DialogFooter>
-                <Button
-                  type="button"
-                  onClick={() => {
-                    setShowPasswordDialog(false);
-                    setPasswordDialogPassword("");
-                    // Don't clear error - let it persist in the main form
-                  }}
-                  className="!bg-white !text-black !border-black !border-[1px] font-normal rounded-none !h-auto hover:!bg-white"
-                >
-                  Cancel
-                </Button>
-                <Button
-                  type="button"
-                  onClick={handlePasswordDialogSubmit}
-                  disabled={!passwordDialogPassword.trim()}
-                  className="!bg-black !text-white !border-white !border-[1px] font-normal rounded-none !h-auto hover:!bg-black"
-                >
-                  {passwordDialogMode === "create" ? "Create" : "Join"}
-                </Button>
-              </DialogFooter>
-            </DialogContent>
-          </Dialog>
+                  <Button
+                    type="button"
+                    onClick={handlePasswordDialogSubmit}
+                    disabled={!passwordDialogPassword.trim()}
+                    className="!bg-black !text-white !border-white !border-[1px] font-normal rounded-none !h-auto hover:!bg-black"
+                  >
+                    {passwordDialogMode === "create" ? "Create" : "Join"}
+                  </Button>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
           </div>
         </CardContent>
       </Card>

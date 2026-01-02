@@ -7,7 +7,7 @@ import {
   CardHeader,
   CardTitle,
   Avatar,
-  AvatarFallback
+  AvatarFallback,
 } from "@uwdsc/ui";
 import type { UserProfile } from "@/types/api";
 import { AppFormValues } from "@/lib/schemas/application";

@@ -111,7 +111,7 @@ export function ApplicationSummary({
               value={
                 application.ethnicity
                   ? Array.isArray(application.ethnicity) &&
-                      application.ethnicity.includes(ETHNICITY_OTHER_LABEL)
+                    application.ethnicity.includes(ETHNICITY_OTHER_LABEL)
                     ? application.ethnicity_other || "—"
                     : Array.isArray(application.ethnicity)
                       ? application.ethnicity.join(", ")
@@ -321,7 +321,6 @@ export function ApplicationSummary({
           </CardContent>
         </Card>
       </motion.div>
-
     </motion.div>
   );
 }

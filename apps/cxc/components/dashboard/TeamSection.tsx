@@ -19,10 +19,7 @@ interface TeamSectionProps {
   className?: string;
 }
 
-export function TeamSection({
-  team,
-  className,
-}: Readonly<TeamSectionProps>) {
+export function TeamSection({ team, className }: Readonly<TeamSectionProps>) {
   const { user } = useAuth();
   const currentUserEmail = user?.email?.toLowerCase();
 
@@ -63,9 +60,7 @@ export function TeamSection({
 
   // Filter out current user from display
   const displayMembers = currentUserEmail
-    ? teamMembers.filter(
-        (member) => member.toLowerCase() !== currentUserEmail,
-      )
+    ? teamMembers.filter((member) => member.toLowerCase() !== currentUserEmail)
     : teamMembers;
 
   const hasTeam = displayMembers.length > 0;
