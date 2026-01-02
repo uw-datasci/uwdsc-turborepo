@@ -341,7 +341,7 @@ export function Teams({ form }: TeamsProps) {
       <Card className="bg-black border border-white/20 rounded-none">
         <CardHeader className="border-b border-white/10">
           <CardTitle className="text-white text-sm uppercase tracking-wider">
-            Team Members
+            Team Members (Optional)
           </CardTitle>
         </CardHeader>
         <CardContent className="pt-4">
@@ -509,6 +509,10 @@ export function Teams({ form }: TeamsProps) {
           </div>
         </CardContent>
       </Card>
+      <p className="text-white/60 text-sm mt-4">
+        Note: You can edit your team selection later from the application
+        dashboard.
+      </p>
     </Form>
   );
 }
