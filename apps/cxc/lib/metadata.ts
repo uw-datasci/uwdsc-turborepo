@@ -9,9 +9,9 @@ export const baseMetadata: Metadata = {
     follow: true,
   },
   icons: {
-    icon: [{ url: "/logos/cxc_logo.svg", type: "image/svg+xml" }],
-    apple: [{ url: "/logos/cxc_logo.svg" }],
-    shortcut: "/logos/cxc_logo.svg",
+    icon: [{ url: "/logos/cxc_favicon.svg", type: "image/svg+xml" }],
+    apple: [{ url: "/logos/cxc_favicon.svg" }],
+    shortcut: "/logos/cxc_favicon.svg",
   },
   manifest: "/meta/manifest.json",
   other: {
