@@ -21,7 +21,7 @@ export const GENERAL_FAQ: QandA[] = [
   {
     id: "1",
     question: "What is CXC?",
-    answer: `CXC is Canada's Largest Data Hackathon returning for its 5th iteration this year! Over 300 students gather at Waterloo's campus to create unique and inspiring designs that tackle data-related challenges. 
+    answer: `CXC is Waterloo's Largest AI Hackathon returning for its 5th iteration this year! Over 300 students gather at Waterloo's campus to create unique and inspiring designs that tackle data-related challenges. 
     This year, CXC will have no restrictions on the type of project you can make. Some past examples of projects include predictions/classifications of datasets, training AI models, or making a data science related website. 
     We will also be hosting social activities, introductory workshops, company booths, and more to help you connect with other participants, industry experts, and learn more about data science.`,
   },
