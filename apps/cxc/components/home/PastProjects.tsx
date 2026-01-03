@@ -94,7 +94,7 @@ export function PastProjects() {
         {/* Mobile */}
         <div className="block lg:hidden">
           <div key="cxc-2025" className="mb-16 flex flex-col items-center">
-            <UFO category="CxC 2025" />
+            <UFO category="CXC 2025" />
             <div className="flex flex-col gap-6">
               {CxC2025Projects.map((project) => (
                 <PastProjectCard key={project.title} {...project} />
@@ -102,7 +102,7 @@ export function PastProjects() {
             </div>
           </div>
           <div key="cxc-2024" className="mb-16 flex flex-col items-center">
-            <UFO category="CxC 2024" />
+            <UFO category="CXC 2024" />
             <div className="flex flex-col gap-6">
               {CxC2024Projects.map((project) => (
                 <PastProjectCard key={project.title} {...project} />
@@ -110,7 +110,7 @@ export function PastProjects() {
             </div>
           </div>
           <div key="cxc-2023" className="mb-16 flex flex-col items-center">
-            <UFO category="CxC 2023" />
+            <UFO category="CXC 2023" />
             <div className="flex flex-col gap-6">
               {CxC2023Projects.map((project) => (
                 <PastProjectCard key={project.title} {...project} />
@@ -122,7 +122,7 @@ export function PastProjects() {
         <div className="hidden lg:block">
           <div className="flex flex-row justify-between items-start w-full max-w-7xl mx-auto gap-8">
             <div className="flex flex-col items-center flex-1">
-              <UFO category="CxC 2025" />
+              <UFO category="CXC 2025" />
               <div className="flex flex-wrap gap-3 max-w-xl items-center justify-center mt-6">
                 {CxC2025Projects.map((project) => (
                   <PastProjectCard key={project.title} {...project} />
@@ -130,7 +130,7 @@ export function PastProjects() {
               </div>
             </div>
             <div className="flex flex-col items-center flex-1">
-              <UFO category="CxC 2024" />
+              <UFO category="CXC 2024" />
               <div className="flex flex-wrap gap-3 max-w-xl items-center justify-center mt-6">
                 {CxC2024Projects.map((project) => (
                   <PastProjectCard key={project.title} {...project} />
@@ -139,7 +139,7 @@ export function PastProjects() {
             </div>
           </div>
           <div className="absolute top-[65%] left-[50%] flex flex-col items-center -translate-x-1/2">
-            <UFO category="CxC 2023" />
+            <UFO category="CXC 2023" />
             <div className="flex flex-row gap-3 items-center justify-center mt-6">
               {CxC2023Projects.map((project) => (
                 <PastProjectCard key={project.title} {...project} />
