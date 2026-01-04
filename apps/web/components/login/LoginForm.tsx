@@ -48,8 +48,9 @@ export function LoginForm() {
         await mutate();
 
         if (responseData.user.email_confirmed_at) {
-          // Email verified, redirect to landing
-          router.push("/");
+          // Email verified, redirect to landing with full page reload
+          // This ensures cookies are synced and SWR cache is fresh
+          window.location.href = "/";
         } else {
           // Email not verified, show modal
           setUserEmail(data.email);
