@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { ProfileService } from "@uwdsc/server/cxc/services/profileService";
 import { createAuthService } from "@/lib/services";
 
@@ -61,12 +61,12 @@ export async function GET(request: Request) {
     // Otherwise, get or generate NFC ID for current user
     const nfcIdForUser = await profileService.getOrGenerateNfcId(user.id);
     return NextResponse.json({ nfc_id: nfcIdForUser }, { status: 200 });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Error in NFC route:", error);
     return NextResponse.json(
       {
         error: "Internal server error",
-        message: error.message || "Failed to process request",
+        message: error instanceof Error ? error.message : "Failed to process request",
       },
       { status: 500 },
     );

@@ -30,7 +30,7 @@ export class EventService {
   /**
    * Get event by ID
    */
-  async getEventById(eventId: bigint): Promise<Event | null> {
+  async getEventById(eventId: number): Promise<Event | null> {
     try {
       return await this.repository.getEventById(eventId);
     } catch (error) {
@@ -59,7 +59,7 @@ export class EventService {
    * Check in a user for an event
    */
   async checkInUser(
-    eventId: bigint,
+    eventId: number,
     profileId: string,
   ): Promise<{ success: boolean; error?: string }> {
     try {
@@ -75,7 +75,7 @@ export class EventService {
   /**
    * Get attendance for an event
    */
-  async getEventAttendance(eventId: bigint): Promise<EventAttendance[]> {
+  async getEventAttendance(eventId: number): Promise<EventAttendance[]> {
     try {
       return await this.repository.getEventAttendance(eventId);
     } catch (error) {

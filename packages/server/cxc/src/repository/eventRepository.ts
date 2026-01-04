@@ -1,7 +1,7 @@
 import { BaseRepository } from "@uwdsc/server/core/repository/baseRepository";
 
 export interface Event {
-  id: bigint;
+  id: number;
   name: string;
   registration_required: boolean;
   description: string | null;
@@ -11,7 +11,7 @@ export interface Event {
   end_time: Date;
   buffered_end_time: Date;
   payment_required: boolean;
-  image_id: bigint | null;
+  image_id: number | null;
   created_at: Date;
   updated_at: Date;
 }
@@ -26,12 +26,12 @@ export interface CreateEventData {
   end_time: Date;
   buffered_end_time: Date;
   payment_required?: boolean;
-  image_id?: bigint;
+  image_id?: number;
 }
 
 export interface EventAttendance {
-  id: bigint;
-  event_id: bigint;
+  id: number;
+  event_id: number;
   profile_id: string;
   checked_in: boolean;
   created_at: Date;
@@ -59,7 +59,7 @@ export class EventRepository extends BaseRepository {
   /**
    * Get event by ID
    */
-  async getEventById(eventId: bigint): Promise<Event | null> {
+  async getEventById(eventId: number): Promise<Event | null> {
     try {
       const result = await this.sql<Event[]>`
         SELECT *
@@ -142,7 +142,7 @@ export class EventRepository extends BaseRepository {
    * Get or create event attendance record
    */
   async getOrCreateAttendance(
-    eventId: bigint,
+    eventId: number,
     profileId: string,
   ): Promise<EventAttendance> {
     try {
@@ -179,7 +179,7 @@ export class EventRepository extends BaseRepository {
    * Check in a user for an event
    */
   async checkInUser(
-    eventId: bigint,
+    eventId: number,
     profileId: string,
   ): Promise<{ success: boolean; error?: string }> {
     try {
@@ -214,7 +214,7 @@ export class EventRepository extends BaseRepository {
   /**
    * Get attendance for an event
    */
-  async getEventAttendance(eventId: bigint): Promise<EventAttendance[]> {
+  async getEventAttendance(eventId: number): Promise<EventAttendance[]> {
     try {
       const result = await this.sql<EventAttendance[]>`
         SELECT *

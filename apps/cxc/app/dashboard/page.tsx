@@ -90,7 +90,7 @@ export default function DashboardPage() {
         <TeamSection team={team} />
 
         {/* NFC Check-In Card */}
-        {user?.id && <NfcCard userId={user.id} />}
+        {user?.id && <NfcCard />}
 
         {/* Quick Links */}
         <motion.div

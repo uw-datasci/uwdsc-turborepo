@@ -1,14 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Image from "next/image";
 import { Card, CardHeader, CardTitle, CardContent, Button } from "@uwdsc/ui";
-import { QrCode, Copy, CheckCircle2 } from "lucide-react";
+import { Copy, CheckCircle2 } from "lucide-react";
 
-interface NfcCardProps {
-  userId: string;
-}
-
-export function NfcCard({ userId }: NfcCardProps) {
+export function NfcCard() {
   const [nfcId, setNfcId] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [copied, setCopied] = useState(false);
@@ -95,10 +92,12 @@ export function NfcCard({ userId }: NfcCardProps) {
           {/* QR Code */}
           <div className="flex-shrink-0">
             <div className="p-4 bg-white border border-white/20">
-              <img
+              <Image
                 src={qrCodeUrl}
                 alt="QR Code for check-in"
-                className="w-48 h-48"
+                width={192}
+                height={192}
+                unoptimized
               />
             </div>
           </div>

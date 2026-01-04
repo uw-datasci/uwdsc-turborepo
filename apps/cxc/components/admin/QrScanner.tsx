@@ -24,8 +24,11 @@ export function QrScanner({ onScan, onClose }: QrScannerProps) {
     try {
       const { Html5Qrcode } = await import("html5-qrcode");
       const html5QrCode = new Html5Qrcode("qr-reader");
-      if (html5QrCode.isScanning()) {
+      // Check if scanning by trying to stop (will throw if not scanning)
+      try {
         await html5QrCode.stop();
+      } catch {
+        // Not scanning, that's fine
       }
     } catch {
       // Ignore errors if library not loaded

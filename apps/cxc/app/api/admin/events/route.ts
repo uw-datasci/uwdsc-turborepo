@@ -34,13 +34,7 @@ export async function GET() {
     }
 
     const events = await eventService.getAllEvents();
-    // Convert BigInt to string for JSON serialization
-    const serializedEvents = events.map((event) => ({
-      ...event,
-      id: String(event.id),
-      image_id: event.image_id ? String(event.image_id) : null,
-    }));
-    return NextResponse.json({ events: serializedEvents }, { status: 200 });
+    return NextResponse.json({ events }, { status: 200 });
   } catch (error: unknown) {
     console.error("Error fetching events:", error);
     return NextResponse.json(
@@ -143,20 +137,11 @@ export async function POST(request: NextRequest) {
       end_time: new Date(end_time),
       buffered_end_time: new Date(buffered_end_time),
       payment_required: payment_required ?? true,
-      image_id: image_id ? BigInt(image_id) : undefined,
+      image_id: image_id ? Number(image_id) : undefined,
     });
 
     console.log("[API] Event created successfully:", event);
-
-    // Convert BigInt to string for JSON serialization
-    const serializedEvent = {
-      ...event,
-      id: String(event.id),
-      image_id: event.image_id ? String(event.image_id) : null,
-    };
-
-    console.log("[API] Returning serialized event");
-    return NextResponse.json({ event: serializedEvent }, { status: 201 });
+    return NextResponse.json({ event }, { status: 201 });
   } catch (error: unknown) {
     console.error("[API] Error creating event:", error);
     if (error instanceof Error) {

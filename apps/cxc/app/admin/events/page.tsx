@@ -55,7 +55,7 @@ export default function AdminEventsPage() {
   const handleQrScan = (result: string) => {
     // Extract NFC ID from URL if it's a check-in URL
     // Format: /admin/checkin/{nfc_id}
-    const match = result.match(/\/admin\/checkin\/([^\/\s]+)/);
+    const match = result.match(/\/admin\/checkin\/([^/\s]+)/);
     if (match && match[1]) {
       const nfcId = match[1];
       router.push(`/admin/checkin/${nfcId}`);
