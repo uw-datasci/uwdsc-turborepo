@@ -4,7 +4,7 @@ const reviews = [
   {
     name: "Samuel Zhang",
     username: "CxC 2025 Winner",
-    body: "CxC 2025 was a really fun and rewarding experience! As first year students, it was amazing to meet so many upper years and learn from their experiences. The real world datasets were also extremely engaging. Most importantly though, DSC fattened us up with delicious food which kept us sane throughout the event.",
+    body: "CXC 2025 was a really fun and rewarding experience! As first year students, it was amazing to meet so many upper years and learn from their experiences. The real world datasets were also extremely engaging. Most importantly though, DSC fattened us up with delicious food which kept us sane throughout the event.",
   },
   {
     name: "Sarah Chen",
