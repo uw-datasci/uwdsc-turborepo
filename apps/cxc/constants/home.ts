@@ -20,15 +20,15 @@ export const CURRENT_SPONSORS: Sponsor[] = [
 export const GENERAL_FAQ: QandA[] = [
   {
     id: "1",
-    question: "What is CxC?",
-    answer: `CxC is Canada's Largest Data Hackathon returning for its 5th iteration this year! Over 300 students gather at Waterloo's campus to create unique and inspiring designs that tackle data-related challenges. 
-    This year, CxC will have no restrictions on the type of project you can make. Some past examples of projects include predictions/classifications of datasets, training AI models, or making a data science related website. 
+    question: "What is CXC?",
+    answer: `CXC is Waterloo's Largest AI Hackathon returning for its 5th iteration this year! Over 300 students gather at Waterloo's campus to create unique and inspiring designs that tackle data-related challenges. 
+    This year, CXC will have no restrictions on the type of project you can make. Some past examples of projects include predictions/classifications of datasets, training AI models, or making a data science related website. 
     We will also be hosting social activities, introductory workshops, company booths, and more to help you connect with other participants, industry experts, and learn more about data science.`,
   },
   {
     id: "2",
     question: "What if I have zero experience in data science?",
-    answer: `No worries! CxC is a beginner-friendly hackathon. We will host several workshops throughout the event to help you acquire some useful skills for the challenges. We will also have a team of experienced mentors ready to provide support on the CxC Discord.`,
+    answer: `No worries! CXC is a beginner-friendly hackathon. We will host several workshops throughout the event to help you acquire some useful skills for the challenges. We will also have a team of experienced mentors ready to provide support on the CXC Discord.`,
   },
   {
     id: "3",
@@ -39,7 +39,7 @@ export const GENERAL_FAQ: QandA[] = [
   {
     id: "4",
     question: "When and where is it?",
-    answer: `CxC will take place on February 6th at 6PM to February 8th at 5PM at Waterloo's STC building.`,
+    answer: `CXC will take place on February 6th at 6PM to February 8th at 5PM at Waterloo's STC building.`,
   },
   {
     id: "5",
@@ -58,8 +58,8 @@ export const GENERAL_FAQ: QandA[] = [
   },
   {
     id: "8",
-    question: "What events will you have at CxC?",
-    answer: `In the past, CxC hosted multiple data science related workshops from simpler topics such as introducing machine learning and data processing with python, to more advanced topics such as planning and structural AI projects. Our event sponsors will also be running booths where you can learn their mission and connect with them throughout the day. Be sure to check them out!
-    In addition, CxC will also be running multiple fun activities throughout the event, from spicy noodle challenge to late-night karaoke. We're confident that our events will be enough for anyone to enjoy :)`,
+    question: "What events will you have at CXC?",
+    answer: `In the past, CXC hosted multiple data science related workshops from simpler topics such as introducing machine learning and data processing with python, to more advanced topics such as planning and structural AI projects. Our event sponsors will also be running booths where you can learn their mission and connect with them throughout the day. Be sure to check them out!
+    In addition, CXC will also be running multiple fun activities throughout the event, from spicy noodle challenge to late-night karaoke. We're confident that our events will be enough for anyone to enjoy :)`,
   },
 ];
