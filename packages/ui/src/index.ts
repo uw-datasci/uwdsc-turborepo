@@ -167,6 +167,17 @@ export { SpinningText } from "./components/spinning-text";
 
 export { ShimmerButton } from "./components/shimmer-button";
 
+export {
+  Table,
+  TableHeader,
+  TableBody,
+  TableFooter,
+  TableHead,
+  TableRow,
+  TableCell,
+  TableCaption,
+} from "./components/table";
+
 // Hooks
 export * from "./hooks";
 

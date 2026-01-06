@@ -8,7 +8,6 @@ import { withProtected } from "./lib/middleware/withProtected";
 import { withAuth } from "./lib/middleware/withAuth";
 
 const APPLY_ROUTE = "/apply";
-const PROTECTED_ROUTES = new Set(["/admin", "/review"]);
 const AUTH_ROUTES = new Set(["/login", "/register", "/start"]);
 
 /**
@@ -34,8 +33,8 @@ export async function proxy(request: NextRequest) {
     // 2. Handle Unauthenticated users
     case pathname === APPLY_ROUTE:
       return withApply(request, user);
-    // 3. Handle Authenticated users trying to access protected routes
-    case PROTECTED_ROUTES.has(pathname):
+    // 3. Handle admin routes (require authentication and admin role)
+    case pathname.startsWith("/admin"):
       return await withProtected(request, user);
   }
 
