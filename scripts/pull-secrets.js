@@ -23,6 +23,16 @@ try {
   const rootDir = join(__dirname, "..");
   const configPath = join(rootDir, ".infisical.json");
 
+  // 0. CHECK & INSTALL: Ensure Infisical CLI is installed
+  try {
+    execSync("infisical --version", { stdio: "ignore" });
+    console.log("✅ Infisical CLI is already installed");
+  } catch {
+    console.log("📦 Infisical CLI not found. Installing globally...");
+    execSync("npm install -g @infisical/cli", { stdio: "inherit" });
+    console.log("✅ Infisical CLI installed successfully");
+  }
+
   // 1. INIT: Run 'infisical init' if config is missing
   if (!existsSync(configPath)) {
     console.log("🔧 Configuration missing. Running 'infisical init'...");
