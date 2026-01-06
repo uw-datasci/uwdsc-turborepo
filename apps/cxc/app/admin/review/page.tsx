@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle, Button } from "@uwdsc/ui";
 import { getRandomApplication, submitReview } from "@/lib/api";
 import { Loader2, RefreshCw } from "lucide-react";
+import { LoadingScreen } from "@/components/LoadingScreen";
 
 interface Application {
   id: string;
@@ -68,7 +69,7 @@ export default function ReviewPage() {
       setError(
         err instanceof Error
           ? err.message
-          : "Failed to load application. Please try again.",
+          : "Failed to load application. Please try again."
       );
     } finally {
       setLoading(false);
@@ -105,7 +106,7 @@ export default function ReviewPage() {
       setError(
         err instanceof Error
           ? err.message
-          : "Failed to submit review. Please try again.",
+          : "Failed to submit review. Please try again."
       );
     } finally {
       setSubmitting(false);
@@ -143,14 +144,7 @@ export default function ReviewPage() {
   );
 
   if (loading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen pt-24 md:pt-28">
-        <div className="text-center space-y-4">
-          <Loader2 className="w-8 h-8 animate-spin mx-auto" />
-          <p className="text-muted-foreground">Loading application...</p>
-        </div>
-      </div>
-    );
+    return <LoadingScreen message="LOADING APPLICATION..." />;
   }
 
   if (error && !application) {
@@ -425,7 +419,7 @@ export default function ReviewPage() {
                                     )}
                                   </span>
                                 </div>
-                              ),
+                              )
                             )
                           : // Fallback to just emails if names not available
                             application.team_members
@@ -540,4 +534,3 @@ export default function ReviewPage() {
     </div>
   );
 }
-

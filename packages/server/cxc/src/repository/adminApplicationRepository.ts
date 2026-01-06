@@ -1,5 +1,6 @@
 import { BaseRepository } from "@uwdsc/server/core/repository/baseRepository";
 import { ApiError } from "../../../core/src/utils/errors";
+import { splitCommaSeparatedString } from "@uwdsc/server/core/utils/dataTransformers";
 
 export interface ApplicationSummary {
   id: string;
@@ -24,11 +25,11 @@ export interface FullApplicationDetails {
   t_shirt: string | null;
   dietary_restrictions: string | null;
   gender: string | null;
-  ethnicity: string | null;
+  ethnicity: string[];
   uni_name: string | null;
   uni_program: string | null;
   year_of_study: string | null;
-  prior_hack_exp: string | null;
+  prior_hack_exp: string[];
   num_hackathons: string | null;
   github_url: string | null;
   linkedin_url: string | null;
@@ -184,7 +185,19 @@ export class AdminApplicationRepository extends BaseRepository {
         return null;
       }
 
-      const application = applicationResult[0];
+      let application = applicationResult[0];
+
+      // Transform comma-separated strings to arrays using shared utility
+      const ethnicityString = application.ethnicity as unknown as string | null;
+      const priorHackExpString = application.prior_hack_exp as unknown as
+        | string
+        | null;
+
+      application = {
+        ...application,
+        ethnicity: splitCommaSeparatedString(ethnicityString),
+        prior_hack_exp: splitCommaSeparatedString(priorHackExpString),
+      };
 
       // Get team name if team members exist
       if (application.team_members) {

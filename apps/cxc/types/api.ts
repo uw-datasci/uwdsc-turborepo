@@ -84,11 +84,11 @@ export interface FullApplicationDetails {
   t_shirt: string | null;
   dietary_restrictions: string | null;
   gender: string | null;
-  ethnicity: string | null;
+  ethnicity: string[];
   uni_name: string | null;
   uni_program: string | null;
   year_of_study: string | null;
-  prior_hack_exp: string | null;
+  prior_hack_exp: string[];
   num_hackathons: string | null;
   github_url: string | null;
   linkedin_url: string | null;

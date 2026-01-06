@@ -3,9 +3,12 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Card, CardContent, CardHeader, CardTitle, Button } from "@uwdsc/ui";
-import { Loader2, FileText } from "lucide-react";
-import { ApplicationsTable } from "@/components/admin/ApplicationsTable";
-import { ApplicationModal } from "@/components/admin/ApplicationModal";
+import { FileText } from "lucide-react";
+import {
+  ApplicationsTable,
+  ApplicationModal,
+} from "@/components/admin/applications";
+import { LoadingScreen } from "@/components/LoadingScreen";
 import { getAllApplications, getApplicationDetails } from "@/lib/api";
 import type { ApplicationSummary, FullApplicationDetails } from "@/types/api";
 
@@ -17,6 +20,7 @@ export default function AdminApplicationsPage() {
   const [fullApplicationDetails, setFullApplicationDetails] =
     useState<FullApplicationDetails | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
+  const [loadingDetails, setLoadingDetails] = useState(false);
 
   useEffect(() => {
     fetchApplications();
@@ -42,6 +46,8 @@ export default function AdminApplicationsPage() {
 
   const handleRowClick = async (application: ApplicationSummary) => {
     setModalOpen(true);
+    setLoadingDetails(true);
+    setFullApplicationDetails(null); // Clear previous data
 
     try {
       const data = await getApplicationDetails(application.id);
@@ -53,6 +59,8 @@ export default function AdminApplicationsPage() {
           ? err.message
           : "Failed to load application details."
       );
+    } finally {
+      setLoadingDetails(false);
     }
   };
 
@@ -61,14 +69,7 @@ export default function AdminApplicationsPage() {
   };
 
   if (loading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen pt-24 md:pt-28">
-        <div className="text-center space-y-4">
-          <Loader2 className="w-8 h-8 animate-spin mx-auto" />
-          <p className="text-muted-foreground">Loading applications...</p>
-        </div>
-      </div>
-    );
+    return <LoadingScreen message="LOADING APPLICATIONS..." />;
   }
 
   if (error && applications.length === 0) {
@@ -131,6 +132,7 @@ export default function AdminApplicationsPage() {
           application={fullApplicationDetails}
           open={modalOpen}
           onOpenChange={setModalOpen}
+          loading={loadingDetails}
         />
       </div>
     </div>
