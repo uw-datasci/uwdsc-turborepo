@@ -7,14 +7,28 @@ Get your development environment up and running in minutes.
 Before you begin, ensure you have the following installed:
 
 - **Node.js** >= 20
-- **pnpm** >= 10.4.1
+- **pnpm** >= 10.26.0
 
 ### Installing pnpm
 
-If you don't have pnpm installed, you can install it with:
+If you don't have pnpm installed, you can install it using one of the following methods:
+
+**Windows (PowerShell):**
+
+```powershell
+Invoke-WebRequest https://get.pnpm.io/install.ps1 -UseBasicParsing | Invoke-Expression
+```
+
+**macOS/Linux (POSIX):**
 
 ```bash
-npm install -g pnpm@10.20.0
+curl -fsSL https://get.pnpm.io/install.sh | sh -
+```
+
+**Alternative (npm):**
+
+```bash
+npm install -g pnpm@10.26.0
 ```
 
 Or follow the [official pnpm installation guide](https://pnpm.io/installation).
@@ -38,17 +52,19 @@ This will install all dependencies for all packages and apps in the monorepo. Th
 
 ### 3. Set Up Environment Variables
 
-Each app may require environment variables. Check for `.env.example` files in:
-
-- `apps/web/.env.example`
-- `apps/cxc/.env.example`
-
-Copy the example files and fill in your values:
+Pull environment variables from Infisical:
 
 ```bash
-cp apps/web/.env.example apps/web/.env.local
-cp apps/cxc/.env.example apps/cxc/.env.local
+pnpm pull-secrets
 ```
+
+The `pull-secrets` script will:
+
+- Install the Infisical CLI globally if it's not already installed
+- Initialize Infisical configuration if needed
+- Authenticate with Infisical (using machine identity or user login)
+- Sync environment variables from Infisical for all apps (`web` and `cxc`)
+- Create `.env.local` files in each app directory with the synced secrets
 
 ## Running the Apps
 
