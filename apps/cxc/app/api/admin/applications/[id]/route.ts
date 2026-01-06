@@ -3,15 +3,16 @@ import { createAuthService } from "@/lib/services";
 import { ProfileService } from "@uwdsc/server/cxc/services/profileService";
 import { AdminApplicationService } from "@uwdsc/server/cxc/services/adminApplicationService";
 
+interface ApplicationParams {
+  params: Promise<{ id: string }>;
+}
+
 /**
  * GET /api/admin/applications/[id]
  * Get full application details by ID
  * Admin only endpoint
  */
-export async function GET(
-  request: Request,
-  { params }: { params: { id: string } }
-) {
+export async function GET(request: Request, { params }: ApplicationParams) {
   try {
     // Authenticate user
     const authService = await createAuthService();
@@ -32,7 +33,7 @@ export async function GET(
       );
     }
 
-    const applicationId = params.id;
+    const { id: applicationId } = await params;
 
     if (!applicationId) {
       return NextResponse.json(
