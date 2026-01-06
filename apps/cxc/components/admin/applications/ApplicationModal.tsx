@@ -67,15 +67,17 @@ export function ApplicationModal({
 
     if (application) {
       return (
-        <div className="space-y-6">
+        <div className="space-y-4 sm:space-y-6">
           {/* Two Column Layout: Basic Info | Education/Experience */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:grid-rows-[1fr]">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 lg:grid-rows-[1fr]">
             {/* Left Column: Basic Information */}
             <Card className="flex flex-col h-full">
-              <CardHeader>
-                <CardTitle>Basic Information</CardTitle>
+              <CardHeader className="pb-3 sm:pb-6">
+                <CardTitle className="text-base sm:text-lg">
+                  Basic Information
+                </CardTitle>
               </CardHeader>
-              <CardContent className="space-y-3 flex-1">
+              <CardContent className="space-y-2 sm:space-y-3 flex-1 text-sm sm:text-base">
                 {application.name && (
                   <div className="flex items-center gap-2">
                     <IdentificationCardIcon className="w-4 h-4 text-muted-foreground" />
@@ -157,13 +159,15 @@ export function ApplicationModal({
             </Card>
 
             {/* Right Column: Education, Experience */}
-            <div className="flex flex-col gap-6 h-full">
+            <div className="flex flex-col gap-4 sm:gap-6 h-full">
               {/* Education */}
               <Card className="flex-1">
-                <CardHeader>
-                  <CardTitle>Education</CardTitle>
+                <CardHeader className="pb-3 sm:pb-6">
+                  <CardTitle className="text-base sm:text-lg">
+                    Education
+                  </CardTitle>
                 </CardHeader>
-                <CardContent className="space-y-3">
+                <CardContent className="space-y-2 sm:space-y-3 text-sm sm:text-base">
                   {application.uni_name && (
                     <div className="flex items-center gap-2">
                       <GraduationCapIcon className="w-4 h-4 text-muted-foreground" />
@@ -190,10 +194,12 @@ export function ApplicationModal({
 
               {/* Experience */}
               <Card className="flex-1">
-                <CardHeader>
-                  <CardTitle>Hackathon Experience</CardTitle>
+                <CardHeader className="pb-3 sm:pb-6">
+                  <CardTitle className="text-base sm:text-lg">
+                    Hackathon Experience
+                  </CardTitle>
                 </CardHeader>
-                <CardContent className="space-y-3">
+                <CardContent className="space-y-2 sm:space-y-3 text-sm sm:text-base">
                   {application.num_hackathons && (
                     <div className="flex items-center gap-2">
                       <TrophyIcon className="w-4 h-4 text-muted-foreground" />
@@ -227,61 +233,69 @@ export function ApplicationModal({
             application.other_url ||
             application.resume_url) && (
             <Card>
-              <CardHeader>
-                <CardTitle>Links</CardTitle>
+              <CardHeader className="pb-3 sm:pb-6">
+                <CardTitle className="text-base sm:text-lg">Links</CardTitle>
               </CardHeader>
-              <CardContent className="space-y-2">
+              <CardContent className="space-y-2 text-sm sm:text-base">
                 {application.github_url && (
-                  <div className="flex items-center gap-2">
-                    <GithubLogoIcon className="w-4 h-4 text-muted-foreground" />
-                    <span className="font-medium">GitHub:</span>{" "}
+                  <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2">
+                    <div className="flex items-center gap-2">
+                      <GithubLogoIcon className="w-4 h-4 text-muted-foreground flex-shrink-0" />
+                      <span className="font-medium">GitHub:</span>
+                    </div>
                     <a
                       href={application.github_url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-blue-500 hover:underline"
+                      className="text-blue-500 hover:underline break-all"
                     >
                       {application.github_url}
                     </a>
                   </div>
                 )}
                 {application.linkedin_url && (
-                  <div className="flex items-center gap-2">
-                    <LinkedinLogoIcon className="w-4 h-4 text-muted-foreground" />
-                    <span className="font-medium">LinkedIn:</span>{" "}
+                  <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2">
+                    <div className="flex items-center gap-2">
+                      <LinkedinLogoIcon className="w-4 h-4 text-muted-foreground flex-shrink-0" />
+                      <span className="font-medium">LinkedIn:</span>
+                    </div>
                     <a
                       href={application.linkedin_url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-blue-500 hover:underline"
+                      className="text-blue-500 hover:underline break-all"
                     >
                       {application.linkedin_url}
                     </a>
                   </div>
                 )}
                 {application.website_url && (
-                  <div className="flex items-center gap-2">
-                    <BrowserIcon className="w-4 h-4 text-muted-foreground" />
-                    <span className="font-medium">Website/X:</span>{" "}
+                  <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2">
+                    <div className="flex items-center gap-2">
+                      <BrowserIcon className="w-4 h-4 text-muted-foreground flex-shrink-0" />
+                      <span className="font-medium">Website/X:</span>
+                    </div>
                     <a
                       href={application.website_url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-blue-500 hover:underline"
+                      className="text-blue-500 hover:underline break-all"
                     >
                       {application.website_url}
                     </a>
                   </div>
                 )}
                 {application.other_url && (
-                  <div className="flex items-center gap-2">
-                    <LinkIcon className="w-4 h-4 text-muted-foreground" />
-                    <span className="font-medium">Other Link:</span>{" "}
+                  <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2">
+                    <div className="flex items-center gap-2">
+                      <LinkIcon className="w-4 h-4 text-muted-foreground flex-shrink-0" />
+                      <span className="font-medium">Other Link:</span>
+                    </div>
                     <a
                       href={application.other_url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-blue-500 hover:underline"
+                      className="text-blue-500 hover:underline break-all"
                     >
                       {application.other_url}
                     </a>
@@ -308,10 +322,10 @@ export function ApplicationModal({
           {/* Team - Full Width */}
           {application.team_members?.trim() && (
             <Card className="lg:col-span-2">
-              <CardHeader>
-                <CardTitle>Team</CardTitle>
+              <CardHeader className="pb-3 sm:pb-6">
+                <CardTitle className="text-base sm:text-lg">Team</CardTitle>
               </CardHeader>
-              <CardContent className="space-y-3">
+              <CardContent className="space-y-2 sm:space-y-3 text-sm sm:text-base">
                 {application.team_name && (
                   <div className="flex items-center gap-2">
                     <UsersIcon className="w-4 h-4 text-muted-foreground" />
@@ -358,15 +372,17 @@ export function ApplicationModal({
           {/* Application Questions - Full Width */}
           {application.cxc_q1 && (
             <Card className="lg:col-span-2">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <LightbulbIcon className="w-5 h-5 text-muted-foreground" />
-                  Tell us about a technical project that you have worked on.
-                  What did you learn? What challenges did you face?
+              <CardHeader className="pb-3 sm:pb-6">
+                <CardTitle className="flex flex-col sm:flex-row sm:items-center gap-2 text-sm sm:text-base">
+                  <LightbulbIcon className="w-4 h-4 sm:w-5 sm:h-5 text-muted-foreground flex-shrink-0" />
+                  <span>
+                    Tell us about a technical project that you have worked on.
+                    What did you learn? What challenges did you face?
+                  </span>
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-sm text-muted-foreground whitespace-pre-wrap">
+                <p className="text-xs sm:text-sm text-muted-foreground whitespace-pre-wrap">
                   {application.cxc_q1}
                 </p>
               </CardContent>
@@ -375,14 +391,14 @@ export function ApplicationModal({
 
           {application.cxc_q2 && (
             <Card className="lg:col-span-2">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <SmileyIcon className="w-5 h-5 text-muted-foreground" />
+              <CardHeader className="pb-3 sm:pb-6">
+                <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
+                  <SmileyIcon className="w-4 h-4 sm:w-5 sm:h-5 text-muted-foreground flex-shrink-0" />
                   Write us a Haiku
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-sm text-muted-foreground whitespace-pre-wrap">
+                <p className="text-xs sm:text-sm text-muted-foreground whitespace-pre-wrap">
                   {application.cxc_q2}
                 </p>
               </CardContent>
@@ -390,16 +406,18 @@ export function ApplicationModal({
           )}
 
           {/* MLH Agreements and Review Info - Side by Side */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
             {/* MLH Agreements */}
             {(application.mlh_agreed_code_of_conduct !== null ||
               application.mlh_authorize_info_sharing !== null ||
               application.mlh_email_opt_in !== null) && (
               <Card>
-                <CardHeader>
-                  <CardTitle>MLH Agreements</CardTitle>
+                <CardHeader className="pb-3 sm:pb-6">
+                  <CardTitle className="text-base sm:text-lg">
+                    MLH Agreements
+                  </CardTitle>
                 </CardHeader>
-                <CardContent className="space-y-2">
+                <CardContent className="space-y-2 text-sm sm:text-base">
                   {application.mlh_agreed_code_of_conduct !== null && (
                     <div className="flex items-center gap-2">
                       <CheckSquareIcon className="w-4 h-4 text-muted-foreground" />
@@ -431,10 +449,12 @@ export function ApplicationModal({
 
             {/* Review Count */}
             <Card>
-              <CardHeader>
-                <CardTitle>Review Information</CardTitle>
+              <CardHeader className="pb-3 sm:pb-6">
+                <CardTitle className="text-base sm:text-lg">
+                  Review Information
+                </CardTitle>
               </CardHeader>
-              <CardContent>
+              <CardContent className="text-sm sm:text-base">
                 <div className="flex items-center gap-2">
                   <TrophyIcon className="w-4 h-4 text-muted-foreground" />
                   <span className="font-medium">Number of Reviews:</span>{" "}
@@ -463,12 +483,16 @@ export function ApplicationModal({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-6xl sm:max-w-6xl h-[85vh] p-0">
-        <DialogHeader className="px-6 pt-6 pb-4 border-b">
-          <DialogTitle>Application Details</DialogTitle>
-          <DialogDescription>{getDescription()}</DialogDescription>
+      <DialogContent className="max-w-[95vw] sm:max-w-[90vw] md:max-w-6xl h-[85vh] sm:h-[90vh] p-0">
+        <DialogHeader className="px-4 sm:px-6 pt-4 sm:pt-6 pb-3 sm:pb-4 border-b">
+          <DialogTitle className="text-lg sm:text-xl">
+            Application Details
+          </DialogTitle>
+          <DialogDescription className="text-sm">
+            {getDescription()}
+          </DialogDescription>
         </DialogHeader>
-        <ScrollArea className="h-[calc(85vh-100px)] px-6 py-6">
+        <ScrollArea className="h-[calc(85vh-80px)] sm:h-[calc(90vh-100px)] px-4 sm:px-6 py-4 sm:py-6">
           {renderContent()}
         </ScrollArea>
       </DialogContent>

@@ -22,7 +22,7 @@ export const applicationColumns: ColumnDef<ApplicationSummary>[] = [
     },
     cell: ({ row }) => {
       const name = row.getValue("name") as string | null;
-      return <div>{name || "N/A"}</div>;
+      return <div className="min-w-[120px]">{name || "N/A"}</div>;
     },
   },
   {
@@ -41,7 +41,7 @@ export const applicationColumns: ColumnDef<ApplicationSummary>[] = [
     },
     cell: ({ row }) => {
       const email = row.getValue("email") as string;
-      return <div className="lowercase">{email}</div>;
+      return <div className="lowercase min-w-[180px]">{email}</div>;
     },
   },
   {
@@ -60,7 +60,7 @@ export const applicationColumns: ColumnDef<ApplicationSummary>[] = [
     },
     cell: ({ row }) => {
       const uniName = row.getValue("uni_name") as string | null;
-      return <div>{uniName || "N/A"}</div>;
+      return <div className="min-w-[150px]">{uniName || "N/A"}</div>;
     },
   },
   {
@@ -79,7 +79,7 @@ export const applicationColumns: ColumnDef<ApplicationSummary>[] = [
     },
     cell: ({ row }) => {
       const gender = row.getValue("gender") as string | null;
-      return <div>{gender || "N/A"}</div>;
+      return <div className="min-w-[80px]">{gender || "N/A"}</div>;
     },
   },
   {
@@ -98,7 +98,7 @@ export const applicationColumns: ColumnDef<ApplicationSummary>[] = [
     },
     cell: ({ row }) => {
       const reviewCount = row.getValue("review_count") as number;
-      return <div className="text-center">{reviewCount}</div>;
+      return <div className="text-center min-w-[80px]">{reviewCount}</div>;
     },
   },
 ];

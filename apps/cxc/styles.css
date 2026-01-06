@@ -1,3 +1,10 @@
+/* CxC Global Style Overrides - No Rounded Corners */
+[data-slot="card"],
+[data-slot="dialog-content"],
+[data-slot="button"] {
+  border-radius: 0 !important;
+}
+
 @keyframes ripple-pulse {
   0% {
     transform: scale(1);
@@ -25,9 +32,21 @@
 }
 
 /* Ripple wave delays */
-.ripples-delay-0 { animation-delay: 0s; }
-.ripples-delay-1 { animation-delay: 0.8s; }
-.ripples-delay-2 { animation-delay: 1.6s; }
-.ripples-delay-3 { animation-delay: 2.4s; }
-.ripples-delay-4 { animation-delay: 3.2s; }
-.ripples-delay-5 { animation-delay: 4s; }
+.ripples-delay-0 {
+  animation-delay: 0s;
+}
+.ripples-delay-1 {
+  animation-delay: 0.8s;
+}
+.ripples-delay-2 {
+  animation-delay: 1.6s;
+}
+.ripples-delay-3 {
+  animation-delay: 2.4s;
+}
+.ripples-delay-4 {
+  animation-delay: 3.2s;
+}
+.ripples-delay-5 {
+  animation-delay: 4s;
+}

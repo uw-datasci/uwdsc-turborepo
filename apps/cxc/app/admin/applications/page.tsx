@@ -2,13 +2,14 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { Card, CardContent, CardHeader, CardTitle, Button } from "@uwdsc/ui";
+import { Card, CardContent, CardHeader, CardTitle } from "@uwdsc/ui";
 import { FileText } from "lucide-react";
 import {
   ApplicationsTable,
   ApplicationModal,
 } from "@/components/admin/applications";
 import { LoadingScreen } from "@/components/LoadingScreen";
+import CxCButton from "@/components/CxCButton";
 import { getAllApplications, getApplicationDetails } from "@/lib/api";
 import type { ApplicationSummary, FullApplicationDetails } from "@/types/api";
 
@@ -81,9 +82,7 @@ export default function AdminApplicationsPage() {
           </CardHeader>
           <CardContent className="space-y-4">
             <p className="text-muted-foreground">{error}</p>
-            <Button onClick={fetchApplications} variant="outline">
-              Try Again
-            </Button>
+            <CxCButton onClick={fetchApplications}>Try Again</CxCButton>
           </CardContent>
         </Card>
       </div>
@@ -93,17 +92,21 @@ export default function AdminApplicationsPage() {
   return (
     <div className="min-h-screen bg-background p-4 md:p-8 pt-24 md:pt-28">
       <div className="max-w-7xl mx-auto space-y-6">
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
-            <h1 className="text-3xl font-bold">Applications</h1>
-            <p className="text-muted-foreground mt-1">
+            <h1 className="text-2xl sm:text-3xl font-bold">Applications</h1>
+            <p className="text-muted-foreground mt-1 text-sm sm:text-base">
               View and manage all submitted applications
             </p>
           </div>
-          <Button onClick={handleGoToReview} className="gap-2">
+          <CxCButton
+            onClick={handleGoToReview}
+            className="gap-2 px-4 py-2 w-full sm:w-auto"
+          >
             <FileText className="w-4 h-4" />
-            Go to Review Page
-          </Button>
+            <span className="hidden xs:inline">Go to Review Page</span>
+            <span className="xs:hidden">Review</span>
+          </CxCButton>
         </div>
 
         {error && (

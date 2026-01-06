@@ -1,10 +1,12 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Card, CardContent, CardHeader, CardTitle, Button } from "@uwdsc/ui";
+import { Card, CardContent, CardHeader, CardTitle } from "@uwdsc/ui";
 import { getRandomApplication, submitReview } from "@/lib/api";
 import { Loader2, RefreshCw } from "lucide-react";
 import { LoadingScreen } from "@/components/LoadingScreen";
+import CxCButton from "@/components/CxCButton";
+import { ScoreButtons, BasicInformation } from "@/components/admin/review";
 
 interface Application {
   id: string;
@@ -113,36 +115,6 @@ export default function ReviewPage() {
     }
   };
 
-  const ScoreButtons = ({
-    selected,
-    onSelect,
-    label,
-  }: {
-    selected: number | null;
-    onSelect: (score: number) => void;
-    label: string;
-  }) => (
-    <div className="flex flex-col gap-3">
-      <label className="text-sm font-medium">{label}</label>
-      <div className="flex flex-wrap gap-2">
-        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((score) => (
-          <Button
-            key={score}
-            type="button"
-            variant={selected === score ? "default" : "outline"}
-            size="sm"
-            onClick={() => onSelect(score)}
-            className={
-              selected === score ? "bg-white text-black hover:bg-white/90" : ""
-            }
-          >
-            {score}
-          </Button>
-        ))}
-      </div>
-    </div>
-  );
-
   if (loading) {
     return <LoadingScreen message="LOADING APPLICATION..." />;
   }
@@ -156,10 +128,10 @@ export default function ReviewPage() {
           </CardHeader>
           <CardContent className="space-y-4">
             <p className="text-muted-foreground">{error}</p>
-            <Button onClick={fetchApplication} variant="outline">
+            <CxCButton onClick={fetchApplication} className="px-4 py-2">
               <RefreshCw className="w-4 h-4 mr-2" />
               Try Again
-            </Button>
+            </CxCButton>
           </CardContent>
         </Card>
       </div>
@@ -178,10 +150,13 @@ export default function ReviewPage() {
               Thank you for reviewing this application. Your scores have been
               saved.
             </p>
-            <Button onClick={() => window.location.reload()} className="w-full">
+            <CxCButton
+              onClick={() => globalThis.location.reload()}
+              className="w-full px-4 py-2"
+            >
               <RefreshCw className="w-4 h-4 mr-2" />
               Review Another Application
-            </Button>
+            </CxCButton>
           </CardContent>
         </Card>
       </div>
@@ -210,14 +185,14 @@ export default function ReviewPage() {
       <div className="max-w-4xl mx-auto space-y-6">
         <div className="flex items-center justify-between">
           <h1 className="text-3xl font-bold">Application Review</h1>
-          <Button
-            onClick={() => window.location.reload()}
-            variant="outline"
+          <CxCButton
+            onClick={() => globalThis.location.reload()}
             disabled={loading}
+            className="px-4 py-2"
           >
             <RefreshCw className="w-4 h-4 mr-2" />
             Get New Application
-          </Button>
+          </CxCButton>
         </div>
 
         {error && (
@@ -230,224 +205,11 @@ export default function ReviewPage() {
 
         <div className="space-y-6">
           {/* Basic Information Section */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Basic Information</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="space-y-2 text-sm">
-                {application.email && (
-                  <div>
-                    <span className="font-medium">Email:</span>{" "}
-                    {application.email}
-                  </div>
-                )}
-                {application.phone_number && (
-                  <div>
-                    <span className="font-medium">Phone:</span>{" "}
-                    {application.phone_number}
-                  </div>
-                )}
-                {application.discord && (
-                  <div>
-                    <span className="font-medium">Discord:</span>{" "}
-                    {application.discord}
-                  </div>
-                )}
-                {application.t_shirt && (
-                  <div>
-                    <span className="font-medium">T-Shirt Size:</span>{" "}
-                    {application.t_shirt}
-                  </div>
-                )}
-                {application.dietary_restrictions && (
-                  <div>
-                    <span className="font-medium">Dietary Restrictions:</span>{" "}
-                    {application.dietary_restrictions}
-                  </div>
-                )}
-                {application.gender && (
-                  <div>
-                    <span className="font-medium">Gender:</span>{" "}
-                    {application.gender}
-                  </div>
-                )}
-                {application.ethnicity && (
-                  <div>
-                    <span className="font-medium">Ethnicity:</span>{" "}
-                    {application.ethnicity}
-                  </div>
-                )}
-                {application.uni_name && (
-                  <div>
-                    <span className="font-medium">University:</span>{" "}
-                    {application.uni_name}
-                  </div>
-                )}
-                {application.uni_program && (
-                  <div>
-                    <span className="font-medium">Program:</span>{" "}
-                    {application.uni_program}
-                  </div>
-                )}
-                {application.year_of_study && (
-                  <div>
-                    <span className="font-medium">Year of Study:</span>{" "}
-                    {application.year_of_study}
-                  </div>
-                )}
-                {application.prior_hack_exp && (
-                  <div>
-                    <span className="font-medium">
-                      Prior Hackathon Experience:
-                    </span>{" "}
-                    {application.prior_hack_exp}
-                  </div>
-                )}
-                {application.num_hackathons && (
-                  <div>
-                    <span className="font-medium">Hackathons Attended:</span>{" "}
-                    {application.num_hackathons}
-                  </div>
-                )}
-                {application.github_url && (
-                  <div>
-                    <span className="font-medium">GitHub:</span>{" "}
-                    <a
-                      href={application.github_url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-blue-500 hover:underline"
-                    >
-                      {application.github_url}
-                    </a>
-                  </div>
-                )}
-                {application.linkedin_url && (
-                  <div>
-                    <span className="font-medium">LinkedIn:</span>{" "}
-                    <a
-                      href={application.linkedin_url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-blue-500 hover:underline"
-                    >
-                      {application.linkedin_url}
-                    </a>
-                  </div>
-                )}
-                {application.website_url && (
-                  <div>
-                    <span className="font-medium">Website/X:</span>{" "}
-                    <a
-                      href={application.website_url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-blue-500 hover:underline"
-                    >
-                      {application.website_url}
-                    </a>
-                  </div>
-                )}
-                {application.other_url && (
-                  <div>
-                    <span className="font-medium">Other Link:</span>{" "}
-                    <a
-                      href={application.other_url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-blue-500 hover:underline"
-                    >
-                      {application.other_url}
-                    </a>
-                  </div>
-                )}
-                {application.resume_url && (
-                  <div className="pt-2">
-                    <span className="font-medium">Resume:</span>{" "}
-                    <a
-                      href={application.resume_url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-blue-500 hover:underline font-medium"
-                      onClick={(e) => {
-                        // Ensure the link opens in a new tab
-                        e.stopPropagation();
-                      }}
-                    >
-                      View Resume ↗
-                    </a>
-                  </div>
-                )}
-                {application.team_members &&
-                  application.team_members.trim() && (
-                    <div className="pt-2">
-                      {application.team_name && (
-                        <div className="mb-3">
-                          <span className="font-medium text-lg">
-                            Team Name:{" "}
-                            <span className="font-semibold">
-                              {application.team_name}
-                            </span>
-                          </span>
-                        </div>
-                      )}
-                      <span className="font-medium block mb-2">
-                        Team Members:
-                      </span>
-                      <div className="flex flex-wrap gap-2">
-                        {application.team_members_with_names &&
-                        application.team_members_with_names.length > 0
-                          ? // Display with names if available
-                            application.team_members_with_names.map(
-                              (member, index) => (
-                                <div
-                                  key={index}
-                                  className="flex items-center gap-2 px-3 py-1.5 bg-cxc-input-bg rounded-md border border-primary/20"
-                                >
-                                  <span className="text-foreground">
-                                    {member.display_name ? (
-                                      <>
-                                        <span>{member.display_name}</span>
-                                        <span className="text-muted-foreground">
-                                          {" "}
-                                          ({member.email})
-                                        </span>
-                                      </>
-                                    ) : (
-                                      <span>{member.email}</span>
-                                    )}
-                                  </span>
-                                </div>
-                              )
-                            )
-                          : // Fallback to just emails if names not available
-                            application.team_members
-                              .split(",")
-                              .map((email, index) => (
-                                <div
-                                  key={index}
-                                  className="flex items-center gap-2 px-3 py-1.5 bg-cxc-input-bg rounded-md border border-primary/20"
-                                >
-                                  <span className="text-foreground">
-                                    {email.trim()}
-                                  </span>
-                                </div>
-                              ))}
-                      </div>
-                    </div>
-                  )}
-              </div>
-
-              <div className="pt-4 border-t">
-                <ScoreButtons
-                  selected={basicInfoScore}
-                  onSelect={setBasicInfoScore}
-                  label="Rate Basic Information (1-10)"
-                />
-              </div>
-            </CardContent>
-          </Card>
+          <BasicInformation
+            application={application}
+            selectedScore={basicInfoScore}
+            onScoreSelect={setBasicInfoScore}
+          />
 
           {/* Application Question 1 Section */}
           {application.cxc_q1 && (
@@ -503,7 +265,7 @@ export default function ReviewPage() {
 
         <Card>
           <CardContent className="pt-6">
-            <Button
+            <CxCButton
               onClick={handleSubmit}
               disabled={
                 submitting ||
@@ -511,8 +273,7 @@ export default function ReviewPage() {
                 q1Score === null ||
                 q2Score === null
               }
-              className="w-full"
-              size="lg"
+              className="w-full px-6 py-3"
             >
               {submitting ? (
                 <>
@@ -522,7 +283,7 @@ export default function ReviewPage() {
               ) : (
                 "Submit Review"
               )}
-            </Button>
+            </CxCButton>
             {basicInfoScore === null || q1Score === null || q2Score === null ? (
               <p className="text-sm text-muted-foreground text-center mt-2">
                 Please rate all sections before submitting
