@@ -52,7 +52,16 @@ This will install all dependencies for all packages and apps in the monorepo. Th
 
 ### 3. Set Up Environment Variables
 
-Pull environment variables from Infisical:
+First, create a `.env` file in the **root directory** of the repository:
+
+```bash
+INFISICAL_CLIENT_ID=<insert-id-here>
+INFISICAL_CLIENT_SECRET=<insert-secret-here>
+```
+
+> **Note**: Contact the Dev VPs on Discord to get your Infisical credentials, or check the DSC exec server for the values.
+
+Then, pull environment variables from Infisical:
 
 ```bash
 pnpm pull-secrets
