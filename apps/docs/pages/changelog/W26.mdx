@@ -6,6 +6,41 @@ This semester continues to build upon the foundation established in Fall 2025, w
 
 ## 🏆 CXC App (apps/cxc)
 
+### Admin Application Management (PR #118)
+
+**Applications Dashboard (`/admin/applications`)**
+- Admins can view all submitted applications in a sortable, filterable table
+- Table displays applicant name, email, university, gender, number of reviews, submission date, and review count
+- Filter applications by email with real-time search
+- Sortable columns for efficient application browsing
+- Pagination support with customizable rows per page (10, 20, 30, 40, 50)
+- Click any row to view complete application details in a modal
+- Real-time application count display
+
+**Application Details Modal**
+- View comprehensive application information in organized sections:
+  - Basic Information: name, email, phone, Discord, age, gender, ethnicity, country, t-shirt size, dietary restrictions
+  - Education & Experience: university, program, year of study, hackathon experience
+  - Social Links: GitHub, LinkedIn, website, portfolio
+  - Application Questions: technical project description and creative haiku
+  - Team Information: team members with names and emails
+  - Resume viewer with secure access
+  - MLH authorization checkboxes status
+- Loading skeleton during data fetch for improved UX
+- Responsive design with mobile-optimized layout
+
+**Enhanced Review System (`/admin/review`)**
+- Redesigned review interface with improved layout and components
+- Reusable review components for consistent scoring UI
+- Better error handling and loading states
+- "Get New Application" button to fetch next application without page reload
+
+**Admin Navigation**
+- New "Admin" dropdown menu in navbar (visible only to admin users)
+- Quick access to Applications Dashboard and Review pages
+- Mobile menu support with admin pages section
+- Description text for each admin page
+
 ### Content & Branding Updates
 - **Brand Consistency (PR #114)**: Standardized "CXC" branding across all components, replacing inconsistent "CxC" usage for improved professional appearance
 
@@ -85,12 +120,19 @@ This semester continues to build upon the foundation established in Fall 2025, w
 ### Backend Architecture Updates
 
 **New Services**
+- `AdminApplicationService`: Manages admin application access
+  - `getAllApplicationSummaries()`: Returns all submitted applications with summary data
+  - `getApplicationById()`: Retrieves full application details by ID
 - `AdminReviewService`: Manages review assignment and submission
   - `getNextApplicationForReview()`: Returns least-reviewed application
   - `submitReview()`: Validates and saves review scores
 - `ApplicationService.getAllUserEmails()`: Fetches user list for team selection
 
 **New Repositories**
+- `AdminApplicationRepository`: Database operations for application management
+  - `getAllApplicationSummaries()`: Query for application table with review counts
+  - `getApplicationById()`: Fetch complete application details with team member info
+  - Includes user name extraction from auth metadata
 - `AdminReviewRepository`: Database operations for reviews
   - `getApplicationWithLeastReviews()`: Query for review assignment
   - `getUserEmail()`: Fetch user email by profile ID
@@ -110,6 +152,8 @@ This semester continues to build upon the foundation established in Fall 2025, w
 ### API Enhancements
 
 **New Endpoints**
+- `GET /api/admin/applications` - Get all submitted applications (admin only)
+- `GET /api/admin/applications/[id]` - Get full application details by ID (admin only)
 - `GET /api/applications/random` - Get next application for review (admin only)
 - `GET /api/applications/resumes` - Retrieve user's resume with signed URL
 - `POST /api/review/submit` - Submit review scores for an application
@@ -122,7 +166,7 @@ This semester continues to build upon the foundation established in Fall 2025, w
 ### Middleware & Security
 
 **Admin Route Protection**
-- `/review` route now requires admin role
+- `/admin/**` routes now require admin role (updated from `/review`)
 - `withProtected` middleware enhanced with role-based access control
 - Non-admin users redirected to home page
 - Profile service integration for role verification
@@ -134,6 +178,8 @@ This semester continues to build upon the foundation established in Fall 2025, w
 ### Client-Side API Functions
 
 **New API Functions**
+- `getAllApplications()`: Fetch all submitted applications for admin table
+- `getApplicationDetails()`: Retrieve full application details by ID
 - `getRandomApplication()`: Fetch random application for review
 - `submitReview()`: Submit review scores with validation
 - `getUserEmails()`: Get user list for team selection
@@ -144,7 +190,20 @@ This semester continues to build upon the foundation established in Fall 2025, w
 
 ## 🎨 Design System (packages/ui)
 
+### New Components
+
+**Table Component (shadcn/ui)**
+- Added complete table component set for data display
+- Includes Table, TableHeader, TableBody, TableFooter, TableRow, TableHead, TableCell, TableCaption
+- Responsive overflow handling with horizontal scrolling
+- Hover states and selected row highlighting
+- Used for admin applications dashboard
+
 ### Component Enhancements
+
+**Dialog Component**
+- Enhanced close button with cursor pointer for better UX
+- Code formatting cleanup (trailing commas)
 
 **GlassSurface Component**
 - Fixed React hook dependency warnings with proper useCallback memoization
@@ -157,6 +216,12 @@ This semester continues to build upon the foundation established in Fall 2025, w
 - Fixed SelectField to handle undefined values correctly
 
 ## 🔧 Infrastructure
+
+### Shared Utilities
+
+**Data Transformers**
+- Added `splitCommaSeparatedString()` utility to core package for consistent string parsing
+- Shared across repositories for ethnicity and experience fields
 
 ### Database Schema Updates
 
