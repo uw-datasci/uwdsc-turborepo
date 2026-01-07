@@ -10,7 +10,7 @@
  * @returns Array of trimmed, non-empty strings
  */
 export function splitCommaSeparatedString(
-  value: string | null | undefined
+  value: string | null | undefined,
 ): string[] {
   if (!value) return [];
   return value
@@ -25,7 +25,7 @@ export function splitCommaSeparatedString(
  * @returns Comma-separated string or empty string
  */
 export function joinArrayToCommaSeparatedString(
-  value: string[] | null | undefined
+  value: string[] | null | undefined,
 ): string {
   if (!value || !Array.isArray(value)) return "";
   return value.join(",");

@@ -132,7 +132,7 @@ export function MobileMenu({
                         <ChevronDownIcon
                           className={cn(
                             "h-6 w-6 transition-transform duration-200",
-                            isAdminOpen && "rotate-180"
+                            isAdminOpen && "rotate-180",
                           )}
                         />
                       </Button>

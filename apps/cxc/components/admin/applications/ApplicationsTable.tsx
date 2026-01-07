@@ -46,7 +46,7 @@ export function ApplicationsTable({
 }: Readonly<ApplicationsTableProps>) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
-    []
+    [],
   );
 
   const table = useReactTable({
@@ -88,7 +88,7 @@ export function ApplicationsTable({
                         ? null
                         : flexRender(
                             header.column.columnDef.header,
-                            header.getContext()
+                            header.getContext(),
                           )}
                     </TableHead>
                   );
@@ -109,7 +109,7 @@ export function ApplicationsTable({
                     <TableCell key={cell.id}>
                       {flexRender(
                         cell.column.columnDef.cell,
-                        cell.getContext()
+                        cell.getContext(),
                       )}
                     </TableCell>
                   ))}
@@ -135,7 +135,9 @@ export function ApplicationsTable({
         </div>
         <div className="flex flex-col sm:flex-row sm:items-center gap-4 sm:space-x-6 lg:space-x-8">
           <div className="flex items-center justify-between sm:justify-start space-x-2">
-            <p className="text-xs sm:text-sm font-medium whitespace-nowrap">Rows per page</p>
+            <p className="text-xs sm:text-sm font-medium whitespace-nowrap">
+              Rows per page
+            </p>
             <Select
               value={`${table.getState().pagination.pageSize}`}
               onValueChange={(value) => {

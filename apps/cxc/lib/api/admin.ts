@@ -34,7 +34,7 @@ export async function getAllApplications(): Promise<GetAllApplicationsResponse> 
  * @throws Error if request fails
  */
 export async function getApplicationDetails(
-  applicationId: string
+  applicationId: string,
 ): Promise<GetApplicationDetailsResponse> {
   const response = await fetch(`/api/admin/applications/${applicationId}`);
 
