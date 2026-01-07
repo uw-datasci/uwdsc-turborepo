@@ -20,6 +20,9 @@ export { uploadResume, getResume } from "./resume";
 export { getRandomApplication, submitReview } from "./review";
 export type { SubmitReviewRequest, SubmitReviewResponse } from "./review";
 
+// Export all admin functions
+export { getAllApplications, getApplicationDetails } from "./admin";
+
 // Export all team functions
 export {
   createTeam,

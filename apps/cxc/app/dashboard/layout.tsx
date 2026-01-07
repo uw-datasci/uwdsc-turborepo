@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Sheet, SheetContent, SheetTrigger, HamburgerIcon } from "@uwdsc/ui";
 import { useAuth } from "@/contexts/AuthContext";
 import { DashboardSidebar } from "@/components/dashboard";
+import { LoadingScreen } from "@/components/LoadingScreen";
 
 interface DashboardLayoutProps {
   readonly children: React.ReactNode;
@@ -23,24 +24,11 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
 
   // Show loading state while checking auth
   if (isLoading) {
-    return (
-      <div className="min-h-screen bg-black flex items-center justify-center">
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          className="flex flex-col items-center gap-4"
-        >
-          <div className="w-8 h-8 border-2 border-white/20 border-t-white animate-spin" />
-          <p className="text-white/60 text-sm font-mono">LOADING...</p>
-        </motion.div>
-      </div>
-    );
+    return <LoadingScreen />;
   }
 
   // Don't render until we know auth state
-  if (!isAuthenticated) {
-    return null;
-  }
+  if (!isAuthenticated) return null;
 
   return (
     <div className="min-h-screen bg-black cxc-app-font">

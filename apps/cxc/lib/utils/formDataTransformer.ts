@@ -14,6 +14,10 @@ import {
   UNIVERSITY_OPTIONS,
 } from "@/constants/application";
 import { AppFormValues } from "@/lib/schemas/application";
+import {
+  splitCommaSeparatedString,
+  joinArrayToCommaSeparatedString,
+} from "@uwdsc/server/core/utils/dataTransformers";
 
 // ============================================================================
 // Database Field Mapping
@@ -29,7 +33,7 @@ import { AppFormValues } from "@/lib/schemas/application";
  */
 export function transformFormDataForDatabase(
   formData: AppFormValues,
-  profileId: string,
+  profileId: string
 ): Record<string, unknown> {
   // Handle conditional "Other" fields
   const dietaryRestrictions =
@@ -97,9 +101,9 @@ export function transformFormDataForDatabase(
     uni_program: program,
     year_of_study: formData.year_of_study,
     // Convert prior_hackathon_experience array to comma-separated string
-    prior_hack_exp: Array.isArray(formData.prior_hackathon_experience)
-      ? formData.prior_hackathon_experience.join(",")
-      : "",
+    prior_hack_exp: joinArrayToCommaSeparatedString(
+      formData.prior_hackathon_experience
+    ),
     num_hackathons: formData.hackathons_attended,
     github_url: formData.github || null,
     linkedin_url: formData.linkedin || null,
@@ -108,9 +112,7 @@ export function transformFormDataForDatabase(
     cxc_q1: formData.cxc_q1,
     cxc_q2: formData.cxc_q2,
     // Convert team_members array to comma-separated string
-    team_members: Array.isArray(formData.team_members)
-      ? formData.team_members.join(",")
-      : "",
+    team_members: joinArrayToCommaSeparatedString(formData.team_members),
     // MLH checkbox fields
     mlh_agreed_code_of_conduct: formData.mlh_agreed_code_of_conduct || false,
     mlh_authorize_info_sharing: formData.mlh_authorize_info_sharing || false,
@@ -126,7 +128,7 @@ export function transformFormDataForDatabase(
  * @returns Form values ready to be populated back into the form
  */
 export function transformDatabaseDataToForm(
-  dbData: Record<string, unknown>,
+  dbData: Record<string, unknown>
 ): Partial<AppFormValues> {
   // Handle dietary restrictions standard/custom
   const dietaryRestrictions = dbData.dietary_restrictions as string;
@@ -152,13 +154,11 @@ export function transformDatabaseDataToForm(
 
   // Handle ethnicity - detect if there's a custom value
   const ethnicityString = dbData.ethnicity as string;
-  const ethnicityArray = ethnicityString
-    ? ethnicityString.split(",").map((e) => e.trim())
-    : [];
+  const ethnicityArray = splitCommaSeparatedString(ethnicityString);
 
   // Check if any ethnicity value is not in the standard options (means it's a custom "Other" value)
   const isEthnicityCustom = ethnicityArray.some(
-    (e) => !ETHNICITIES.includes(e),
+    (e) => !ETHNICITIES.includes(e)
   );
 
   // If custom ethnicity exists, set form to ["Other"] and populate ethnicity_other
@@ -198,13 +198,9 @@ export function transformDatabaseDataToForm(
     year_of_study: (dbData.year_of_study as string) || "",
 
     // Convert comma-separated string back to array
-    prior_hackathon_experience: dbData.prior_hack_exp
-      ? ((dbData.prior_hack_exp as string)
-          .split(",")
-          .filter((e: string) =>
-            e.trim(),
-          ) as AppFormValues["prior_hackathon_experience"])
-      : [],
+    prior_hackathon_experience: splitCommaSeparatedString(
+      dbData.prior_hack_exp as string | null
+    ) as AppFormValues["prior_hackathon_experience"],
     hackathons_attended:
       (dbData.num_hackathons as AppFormValues["hackathons_attended"]) ||
       undefined,
@@ -218,11 +214,9 @@ export function transformDatabaseDataToForm(
     cxc_q2: (dbData.cxc_q2 as string) || "",
 
     // Convert comma-separated string back to array
-    team_members: dbData.team_members
-      ? (dbData.team_members as string)
-          .split(",")
-          .filter((m: string) => m.trim())
-      : [],
+    team_members: splitCommaSeparatedString(
+      dbData.team_members as string | null
+    ),
     // MLH checkbox fields
     mlh_agreed_code_of_conduct:
       (dbData.mlh_agreed_code_of_conduct as boolean) || false,
@@ -244,14 +238,14 @@ export function transformDatabaseDataToForm(
  * @returns Cleaned object with no undefined, null, or empty values
  */
 export function cleanFormData(
-  data: Record<string, unknown>,
+  data: Record<string, unknown>
 ): Record<string, unknown> {
   console.log("data", data);
   return Object.fromEntries(
     Object.entries(data).filter(
       ([key, value]) =>
         key === "ethnicity" ||
-        (value !== undefined && value !== null && value !== ""),
-    ),
+        (value !== undefined && value !== null && value !== "")
+    )
   );
 }

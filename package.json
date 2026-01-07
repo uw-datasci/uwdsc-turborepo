@@ -27,5 +27,8 @@
   "packageManager": "pnpm@10.26.0",
   "engines": {
     "node": ">=20"
+  },
+  "dependencies": {
+    "@tanstack/react-table": "^8.21.3"
   }
 }

@@ -96,7 +96,7 @@ try {
 
     console.log(`⚡ Syncing ${name}...`);
     const secrets = execSync(
-      `infisical export --path="${infisicalPath}" --format=dotenv-export --env=dev ${projectFlag}`,
+      `infisical export --path="${infisicalPath}" --env=dev ${projectFlag}`,
       { encoding: "utf8" }
     );
 
