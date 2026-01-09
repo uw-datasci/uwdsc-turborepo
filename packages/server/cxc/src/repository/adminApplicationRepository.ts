@@ -105,7 +105,7 @@ export class AdminApplicationRepository extends BaseRepository {
     } catch (error) {
       throw new ApiError(
         `Failed to fetch application summaries: ${(error as Error).message}`,
-        500
+        500,
       );
     }
   }
@@ -114,7 +114,7 @@ export class AdminApplicationRepository extends BaseRepository {
    * Get full application details by application ID
    */
   async getApplicationById(
-    applicationId: string
+    applicationId: string,
   ): Promise<FullApplicationDetails | null> {
     try {
       // Get application with user info
@@ -258,7 +258,7 @@ export class AdminApplicationRepository extends BaseRepository {
     } catch (error) {
       throw new ApiError(
         `Failed to fetch application details: ${(error as Error).message}`,
-        500
+        500,
       );
     }
   }

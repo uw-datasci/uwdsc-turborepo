@@ -38,7 +38,7 @@ export default function AdminApplicationsPage() {
       setError(
         err instanceof Error
           ? err.message
-          : "Failed to load applications. Please try again."
+          : "Failed to load applications. Please try again.",
       );
     } finally {
       setLoading(false);
@@ -58,7 +58,7 @@ export default function AdminApplicationsPage() {
       setError(
         err instanceof Error
           ? err.message
-          : "Failed to load application details."
+          : "Failed to load application details.",
       );
     } finally {
       setLoadingDetails(false);

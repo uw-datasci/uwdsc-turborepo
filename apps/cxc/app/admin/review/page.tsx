@@ -71,7 +71,7 @@ export default function ReviewPage() {
       setError(
         err instanceof Error
           ? err.message
-          : "Failed to load application. Please try again."
+          : "Failed to load application. Please try again.",
       );
     } finally {
       setLoading(false);
@@ -108,7 +108,7 @@ export default function ReviewPage() {
       setError(
         err instanceof Error
           ? err.message
-          : "Failed to submit review. Please try again."
+          : "Failed to submit review. Please try again.",
       );
     } finally {
       setSubmitting(false);

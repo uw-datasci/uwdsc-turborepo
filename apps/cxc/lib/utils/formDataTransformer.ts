@@ -33,7 +33,7 @@ import {
  */
 export function transformFormDataForDatabase(
   formData: AppFormValues,
-  profileId: string
+  profileId: string,
 ): Record<string, unknown> {
   // Handle conditional "Other" fields
   const dietaryRestrictions =
@@ -102,7 +102,7 @@ export function transformFormDataForDatabase(
     year_of_study: formData.year_of_study,
     // Convert prior_hackathon_experience array to comma-separated string
     prior_hack_exp: joinArrayToCommaSeparatedString(
-      formData.prior_hackathon_experience
+      formData.prior_hackathon_experience,
     ),
     num_hackathons: formData.hackathons_attended,
     github_url: formData.github || null,
@@ -128,7 +128,7 @@ export function transformFormDataForDatabase(
  * @returns Form values ready to be populated back into the form
  */
 export function transformDatabaseDataToForm(
-  dbData: Record<string, unknown>
+  dbData: Record<string, unknown>,
 ): Partial<AppFormValues> {
   // Handle dietary restrictions standard/custom
   const dietaryRestrictions = dbData.dietary_restrictions as string;
@@ -158,7 +158,7 @@ export function transformDatabaseDataToForm(
 
   // Check if any ethnicity value is not in the standard options (means it's a custom "Other" value)
   const isEthnicityCustom = ethnicityArray.some(
-    (e) => !ETHNICITIES.includes(e)
+    (e) => !ETHNICITIES.includes(e),
   );
 
   // If custom ethnicity exists, set form to ["Other"] and populate ethnicity_other
@@ -199,7 +199,7 @@ export function transformDatabaseDataToForm(
 
     // Convert comma-separated string back to array
     prior_hackathon_experience: splitCommaSeparatedString(
-      dbData.prior_hack_exp as string | null
+      dbData.prior_hack_exp as string | null,
     ) as AppFormValues["prior_hackathon_experience"],
     hackathons_attended:
       (dbData.num_hackathons as AppFormValues["hackathons_attended"]) ||
@@ -215,7 +215,7 @@ export function transformDatabaseDataToForm(
 
     // Convert comma-separated string back to array
     team_members: splitCommaSeparatedString(
-      dbData.team_members as string | null
+      dbData.team_members as string | null,
     ),
     // MLH checkbox fields
     mlh_agreed_code_of_conduct:
@@ -238,14 +238,14 @@ export function transformDatabaseDataToForm(
  * @returns Cleaned object with no undefined, null, or empty values
  */
 export function cleanFormData(
-  data: Record<string, unknown>
+  data: Record<string, unknown>,
 ): Record<string, unknown> {
   console.log("data", data);
   return Object.fromEntries(
     Object.entries(data).filter(
       ([key, value]) =>
         key === "ethnicity" ||
-        (value !== undefined && value !== null && value !== "")
-    )
+        (value !== undefined && value !== null && value !== ""),
+    ),
   );
 }

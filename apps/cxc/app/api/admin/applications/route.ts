@@ -25,7 +25,7 @@ export async function GET() {
     if (profile?.role !== "admin") {
       return NextResponse.json(
         { error: "Forbidden: Admin access required" },
-        { status: 403 }
+        { status: 403 },
       );
     }
 
@@ -39,7 +39,7 @@ export async function GET() {
     console.error("Error fetching applications:", error);
     return NextResponse.json(
       { error: "Internal server error" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
