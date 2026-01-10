@@ -22,7 +22,7 @@ export class AdminApplicationService {
    * Get full application details by ID
    */
   async getApplicationById(
-    applicationId: string
+    applicationId: string,
   ): Promise<FullApplicationDetails | null> {
     return this.repository.getApplicationById(applicationId);
   }

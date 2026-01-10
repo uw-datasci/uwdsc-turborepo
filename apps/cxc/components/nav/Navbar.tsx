@@ -102,7 +102,7 @@ export default function Navbar() {
                             className={cn(
                               "inline-flex h-9 w-max items-center justify-center rounded-md px-4 py-2 !text-base font-medium",
                               "transition-colors hover:text-gray-400 focus:text-gray-400 outline-none",
-                              "hover:bg-transparent focus:bg-transparent bg-transparent"
+                              "hover:bg-transparent focus:bg-transparent bg-transparent",
                             )}
                           >
                             {link.label}

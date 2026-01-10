@@ -82,8 +82,7 @@ export function BasicInformation({
           )}
           {application.gender && (
             <div>
-              <span className="font-medium">Gender:</span>{" "}
-              {application.gender}
+              <span className="font-medium">Gender:</span> {application.gender}
             </div>
           )}
           {application.ethnicity && (
@@ -112,9 +111,7 @@ export function BasicInformation({
           )}
           {application.prior_hack_exp && (
             <div>
-              <span className="font-medium">
-                Prior Hackathon Experience:
-              </span>{" "}
+              <span className="font-medium">Prior Hackathon Experience:</span>{" "}
               {application.prior_hack_exp}
             </div>
           )}
@@ -208,40 +205,34 @@ export function BasicInformation({
               <div className="flex flex-wrap gap-2">
                 {application.team_members_with_names &&
                 application.team_members_with_names.length > 0
-                  ? application.team_members_with_names.map(
-                      (member, index) => (
-                        <div
-                          key={index}
-                          className="flex items-center gap-2 px-3 py-1.5 bg-cxc-input-bg rounded-md border border-primary/20"
-                        >
-                          <span className="text-foreground">
-                            {member.display_name ? (
-                              <>
-                                <span>{member.display_name}</span>
-                                <span className="text-muted-foreground">
-                                  {" "}
-                                  ({member.email})
-                                </span>
-                              </>
-                            ) : (
-                              <span>{member.email}</span>
-                            )}
-                          </span>
-                        </div>
-                      )
-                    )
-                  : application.team_members
-                      .split(",")
-                      .map((email, index) => (
-                        <div
-                          key={index}
-                          className="flex items-center gap-2 px-3 py-1.5 bg-cxc-input-bg rounded-md border border-primary/20"
-                        >
-                          <span className="text-foreground">
-                            {email.trim()}
-                          </span>
-                        </div>
-                      ))}
+                  ? application.team_members_with_names.map((member, index) => (
+                      <div
+                        key={index}
+                        className="flex items-center gap-2 px-3 py-1.5 bg-cxc-input-bg rounded-md border border-primary/20"
+                      >
+                        <span className="text-foreground">
+                          {member.display_name ? (
+                            <>
+                              <span>{member.display_name}</span>
+                              <span className="text-muted-foreground">
+                                {" "}
+                                ({member.email})
+                              </span>
+                            </>
+                          ) : (
+                            <span>{member.email}</span>
+                          )}
+                        </span>
+                      </div>
+                    ))
+                  : application.team_members.split(",").map((email, index) => (
+                      <div
+                        key={index}
+                        className="flex items-center gap-2 px-3 py-1.5 bg-cxc-input-bg rounded-md border border-primary/20"
+                      >
+                        <span className="text-foreground">{email.trim()}</span>
+                      </div>
+                    ))}
               </div>
             </div>
           )}
@@ -258,4 +249,3 @@ export function BasicInformation({
     </Card>
   );
 }
-

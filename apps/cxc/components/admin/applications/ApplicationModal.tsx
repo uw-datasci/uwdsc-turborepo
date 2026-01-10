@@ -355,7 +355,7 @@ export function ApplicationModal({
                               <span>{member.email}</span>
                             )}
                           </Badge>
-                        )
+                        ),
                       )
                     : application.team_members
                         .split(",")

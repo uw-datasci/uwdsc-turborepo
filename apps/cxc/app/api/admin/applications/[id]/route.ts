@@ -29,7 +29,7 @@ export async function GET(request: Request, { params }: ApplicationParams) {
     if (profile?.role !== "admin") {
       return NextResponse.json(
         { error: "Forbidden: Admin access required" },
-        { status: 403 }
+        { status: 403 },
       );
     }
 
@@ -38,7 +38,7 @@ export async function GET(request: Request, { params }: ApplicationParams) {
     if (!applicationId) {
       return NextResponse.json(
         { error: "Application ID is required" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -50,7 +50,7 @@ export async function GET(request: Request, { params }: ApplicationParams) {
     if (!application) {
       return NextResponse.json(
         { error: "Application not found" },
-        { status: 404 }
+        { status: 404 },
       );
     }
 
@@ -61,7 +61,7 @@ export async function GET(request: Request, { params }: ApplicationParams) {
       const resumeService = await createResumeService();
       const resumeResult = await resumeService.getSignedResumeUrl(
         application.profile_id,
-        3600
+        3600,
       );
       if (resumeResult.success && resumeResult.url) {
         resumeUrl = resumeResult.url;
@@ -81,7 +81,7 @@ export async function GET(request: Request, { params }: ApplicationParams) {
     console.error("Error fetching application details:", error);
     return NextResponse.json(
       { error: "Internal server error" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
