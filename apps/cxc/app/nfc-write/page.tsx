@@ -11,13 +11,9 @@ export default function NfcWritePage() {
     success: boolean;
     message: string;
   } | null>(null);
-  const [isSupported, setIsSupported] = useState<boolean | null>(null);
 
-  // Check Web NFC support and load from clipboard on mount
+  // Load from clipboard on mount
   useEffect(() => {
-    const supported = typeof window !== "undefined" && "NDEFReader" in window;
-    setIsSupported(supported);
-  
     async function loadFromClipboard() {
       try {
         const text = await navigator.clipboard.readText();
@@ -29,8 +25,8 @@ export default function NfcWritePage() {
             setNfcUrl(`${baseUrl}/admin/checkin/${text}`);
           }
         }
-      } catch (error) {
-        console.log("Could not read from clipboard:", error);
+      } catch {
+        // Clipboard read failed (permission denied or not available)
       }
     }
   
@@ -42,14 +38,6 @@ export default function NfcWritePage() {
       setResult({
         success: false,
         message: "Please enter a URL to write",
-      });
-      return;
-    }
-
-    if (!isSupported) {
-      setResult({
-        success: false,
-        message: "Web NFC is not supported on this device. Please use Chrome on Android.",
       });
       return;
     }
@@ -131,22 +119,12 @@ export default function NfcWritePage() {
           <CardTitle>Write to NFC Card</CardTitle>
         </CardHeader>
         <CardContent className="space-y-6">
-          {/* Web NFC Support Status */}
-          {isSupported === false && (
-            <div className="p-4 rounded-md bg-yellow-500/10 text-yellow-500 border border-yellow-500/20">
-              <p className="text-sm">
-                Web NFC is not supported on this device. This feature requires Chrome on Android with HTTPS.
-              </p>
-            </div>
-          )}
-
-          {isSupported === true && (
-            <div className="p-4 rounded-md bg-blue-500/10 text-blue-500 border border-blue-500/20">
-              <p className="text-sm">
-                Web NFC is supported. Hold your NFC card close to your device when writing.
-              </p>
-            </div>
-          )}
+          {/* Warning Message */}
+          <div className="p-4 rounded-md bg-yellow-500/10 text-yellow-500 border border-yellow-500/20">
+            <p className="text-sm font-medium">
+              ⚠️ Please use Android and Chrome!!! This feature requires Chrome on Android with HTTPS.
+            </p>
+          </div>
 
           {/* URL Input */}
           <div>
@@ -180,7 +158,7 @@ export default function NfcWritePage() {
           {/* Write Button */}
           <Button
             onClick={handleWrite}
-            disabled={!nfcUrl.trim() || writing || !isSupported}
+            disabled={!nfcUrl.trim() || writing}
             className="w-full"
             size="lg"
           >
@@ -217,7 +195,7 @@ export default function NfcWritePage() {
             <h3 className="font-medium mb-2">Instructions:</h3>
             <ol className="list-decimal list-inside space-y-1 text-sm text-muted-foreground">
               <li>Enter or paste the URL you want to write to the NFC card</li>
-              <li>Click "Write to NFC Card"</li>
+              <li>Click &quot;Write to NFC Card&quot;</li>
               <li>Hold your NFC card close to your device when prompted</li>
               <li>Wait for the confirmation message</li>
             </ol>
