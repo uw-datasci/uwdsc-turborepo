@@ -100,4 +100,37 @@ export class ProfileService {
       );
     }
   }
+
+  /**
+   * Search users by email
+   */
+  async searchUsersByEmail(emailQuery: string): Promise<Array<{
+    id: string;
+    email: string;
+    role: string;
+    display_name: string | null;
+  }>> {
+    try {
+      return await this.repository.searchUsersByEmail(emailQuery);
+    } catch (error) {
+      throw new ApiError(
+        `Failed to search users: ${(error as Error).message}`,
+        500,
+      );
+    }
+  }
+
+  /**
+   * Update user role
+   */
+  async updateUserRole(userId: string, role: string): Promise<{ success: boolean; error?: string }> {
+    try {
+      return await this.repository.updateUserRole(userId, role);
+    } catch (error) {
+      throw new ApiError(
+        `Failed to update user role: ${(error as Error).message}`,
+        500,
+      );
+    }
+  }
 }

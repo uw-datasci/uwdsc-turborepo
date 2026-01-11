@@ -24,9 +24,9 @@ export async function GET() {
       );
     }
 
-    // Check if user is admin
+    // Check if user is admin or superadmin
     const profile = await profileService.getProfileByUserId(user.id);
-    if (profile?.role !== "admin") {
+    if (profile?.role !== "admin" && profile?.role !== "superadmin") {
       return NextResponse.json(
         { error: "Forbidden", message: "Admin access required" },
         { status: 403 },
@@ -71,11 +71,11 @@ export async function POST(request: NextRequest) {
 
     console.log("[API] User authenticated:", user.id);
 
-    // Check if user is admin
+    // Check if user is admin or superadmin
     console.log("[API] Checking admin role...");
     const profile = await profileService.getProfileByUserId(user.id);
     console.log("[API] Profile:", profile);
-    if (profile?.role !== "admin") {
+    if (profile?.role !== "admin" && profile?.role !== "superadmin") {
       console.log("[API] User is not admin, role:", profile?.role);
       return NextResponse.json(
         { error: "Forbidden", message: "Admin access required" },

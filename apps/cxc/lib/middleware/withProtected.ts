@@ -19,9 +19,18 @@ export async function withProtected(request: NextRequest, user: any) {
       const profileService = new ProfileService();
       const profile = await profileService.getProfileByUserId(user.id);
 
-      if (profile?.role !== "admin") {
-        // Redirect non-admin users to home
-        return NextResponse.redirect(new URL("/", request.url));
+      // Special handling for /admin/assign - requires superadmin
+      if (request.nextUrl.pathname === "/admin/assign") {
+        if (profile?.role !== "superadmin") {
+          // Redirect non-superadmin users to home
+          return NextResponse.redirect(new URL("/", request.url));
+        }
+      } else {
+        // Other admin routes require admin or superadmin
+        if (profile?.role !== "admin" && profile?.role !== "superadmin") {
+          // Redirect non-admin users to home
+          return NextResponse.redirect(new URL("/", request.url));
+        }
       }
     } catch (error) {
       console.error("Error checking admin role:", error);

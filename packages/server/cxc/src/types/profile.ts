@@ -1,5 +1,5 @@
 // Role enum matching Prisma schema
-export type Role = "hacker" | "volunteer" | "admin" | "default";
+export type Role = "hacker" | "volunteer" | "admin" | "superadmin" | "default";
 
 // Profile type matching the database schema
 export interface Profile {

@@ -152,4 +152,106 @@ export class ProfileRepository extends BaseRepository {
       };
     }
   }
+
+  /**
+   * Search users by email
+   * @param emailQuery - Email or partial email to search for
+   * @returns Array of users with their profile information
+   */
+  async searchUsersByEmail(emailQuery: string): Promise<Array<{
+    id: string;
+    email: string;
+    role: string;
+    display_name: string | null;
+  }>> {
+    try {
+      const result = await this.sql<Array<{
+        id: string;
+        email: string;
+        role: string;
+        display_name: string | null;
+      }>>`
+        SELECT 
+          au.id,
+          au.email,
+          COALESCE(p.role::text, 'default') as role,
+          CASE 
+            WHEN au.raw_user_meta_data->>'first_name' IS NOT NULL 
+              AND au.raw_user_meta_data->>'last_name' IS NOT NULL
+            THEN TRIM(
+              COALESCE(au.raw_user_meta_data->>'first_name', '') || ' ' || 
+              COALESCE(au.raw_user_meta_data->>'last_name', '')
+            )
+            WHEN au.raw_user_meta_data->>'first_name' IS NOT NULL
+            THEN au.raw_user_meta_data->>'first_name'
+            WHEN au.raw_user_meta_data->>'last_name' IS NOT NULL
+            THEN au.raw_user_meta_data->>'last_name'
+            ELSE NULL
+          END as display_name
+        FROM auth.users au
+        LEFT JOIN profiles p ON au.id = p.id
+        WHERE au.email ILIKE ${`%${emailQuery}%`}
+        ORDER BY au.email ASC
+        LIMIT 20
+      `;
+
+      return result;
+    } catch (error: unknown) {
+      console.error("Error searching users by email:", error);
+      throw error;
+    }
+  }
+
+  /**
+   * Update user role
+   * @param userId - The auth.users.id (UUID)
+   * @param role - The new role to assign
+   */
+  async updateUserRole(
+    userId: string,
+    role: string,
+  ): Promise<{ success: boolean; error?: string }> {
+    try {
+      // First, ensure profile exists
+      const profile = await this.getProfileByUserId(userId);
+      
+      if (!profile) {
+        // Create profile if it doesn't exist
+        const createResult = await this.createProfile({
+          id: userId,
+          role: role,
+          nfc_id: "", // Will be generated later if needed
+        });
+        
+        if (!createResult.success) {
+          return createResult;
+        }
+      } else {
+        // Update existing profile
+        const result = await this.sql`
+          UPDATE profiles
+          SET 
+            role = ${role}::role_enum,
+            updated_at = NOW()
+          WHERE id = ${userId}
+          RETURNING *
+        `;
+
+        if (result.length === 0) {
+          return {
+            success: false,
+            error: "Profile not found",
+          };
+        }
+      }
+
+      return { success: true };
+    } catch (error: unknown) {
+      console.error("Error updating user role:", error);
+      return {
+        success: false,
+        error: (error as Error).message || "Failed to update user role",
+      };
+    }
+  }
 }

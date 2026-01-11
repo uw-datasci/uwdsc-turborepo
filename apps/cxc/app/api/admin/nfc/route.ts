@@ -24,9 +24,9 @@ export async function GET(request: Request) {
       );
     }
 
-    // Check if user is admin
+    // Check if user is admin or superadmin
     const adminProfile = await profileService.getProfileByUserId(user.id);
-    if (adminProfile?.role !== "admin") {
+    if (adminProfile?.role !== "admin" && adminProfile?.role !== "superadmin") {
       return NextResponse.json(
         { error: "Forbidden", message: "Admin access required" },
         { status: 403 },
