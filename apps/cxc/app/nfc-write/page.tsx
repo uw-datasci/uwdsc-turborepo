@@ -15,32 +15,27 @@ export default function NfcWritePage() {
 
   // Check Web NFC support and load from clipboard on mount
   useEffect(() => {
-    // Check if Web NFC is supported
-    const supported = "NDEFWriter" in window || "nfc" in navigator;
+    const supported = typeof window !== "undefined" && "NDEFReader" in window;
     setIsSupported(supported);
-
-    // Try to read from clipboard
+  
     async function loadFromClipboard() {
       try {
         const text = await navigator.clipboard.readText();
         if (text && text.trim()) {
-          // Check if it looks like a URL or NFC ID
           if (text.startsWith("http") || text.startsWith("/")) {
             setNfcUrl(text);
           } else {
-            // If it's just an NFC ID, construct the check-in URL
             const baseUrl = window.location.origin;
             setNfcUrl(`${baseUrl}/admin/checkin/${text}`);
           }
         }
       } catch (error) {
-        // Clipboard read failed (permission denied or not available)
         console.log("Could not read from clipboard:", error);
       }
     }
-
+  
     loadFromClipboard();
-  }, []);
+  }, []);  
 
   const handleWrite = async () => {
     if (!nfcUrl.trim()) {
