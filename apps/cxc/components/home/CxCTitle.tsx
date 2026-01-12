@@ -18,7 +18,6 @@ export default function CxCTitle() {
   // const isTablet = useIsMobile(1024);
   // const [cursorDone, setCursorDone] = useState(false);
   // const [logoVisible, setLogoVisible] = useState(false);
-  // add due date
 
   useEffect(() => {
     const checkCountdown = () => {
@@ -68,10 +67,10 @@ export default function CxCTitle() {
                   />
                 </div>
                 {/* TODO: -bottom-12 md:-bottom-10 when adding back tangerine*/}
-                <div className="flex flex-col items-center gap-6 md:gap-8 justify-center absolute -bottom-2">
+                <div className="flex flex-col items-center gap-6 justify-center absolute -bottom-12 md:-bottom-10">
                   <div className="flex flex-col items-center">
                     <Badge
-                      className="mb-2 md:mb-3 font-normal text-sm md:text-base border-white/50 bg-background"
+                      className="font-normal text-sm md:text-base border-white/50 bg-background"
                       variant="outline"
                     >
                       FEB 6-8 · An AI Hackathon
@@ -132,12 +131,17 @@ export default function CxCTitle() {
                       />
                     </div> */}
                   </div>
-                  <CxCButton
-                    asChild
-                    className="text-base md:text-2xl py-2 md:py-3 px-10 md:px-14 hover:scale-105"
-                  >
-                    <Link href="/apply">Apply</Link>
-                  </CxCButton>
+                  <div className="flex flex-col items-center gap-6">
+                    <CxCButton
+                      asChild
+                      className="text-base md:text-2xl py-2 md:py-3 px-10 md:px-14 hover:scale-105"
+                    >
+                      <Link href="/apply">Apply</Link>
+                    </CxCButton>
+                    <div className="text-sm font-mono border border-orange-300 text-orange-300 px-3 py-1 shadow-[0_0_10px_rgba(251,146,60,0.3)]">
+                      Applications due Jan 12, 11:59pm
+                    </div>
+                  </div>
                 </div>
               </motion.div>
             </WarpBackground>
