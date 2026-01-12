@@ -61,6 +61,28 @@ export class ProfileRepository extends BaseRepository {
   }
 
   /**
+   * Get user email by profile ID (user ID)
+   * @param profileId - The profile ID (same as auth.users.id)
+   */
+  async getUserEmail(profileId: string): Promise<string | null> {
+    try {
+      const result = await this.sql<Array<{ email: string }>>`
+        SELECT email 
+        FROM auth.users 
+        WHERE id = ${profileId} 
+        LIMIT 1
+      `;
+
+      if (result.length === 0 || !result[0]) return null;
+
+      return result[0].email;
+    } catch (error: unknown) {
+      console.error("Error fetching user email:", error);
+      return null;
+    }
+  }
+
+  /**
    * Update or set NFC ID for a profile
    * @param userId - The auth.users.id (UUID)
    * @param nfcId - The NFC ID to set (string)

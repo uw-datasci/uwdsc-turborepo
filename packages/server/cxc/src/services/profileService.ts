@@ -133,4 +133,18 @@ export class ProfileService {
       );
     }
   }
+
+  /**
+   * Get user email by profile ID
+   */
+  async getUserEmail(profileId: string): Promise<string | null> {
+    try {
+      return await this.repository.getUserEmail(profileId);
+    } catch (error) {
+      throw new ApiError(
+        `Failed to get user email: ${(error as Error).message}`,
+        500,
+      );
+    }
+  }
 }

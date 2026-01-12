@@ -30,7 +30,8 @@ export default function AdminCheckInPage() {
     null,
   );
   const [profile, setProfile] = useState<{
-    role: string;
+    email: string | null;
+    nfc_id: string | null;
   } | null>(null);
 
   // Load events and profile on mount
@@ -53,18 +54,57 @@ export default function AdminCheckInPage() {
           }
         }
 
-        // Load profile by NFC ID
-        const profileRes = await fetch(`/api/admin/nfc?nfc_id=${nfcId}`);
-        if (profileRes.ok) {
-          const data = await profileRes.json();
-          setProfile(data.profile);
-        } else if (profileRes.status === 404) {
-          setCheckInResult({
-            success: false,
-            message: "Profile not found for this NFC ID",
-            error: "Profile not found",
-          });
-        }
+        // Load profile by NFC ID - poll until we get email
+        const loadProfile = async () => {
+          let attempts = 0;
+          const maxAttempts = 10;
+          
+          while (attempts < maxAttempts) {
+            try {
+              const profileRes = await fetch(`/api/admin/nfc?nfc_id=${nfcId}`);
+              if (profileRes.ok) {
+                const data = await profileRes.json();
+                const profileData = data.profile;
+                
+                if (profileData?.email) {
+                  setProfile({
+                    email: profileData.email,
+                    nfc_id: profileData.nfc_id || nfcId,
+                  });
+                  return;
+                } else if (profileData) {
+                  // Profile exists but no email yet, keep polling
+                  setProfile({
+                    email: null,
+                    nfc_id: profileData.nfc_id || nfcId,
+                  });
+                }
+              } else if (profileRes.status === 404) {
+                setCheckInResult({
+                  success: false,
+                  message: "Profile not found for this NFC ID",
+                  error: "Profile not found",
+                });
+                return;
+              }
+            } catch (fetchError) {
+              console.error("Error fetching profile:", fetchError);
+            }
+            
+            // Wait before retrying (polling)
+            if (attempts < maxAttempts - 1) {
+              await new Promise(resolve => setTimeout(resolve, 500));
+            }
+            attempts++;
+          }
+          
+          // If we still don't have email after polling, show what we have
+          if (attempts >= maxAttempts) {
+            console.warn("Failed to load email after polling");
+          }
+        };
+        
+        await loadProfile();
       } catch (error) {
         console.error("Error loading data:", error);
         setCheckInResult({
@@ -108,17 +148,20 @@ export default function AdminCheckInPage() {
       const data: CheckInResponse = await response.json();
 
       if (response.ok && data.success) {
-        // Copy NFC ID to clipboard on first check-in
+        // Copy check-in URL to clipboard
         // This allows admin to write it to the NFC tag
+        const baseUrl = typeof window !== "undefined" ? window.location.origin : "";
+        const checkInUrl = `${baseUrl}/admin/checkin/${nfcId}`;
+        
         try {
-          await navigator.clipboard.writeText(nfcId);
-          // Update message to indicate NFC ID was copied
+          await navigator.clipboard.writeText(checkInUrl);
+          // Update message to indicate check-in URL was copied
           setCheckInResult({
             ...data,
-            message: `${data.message} NFC ID copied to clipboard!`,
+            message: `${data.message} Check-in URL copied to clipboard!`,
           });
         } catch (clipboardError) {
-          console.error("Failed to copy NFC ID to clipboard:", clipboardError);
+          console.error("Failed to copy check-in URL to clipboard:", clipboardError);
           setCheckInResult(data);
         }
         
@@ -158,8 +201,10 @@ export default function AdminCheckInPage() {
           {/* NFC ID Display */}
           <div>
             <label className="text-sm font-medium mb-2 block">NFC ID</label>
-            <div className="p-3 bg-muted rounded-md font-mono text-sm">
-              {nfcId}
+            <div className="p-3 bg-muted rounded-md font-mono text-sm break-all">
+              {typeof window !== "undefined" 
+                ? `${window.location.origin}/admin/checkin/${nfcId}`
+                : `/admin/checkin/${nfcId}`}
             </div>
           </div>
 
@@ -168,7 +213,11 @@ export default function AdminCheckInPage() {
             <div>
               <label className="text-sm font-medium mb-2 block">User</label>
               <div className="p-3 bg-muted rounded-md">
-                Role: {profile.role}
+                {profile.email ? (
+                  <>Email: {profile.email}</>
+                ) : (
+                  <>Loading email...</>
+                )}
               </div>
             </div>
           )}

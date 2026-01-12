@@ -47,11 +47,15 @@ export async function GET(request: Request) {
         );
       }
 
+      // Get user email
+      const email = await profileService.getUserEmail(profile.id);
+
       return NextResponse.json(
         {
           profile: {
             id: profile.id,
-            role: profile.role,
+            email: email,
+            nfc_id: profile.nfc_id,
           },
         },
         { status: 200 },
