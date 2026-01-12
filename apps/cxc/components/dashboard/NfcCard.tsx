@@ -80,8 +80,6 @@ export function NfcCard() {
   // Use the actual application URL (from window.location.origin)
   const baseUrl = typeof window !== "undefined" ? window.location.origin : "";
   const checkInUrl = `${baseUrl}/admin/checkin/${nfcId}`;
-  // NFC ID should be displayed as https://cxc.uwdatascience.ca//admin/checkin/{nfcId}
-  const nfcIdDisplay = `https://cxc.uwdatascience.ca/admin/checkin/${nfcId}`;
   const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(checkInUrl)}`;
 
   return (
@@ -113,7 +111,7 @@ export function NfcCard() {
                 NFC ID
               </label>
               <div className="p-3 bg-white/5 border border-white/10 font-mono text-sm text-white break-all">
-                {nfcIdDisplay}
+                {checkInUrl}
               </div>
             </div>
 
