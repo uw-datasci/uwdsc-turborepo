@@ -25,9 +25,7 @@ export const baseMetadata: Metadata = {
   },
 };
 
-export const baseViewport: Viewport = {
-  themeColor: "#000211",
-};
+export const baseViewport: Viewport = { themeColor: "#000211" };
 
 /**
  * Creates metadata for dynamic routes using generateMetadata().
