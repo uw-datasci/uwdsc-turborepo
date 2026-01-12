@@ -4,6 +4,21 @@ This semester continues to build upon the foundation established in Fall 2025, w
 
 ## 🎯 Main Website (apps/web)
 
+### Application Deadline Management (PR #122)
+
+**Flexible Deadline Support**
+- Terms now support dual deadline system with soft and hard deadlines
+- Database schema updated with `app_soft_deadline` and `app_hard_deadline` fields
+- Enables grace periods and extended submission windows
+- Soft deadline can be used for priority consideration
+- Hard deadline enforces final cutoff for all submissions
+
+**Database Schema Enhancement**
+- `Terms` table now includes:
+  - `app_soft_deadline`: Recommended submission deadline
+  - `app_hard_deadline`: Final submission cutoff
+  - Both stored as `Timestamptz` for timezone-aware deadline management
+
 ## 🏆 CXC App (apps/cxc)
 
 ### Admin Application Management (PR #118)
@@ -224,6 +239,14 @@ This semester continues to build upon the foundation established in Fall 2025, w
 - Shared across repositories for ethnicity and experience fields
 
 ### Database Schema Updates
+
+**Terms Table Enhancement (PR #122)**
+- Added dual deadline support for flexible application windows:
+  - `app_soft_deadline` (Timestamptz) - Recommended submission deadline
+  - `app_hard_deadline` (Timestamptz) - Final submission cutoff
+- Replaces single `app_deadline` field with two distinct deadlines
+- Enables grace periods and priority consideration workflows
+- Timezone-aware deadline management for global applicants
 
 **New Tables**
 - `reviews` table for storing application reviews:

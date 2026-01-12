@@ -627,6 +627,70 @@ async findActive() {
 }
 ```
 
+### Working with Application Deadlines
+
+The Terms table supports flexible deadline management with soft and hard deadlines:
+
+```typescript
+// Check if applications are open
+async isApplicationOpen(termId: bigint): Promise<boolean> {
+  const result = await pool.query(
+    `SELECT 
+       app_release_date,
+       app_soft_deadline,
+       app_hard_deadline,
+       NOW() as current_time
+     FROM terms
+     WHERE id = $1`,
+    [termId]
+  );
+  
+  if (result.rows.length === 0) return false;
+  
+  const { app_release_date, app_hard_deadline, current_time } = result.rows[0];
+  const now = new Date(current_time);
+  
+  return now >= new Date(app_release_date) && now <= new Date(app_hard_deadline);
+}
+
+// Check if within soft deadline (priority consideration)
+async isWithinSoftDeadline(termId: bigint): Promise<boolean> {
+  const result = await pool.query(
+    `SELECT 
+       app_soft_deadline,
+       NOW() as current_time
+     FROM terms
+     WHERE id = $1`,
+    [termId]
+  );
+  
+  if (result.rows.length === 0) return false;
+  
+  const { app_soft_deadline, current_time } = result.rows[0];
+  return new Date(current_time) <= new Date(app_soft_deadline);
+}
+
+// Get current active term
+async getCurrentTerm() {
+  const result = await pool.query(
+    `SELECT *
+     FROM terms
+     WHERE app_release_date <= NOW()
+       AND app_hard_deadline >= NOW()
+     ORDER BY app_release_date DESC
+     LIMIT 1`
+  );
+  
+  return result.rows[0] || null;
+}
+```
+
+**Use Cases:**
+- **Soft Deadline**: Recommended submission date for priority review
+- **Hard Deadline**: Final cutoff for all submissions
+- **Grace Period**: Time between soft and hard deadlines for late submissions
+- **Timezone Handling**: Uses `Timestamptz` for accurate global deadline enforcement
+
 ### Optimistic Locking
 
 ```sql
