@@ -9,7 +9,12 @@ export const baseMetadata: Metadata = {
     follow: true,
   },
   icons: {
-    icon: [{ url: "/logos/cxc_favicon.png", type: "image/png" }],
+    icon: [
+      { url: "/logos/cxc_favicon.png", type: "image/png" },
+      { url: "/logos/cxc_favicon.png", sizes: "48x48", type: "image/png" },
+      { url: "/logos/cxc_favicon.png", sizes: "96x96", type: "image/png" },
+      { url: "/logos/cxc_favicon.png", sizes: "192x192", type: "image/png" },
+    ],
     apple: [{ url: "/logos/cxc_favicon.png" }],
     shortcut: "/logos/cxc_favicon.png",
   },
