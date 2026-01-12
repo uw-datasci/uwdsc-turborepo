@@ -95,7 +95,7 @@ export function ApplicationSummary({
     >
       {/* Personal Information */}
       <motion.div variants={item}>
-        <Card className="bg-black border border-white/20 rounded-none">
+        <Card className="bg-black border border-white/20 rounded-none !gap-0">
           <CardHeader className="border-b border-white/10">
             <CardTitle className="text-white text-sm uppercase tracking-wider">
               Personal Information
@@ -145,7 +145,7 @@ export function ApplicationSummary({
 
       {/* Education */}
       <motion.div variants={item}>
-        <Card className="bg-black border border-white/20 rounded-none">
+        <Card className="bg-black border border-white/20 rounded-none !gap-0">
           <CardHeader className="border-b border-white/10">
             <CardTitle className="text-white text-sm uppercase tracking-wider">
               Education
@@ -178,7 +178,7 @@ export function ApplicationSummary({
 
       {/* Experience */}
       <motion.div variants={item}>
-        <Card className="bg-black border border-white/20 rounded-none">
+        <Card className="bg-black border border-white/20 rounded-none !gap-0">
           <CardHeader className="border-b border-white/10">
             <CardTitle className="text-white text-sm uppercase tracking-wider">
               Experience
@@ -214,7 +214,7 @@ export function ApplicationSummary({
 
       {/* Links */}
       <motion.div variants={item}>
-        <Card className="bg-black border border-white/20 rounded-none">
+        <Card className="bg-black border border-white/20 rounded-none !gap-0">
           <CardHeader className="border-b border-white/10">
             <CardTitle className="text-white text-sm uppercase tracking-wider">
               Links
@@ -293,7 +293,7 @@ export function ApplicationSummary({
 
       {/* Short Answer Responses */}
       <motion.div variants={item}>
-        <Card className="bg-black border border-white/20 rounded-none">
+        <Card className="bg-black border border-white/20 rounded-none !gap-0">
           <CardHeader className="border-b border-white/10">
             <CardTitle className="text-white text-sm uppercase tracking-wider">
               Short Answers
