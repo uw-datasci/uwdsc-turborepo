@@ -9,7 +9,7 @@ const profileService = new ProfileService();
  * Get or generate NFC ID for the current user
  * GET /api/admin/nfc?nfc_id=xxx
  * Get profile by NFC ID
- * Admin only endpoint
+ * Admin and superadmin only endpoint
  */
 export async function GET(request: Request) {
   try {

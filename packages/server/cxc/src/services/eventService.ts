@@ -85,5 +85,22 @@ export class EventService {
       );
     }
   }
+
+  /**
+   * Update an existing event
+   */
+  async updateEvent(
+    eventId: number,
+    data: Partial<CreateEventData>,
+  ): Promise<Event> {
+    try {
+      return await this.repository.updateEvent(eventId, data);
+    } catch (error) {
+      throw new ApiError(
+        `Failed to update event: ${(error as Error).message}`,
+        500,
+      );
+    }
+  }
 }
 

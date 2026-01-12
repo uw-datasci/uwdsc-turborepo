@@ -9,6 +9,7 @@ import {
 /**
  * POST /api/review/submit
  * Saves review scores to database
+ * Admin and superadmin only endpoint
  */
 export async function POST(request: NextRequest) {
   try {
@@ -20,11 +21,11 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    // Check if user has admin role
+    // Check if user has admin or superadmin role
     const profileService = new ProfileService();
     const profile = await profileService.getProfileByUserId(user.id);
 
-    if (profile?.role !== "admin") {
+    if (profile?.role !== "admin" && profile?.role !== "superadmin") {
       return NextResponse.json(
         { error: "Forbidden: Admin access required" },
         { status: 403 },

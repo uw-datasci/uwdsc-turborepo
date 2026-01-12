@@ -229,5 +229,57 @@ export class EventRepository extends BaseRepository {
       throw error;
     }
   }
+
+  /**
+   * Update an existing event
+   */
+  async updateEvent(
+    eventId: number,
+    data: Partial<CreateEventData>,
+  ): Promise<Event> {
+    try {
+      // Build update object with only provided fields
+      const updateFields: Record<string, unknown> = {};
+      
+      if (data.name !== undefined) updateFields.name = data.name;
+      if (data.registration_required !== undefined) updateFields.registration_required = data.registration_required;
+      if (data.description !== undefined) updateFields.description = data.description ?? null;
+      if (data.location !== undefined) updateFields.location = data.location ?? null;
+      if (data.start_time !== undefined) updateFields.start_time = data.start_time;
+      if (data.buffered_start_time !== undefined) updateFields.buffered_start_time = data.buffered_start_time;
+      if (data.end_time !== undefined) updateFields.end_time = data.end_time;
+      if (data.buffered_end_time !== undefined) updateFields.buffered_end_time = data.buffered_end_time;
+      if (data.payment_required !== undefined) updateFields.payment_required = data.payment_required;
+      if (data.image_id !== undefined) updateFields.image_id = data.image_id ?? null;
+      
+      // Always update the updated_at timestamp
+      updateFields.updated_at = new Date();
+
+      if (Object.keys(updateFields).length === 0) {
+        // No fields to update, just return the existing event
+        const existing = await this.getEventById(eventId);
+        if (!existing) {
+          throw new Error("Event not found");
+        }
+        return existing;
+      }
+
+      const result = await this.sql<Event[]>`
+        UPDATE events
+        SET ${this.sql(updateFields)}
+        WHERE id = ${eventId}
+        RETURNING *
+      `;
+
+      if (result.length === 0) {
+        throw new Error("Event not found or update failed");
+      }
+
+      return result[0]!;
+    } catch (error: unknown) {
+      console.error("Error updating event:", error);
+      throw error;
+    }
+  }
 }
 

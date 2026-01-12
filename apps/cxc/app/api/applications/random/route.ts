@@ -6,7 +6,7 @@ import { AdminReviewService } from "@uwdsc/server/cxc/services/adminReviewServic
 /**
  * GET /api/applications/random
  * Returns the application with least number of reviews (ties broken lexicographically)
- * Admin only endpoint
+ * Admin and superadmin only endpoint
  */
 export async function GET() {
   try {
@@ -18,11 +18,11 @@ export async function GET() {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    // Check if user has admin role
+    // Check if user has admin or superadmin role
     const profileService = new ProfileService();
     const profile = await profileService.getProfileByUserId(user.id);
 
-    if (profile?.role !== "admin") {
+    if (profile?.role !== "admin" && profile?.role !== "superadmin") {
       return NextResponse.json(
         { error: "Forbidden: Admin access required" },
         { status: 403 },
@@ -57,8 +57,15 @@ export async function GET() {
     );
 
     if (!application) {
+      console.log(`[API] No applications found for reviewer ${user.id}. This could mean:
+        1. No applications with status='submitted' exist
+        2. All submitted applications have already been reviewed by this user
+        3. There was an error fetching applications`);
       return NextResponse.json(
-        { error: "No applications available for review" },
+        { 
+          error: "No applications available for review",
+          message: "Either there are no submitted applications, or you have already reviewed all available applications."
+        },
         { status: 404 },
       );
     }

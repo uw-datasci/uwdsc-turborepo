@@ -206,7 +206,7 @@ export default function AdminAssignPage() {
                       </div>
                     </div>
                     <div className="flex items-center gap-2">
-                      {user.role === "admin" || user.role === "superadmin" ? (
+                      {user.role === "superadmin" ? (
                         <div className="flex items-center gap-2 text-sm text-muted-foreground">
                           <Shield className="h-4 w-4" />
                           <span>Already {user.role}</span>

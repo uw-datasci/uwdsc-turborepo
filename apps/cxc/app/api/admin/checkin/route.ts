@@ -9,7 +9,7 @@ const profileService = new ProfileService();
 /**
  * POST /api/admin/checkin
  * Check in a user for an event using NFC ID
- * Admin only endpoint
+ * Admin and superadmin only endpoint
  */
 export async function POST(request: NextRequest) {
   try {

@@ -9,7 +9,7 @@ const profileService = new ProfileService();
 /**
  * GET /api/admin/events
  * Get all events
- * Admin only endpoint
+ * Admin and superadmin only endpoint
  */
 export async function GET() {
   try {
@@ -50,7 +50,7 @@ export async function GET() {
 /**
  * POST /api/admin/events
  * Create a new event
- * Admin only endpoint
+ * Admin and superadmin only endpoint
  */
 export async function POST(request: NextRequest) {
   console.log("[API] POST /api/admin/events - Starting");

@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Card, CardHeader, CardTitle, CardContent, Button } from "@uwdsc/ui";
-import { Plus, Loader2, QrCode } from "lucide-react";
+import { Plus, Loader2, QrCode, Edit, Radio, CheckCircle2, XCircle } from "lucide-react";
 import { QrScanner } from "@/components/admin/QrScanner";
 
 interface Event {
@@ -23,6 +23,11 @@ export default function AdminEventsPage() {
   const [loading, setLoading] = useState(true);
   const [selectedEventId, setSelectedEventId] = useState<string | null>(null);
   const [showScanner, setShowScanner] = useState(false);
+  const [readingNfc, setReadingNfc] = useState(false);
+  const [nfcResult, setNfcResult] = useState<{
+    success: boolean;
+    message: string;
+  } | null>(null);
 
   useEffect(() => {
     async function loadEvents() {
@@ -66,6 +71,202 @@ export default function AdminEventsPage() {
     setShowScanner(false);
   };
 
+  const handleNfcRead = async () => {
+    setReadingNfc(true);
+    setNfcResult(null);
+
+    try {
+      const urlResult: { url: string | null } = { url: null };
+
+      // Use Web NFC API to read
+      if ("NDEFReader" in window) {
+        // Chrome 89+ API
+        const reader = new (window as any).NDEFReader();
+        
+        // Wait for NFC scan with timeout
+        await new Promise<void>((resolve, reject) => {
+          let resolved = false;
+          const timeout = setTimeout(() => {
+            if (!resolved) {
+              resolved = true;
+              try {
+                if (reader.abort) reader.abort();
+              } catch {
+                // Ignore abort errors
+              }
+              reject(new Error("No NFC card detected. Please hold the card close to your device."));
+            }
+          }, 30000); // 30 second timeout
+
+          const handleReading = (event: any) => {
+            if (resolved) return;
+            resolved = true;
+            clearTimeout(timeout);
+            
+            try {
+              const message = event.message;
+              if (message.records && message.records.length > 0) {
+                const record = message.records[0];
+                const decoder = new TextDecoder();
+                
+                if (record.recordType === "url") {
+                  // URL records have the URL directly in the data
+                  if (typeof record.data === "string") {
+                    urlResult.url = record.data;
+                  } else {
+                    urlResult.url = decoder.decode(record.data);
+                  }
+                } else if (record.recordType === "text") {
+                  urlResult.url = decoder.decode(record.data);
+                } else if (record.recordType === "mime" && record.mediaType === "text/plain") {
+                  urlResult.url = decoder.decode(record.data);
+                }
+              }
+            } catch (parseError) {
+              console.error("Error parsing NFC record:", parseError);
+            }
+            
+            try {
+              if (reader.abort) reader.abort();
+            } catch {
+              // Ignore abort errors
+            }
+            resolve();
+          };
+
+          const handleError = (error: any) => {
+            if (resolved) return;
+            resolved = true;
+            clearTimeout(timeout);
+            reject(new Error(error.message || "Error reading NFC card"));
+          };
+
+          reader.addEventListener("reading", handleReading);
+          reader.addEventListener("readingerror", handleError);
+
+          // Start scanning
+          reader.scan().catch((error: any) => {
+            if (resolved) return;
+            resolved = true;
+            clearTimeout(timeout);
+            reject(error);
+          });
+        });
+      } else if ("nfc" in navigator && (navigator as any).nfc) {
+        // Chrome 89+ alternative API
+        const ndef = new (navigator as any).nfc.NDEFReader();
+        
+        // Wait for NFC scan with timeout
+        await new Promise<void>((resolve, reject) => {
+          let resolved = false;
+          const timeout = setTimeout(() => {
+            if (!resolved) {
+              resolved = true;
+              try {
+                if (ndef.abort) ndef.abort();
+              } catch {
+                // Ignore abort errors
+              }
+              reject(new Error("No NFC card detected. Please hold the card close to your device."));
+            }
+          }, 30000);
+
+          const handleReading = (event: any) => {
+            if (resolved) return;
+            resolved = true;
+            clearTimeout(timeout);
+            
+            try {
+              const message = event.message;
+              if (message.records && message.records.length > 0) {
+                const record = message.records[0];
+                const decoder = new TextDecoder();
+                
+                if (record.recordType === "url") {
+                  if (typeof record.data === "string") {
+                    urlResult.url = record.data;
+                  } else {
+                    urlResult.url = decoder.decode(record.data);
+                  }
+                } else if (record.recordType === "text") {
+                  urlResult.url = decoder.decode(record.data);
+                }
+              }
+            } catch (parseError) {
+              console.error("Error parsing NFC record:", parseError);
+            }
+            
+            try {
+              if (ndef.abort) ndef.abort();
+            } catch {
+              // Ignore abort errors
+            }
+            resolve();
+          };
+
+          const handleError = (error: any) => {
+            if (resolved) return;
+            resolved = true;
+            clearTimeout(timeout);
+            reject(new Error(error.message || "Error reading NFC card"));
+          };
+
+          ndef.addEventListener("reading", handleReading);
+          ndef.addEventListener("readingerror", handleError);
+
+          // Start scanning
+          ndef.scan().catch((error: any) => {
+            if (resolved) return;
+            resolved = true;
+            clearTimeout(timeout);
+            reject(error);
+          });
+        });
+      } else {
+        throw new Error("Web NFC API not available");
+      }
+
+      const url = urlResult.url;
+      if (url) {
+        setNfcResult({
+          success: true,
+          message: "Successfully read URL from NFC card!",
+        });
+        
+        // Extract NFC ID from URL and navigate to check-in page
+        const match = url.match(/\/admin\/checkin\/([^/\s]+)/);
+        if (match && match[1]) {
+          const nfcId = match[1];
+          router.push(`/admin/checkin/${nfcId}`);
+        } else {
+          // If it's just an NFC ID in the URL, try to extract it
+          const nfcIdMatch = url.match(/([a-zA-Z0-9_-]{16,})/);
+          if (nfcIdMatch && nfcIdMatch[1]) {
+            router.push(`/admin/checkin/${nfcIdMatch[1]}`);
+          } else {
+            setNfcResult({
+              success: false,
+              message: "Could not extract NFC ID from URL. Please try again.",
+            });
+          }
+        }
+      } else {
+        setNfcResult({
+          success: false,
+          message: "NFC card read but no URL found.",
+        });
+      }
+    } catch (error: any) {
+      console.error("Error reading NFC:", error);
+      setNfcResult({
+        success: false,
+        message: error.message || "Failed to read NFC card. Make sure the card is close to your device.",
+      });
+    } finally {
+      setReadingNfc(false);
+    }
+  };
+
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
@@ -78,10 +279,19 @@ export default function AdminEventsPage() {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <h1 className="text-3xl font-bold">Events</h1>
-        <Button onClick={() => router.push("/admin/events/add")}>
-          <Plus className="mr-2 h-4 w-4" />
-          Add Event
-        </Button>
+        <div className="flex gap-2">
+          <Button
+            variant="outline"
+            onClick={() => router.push("/admin/events/edit")}
+          >
+            <Edit className="mr-2 h-4 w-4" />
+            Edit Event
+          </Button>
+          <Button onClick={() => router.push("/admin/events/add")}>
+            <Plus className="mr-2 h-4 w-4" />
+            Add Event
+          </Button>
+        </div>
       </div>
 
       {/* Event Selection */}
@@ -121,8 +331,7 @@ export default function AdminEventsPage() {
               {selectedEventId && (
                 <div className="p-4 bg-muted rounded-md">
                   <p className="text-sm text-muted-foreground mb-2">
-                    Selected event is cached for NFC check-ins. Users will be
-                    checked into this event when they scan their NFC tag.
+                    Selected event is cached for NFC check-ins. Go to NFC tools to check hackers in.
                   </p>
                 </div>
               )}
@@ -134,7 +343,7 @@ export default function AdminEventsPage() {
       {/* QR Code Scanner */}
       <Card>
         <CardHeader>
-          <CardTitle>QR Code Scanner</CardTitle>
+          <CardTitle>QR Code Scanner (backup)</CardTitle>
         </CardHeader>
         <CardContent>
           {showScanner ? (
@@ -151,56 +360,57 @@ export default function AdminEventsPage() {
         </CardContent>
       </Card>
 
-      {/* Events List */}
-      {events.length > 0 && (
-        <Card>
-          <CardHeader>
-            <CardTitle>All Events</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              {events.map((event) => (
-                <div
-                  key={event.id}
-                  className="p-4 border rounded-md hover:bg-muted/50 transition-colors"
-                >
-                  <div className="flex justify-between items-start">
-                    <div>
-                      <h3 className="font-semibold text-lg">{event.name}</h3>
-                      {event.description && (
-                        <p className="text-sm text-muted-foreground mt-1">
-                          {event.description}
-                        </p>
-                      )}
-                      <div className="mt-2 text-sm text-muted-foreground">
-                        <p>
-                          Start: {new Date(event.start_time).toLocaleString()}
-                        </p>
-                        <p>
-                          End: {new Date(event.end_time).toLocaleString()}
-                        </p>
-                        {event.location && <p>Location: {event.location}</p>}
-                      </div>
-                    </div>
-                    <div className="flex gap-2">
-                      {event.registration_required && (
-                        <span className="px-2 py-1 text-xs bg-blue-500/10 text-blue-500 rounded">
-                          Registration Required
-                        </span>
-                      )}
-                      {event.payment_required && (
-                        <span className="px-2 py-1 text-xs bg-green-500/10 text-green-500 rounded">
-                          Payment Required
-                        </span>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              ))}
+      {/* NFC Reader */}
+      <Card>
+        <CardHeader>
+          <CardTitle>NFC Reader (backup)</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="p-4 rounded-md bg-yellow-500/10 text-yellow-500 border border-yellow-500/20">
+            <p className="text-sm font-medium">
+              ⚠️ Please use Android and Chrome!!! This feature requires Chrome on Android with HTTPS.
+            </p>
+          </div>
+
+          <Button
+            onClick={handleNfcRead}
+            disabled={readingNfc}
+            className="w-full"
+            size="lg"
+          >
+            {readingNfc ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Reading NFC Card... (Hold card close)
+              </>
+            ) : (
+              <>
+                <Radio className="mr-2 h-4 w-4" />
+                Read NFC Card
+              </>
+            )}
+          </Button>
+
+          {/* Result Message */}
+          {nfcResult && (
+            <div
+              className={`p-4 rounded-md flex items-center gap-2 ${
+                nfcResult.success
+                  ? "bg-green-500/10 text-green-500 border border-green-500/20"
+                  : "bg-red-500/10 text-red-500 border border-red-500/20"
+              }`}
+            >
+              {nfcResult.success ? (
+                <CheckCircle2 className="h-5 w-5" />
+              ) : (
+                <XCircle className="h-5 w-5" />
+              )}
+              <span>{nfcResult.message}</span>
             </div>
-          </CardContent>
-        </Card>
-      )}
+          )}
+        </CardContent>
+      </Card>
+
     </div>
   );
 }

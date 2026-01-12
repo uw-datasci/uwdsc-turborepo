@@ -27,6 +27,11 @@ export async function proxy(request: NextRequest) {
 
   // --- Dispatch to specific middleware handlers ---
 
+  // Check if pathname starts with any protected route
+  const isProtectedRoute = Array.from(PROTECTED_ROUTES).some(route => 
+    pathname === route || pathname.startsWith(`${route}/`)
+  );
+
   switch (true) {
     // 1. Handle Authenticated users trying to access auth pages
     case AUTH_ROUTES.has(pathname):
@@ -35,7 +40,7 @@ export async function proxy(request: NextRequest) {
     case pathname === APPLY_ROUTE:
       return withApply(request, user);
     // 3. Handle Authenticated users trying to access protected routes
-    case PROTECTED_ROUTES.has(pathname):
+    case isProtectedRoute:
       return await withProtected(request, user);
   }
 

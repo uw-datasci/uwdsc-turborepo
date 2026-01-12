@@ -20,7 +20,7 @@ export function NfcCard() {
           if (data.nfc_id) {
             setNfcId(data.nfc_id);
           } else {
-            // If no NFC ID, try to generate it via admin endpoint (if user is admin)
+            // If no NFC ID, try to generate it via admin endpoint (if user is admin or superadmin)
             try {
               const adminResponse = await fetch("/api/admin/nfc");
               if (adminResponse.ok) {
@@ -45,7 +45,8 @@ export function NfcCard() {
   const handleCopy = async () => {
     if (!nfcId) return;
 
-    const baseUrl = window.location.origin;
+    // Use the actual application URL (from window.location.origin)
+    const baseUrl = typeof window !== "undefined" ? window.location.origin : "";
     const checkInUrl = `${baseUrl}/admin/checkin/${nfcId}`;
 
     try {
@@ -76,8 +77,11 @@ export function NfcCard() {
     return null;
   }
 
+  // Use the actual application URL (from window.location.origin)
   const baseUrl = typeof window !== "undefined" ? window.location.origin : "";
   const checkInUrl = `${baseUrl}/admin/checkin/${nfcId}`;
+  // NFC ID should be displayed as https://cxc.uwdatascience.ca//admin/checkin/{nfcId}
+  const nfcIdDisplay = `https://cxc.uwdatascience.ca/admin/checkin/${nfcId}`;
   const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(checkInUrl)}`;
 
   return (
@@ -109,7 +113,7 @@ export function NfcCard() {
                 NFC ID
               </label>
               <div className="p-3 bg-white/5 border border-white/10 font-mono text-sm text-white break-all">
-                {nfcId}
+                {nfcIdDisplay}
               </div>
             </div>
 
@@ -138,8 +142,7 @@ export function NfcCard() {
             </div>
 
             <p className="text-white/60 text-sm">
-              Scan this QR code or use the URL to check in at events. Write the
-              URL to your NFC tag for quick access.
+              Scan this QR code or use your NFC to check in at events. 
             </p>
           </div>
         </div>
