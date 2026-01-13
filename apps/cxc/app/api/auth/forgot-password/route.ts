@@ -13,10 +13,14 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       );
     }
 
-    const requestUrl = new URL(request.url);
     const authService = await createAuthService();
-    // Use the request origin dynamically (like window.location.origin on client)
-    const emailRedirectTo = `${requestUrl.origin}/api/auth/callback?next=/reset-password`;
+    // Get origin dynamically from request headers (works behind proxies)
+    const host = request.headers.get("x-forwarded-host") || request.headers.get("host");
+    const forwardedProto = request.headers.get("x-forwarded-proto");
+    // Determine protocol: use forwarded-proto if available, otherwise infer from host or default to https
+    const protocol = forwardedProto || (host?.includes("localhost") ? "http" : "https");
+    const origin = `${protocol}://${host}`;
+    const emailRedirectTo = `${origin}/api/auth/callback?next=/reset-password`;
     const result = await authService.forgotPassword(email, emailRedirectTo);
 
     if (!result.success) {
