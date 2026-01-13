@@ -52,22 +52,6 @@ export interface ResendVerificationEmailResponse {
   message: string;
 }
 
-export interface ForgotPasswordRequest {
-  email: string;
-}
-
-export interface ForgotPasswordResponse {
-  message: string;
-}
-
-export interface ResetPasswordRequest {
-  password: string;
-}
-
-export interface ResetPasswordResponse {
-  message: string;
-}
-
 // ============================================================================
 // User Types
 // ============================================================================

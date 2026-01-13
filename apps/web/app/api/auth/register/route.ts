@@ -13,9 +13,8 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       );
     }
 
-    const requestUrl = new URL(request.url);
     const authService = await createAuthService();
-    const emailRedirectTo = `${requestUrl.origin}/api/auth/callback?next=/complete-profile`;
+    const emailRedirectTo = `${process.env.NEXT_PUBLIC_APP_URL}/api/auth/callback?next=/complete-profile`;
     const result = await authService.register(
       { email, password },
       emailRedirectTo,
