@@ -17,7 +17,6 @@ import {
 } from "@uwdsc/ui";
 import { useRouter } from "next/navigation";
 import { Loader2, Eye, EyeOff, CheckCircle } from "lucide-react";
-import { renderTextField } from "@/components/FormHelpers";
 import { resetPassword } from "@/lib/api";
 import AppSection from "@/components/application/AppSection";
 import Link from "next/link";
@@ -75,7 +74,7 @@ export function ResetPasswordForm() {
       if (accessToken && type === "recovery") {
         try {
           const supabase = createSupabaseBrowserClient();
-          const { data, error } = await supabase.auth.setSession({
+          const { error } = await supabase.auth.setSession({
             access_token: accessToken,
             refresh_token: hashParams.get("refresh_token") || "",
           });
