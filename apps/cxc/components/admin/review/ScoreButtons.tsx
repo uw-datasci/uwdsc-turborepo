@@ -6,18 +6,22 @@ interface ScoreButtonsProps {
   readonly selected: number | null;
   readonly onSelect: (score: number) => void;
   readonly label: string;
+  readonly maxScore?: number;
 }
 
 export function ScoreButtons({
   selected,
   onSelect,
   label,
+  maxScore = 10,
 }: Readonly<ScoreButtonsProps>) {
+  const scores = Array.from({ length: maxScore + 1 }, (_, i) => i);
+
   return (
     <div className="flex flex-col gap-3">
       <label className="text-sm font-medium">{label}</label>
       <div className="flex flex-wrap gap-2">
-        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((score) => (
+        {scores.map((score) => (
           <CxCButton
             key={score}
             type="button"

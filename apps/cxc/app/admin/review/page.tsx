@@ -50,7 +50,8 @@ export default function ReviewPage() {
   const [application, setApplication] = useState<Application | null>(null);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
-  const [basicInfoScore, setBasicInfoScore] = useState<number | null>(null);
+  const [resumeScore, setResumeScore] = useState<number | null>(null);
+  const [linksScore, setLinksScore] = useState<number | null>(null);
   const [q1Score, setQ1Score] = useState<number | null>(null);
   const [q2Score, setQ2Score] = useState<number | null>(null);
   const [submitted, setSubmitted] = useState(false);
@@ -59,7 +60,8 @@ export default function ReviewPage() {
   const fetchApplication = async () => {
     setLoading(true);
     setError(null);
-    setBasicInfoScore(null);
+    setResumeScore(null);
+    setLinksScore(null);
     setQ1Score(null);
     setQ2Score(null);
     setSubmitted(false);
@@ -82,10 +84,42 @@ export default function ReviewPage() {
     fetchApplication();
   }, []);
 
+  // Auto-click score of 0 if fields don't exist
+  useEffect(() => {
+    if (!application) return;
+
+    // Auto-set resume score to 0 if resume doesn't exist
+    if (!application.resume_url && resumeScore === null) {
+      setResumeScore(0);
+    }
+
+    // Auto-set links score to 0 if no links exist
+    if (
+      !application.github_url &&
+      !application.linkedin_url &&
+      !application.website_url &&
+      !application.other_url &&
+      linksScore === null
+    ) {
+      setLinksScore(0);
+    }
+
+    // Auto-set Q1 score to 0 if Q1 doesn't exist
+    if (!application.cxc_q1 && q1Score === null) {
+      setQ1Score(0);
+    }
+
+    // Auto-set Q2 score to 0 if Q2 doesn't exist
+    if (!application.cxc_q2 && q2Score === null) {
+      setQ2Score(0);
+    }
+  }, [application, resumeScore, linksScore, q1Score, q2Score]);
+
   const handleSubmit = async () => {
     if (
       !application ||
-      basicInfoScore === null ||
+      resumeScore === null ||
+      linksScore === null ||
       q1Score === null ||
       q2Score === null
     ) {
@@ -98,7 +132,8 @@ export default function ReviewPage() {
     try {
       await submitReview({
         application_id: application.id,
-        basic_info_score: basicInfoScore,
+        resume_score: resumeScore,
+        links_score: linksScore,
         q1_score: q1Score,
         q2_score: q2Score,
       });
@@ -205,14 +240,128 @@ export default function ReviewPage() {
 
         <div className="space-y-6">
           {/* Basic Information Section */}
-          <BasicInformation
-            application={application}
-            selectedScore={basicInfoScore}
-            onScoreSelect={setBasicInfoScore}
-          />
+          <BasicInformation application={application} />
+
+          {/* Resume Section */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Resume</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {application.resume_url ? (
+                <div className="space-y-2">
+                  <a
+                    href={application.resume_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-blue-500 hover:underline font-medium inline-block"
+                  >
+                    View Resume ↗
+                  </a>
+                </div>
+              ) : (
+                <div className="space-y-2">
+                  <p className="text-sm text-muted-foreground">
+                    No resume provided
+                  </p>
+                </div>
+              )}
+
+              <div className="pt-4 border-t">
+                <ScoreButtons
+                  selected={resumeScore}
+                  onSelect={setResumeScore}
+                  label="Rate Resume (0-3)"
+                  maxScore={3}
+                />
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Links Section */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Links</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="space-y-2 text-sm">
+                {application.github_url && (
+                  <div>
+                    <span className="font-medium">GitHub:</span>{" "}
+                    <a
+                      href={application.github_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-blue-500 hover:underline"
+                    >
+                      {application.github_url}
+                    </a>
+                  </div>
+                )}
+                {application.linkedin_url && (
+                  <div>
+                    <span className="font-medium">LinkedIn:</span>{" "}
+                    <a
+                      href={application.linkedin_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-blue-500 hover:underline"
+                    >
+                      {application.linkedin_url}
+                    </a>
+                  </div>
+                )}
+                {application.website_url && (
+                  <div>
+                    <span className="font-medium">Website/X:</span>{" "}
+                    <a
+                      href={application.website_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-blue-500 hover:underline"
+                    >
+                      {application.website_url}
+                    </a>
+                  </div>
+                )}
+                {application.other_url && (
+                  <div>
+                    <span className="font-medium">Other Link:</span>{" "}
+                    <a
+                      href={application.other_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-blue-500 hover:underline"
+                    >
+                      {application.other_url}
+                    </a>
+                  </div>
+                )}
+                {!application.github_url &&
+                  !application.linkedin_url &&
+                  !application.website_url &&
+                  !application.other_url && (
+                    <div>
+                      <p className="text-sm text-muted-foreground">
+                        No links provided
+                      </p>
+                    </div>
+                  )}
+              </div>
+
+              <div className="pt-4 border-t">
+                <ScoreButtons
+                  selected={linksScore}
+                  onSelect={setLinksScore}
+                  label="Rate Links (0-2)"
+                  maxScore={2}
+                />
+              </div>
+            </CardContent>
+          </Card>
 
           {/* Application Question 1 Section */}
-          {application.cxc_q1 && (
+          {application.cxc_q1 ? (
             <Card>
               <CardHeader>
                 <CardTitle>
@@ -231,7 +380,33 @@ export default function ReviewPage() {
                   <ScoreButtons
                     selected={q1Score}
                     onSelect={setQ1Score}
-                    label="Rate Question 1 (1-10)"
+                    label="Rate Question 1 (0-7)"
+                    maxScore={7}
+                  />
+                </div>
+              </CardContent>
+            </Card>
+          ) : (
+            <Card>
+              <CardHeader>
+                <CardTitle>
+                  Tell us about a technical project that you have worked on.
+                  What did you learn? What challenges did you face?
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="space-y-2">
+                  <p className="text-sm text-muted-foreground">
+                    No answer provided
+                  </p>
+                </div>
+
+                <div className="pt-4 border-t">
+                  <ScoreButtons
+                    selected={q1Score}
+                    onSelect={setQ1Score}
+                    label="Rate Question 1 (0-7)"
+                    maxScore={7}
                   />
                 </div>
               </CardContent>
@@ -239,7 +414,7 @@ export default function ReviewPage() {
           )}
 
           {/* Application Question 2 Section */}
-          {application.cxc_q2 && (
+          {application.cxc_q2 ? (
             <Card>
               <CardHeader>
                 <CardTitle>Write us a Haiku</CardTitle>
@@ -255,7 +430,30 @@ export default function ReviewPage() {
                   <ScoreButtons
                     selected={q2Score}
                     onSelect={setQ2Score}
-                    label="Rate Question 2 (1-10)"
+                    label="Rate Question 2 (0-3)"
+                    maxScore={3}
+                  />
+                </div>
+              </CardContent>
+            </Card>
+          ) : (
+            <Card>
+              <CardHeader>
+                <CardTitle>Write us a Haiku</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="space-y-2">
+                  <p className="text-sm text-muted-foreground">
+                    No answer provided
+                  </p>
+                </div>
+
+                <div className="pt-4 border-t">
+                  <ScoreButtons
+                    selected={q2Score}
+                    onSelect={setQ2Score}
+                    label="Rate Question 2 (0-3)"
+                    maxScore={3}
                   />
                 </div>
               </CardContent>
@@ -269,7 +467,8 @@ export default function ReviewPage() {
               onClick={handleSubmit}
               disabled={
                 submitting ||
-                basicInfoScore === null ||
+                resumeScore === null ||
+                linksScore === null ||
                 q1Score === null ||
                 q2Score === null
               }
@@ -284,7 +483,10 @@ export default function ReviewPage() {
                 "Submit Review"
               )}
             </CxCButton>
-            {basicInfoScore === null || q1Score === null || q2Score === null ? (
+            {resumeScore === null ||
+            linksScore === null ||
+            q1Score === null ||
+            q2Score === null ? (
               <p className="text-sm text-muted-foreground text-center mt-2">
                 Please rate all sections before submitting
               </p>

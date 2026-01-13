@@ -1,7 +1,6 @@
 "use client";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@uwdsc/ui";
-import { ScoreButtons } from "./ScoreButtons";
 
 interface Application {
   id: string;
@@ -35,14 +34,10 @@ interface Application {
 
 interface BasicInformationProps {
   readonly application: Application;
-  readonly selectedScore: number | null;
-  readonly onScoreSelect: (score: number) => void;
 }
 
 export function BasicInformation({
   application,
-  selectedScore,
-  onScoreSelect,
 }: Readonly<BasicInformationProps>) {
   return (
     <Card>
@@ -121,74 +116,6 @@ export function BasicInformation({
               {application.num_hackathons}
             </div>
           )}
-          {application.github_url && (
-            <div>
-              <span className="font-medium">GitHub:</span>{" "}
-              <a
-                href={application.github_url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-blue-500 hover:underline"
-              >
-                {application.github_url}
-              </a>
-            </div>
-          )}
-          {application.linkedin_url && (
-            <div>
-              <span className="font-medium">LinkedIn:</span>{" "}
-              <a
-                href={application.linkedin_url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-blue-500 hover:underline"
-              >
-                {application.linkedin_url}
-              </a>
-            </div>
-          )}
-          {application.website_url && (
-            <div>
-              <span className="font-medium">Website/X:</span>{" "}
-              <a
-                href={application.website_url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-blue-500 hover:underline"
-              >
-                {application.website_url}
-              </a>
-            </div>
-          )}
-          {application.other_url && (
-            <div>
-              <span className="font-medium">Other Link:</span>{" "}
-              <a
-                href={application.other_url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-blue-500 hover:underline"
-              >
-                {application.other_url}
-              </a>
-            </div>
-          )}
-          {application.resume_url && (
-            <div className="pt-2">
-              <span className="font-medium">Resume:</span>{" "}
-              <a
-                href={application.resume_url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-blue-500 hover:underline font-medium"
-                onClick={(e) => {
-                  e.stopPropagation();
-                }}
-              >
-                View Resume ↗
-              </a>
-            </div>
-          )}
           {application.team_members?.trim() && (
             <div className="pt-2">
               {application.team_name && (
@@ -236,14 +163,6 @@ export function BasicInformation({
               </div>
             </div>
           )}
-        </div>
-
-        <div className="pt-4 border-t">
-          <ScoreButtons
-            selected={selectedScore}
-            onSelect={onScoreSelect}
-            label="Rate Basic Information (1-10)"
-          />
         </div>
       </CardContent>
     </Card>

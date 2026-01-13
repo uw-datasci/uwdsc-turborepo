@@ -104,7 +104,8 @@ CREATE TABLE "public"."reviews" (
   "id" UUID NOT NULL DEFAULT gen_random_uuid(),
   "application_id" UUID NOT NULL,
   "reviewer_id" UUID NOT NULL,
-  "basic_info_score" INTEGER NOT NULL,
+  "resume_score" INTEGER NOT NULL,
+  "links_score" INTEGER NOT NULL,
   "q1_score" INTEGER NOT NULL,
   "q2_score" INTEGER NOT NULL,
   "reviewed_at" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
@@ -114,22 +115,28 @@ CREATE TABLE "public"."reviews" (
   CONSTRAINT "reviews_application_id_reviewer_id_key" UNIQUE ("application_id", "reviewer_id"),
   CONSTRAINT "reviews_application_id_fkey" FOREIGN KEY ("application_id") REFERENCES "public"."applications" ("id") ON DELETE CASCADE,
   CONSTRAINT "reviews_reviewer_id_fkey" FOREIGN KEY ("reviewer_id") REFERENCES "public"."profiles" ("id") ON DELETE CASCADE,
-  CONSTRAINT "reviews_basic_info_score_check" CHECK (
+  CONSTRAINT "reviews_resume_score_check" CHECK (
     (
-      ("basic_info_score" >= 1)
-      AND ("basic_info_score" <= 10)
+      ("resume_score" >= 0)
+      AND ("resume_score" <= 3)
+    )
+  ),
+  CONSTRAINT "reviews_links_score_check" CHECK (
+    (
+      ("links_score" >= 0)
+      AND ("links_score" <= 2)
     )
   ),
   CONSTRAINT "reviews_q1_score_check" CHECK (
     (
-      ("q1_score" >= 1)
-      AND ("q1_score" <= 10)
+      ("q1_score" >= 0)
+      AND ("q1_score" <= 7)
     )
   ),
   CONSTRAINT "reviews_q2_score_check" CHECK (
     (
-      ("q2_score" >= 1)
-      AND ("q2_score" <= 10)
+      ("q2_score" >= 0)
+      AND ("q2_score" <= 3)
     )
   )
 );
