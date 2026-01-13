@@ -11,13 +11,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     }
 
     const authService = await createAuthService();
-    // Get origin dynamically from request headers (works behind proxies)
-    const host = request.headers.get("x-forwarded-host") || request.headers.get("host");
-    const forwardedProto = request.headers.get("x-forwarded-proto");
-    // Determine protocol: use forwarded-proto if available, otherwise infer from host or default to https
-    const protocol = forwardedProto || (host?.includes("localhost") ? "http" : "https");
-    const origin = `${protocol}://${host}`;
-    const emailRedirectTo = `${origin}/api/auth/callback?next=/`;
+    const emailRedirectTo = `${process.env.NEXT_PUBLIC_SITE_URL}/api/auth/callback?next=/`;
     const result = await authService.resendVerificationEmail(
       email,
       emailRedirectTo,
