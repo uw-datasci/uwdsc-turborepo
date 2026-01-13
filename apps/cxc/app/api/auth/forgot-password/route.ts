@@ -15,6 +15,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 
     const requestUrl = new URL(request.url);
     const authService = await createAuthService();
+    // Use the request origin dynamically (like window.location.origin on client)
     const emailRedirectTo = `${requestUrl.origin}/api/auth/callback?next=/reset-password`;
     const result = await authService.forgotPassword(email, emailRedirectTo);
 
