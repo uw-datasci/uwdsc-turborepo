@@ -10,8 +10,9 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       return NextResponse.json({ error: "Email is required" }, { status: 400 });
     }
 
+    const requestUrl = new URL(request.url);
     const authService = await createAuthService();
-    const emailRedirectTo = `${process.env.NEXT_PUBLIC_APP_URL}/api/auth/callback?next=/`;
+    const emailRedirectTo = `${requestUrl.origin}/api/auth/callback?next=/`;
     const result = await authService.resendVerificationEmail(
       email,
       emailRedirectTo,

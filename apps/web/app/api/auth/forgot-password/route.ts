@@ -7,19 +7,22 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     const { email } = body;
 
     if (!email) {
-      return NextResponse.json({ error: "Email is required" }, { status: 400 });
+      return NextResponse.json(
+        { error: "Email is required" },
+        { status: 400 },
+      );
     }
 
     const requestUrl = new URL(request.url);
     const authService = await createAuthService();
-    const emailRedirectTo = `${requestUrl.origin}/api/auth/callback?next=/complete-profile`;
-    const result = await authService.resendVerificationEmail(
-      email,
-      emailRedirectTo,
-    );
+    const emailRedirectTo = `${requestUrl.origin}/api/auth/callback?next=/reset-password`;
+    const result = await authService.forgotPassword(email, emailRedirectTo);
 
     if (!result.success) {
-      return NextResponse.json({ error: result.error }, { status: 400 });
+      return NextResponse.json(
+        { error: result.error },
+        { status: 400 },
+      );
     }
 
     return NextResponse.json({
@@ -27,7 +30,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       message: result.message,
     });
   } catch (error) {
-    console.error("Resend verification error:", error);
+    console.error("Forgot password error:", error);
     return NextResponse.json(
       { error: "An unexpected error occurred" },
       { status: 500 },

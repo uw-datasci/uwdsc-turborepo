@@ -11,6 +11,8 @@ export {
   getAuthMe,
   resendVerificationEmail,
   signOut,
+  forgotPassword,
+  resetPassword,
 } from "./auth";
 
 // Export all user functions
