@@ -6,6 +6,53 @@ import { Card, CardHeader, CardTitle, CardContent, Button } from "@uwdsc/ui";
 import { Plus, Loader2, QrCode, Edit, Radio, CheckCircle2, XCircle } from "lucide-react";
 import { QrScanner } from "@/components/admin/QrScanner";
 
+// Web NFC API types
+interface NDEFRecord {
+  recordType: string;
+  data: string | Uint8Array;
+  mediaType?: string;
+}
+
+interface NDEFMessage {
+  records: NDEFRecord[];
+}
+
+interface NDEFReadingEvent {
+  message: NDEFMessage;
+}
+
+interface NDEFErrorEvent {
+  message?: string;
+}
+
+interface NDEFReader {
+  scan(): Promise<void>;
+  abort?(): void;
+  addEventListener(
+    type: "reading",
+    callback: (event: NDEFReadingEvent) => void,
+  ): void;
+  addEventListener(
+    type: "readingerror",
+    callback: (event: NDEFErrorEvent) => void,
+  ): void;
+}
+
+interface NDEFWriter {
+  write(options: { records: NDEFRecord[] }): Promise<void>;
+}
+
+interface WindowWithNDEF extends Window {
+  NDEFReader: new () => NDEFReader;
+}
+
+interface NavigatorWithNFC extends Navigator {
+  nfc?: {
+    NDEFReader: new () => NDEFReader;
+    NDEFWriter: new () => NDEFWriter;
+  };
+}
+
 interface Event {
   id: string;
   name: string;
@@ -81,7 +128,7 @@ export default function AdminEventsPage() {
       // Use Web NFC API to read
       if ("NDEFReader" in window) {
         // Chrome 89+ API
-        const reader = new (window as any).NDEFReader();
+        const reader = new (window as unknown as WindowWithNDEF).NDEFReader();
         
         // Wait for NFC scan with timeout
         await new Promise<void>((resolve, reject) => {
@@ -98,7 +145,7 @@ export default function AdminEventsPage() {
             }
           }, 30000); // 30 second timeout
 
-          const handleReading = (event: any) => {
+          const handleReading = (event: NDEFReadingEvent) => {
             if (resolved) return;
             resolved = true;
             clearTimeout(timeout);
@@ -107,19 +154,28 @@ export default function AdminEventsPage() {
               const message = event.message;
               if (message.records && message.records.length > 0) {
                 const record = message.records[0];
+                if (!record) return;
                 const decoder = new TextDecoder();
                 
                 if (record.recordType === "url") {
                   // URL records have the URL directly in the data
                   if (typeof record.data === "string") {
                     urlResult.url = record.data;
-                  } else {
+                  } else if (record.data instanceof Uint8Array) {
                     urlResult.url = decoder.decode(record.data);
                   }
                 } else if (record.recordType === "text") {
-                  urlResult.url = decoder.decode(record.data);
+                  if (record.data instanceof Uint8Array) {
+                    urlResult.url = decoder.decode(record.data);
+                  } else if (typeof record.data === "string") {
+                    urlResult.url = record.data;
+                  }
                 } else if (record.recordType === "mime" && record.mediaType === "text/plain") {
-                  urlResult.url = decoder.decode(record.data);
+                  if (record.data instanceof Uint8Array) {
+                    urlResult.url = decoder.decode(record.data);
+                  } else if (typeof record.data === "string") {
+                    urlResult.url = record.data;
+                  }
                 }
               }
             } catch (parseError) {
@@ -134,7 +190,7 @@ export default function AdminEventsPage() {
             resolve();
           };
 
-          const handleError = (error: any) => {
+          const handleError = (error: NDEFErrorEvent) => {
             if (resolved) return;
             resolved = true;
             clearTimeout(timeout);
@@ -145,16 +201,16 @@ export default function AdminEventsPage() {
           reader.addEventListener("readingerror", handleError);
 
           // Start scanning
-          reader.scan().catch((error: any) => {
+          reader.scan().catch((error: Error) => {
             if (resolved) return;
             resolved = true;
             clearTimeout(timeout);
             reject(error);
           });
         });
-      } else if ("nfc" in navigator && (navigator as any).nfc) {
+      } else if ("nfc" in navigator && (navigator as NavigatorWithNFC).nfc) {
         // Chrome 89+ alternative API
-        const ndef = new (navigator as any).nfc.NDEFReader();
+        const ndef = new (navigator as NavigatorWithNFC).nfc!.NDEFReader();
         
         // Wait for NFC scan with timeout
         await new Promise<void>((resolve, reject) => {
@@ -171,7 +227,7 @@ export default function AdminEventsPage() {
             }
           }, 30000);
 
-          const handleReading = (event: any) => {
+          const handleReading = (event: NDEFReadingEvent) => {
             if (resolved) return;
             resolved = true;
             clearTimeout(timeout);
@@ -180,16 +236,21 @@ export default function AdminEventsPage() {
               const message = event.message;
               if (message.records && message.records.length > 0) {
                 const record = message.records[0];
+                if (!record) return;
                 const decoder = new TextDecoder();
                 
                 if (record.recordType === "url") {
                   if (typeof record.data === "string") {
                     urlResult.url = record.data;
-                  } else {
+                  } else if (record.data instanceof Uint8Array) {
                     urlResult.url = decoder.decode(record.data);
                   }
                 } else if (record.recordType === "text") {
-                  urlResult.url = decoder.decode(record.data);
+                  if (record.data instanceof Uint8Array) {
+                    urlResult.url = decoder.decode(record.data);
+                  } else if (typeof record.data === "string") {
+                    urlResult.url = record.data;
+                  }
                 }
               }
             } catch (parseError) {
@@ -204,7 +265,7 @@ export default function AdminEventsPage() {
             resolve();
           };
 
-          const handleError = (error: any) => {
+          const handleError = (error: NDEFErrorEvent) => {
             if (resolved) return;
             resolved = true;
             clearTimeout(timeout);
@@ -215,7 +276,7 @@ export default function AdminEventsPage() {
           ndef.addEventListener("readingerror", handleError);
 
           // Start scanning
-          ndef.scan().catch((error: any) => {
+          ndef.scan().catch((error: Error) => {
             if (resolved) return;
             resolved = true;
             clearTimeout(timeout);
@@ -256,11 +317,14 @@ export default function AdminEventsPage() {
           message: "NFC card read but no URL found.",
         });
       }
-    } catch (error: any) {
+    } catch (error) {
       console.error("Error reading NFC:", error);
+      const errorMessage = error instanceof Error 
+        ? error.message 
+        : "Failed to read NFC card. Make sure the card is close to your device.";
       setNfcResult({
         success: false,
-        message: error.message || "Failed to read NFC card. Make sure the card is close to your device.",
+        message: errorMessage,
       });
     } finally {
       setReadingNfc(false);

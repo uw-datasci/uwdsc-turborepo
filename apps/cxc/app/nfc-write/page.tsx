@@ -4,6 +4,26 @@ import { useEffect, useState } from "react";
 import { Card, CardHeader, CardTitle, CardContent, Button, Input } from "@uwdsc/ui";
 import { CheckCircle2, XCircle, Loader2, Copy } from "lucide-react";
 
+// Web NFC API types
+interface NDEFRecord {
+  recordType: string;
+  data: string | Uint8Array;
+}
+
+interface NDEFWriter {
+  write(options: { records: NDEFRecord[] }): Promise<void>;
+}
+
+interface WindowWithNDEF extends Window {
+  NDEFWriter: new () => NDEFWriter;
+}
+
+interface NavigatorWithNFC extends Navigator {
+  nfc?: {
+    NDEFWriter: new () => NDEFWriter;
+  };
+}
+
 export default function NfcWritePage() {
   const [nfcUrl, setNfcUrl] = useState<string>("");
   const [writing, setWriting] = useState(false);
@@ -49,7 +69,7 @@ export default function NfcWritePage() {
       // Use Web NFC API to write
       if ("NDEFWriter" in window) {
         // Chrome 89+ API
-        const writer = new (window as any).NDEFWriter();
+        const writer = new (window as unknown as WindowWithNDEF).NDEFWriter();
         await writer.write({
           records: [
             {
@@ -58,9 +78,9 @@ export default function NfcWritePage() {
             },
           ],
         });
-      } else if ("nfc" in navigator && (navigator as any).nfc) {
+      } else if ("nfc" in navigator && (navigator as NavigatorWithNFC).nfc) {
         // Chrome 89+ alternative API
-        const ndef = new (navigator as any).nfc.NDEFWriter();
+        const ndef = new (navigator as NavigatorWithNFC).nfc!.NDEFWriter();
         await ndef.write({
           records: [
             {
@@ -82,11 +102,14 @@ export default function NfcWritePage() {
       setTimeout(() => {
         setResult(null);
       }, 5000);
-    } catch (error: any) {
+    } catch (error) {
       console.error("Error writing NFC:", error);
+      const errorMessage = error instanceof Error 
+        ? error.message 
+        : "Failed to write to NFC card. Make sure the card is close to your device.";
       setResult({
         success: false,
-        message: error.message || "Failed to write to NFC card. Make sure the card is close to your device.",
+        message: errorMessage,
       });
     } finally {
       setWriting(false);
@@ -104,7 +127,7 @@ export default function NfcWritePage() {
           setNfcUrl(`${baseUrl}/admin/checkin/${text}`);
         }
       }
-    } catch (error) {
+    } catch {
       setResult({
         success: false,
         message: "Could not read from clipboard. Please paste manually.",

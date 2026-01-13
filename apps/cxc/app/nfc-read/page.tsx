@@ -4,6 +4,48 @@ import { useEffect, useState } from "react";
 import { Card, CardHeader, CardTitle, CardContent, Button } from "@uwdsc/ui";
 import { CheckCircle2, XCircle, Loader2, Copy, ExternalLink } from "lucide-react";
 
+// Web NFC API types
+interface NDEFRecord {
+  recordType: string;
+  data: string | Uint8Array;
+  mediaType?: string;
+}
+
+interface NDEFMessage {
+  records: NDEFRecord[];
+}
+
+interface NDEFReadingEvent {
+  message: NDEFMessage;
+}
+
+interface NDEFErrorEvent {
+  message?: string;
+}
+
+interface NDEFReader {
+  scan(): Promise<void>;
+  abort?(): void;
+  addEventListener(
+    type: "reading",
+    callback: (event: NDEFReadingEvent) => void,
+  ): void;
+  addEventListener(
+    type: "readingerror",
+    callback: (event: NDEFErrorEvent) => void,
+  ): void;
+}
+
+interface WindowWithNDEF extends Window {
+  NDEFReader: new () => NDEFReader;
+}
+
+interface NavigatorWithNFC extends Navigator {
+  nfc?: {
+    NDEFReader: new () => NDEFReader;
+  };
+}
+
 export default function NfcReadPage() {
   const [reading, setReading] = useState(false);
   const [nfcData, setNfcData] = useState<string | null>(null);
@@ -39,7 +81,7 @@ export default function NfcReadPage() {
       // Use Web NFC API to read
       if ("NDEFReader" in window) {
         // Chrome 89+ API
-        const reader = new (window as any).NDEFReader();
+        const reader = new (window as unknown as WindowWithNDEF).NDEFReader();
         
         // Wait for NFC scan with timeout
         await new Promise<void>((resolve, reject) => {
@@ -49,12 +91,14 @@ export default function NfcReadPage() {
               resolved = true;
               try {
                 if (reader.abort) reader.abort();
-              } catch {}
+              } catch {
+                // Ignore abort errors
+              }
               reject(new Error("No NFC card detected. Please hold the card close to your device."));
             }
           }, 30000); // 30 second timeout
 
-          const handleReading = (event: any) => {
+          const handleReading = (event: NDEFReadingEvent) => {
             if (resolved) return;
             resolved = true;
             clearTimeout(timeout);
@@ -63,19 +107,28 @@ export default function NfcReadPage() {
               const message = event.message;
               if (message.records && message.records.length > 0) {
                 const record = message.records[0];
+                if (!record) return;
                 const decoder = new TextDecoder();
                 
                 if (record.recordType === "url") {
                   // URL records have the URL directly in the data
                   if (typeof record.data === "string") {
                     url = record.data;
-                  } else {
+                  } else if (record.data instanceof Uint8Array) {
                     url = decoder.decode(record.data);
                   }
                 } else if (record.recordType === "text") {
-                  url = decoder.decode(record.data);
+                  if (record.data instanceof Uint8Array) {
+                    url = decoder.decode(record.data);
+                  } else if (typeof record.data === "string") {
+                    url = record.data;
+                  }
                 } else if (record.recordType === "mime" && record.mediaType === "text/plain") {
-                  url = decoder.decode(record.data);
+                  if (record.data instanceof Uint8Array) {
+                    url = decoder.decode(record.data);
+                  } else if (typeof record.data === "string") {
+                    url = record.data;
+                  }
                 }
               }
             } catch (parseError) {
@@ -84,11 +137,13 @@ export default function NfcReadPage() {
             
             try {
               if (reader.abort) reader.abort();
-            } catch {}
+            } catch {
+              // Ignore abort errors
+            }
             resolve();
           };
 
-          const handleError = (error: any) => {
+          const handleError = (error: NDEFErrorEvent) => {
             if (resolved) return;
             resolved = true;
             clearTimeout(timeout);
@@ -99,16 +154,16 @@ export default function NfcReadPage() {
           reader.addEventListener("readingerror", handleError);
 
           // Start scanning
-          reader.scan().catch((error: any) => {
+          reader.scan().catch((error: Error) => {
             if (resolved) return;
             resolved = true;
             clearTimeout(timeout);
             reject(error);
           });
         });
-      } else if ("nfc" in navigator && (navigator as any).nfc) {
+      } else if ("nfc" in navigator && (navigator as NavigatorWithNFC).nfc) {
         // Chrome 89+ alternative API
-        const ndef = new (navigator as any).nfc.NDEFReader();
+        const ndef = new (navigator as NavigatorWithNFC).nfc!.NDEFReader();
         
         // Wait for NFC scan with timeout
         await new Promise<void>((resolve, reject) => {
@@ -118,12 +173,14 @@ export default function NfcReadPage() {
               resolved = true;
               try {
                 if (ndef.abort) ndef.abort();
-              } catch {}
+              } catch {
+                // Ignore abort errors
+              }
               reject(new Error("No NFC card detected. Please hold the card close to your device."));
             }
           }, 30000);
 
-          const handleReading = (event: any) => {
+          const handleReading = (event: NDEFReadingEvent) => {
             if (resolved) return;
             resolved = true;
             clearTimeout(timeout);
@@ -132,16 +189,21 @@ export default function NfcReadPage() {
               const message = event.message;
               if (message.records && message.records.length > 0) {
                 const record = message.records[0];
+                if (!record) return;
                 const decoder = new TextDecoder();
                 
                 if (record.recordType === "url") {
                   if (typeof record.data === "string") {
                     url = record.data;
-                  } else {
+                  } else if (record.data instanceof Uint8Array) {
                     url = decoder.decode(record.data);
                   }
                 } else if (record.recordType === "text") {
-                  url = decoder.decode(record.data);
+                  if (record.data instanceof Uint8Array) {
+                    url = decoder.decode(record.data);
+                  } else if (typeof record.data === "string") {
+                    url = record.data;
+                  }
                 }
               }
             } catch (parseError) {
@@ -150,11 +212,13 @@ export default function NfcReadPage() {
             
             try {
               if (ndef.abort) ndef.abort();
-            } catch {}
+            } catch {
+              // Ignore abort errors
+            }
             resolve();
           };
 
-          const handleError = (error: any) => {
+          const handleError = (error: NDEFErrorEvent) => {
             if (resolved) return;
             resolved = true;
             clearTimeout(timeout);
@@ -165,7 +229,7 @@ export default function NfcReadPage() {
           ndef.addEventListener("readingerror", handleError);
 
           // Start scanning
-          ndef.scan().catch((error: any) => {
+          ndef.scan().catch((error: Error) => {
             if (resolved) return;
             resolved = true;
             clearTimeout(timeout);
@@ -188,11 +252,14 @@ export default function NfcReadPage() {
           message: "NFC card read but no URL found.",
         });
       }
-    } catch (error: any) {
+    } catch (error) {
       console.error("Error reading NFC:", error);
+      const errorMessage = error instanceof Error 
+        ? error.message 
+        : "Failed to read NFC card. Make sure the card is close to your device.";
       setResult({
         success: false,
-        message: error.message || "Failed to read NFC card. Make sure the card is close to your device.",
+        message: errorMessage,
       });
     } finally {
       setReading(false);
@@ -326,7 +393,7 @@ export default function NfcReadPage() {
           <div className="p-4 rounded-md bg-muted">
             <h3 className="font-medium mb-2">Instructions:</h3>
             <ol className="list-decimal list-inside space-y-1 text-sm text-muted-foreground">
-              <li>Click "Read NFC Card"</li>
+              <li>Click &quot;Read NFC Card&quot;</li>
               <li>Hold your NFC card close to your device</li>
               <li>Wait for the card to be detected and read</li>
               <li>The URL will be displayed if found</li>
