@@ -9,9 +9,14 @@ export const baseMetadata: Metadata = {
     follow: true,
   },
   icons: {
-    icon: [{ url: "/logos/cxc_favicon.svg", type: "image/svg+xml" }],
-    apple: [{ url: "/logos/cxc_favicon.svg" }],
-    shortcut: "/logos/cxc_favicon.svg",
+    icon: [
+      { url: "/logos/cxc_favicon.png", type: "image/png" },
+      { url: "/logos/cxc_favicon.png", sizes: "48x48", type: "image/png" },
+      { url: "/logos/cxc_favicon.png", sizes: "96x96", type: "image/png" },
+      { url: "/logos/cxc_favicon.png", sizes: "192x192", type: "image/png" },
+    ],
+    apple: [{ url: "/logos/cxc_favicon.png" }],
+    shortcut: "/logos/cxc_favicon.png",
   },
   manifest: "/meta/manifest.json",
   other: {
@@ -20,9 +25,7 @@ export const baseMetadata: Metadata = {
   },
 };
 
-export const baseViewport: Viewport = {
-  themeColor: "#000211",
-};
+export const baseViewport: Viewport = { themeColor: "#000211" };
 
 /**
  * Creates metadata for dynamic routes using generateMetadata().

@@ -13,6 +13,8 @@ import {
   NavigationMenuItem,
   NavigationMenuLink,
   NavigationMenuList,
+  NavigationMenuTrigger,
+  NavigationMenuContent,
 } from "@uwdsc/ui";
 import { cn } from "@uwdsc/ui/lib/utils";
 import CxCButton from "../CxCButton";
@@ -21,6 +23,19 @@ import DSCLogo from "../DSCLogo";
 const navLinks = [
   { href: "/", label: "Home" },
   { href: "/dashboard", label: "Dashboard" },
+];
+
+const adminPages = [
+  {
+    href: "/admin/applications",
+    label: "Applications",
+    description: "View and manage all submitted applications",
+  },
+  {
+    href: "/admin/review",
+    label: "Review",
+    description: "Review applications one at a time",
+  },
 ];
 
 export default function Navbar() {
@@ -95,6 +110,36 @@ export default function Navbar() {
                         </NavigationMenuLink>
                       </NavigationMenuItem>
                     ))}
+
+                    {/* Admin dropdown - only show to admin users */}
+                    {user?.role === "admin" && (
+                      <NavigationMenuItem>
+                        <NavigationMenuTrigger className="!text-base font-medium">
+                          Admin
+                        </NavigationMenuTrigger>
+                        <NavigationMenuContent>
+                          <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
+                            {adminPages.map((page) => (
+                              <li key={page.href}>
+                                <NavigationMenuLink asChild>
+                                  <Link
+                                    href={page.href}
+                                    className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
+                                  >
+                                    <div className="text-sm font-medium leading-none">
+                                      {page.label}
+                                    </div>
+                                    <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
+                                      {page.description}
+                                    </p>
+                                  </Link>
+                                </NavigationMenuLink>
+                              </li>
+                            ))}
+                          </ul>
+                        </NavigationMenuContent>
+                      </NavigationMenuItem>
+                    )}
                   </NavigationMenuList>
                 </NavigationMenu>
               )}
@@ -109,7 +154,11 @@ export default function Navbar() {
                       <UserAvatar />
                     </div>
                     <div className="block sm:hidden flex items-center justify-center">
-                      <MobileMenu navLinks={navLinks} user={user ?? null} />
+                      <MobileMenu
+                        navLinks={navLinks}
+                        user={user ?? null}
+                        adminPages={adminPages}
+                      />
                     </div>
                   </>
                 ) : (

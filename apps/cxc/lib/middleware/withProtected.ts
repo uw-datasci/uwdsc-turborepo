@@ -11,7 +11,7 @@ import { ProfileService } from "@uwdsc/server/cxc/services/profileService";
  * Special: /admin/assign requires superadmin role
  */
 export async function withProtected(request: NextRequest, user: any) {
-  // If route is protected and user is not authenticated, redirect to login
+  // If user is not authenticated, redirect to login
   if (!user) return NextResponse.redirect(new URL("/login", request.url));
 
   // Check admin role for /review and /admin routes
@@ -46,6 +46,6 @@ export async function withProtected(request: NextRequest, user: any) {
     }
   }
 
-  // User is authenticated and has required permissions
+  // User is authenticated and has admin permissions
   return NextResponse.next();
 }

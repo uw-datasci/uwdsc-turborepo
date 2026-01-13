@@ -12,24 +12,35 @@ import {
   Separator,
   SheetDescription,
   ArrowRightIcon,
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
 } from "@uwdsc/ui";
 import Link from "next/link";
-// no extra icons needed for mobile menu
 import { signOut, type UserProfile } from "@/lib/api";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
 import DSCLogo from "../DSCLogo";
 import { motion } from "framer-motion";
 import CxCButton from "../CxCButton";
+import { cn } from "@uwdsc/ui/lib/utils";
+import { ChevronDownIcon } from "lucide-react";
 
 interface NavLink {
   href: string;
   label: string;
 }
 
+interface AdminPage {
+  href: string;
+  label: string;
+  description: string;
+}
+
 interface MobileMenuProps {
   navLinks: NavLink[];
   user: UserProfile | null;
+  adminPages?: AdminPage[];
 }
 
 function HamburgerIcon() {
@@ -42,10 +53,15 @@ function HamburgerIcon() {
   );
 }
 
-export function MobileMenu({ navLinks, user }: Readonly<MobileMenuProps>) {
+export function MobileMenu({
+  navLinks,
+  user,
+  adminPages = [],
+}: Readonly<MobileMenuProps>) {
   const router = useRouter();
   const { mutate } = useAuth();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isAdminOpen, setIsAdminOpen] = useState(false);
 
   const handleSignOut = async () => {
     try {
@@ -82,8 +98,8 @@ export function MobileMenu({ navLinks, user }: Readonly<MobileMenuProps>) {
             </SheetClose>
           </SheetHeader>
 
-          <div className="flex flex-col flex-1 overflow-y-auto pb-24">
-            <div className="px-6 py-6">
+          <div className="flex flex-col flex-1 overflow-y-auto">
+            <div className="px-6 py-6 flex-1">
               <nav className="space-y-4">
                 {navLinks.map((link) => (
                   <SheetClose key={link.href} asChild>
@@ -97,10 +113,59 @@ export function MobileMenu({ navLinks, user }: Readonly<MobileMenuProps>) {
                   </SheetClose>
                 ))}
               </nav>
+
+              {/* Admin section - only show to admin users */}
+              {user?.role === "admin" && adminPages.length > 0 && (
+                <div className="mt-6">
+                  <Separator className="my-4 border-border/40" />
+                  <Collapsible
+                    open={isAdminOpen}
+                    onOpenChange={setIsAdminOpen}
+                    className="space-y-2"
+                  >
+                    <CollapsibleTrigger asChild>
+                      <Button
+                        variant="ghost"
+                        className="w-full justify-between text-2xl py-5 px-4 h-auto font-semibold hover:bg-accent/10 transition-colors rounded-lg"
+                      >
+                        Admin
+                        <ChevronDownIcon
+                          className={cn(
+                            "h-6 w-6 transition-transform duration-200",
+                            isAdminOpen && "rotate-180",
+                          )}
+                        />
+                      </Button>
+                    </CollapsibleTrigger>
+                    <CollapsibleContent className="space-y-2 mt-2">
+                      {adminPages.map((page) => (
+                        <SheetClose key={page.href} asChild>
+                          <Button
+                            variant="ghost"
+                            className="w-full justify-start text-left text-base py-3 px-6 h-auto font-medium hover:bg-accent/10 transition-colors rounded-lg ml-4"
+                            asChild
+                          >
+                            <Link href={page.href}>
+                              <div className="flex flex-col items-start gap-0.5">
+                                <span className="font-medium">
+                                  {page.label}
+                                </span>
+                                <span className="text-xs text-muted-foreground font-normal">
+                                  {page.description}
+                                </span>
+                              </div>
+                            </Link>
+                          </Button>
+                        </SheetClose>
+                      ))}
+                    </CollapsibleContent>
+                  </Collapsible>
+                </div>
+              )}
             </div>
 
             {user ? (
-              <div className="absolute left-0 right-0 bottom-6 border-t border-border/50 bg-muted/30 mx-0 px-0">
+              <div className="mt-auto border-t border-border/50 bg-muted/30 mx-0 px-0 mb-6">
                 <div className="px-6 py-4">
                   <div className="mb-2 mx-4">
                     <p className="font-semibold text-lg text-foreground">
@@ -121,7 +186,7 @@ export function MobileMenu({ navLinks, user }: Readonly<MobileMenuProps>) {
                 </div>
               </div>
             ) : (
-              <div className="absolute left-0 right-0 bottom-6 border-t border-border/50 bg-muted/30 mx-0 px-0">
+              <div className="mt-auto border-t border-border/50 bg-muted/30 mx-0 px-0 mb-6">
                 <div className="px-6 py-4">
                   <SheetClose asChild>
                     <div className="flex flex-wrap gap-4 md:gap-8 font-normal">
