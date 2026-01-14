@@ -19,6 +19,7 @@ import {
 import { cn } from "@uwdsc/ui/lib/utils";
 import CxCButton from "../CxCButton";
 import DSCLogo from "../DSCLogo";
+import Image from "next/image";
 
 const navLinks = [
   { href: "/", label: "Home" },
@@ -78,11 +79,28 @@ export default function Navbar() {
     // Hide navbar on dashboard routes
     pathname?.startsWith("/dashboard") ? null : (
       <motion.nav
-        className="w-full fixed top-0 left-0 right-0 bg-background z-50 cxc-app-font"
+        className="w-full fixed top-0 left-0 right-0 bg-background z-50 cxc-app-font relative"
         initial={{ y: 0 }}
         animate={{ y: isVisible ? 0 : "-100%" }}
         transition={{ duration: 0.3, ease: "easeInOut" }}
       >
+        {/* MLH Trust Badge */}
+        <a
+          id="mlh-trust-badge"
+          className="absolute top-0 right-20 sm:right-20 md:right-24 lg:right-28 w-16 md:w-20 lg:w-24 max-w-[96px] min-w-[48px] z-10"
+          href="https://mlh.io/na?utm_source=na-hackathon&utm_medium=TrustBadge&utm_campaign=2026-season&utm_content=white"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <Image
+            src="https://s3.amazonaws.com/logged-assets/trust-badge/2026/mlh-trust-badge-2026-white.svg"
+            alt="Major League Hacking 2026 Hackathon Season"
+            width={96}
+            height={96}
+            className="w-full h-auto"
+          />
+        </a>
+
         <div className="w-full py-4 px-4 sm:px-6 lg:px-8">
           <div className="flex h-16 w-full items-center justify-between">
             {/* Left section - Logo and Navigation */}

@@ -103,22 +103,18 @@ export function createSupabaseMiddlewareClient<
  */
 export function createSupabaseServiceRoleClient() {
   const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-  
+
   if (!serviceRoleKey) {
     throw new Error(
       "SUPABASE_SERVICE_ROLE_KEY environment variable is not set. " +
-      "This is required for admin operations that bypass RLS."
+        "This is required for admin operations that bypass RLS.",
     );
   }
 
-  return createClient(
-    process.env.SUPABASE_URL!,
-    serviceRoleKey,
-    {
-      auth: {
-        autoRefreshToken: false,
-        persistSession: false,
-      },
-    }
-  );
+  return createClient(process.env.SUPABASE_URL!, serviceRoleKey, {
+    auth: {
+      autoRefreshToken: false,
+      persistSession: false,
+    },
+  });
 }
