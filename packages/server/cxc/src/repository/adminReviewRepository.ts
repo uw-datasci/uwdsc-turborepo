@@ -19,7 +19,8 @@ export interface ReviewData {
   id: string;
   application_id: string;
   reviewer_id: string;
-  basic_info_score: number;
+  resume_score: number;
+  links_score: number;
   q1_score: number;
   q2_score: number;
   reviewed_at: string;
@@ -248,7 +249,8 @@ export class AdminReviewRepository extends BaseRepository {
   async createReview(reviewData: {
     application_id: string;
     reviewer_id: string;
-    basic_info_score: number;
+    resume_score: number;
+    links_score: number;
     q1_score: number;
     q2_score: number;
   }): Promise<ReviewData> {
@@ -257,7 +259,8 @@ export class AdminReviewRepository extends BaseRepository {
         INSERT INTO reviews (
           application_id,
           reviewer_id,
-          basic_info_score,
+          resume_score,
+          links_score,
           q1_score,
           q2_score,
           reviewed_at
@@ -265,7 +268,8 @@ export class AdminReviewRepository extends BaseRepository {
         VALUES (
           ${reviewData.application_id},
           ${reviewData.reviewer_id},
-          ${reviewData.basic_info_score},
+          ${reviewData.resume_score},
+          ${reviewData.links_score},
           ${reviewData.q1_score},
           ${reviewData.q2_score},
           NOW()

@@ -17,7 +17,8 @@ export interface ApplicationForReview {
 
 export interface ReviewScores {
   application_id: string;
-  basic_info_score: number;
+  resume_score: number;
+  links_score: number;
   q1_score: number;
   q2_score: number;
 }
@@ -114,9 +115,10 @@ export class AdminReviewService {
     reviewerId: string,
   ): Promise<SubmitReviewResult> {
     // Validate scores
-    this.validateScore(reviewScores.basic_info_score, "basic_info_score");
-    this.validateScore(reviewScores.q1_score, "q1_score");
-    this.validateScore(reviewScores.q2_score, "q2_score");
+    this.validateScore(reviewScores.resume_score, "resume_score", 0, 3);
+    this.validateScore(reviewScores.links_score, "links_score", 0, 2);
+    this.validateScore(reviewScores.q1_score, "q1_score", 0, 7);
+    this.validateScore(reviewScores.q2_score, "q2_score", 0, 3);
 
     if (!reviewScores.application_id) {
       throw new Error("application_id is required");
@@ -136,7 +138,8 @@ export class AdminReviewService {
     const review = await this.repository.createReview({
       application_id: reviewScores.application_id,
       reviewer_id: reviewerId,
-      basic_info_score: reviewScores.basic_info_score,
+      resume_score: reviewScores.resume_score,
+      links_score: reviewScores.links_score,
       q1_score: reviewScores.q1_score,
       q2_score: reviewScores.q2_score,
     });
@@ -152,11 +155,16 @@ export class AdminReviewService {
   }
 
   /**
-   * Validate that a score is between 1 and 10
+   * Validate that a score is within the specified range
    */
-  private validateScore(score: number, fieldName: string): void {
-    if (typeof score !== "number" || score < 1 || score > 10) {
-      throw new Error(`${fieldName} must be between 1 and 10`);
+  private validateScore(
+    score: number,
+    fieldName: string,
+    min: number = 0,
+    max: number = 10,
+  ): void {
+    if (typeof score !== "number" || score < min || score > max) {
+      throw new Error(`${fieldName} must be between ${min} and ${max}`);
     }
   }
 }

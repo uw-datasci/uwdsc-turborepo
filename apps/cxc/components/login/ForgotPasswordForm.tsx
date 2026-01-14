@@ -4,11 +4,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import {
-  Form,
-  Button,
-  FormField,
-} from "@uwdsc/ui";
+import { Form, Button, FormField } from "@uwdsc/ui";
 import { Loader2, Mail, ArrowLeft } from "lucide-react";
 import { renderTextField } from "@/components/FormHelpers";
 import { forgotPassword } from "@/lib/api";
@@ -113,14 +109,9 @@ export function ForgotPasswordForm() {
             transition={{ duration: 0.5, ease: "easeInOut" }}
             className="w-full"
           >
-            <h1 className="text-6xl lg:text-7xl mb-12">
-              Forgot password?
-            </h1>
+            <h1 className="text-6xl lg:text-7xl mb-12">Forgot password?</h1>
             <Form {...form}>
-              <form
-                onSubmit={form.handleSubmit(onSubmit)}
-                className="w-full"
-              >
+              <form onSubmit={form.handleSubmit(onSubmit)} className="w-full">
                 <div className="flex flex flex-col gap-10 mb-8">
                   <div className="flex flex-col gap-4">
                     <AppSection label="Your email">
@@ -160,7 +151,10 @@ export function ForgotPasswordForm() {
                   >
                     {isLoading ? (
                       <>
-                        <Loader2 className="w-5 h-5 animate-spin" strokeWidth={3} />
+                        <Loader2
+                          className="w-5 h-5 animate-spin"
+                          strokeWidth={3}
+                        />
                         Sending...
                       </>
                     ) : (

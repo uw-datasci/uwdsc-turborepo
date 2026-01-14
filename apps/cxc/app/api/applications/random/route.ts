@@ -33,20 +33,32 @@ export async function GET() {
     const adminReviewService = new AdminReviewService();
 
     // Create a helper function to get resume URL
+    // Use admin resume service (service role) to bypass RLS for admin operations
+    // Note: profileId should be the same as userId (auth.users.id)
     const getResumeUrl = async (profileId: string): Promise<string | null> => {
       try {
-        const { createResumeService } = await import("@/lib/services");
-        const resumeService = await createResumeService();
-        const resumeResult = await resumeService.getSignedResumeUrl(
+        const { createAdminResumeService } = await import("@/lib/services");
+        const adminResumeService = createAdminResumeService();
+        const resumeResult = await adminResumeService.getSignedResumeUrl(
           profileId,
           3600,
         );
         if (resumeResult.success && resumeResult.url) {
           return resumeResult.url;
         }
+        // Log when resume is not found for debugging
+        if (!resumeResult.success) {
+          console.log(
+            `Resume not found for profileId ${profileId}:`,
+            resumeResult.error,
+          );
+        }
         return null;
       } catch (error) {
-        console.error("Error fetching resume signed URL:", error);
+        console.error(
+          `Error fetching resume signed URL for profileId ${profileId}:`,
+          error,
+        );
         return null;
       }
     };
