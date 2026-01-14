@@ -12,6 +12,10 @@ import type {
   LoginResponse,
   ResendVerificationEmailRequest,
   ResendVerificationEmailResponse,
+  ForgotPasswordRequest,
+  ForgotPasswordResponse,
+  ResetPasswordRequest,
+  ResetPasswordResponse,
 } from "@/types/api";
 import { createApiError } from "./errors";
 
@@ -102,6 +106,56 @@ export async function signOut(): Promise<{ message: string }> {
   const response = await fetch("/api/auth/signout", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw createApiError(data, response.status);
+  }
+
+  return data;
+}
+
+/**
+ * Request password reset email
+ *
+ * @param request - Email address to send password reset to
+ * @returns Promise with success message
+ * @throws Error if request fails
+ */
+export async function forgotPassword(
+  request: ForgotPasswordRequest,
+): Promise<ForgotPasswordResponse> {
+  const response = await fetch("/api/auth/forgot-password", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(request),
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw createApiError(data, response.status);
+  }
+
+  return data;
+}
+
+/**
+ * Reset user password
+ *
+ * @param request - New password
+ * @returns Promise with success message
+ * @throws Error if reset fails
+ */
+export async function resetPassword(
+  request: ResetPasswordRequest,
+): Promise<ResetPasswordResponse> {
+  const response = await fetch("/api/auth/reset-password", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(request),
   });
 
   const data = await response.json();

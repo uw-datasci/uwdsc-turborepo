@@ -85,4 +85,29 @@ export class AuthRepository {
     const { error } = await this.client.auth.exchangeCodeForSession(code);
     return error;
   }
+
+  /**
+   * Send password reset email
+   */
+  async resetPasswordForEmail(email: string, emailRedirectTo?: string) {
+    const { data, error } = await this.client.auth.resetPasswordForEmail(
+      email,
+      {
+        redirectTo: emailRedirectTo,
+      },
+    );
+
+    return { data, error };
+  }
+
+  /**
+   * Update user password
+   */
+  async updateUserPassword(newPassword: string) {
+    const { data, error } = await this.client.auth.updateUser({
+      password: newPassword,
+    });
+
+    return { data, error };
+  }
 }
