@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@uwdsc/ui";
+import { motion } from "framer-motion";
 import { getRandomApplication, submitReview } from "@/lib/api";
 import { Loader2, RefreshCw } from "lucide-react";
 import { LoadingScreen } from "@/components/LoadingScreen";
@@ -156,32 +156,42 @@ export default function ReviewPage() {
 
   if (error && !application) {
     return (
-      <div className="flex items-center justify-center min-h-screen px-4 pt-24 md:pt-28">
-        <Card className="max-w-2xl w-full">
-          <CardHeader>
-            <CardTitle>Error Loading Application</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <p className="text-muted-foreground">{error}</p>
+      <div className="px-6 lg:px-8 pb-6 lg:pb-8 pt-24 md:pt-28">
+        <div className="max-w-4xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4 }}
+            className="bg-black border border-red-500/50 p-6"
+          >
+            <h2 className="text-xl font-bold text-red-400 mb-4">
+              Error Loading Application
+            </h2>
+            <p className="text-white/60 mb-6">{error}</p>
             <CxCButton onClick={fetchApplication} className="px-4 py-2">
               <RefreshCw className="w-4 h-4 mr-2" />
               Try Again
             </CxCButton>
-          </CardContent>
-        </Card>
+          </motion.div>
+        </div>
       </div>
     );
   }
 
   if (submitted) {
     return (
-      <div className="flex items-center justify-center min-h-screen px-4 pt-24 md:pt-28">
-        <Card className="max-w-2xl w-full">
-          <CardHeader>
-            <CardTitle>Review Submitted Successfully!</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <p className="text-muted-foreground">
+      <div className="px-6 lg:px-8 pb-6 lg:pb-8 pt-24 md:pt-28">
+        <div className="max-w-4xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.4 }}
+            className="bg-black border border-green-500/50 p-6"
+          >
+            <h2 className="text-xl font-bold text-green-400 mb-4">
+              Review Submitted Successfully!
+            </h2>
+            <p className="text-white/60 mb-6">
               Thank you for reviewing this application. Your scores have been
               saved.
             </p>
@@ -192,34 +202,52 @@ export default function ReviewPage() {
               <RefreshCw className="w-4 h-4 mr-2" />
               Review Another Application
             </CxCButton>
-          </CardContent>
-        </Card>
+          </motion.div>
+        </div>
       </div>
     );
   }
 
   if (!application) {
     return (
-      <div className="flex items-center justify-center min-h-screen px-4 pt-24 md:pt-28">
-        <Card className="max-w-2xl w-full">
-          <CardHeader>
-            <CardTitle>No Applications Available</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-muted-foreground">
+      <div className="px-6 lg:px-8 pb-6 lg:pb-8 pt-24 md:pt-28">
+        <div className="max-w-4xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4 }}
+            className="bg-black border border-white/20 p-6"
+          >
+            <h2 className="text-xl font-bold text-white mb-4">
+              No Applications Available
+            </h2>
+            <p className="text-white/60">
               There are no applications available for review at this time.
             </p>
-          </CardContent>
-        </Card>
+          </motion.div>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-background p-4 md:p-8 pt-24 md:pt-28">
+    <div className="px-6 lg:px-8 pb-6 lg:pb-8 pt-24 md:pt-28">
       <div className="max-w-4xl mx-auto space-y-6">
-        <div className="flex items-center justify-between">
-          <h1 className="text-3xl font-bold">Application Review</h1>
+        {/* Header */}
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4 }}
+          className="border-b border-white/10 pb-6 flex items-center justify-between"
+        >
+          <div>
+            <h1 className="text-2xl lg:text-3xl font-bold text-white">
+              Application Review
+            </h1>
+            <p className="text-white/60 mt-1">
+              Review and score this application submission.
+            </p>
+          </div>
           <CxCButton
             onClick={() => globalThis.location.reload()}
             disabled={loading}
@@ -228,14 +256,16 @@ export default function ReviewPage() {
             <RefreshCw className="w-4 h-4 mr-2" />
             Get New Application
           </CxCButton>
-        </div>
+        </motion.div>
 
         {error && (
-          <Card className="border-destructive">
-            <CardContent className="pt-6">
-              <p className="text-destructive text-sm">{error}</p>
-            </CardContent>
-          </Card>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="bg-black border border-red-500/50 p-4"
+          >
+            <p className="text-red-400 text-sm">{error}</p>
+          </motion.div>
         )}
 
         <div className="space-y-6">
@@ -243,31 +273,34 @@ export default function ReviewPage() {
           <BasicInformation application={application} />
 
           {/* Resume Section */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Resume</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, delay: 0.1 }}
+            className="bg-black border border-white/20"
+          >
+            <div className="p-6 border-b border-white/10">
+              <h2 className="text-lg font-semibold text-white">Resume</h2>
+            </div>
+            <div className="p-6 space-y-4">
               {application.resume_url ? (
                 <div className="space-y-2">
                   <a
                     href={application.resume_url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-blue-500 hover:underline font-medium inline-block"
+                    className="text-blue-400 hover:text-blue-300 font-medium inline-block transition-colors"
                   >
                     View Resume ↗
                   </a>
                 </div>
               ) : (
                 <div className="space-y-2">
-                  <p className="text-sm text-muted-foreground">
-                    No resume provided
-                  </p>
+                  <p className="text-sm text-white/40">No resume provided</p>
                 </div>
               )}
 
-              <div className="pt-4 border-t">
+              <div className="pt-4 border-t border-white/10">
                 <ScoreButtons
                   selected={resumeScore}
                   onSelect={setResumeScore}
@@ -275,24 +308,29 @@ export default function ReviewPage() {
                   maxScore={3}
                 />
               </div>
-            </CardContent>
-          </Card>
+            </div>
+          </motion.div>
 
           {/* Links Section */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Links</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, delay: 0.2 }}
+            className="bg-black border border-white/20"
+          >
+            <div className="p-6 border-b border-white/10">
+              <h2 className="text-lg font-semibold text-white">Links</h2>
+            </div>
+            <div className="p-6 space-y-4">
               <div className="space-y-2 text-sm">
                 {application.github_url && (
                   <div>
-                    <span className="font-medium">GitHub:</span>{" "}
+                    <span className="font-medium text-white">GitHub:</span>{" "}
                     <a
                       href={application.github_url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-blue-500 hover:underline"
+                      className="text-blue-400 hover:text-blue-300 transition-colors"
                     >
                       {application.github_url}
                     </a>
@@ -300,12 +338,12 @@ export default function ReviewPage() {
                 )}
                 {application.linkedin_url && (
                   <div>
-                    <span className="font-medium">LinkedIn:</span>{" "}
+                    <span className="font-medium text-white">LinkedIn:</span>{" "}
                     <a
                       href={application.linkedin_url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-blue-500 hover:underline"
+                      className="text-blue-400 hover:text-blue-300 transition-colors"
                     >
                       {application.linkedin_url}
                     </a>
@@ -313,12 +351,12 @@ export default function ReviewPage() {
                 )}
                 {application.website_url && (
                   <div>
-                    <span className="font-medium">Website/X:</span>{" "}
+                    <span className="font-medium text-white">Website/X:</span>{" "}
                     <a
                       href={application.website_url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-blue-500 hover:underline"
+                      className="text-blue-400 hover:text-blue-300 transition-colors"
                     >
                       {application.website_url}
                     </a>
@@ -326,12 +364,12 @@ export default function ReviewPage() {
                 )}
                 {application.other_url && (
                   <div>
-                    <span className="font-medium">Other Link:</span>{" "}
+                    <span className="font-medium text-white">Other Link:</span>{" "}
                     <a
                       href={application.other_url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-blue-500 hover:underline"
+                      className="text-blue-400 hover:text-blue-300 transition-colors"
                     >
                       {application.other_url}
                     </a>
@@ -342,14 +380,12 @@ export default function ReviewPage() {
                   !application.website_url &&
                   !application.other_url && (
                     <div>
-                      <p className="text-sm text-muted-foreground">
-                        No links provided
-                      </p>
+                      <p className="text-sm text-white/40">No links provided</p>
                     </div>
                   )}
               </div>
 
-              <div className="pt-4 border-t">
+              <div className="pt-4 border-t border-white/10">
                 <ScoreButtons
                   selected={linksScore}
                   onSelect={setLinksScore}
@@ -357,26 +393,31 @@ export default function ReviewPage() {
                   maxScore={2}
                 />
               </div>
-            </CardContent>
-          </Card>
+            </div>
+          </motion.div>
 
           {/* Application Question 1 Section */}
           {application.cxc_q1 ? (
-            <Card>
-              <CardHeader>
-                <CardTitle>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, delay: 0.3 }}
+              className="bg-black border border-white/20"
+            >
+              <div className="p-6 border-b border-white/10">
+                <h2 className="text-lg font-semibold text-white">
                   Tell us about a technical project that you have worked on.
                   What did you learn? What challenges did you face?
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
+                </h2>
+              </div>
+              <div className="p-6 space-y-4">
                 <div className="space-y-2">
-                  <p className="text-sm text-muted-foreground whitespace-pre-wrap">
+                  <p className="text-sm text-white/80 whitespace-pre-wrap">
                     {application.cxc_q1}
                   </p>
                 </div>
 
-                <div className="pt-4 border-t">
+                <div className="pt-4 border-t border-white/10">
                   <ScoreButtons
                     selected={q1Score}
                     onSelect={setQ1Score}
@@ -384,24 +425,27 @@ export default function ReviewPage() {
                     maxScore={7}
                   />
                 </div>
-              </CardContent>
-            </Card>
+              </div>
+            </motion.div>
           ) : (
-            <Card>
-              <CardHeader>
-                <CardTitle>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, delay: 0.3 }}
+              className="bg-black border border-white/20"
+            >
+              <div className="p-6 border-b border-white/10">
+                <h2 className="text-lg font-semibold text-white">
                   Tell us about a technical project that you have worked on.
                   What did you learn? What challenges did you face?
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
+                </h2>
+              </div>
+              <div className="p-6 space-y-4">
                 <div className="space-y-2">
-                  <p className="text-sm text-muted-foreground">
-                    No answer provided
-                  </p>
+                  <p className="text-sm text-white/40">No answer provided</p>
                 </div>
 
-                <div className="pt-4 border-t">
+                <div className="pt-4 border-t border-white/10">
                   <ScoreButtons
                     selected={q1Score}
                     onSelect={setQ1Score}
@@ -409,24 +453,31 @@ export default function ReviewPage() {
                     maxScore={7}
                   />
                 </div>
-              </CardContent>
-            </Card>
+              </div>
+            </motion.div>
           )}
 
           {/* Application Question 2 Section */}
           {application.cxc_q2 ? (
-            <Card>
-              <CardHeader>
-                <CardTitle>Write us a Haiku</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, delay: 0.4 }}
+              className="bg-black border border-white/20"
+            >
+              <div className="p-6 border-b border-white/10">
+                <h2 className="text-lg font-semibold text-white">
+                  Write us a Haiku
+                </h2>
+              </div>
+              <div className="p-6 space-y-4">
                 <div className="space-y-2">
-                  <p className="text-sm text-muted-foreground whitespace-pre-wrap">
+                  <p className="text-sm text-white/80 whitespace-pre-wrap">
                     {application.cxc_q2}
                   </p>
                 </div>
 
-                <div className="pt-4 border-t">
+                <div className="pt-4 border-t border-white/10">
                   <ScoreButtons
                     selected={q2Score}
                     onSelect={setQ2Score}
@@ -434,21 +485,26 @@ export default function ReviewPage() {
                     maxScore={3}
                   />
                 </div>
-              </CardContent>
-            </Card>
+              </div>
+            </motion.div>
           ) : (
-            <Card>
-              <CardHeader>
-                <CardTitle>Write us a Haiku</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, delay: 0.4 }}
+              className="bg-black border border-white/20"
+            >
+              <div className="p-6 border-b border-white/10">
+                <h2 className="text-lg font-semibold text-white">
+                  Write us a Haiku
+                </h2>
+              </div>
+              <div className="p-6 space-y-4">
                 <div className="space-y-2">
-                  <p className="text-sm text-muted-foreground">
-                    No answer provided
-                  </p>
+                  <p className="text-sm text-white/40">No answer provided</p>
                 </div>
 
-                <div className="pt-4 border-t">
+                <div className="pt-4 border-t border-white/10">
                   <ScoreButtons
                     selected={q2Score}
                     onSelect={setQ2Score}
@@ -456,43 +512,46 @@ export default function ReviewPage() {
                     maxScore={3}
                   />
                 </div>
-              </CardContent>
-            </Card>
+              </div>
+            </motion.div>
           )}
         </div>
 
-        <Card>
-          <CardContent className="pt-6">
-            <CxCButton
-              onClick={handleSubmit}
-              disabled={
-                submitting ||
-                resumeScore === null ||
-                linksScore === null ||
-                q1Score === null ||
-                q2Score === null
-              }
-              className="w-full px-6 py-3"
-            >
-              {submitting ? (
-                <>
-                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                  Submitting...
-                </>
-              ) : (
-                "Submit Review"
-              )}
-            </CxCButton>
-            {resumeScore === null ||
-            linksScore === null ||
-            q1Score === null ||
-            q2Score === null ? (
-              <p className="text-sm text-muted-foreground text-center mt-2">
-                Please rate all sections before submitting
-              </p>
-            ) : null}
-          </CardContent>
-        </Card>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, delay: 0.5 }}
+          className="bg-black border border-white/20 p-6"
+        >
+          <CxCButton
+            onClick={handleSubmit}
+            disabled={
+              submitting ||
+              resumeScore === null ||
+              linksScore === null ||
+              q1Score === null ||
+              q2Score === null
+            }
+            className="w-full px-6 py-3"
+          >
+            {submitting ? (
+              <>
+                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                Submitting...
+              </>
+            ) : (
+              "Submit Review"
+            )}
+          </CxCButton>
+          {resumeScore === null ||
+          linksScore === null ||
+          q1Score === null ||
+          q2Score === null ? (
+            <p className="text-sm text-white/40 text-center mt-2">
+              Please rate all sections before submitting
+            </p>
+          ) : null}
+        </motion.div>
       </div>
     </div>
   );

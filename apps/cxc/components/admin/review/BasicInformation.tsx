@@ -1,6 +1,6 @@
 "use client";
 
-import { Card, CardContent, CardHeader, CardTitle } from "@uwdsc/ui";
+import { motion } from "framer-motion";
 
 interface Application {
   id: string;
@@ -40,79 +40,92 @@ export function BasicInformation({
   application,
 }: Readonly<BasicInformationProps>) {
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Basic Information</CardTitle>
-      </CardHeader>
-      <CardContent className="space-y-4">
-        <div className="space-y-2 text-sm">
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4 }}
+      className="bg-black border border-white/20"
+    >
+      <div className="p-6 border-b border-white/10">
+        <h2 className="text-lg font-semibold text-white">Basic Information</h2>
+      </div>
+      <div className="p-6 space-y-4">
+        <div className="space-y-2 text-sm text-white/80">
           {application.email && (
             <div>
-              <span className="font-medium">Email:</span> {application.email}
+              <span className="font-medium text-white">Email:</span>{" "}
+              {application.email}
             </div>
           )}
           {application.phone_number && (
             <div>
-              <span className="font-medium">Phone:</span>{" "}
+              <span className="font-medium text-white">Phone:</span>{" "}
               {application.phone_number}
             </div>
           )}
           {application.discord && (
             <div>
-              <span className="font-medium">Discord:</span>{" "}
+              <span className="font-medium text-white">Discord:</span>{" "}
               {application.discord}
             </div>
           )}
           {application.t_shirt && (
             <div>
-              <span className="font-medium">T-Shirt Size:</span>{" "}
+              <span className="font-medium text-white">T-Shirt Size:</span>{" "}
               {application.t_shirt}
             </div>
           )}
           {application.dietary_restrictions && (
             <div>
-              <span className="font-medium">Dietary Restrictions:</span>{" "}
+              <span className="font-medium text-white">
+                Dietary Restrictions:
+              </span>{" "}
               {application.dietary_restrictions}
             </div>
           )}
           {application.gender && (
             <div>
-              <span className="font-medium">Gender:</span> {application.gender}
+              <span className="font-medium text-white">Gender:</span>{" "}
+              {application.gender}
             </div>
           )}
           {application.ethnicity && (
             <div>
-              <span className="font-medium">Ethnicity:</span>{" "}
+              <span className="font-medium text-white">Ethnicity:</span>{" "}
               {application.ethnicity}
             </div>
           )}
           {application.uni_name && (
             <div>
-              <span className="font-medium">University:</span>{" "}
+              <span className="font-medium text-white">University:</span>{" "}
               {application.uni_name}
             </div>
           )}
           {application.uni_program && (
             <div>
-              <span className="font-medium">Program:</span>{" "}
+              <span className="font-medium text-white">Program:</span>{" "}
               {application.uni_program}
             </div>
           )}
           {application.year_of_study && (
             <div>
-              <span className="font-medium">Year of Study:</span>{" "}
+              <span className="font-medium text-white">Year of Study:</span>{" "}
               {application.year_of_study}
             </div>
           )}
           {application.prior_hack_exp && (
             <div>
-              <span className="font-medium">Prior Hackathon Experience:</span>{" "}
+              <span className="font-medium text-white">
+                Prior Hackathon Experience:
+              </span>{" "}
               {application.prior_hack_exp}
             </div>
           )}
           {application.num_hackathons && (
             <div>
-              <span className="font-medium">Hackathons Attended:</span>{" "}
+              <span className="font-medium text-white">
+                Hackathons Attended:
+              </span>{" "}
               {application.num_hackathons}
             </div>
           )}
@@ -120,7 +133,7 @@ export function BasicInformation({
             <div className="pt-2">
               {application.team_name && (
                 <div className="mb-3">
-                  <span className="font-medium text-lg">
+                  <span className="font-medium text-lg text-white">
                     Team Name:{" "}
                     <span className="font-semibold">
                       {application.team_name}
@@ -128,20 +141,22 @@ export function BasicInformation({
                   </span>
                 </div>
               )}
-              <span className="font-medium block mb-2">Team Members:</span>
+              <span className="font-medium text-white block mb-2">
+                Team Members:
+              </span>
               <div className="flex flex-wrap gap-2">
                 {application.team_members_with_names &&
                 application.team_members_with_names.length > 0
                   ? application.team_members_with_names.map((member, index) => (
                       <div
                         key={index}
-                        className="flex items-center gap-2 px-3 py-1.5 bg-cxc-input-bg rounded-md border border-primary/20"
+                        className="flex items-center gap-2 px-3 py-1.5 bg-white/5 border border-white/20"
                       >
-                        <span className="text-foreground">
+                        <span className="text-white/80">
                           {member.display_name ? (
                             <>
                               <span>{member.display_name}</span>
-                              <span className="text-muted-foreground">
+                              <span className="text-white/40">
                                 {" "}
                                 ({member.email})
                               </span>
@@ -155,16 +170,16 @@ export function BasicInformation({
                   : application.team_members.split(",").map((email, index) => (
                       <div
                         key={index}
-                        className="flex items-center gap-2 px-3 py-1.5 bg-cxc-input-bg rounded-md border border-primary/20"
+                        className="flex items-center gap-2 px-3 py-1.5 bg-white/5 border border-white/20"
                       >
-                        <span className="text-foreground">{email.trim()}</span>
+                        <span className="text-white/80">{email.trim()}</span>
                       </div>
                     ))}
               </div>
             </div>
           )}
         </div>
-      </CardContent>
-    </Card>
+      </div>
+    </motion.div>
   );
 }

@@ -19,7 +19,7 @@ export function ScoreButtons({
 
   return (
     <div className="flex flex-col gap-3">
-      <label className="text-sm font-medium">{label}</label>
+      <label className="text-sm font-medium text-white">{label}</label>
       <div className="flex flex-wrap gap-2">
         {scores.map((score) => (
           <CxCButton
@@ -31,7 +31,7 @@ export function ScoreButtons({
             className={
               selected === score
                 ? "w-10 h-10 p-0 aspect-square"
-                : "!bg-transparent !text-white border border-white/20 w-10 h-10 p-0 aspect-square"
+                : "!bg-transparent !text-white border border-white/20 hover:!bg-white hover:!text-black w-10 h-10 p-0 aspect-square transition-colors"
             }
           >
             {score}
