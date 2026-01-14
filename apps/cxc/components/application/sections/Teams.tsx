@@ -37,9 +37,10 @@ import CxCButton from "../../CxCButton";
 interface TeamsProps {
   readonly form: UseFormReturn<AppFormValues>;
   readonly useCard?: boolean; // If true, use Card with border (for dashboard), if false, use AppSection (for apply page)
+  readonly disabled?: boolean; // If true, disable all team actions (for after deadline)
 }
 
-export function Teams({ form, useCard = false }: TeamsProps) {
+export function Teams({ form, useCard = false, disabled = false }: TeamsProps) {
   const [team, setTeam] = useState<Team | null>(null);
   const [isLoadingTeam, setIsLoadingTeam] = useState(true);
   const [isCreating, setIsCreating] = useState(false);
@@ -349,6 +350,13 @@ export function Teams({ form, useCard = false }: TeamsProps) {
 
   const content = (
     <div className="flex flex-col gap-4">
+      {disabled && (
+        <div className="border border-orange-400/40 p-2 bg-orange-400/5 my-2">
+          <p className="text-orange-400 text-xs font-mono">
+            Team editing is locked after the application deadline.
+          </p>
+        </div>
+      )}
       {team ? (
         <>
           {/* Display team name and members when in a team */}
@@ -381,7 +389,7 @@ export function Teams({ form, useCard = false }: TeamsProps) {
           <CxCButton
             type="button"
             onClick={handleLeaveTeam}
-            disabled={isLeaving}
+            disabled={isLeaving || disabled}
             className="mt-4"
           >
             {isLeaving ? "Leaving..." : "Leave Team"}
@@ -400,6 +408,7 @@ export function Teams({ form, useCard = false }: TeamsProps) {
                   setError(""); // Clear error when typing
                 }}
                 placeholder="Enter team name"
+                disabled={disabled}
                 className="!h-auto !border-0 !px-4.5 !py-4 !text-base !border-b-[2px] !bg-cxc-input-bg !rounded-none !shadow-none"
               />
             </div>
@@ -410,7 +419,7 @@ export function Teams({ form, useCard = false }: TeamsProps) {
               <CxCButton
                 type="button"
                 onClick={handleCreateTeam}
-                disabled={isCreating || isJoining}
+                disabled={isCreating || isJoining || disabled}
                 className="flex-1 text-lg"
               >
                 {isCreating ? "Creating..." : "Create Team"}
@@ -418,7 +427,7 @@ export function Teams({ form, useCard = false }: TeamsProps) {
               <Button
                 type="button"
                 onClick={handleJoinTeam}
-                disabled={isCreating || isJoining}
+                disabled={isCreating || isJoining || disabled}
                 className="flex-1 !bg-black !text-white !border-white !border-[1px] font-normal rounded-none !h-auto hover:!bg-black text-lg"
               >
                 {isJoining ? "Joining..." : "Join Team"}
@@ -510,7 +519,7 @@ export function Teams({ form, useCard = false }: TeamsProps) {
   return (
     <Form {...form}>
       {useCard ? (
-        <Card className="bg-black border border-white/20 rounded-none">
+        <Card className="bg-black border border-white/20 rounded-none !gap-0">
           <CardHeader className="border-b border-white/10">
             <CardTitle className="text-white text-sm uppercase tracking-wider">
               Team Members (optional)
