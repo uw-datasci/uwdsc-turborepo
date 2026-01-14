@@ -4,7 +4,25 @@ This semester continues to build upon the foundation established in Fall 2025, w
 
 ## 🎯 Main Website (apps/web)
 
+### Account Security (PR #126)
+
+**Password Reset Flow**
+- Users can now reset forgotten passwords through a secure email-based flow
+- "Forgot Password" link added to login page for easy access
+- Password reset emails sent with time-limited secure links
+- Dedicated reset password page with new password confirmation
+- Email verification required before password can be reset
+
 ## 🏆 CXC App (apps/cxc)
+
+### Account Security (PR #126)
+
+**Password Reset Flow**
+- Users can now reset forgotten passwords through a secure email-based flow
+- "Forgot Password" link added to login page for easy access
+- Password reset emails sent with time-limited secure links
+- Dedicated reset password page with new password confirmation
+- Email verification required before password can be reset
 
 ### Admin Application Management (PR #118)
 
@@ -216,6 +234,18 @@ This semester continues to build upon the foundation established in Fall 2025, w
 - Fixed SelectField to handle undefined values correctly
 
 ## 🔧 Infrastructure
+
+### Authentication Services (PR #126)
+
+**Password Reset Backend**
+- `AuthService.forgotPassword()`: Sends password reset email with secure redirect link
+- `AuthService.resetPassword()`: Validates and updates user password
+- `AuthRepository.resetPasswordForEmail()`: Supabase integration for password reset emails
+- `AuthRepository.updateUserPassword()`: Secure password update functionality
+- New API endpoints:
+  - `POST /api/auth/forgot-password` - Request password reset email
+  - `POST /api/auth/reset-password` - Complete password reset with new password
+- Client-side API functions for password reset flow integration
 
 ### Shared Utilities
 
