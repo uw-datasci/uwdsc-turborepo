@@ -7,10 +7,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     const { email } = body;
 
     if (!email) {
-      return NextResponse.json(
-        { error: "Email is required" },
-        { status: 400 },
-      );
+      return NextResponse.json({ error: "Email is required" }, { status: 400 });
     }
 
     const authService = await createAuthService();
@@ -18,10 +15,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     const result = await authService.forgotPassword(email, emailRedirectTo);
 
     if (!result.success) {
-      return NextResponse.json(
-        { error: result.error },
-        { status: 400 },
-      );
+      return NextResponse.json({ error: result.error }, { status: 400 });
     }
 
     return NextResponse.json({

@@ -87,13 +87,13 @@ export function ResetPasswordForm() {
 
           // Clear hash from URL
           window.history.replaceState(null, "", window.location.pathname);
-          
+
           // Wait a bit for session to be established, then refresh auth state
-          await new Promise(resolve => setTimeout(resolve, 100));
+          await new Promise((resolve) => setTimeout(resolve, 100));
           await mutate();
-          
+
           // Give auth context time to update
-          await new Promise(resolve => setTimeout(resolve, 200));
+          await new Promise((resolve) => setTimeout(resolve, 200));
         } catch (error) {
           console.error("Error processing hash:", error);
           router.push("/login?error=Failed to process reset link");
@@ -113,7 +113,9 @@ export function ResetPasswordForm() {
       // Give extra time for session to be established after hash processing
       const timeoutId = setTimeout(() => {
         if (!isAuthenticated) {
-          router.push("/login?error=Please use the password reset link from your email");
+          router.push(
+            "/login?error=Please use the password reset link from your email",
+          );
         }
       }, 500);
 
@@ -129,7 +131,9 @@ export function ResetPasswordForm() {
       setIsPasswordReset(true);
       // Redirect to login after 2 seconds
       setTimeout(() => {
-        router.push("/login?message=Password reset successfully. Please sign in.");
+        router.push(
+          "/login?message=Password reset successfully. Please sign in.",
+        );
       }, 2000);
     } catch (error: unknown) {
       console.error("Reset password error:", error);
@@ -174,10 +178,7 @@ export function ResetPasswordForm() {
             {/* Animated Check Icon */}
             <div className="relative mb-8">
               <div className="absolute inset-0 bg-white/20 blur-3xl rounded-full animate-pulse" />
-              <CheckCircle
-                className="w-24 h-24 text-white"
-                strokeWidth={1.5}
-              />
+              <CheckCircle className="w-24 h-24 text-white" strokeWidth={1.5} />
             </div>
 
             {/* Title */}
@@ -197,9 +198,7 @@ export function ResetPasswordForm() {
             transition={{ duration: 0.5, ease: "easeInOut" }}
             className="w-full"
           >
-            <h1 className="text-6xl lg:text-7xl mb-12">
-              Reset your password
-            </h1>
+            <h1 className="text-6xl lg:text-7xl mb-12">Reset your password</h1>
             <Form {...form}>
               <form onSubmit={form.handleSubmit(onSubmit)} className="w-full">
                 <div className="flex flex flex-col gap-10 mb-8">
@@ -232,7 +231,9 @@ export function ResetPasswordForm() {
                                     />
                                     <button
                                       type="button"
-                                      onClick={() => setShowPassword(!showPassword)}
+                                      onClick={() =>
+                                        setShowPassword(!showPassword)
+                                      }
                                       className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
                                     >
                                       {showPassword ? (
@@ -262,7 +263,11 @@ export function ResetPasswordForm() {
                                   <div className="relative">
                                     <Input
                                       {...field}
-                                      type={showConfirmPassword ? "text" : "password"}
+                                      type={
+                                        showConfirmPassword
+                                          ? "text"
+                                          : "password"
+                                      }
                                       autoComplete="new-password"
                                       placeholder="Confirm new password"
                                       value={field.value ?? ""}
@@ -274,7 +279,11 @@ export function ResetPasswordForm() {
                                     />
                                     <button
                                       type="button"
-                                      onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                                      onClick={() =>
+                                        setShowConfirmPassword(
+                                          !showConfirmPassword,
+                                        )
+                                      }
                                       className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
                                     >
                                       {showConfirmPassword ? (
@@ -309,7 +318,10 @@ export function ResetPasswordForm() {
                   >
                     {isLoading ? (
                       <>
-                        <Loader2 className="w-5 h-5 animate-spin" strokeWidth={3} />
+                        <Loader2
+                          className="w-5 h-5 animate-spin"
+                          strokeWidth={3}
+                        />
                         Resetting...
                       </>
                     ) : (
