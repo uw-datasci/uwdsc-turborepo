@@ -54,12 +54,12 @@ export async function GET(request: Request, { params }: ApplicationParams) {
       );
     }
 
-    // Get resume URL if available
+    // Get resume URL if available (use admin service to bypass RLS)
     let resumeUrl: string | null = null;
     try {
-      const { createResumeService } = await import("@/lib/services");
-      const resumeService = await createResumeService();
-      const resumeResult = await resumeService.getSignedResumeUrl(
+      const { createAdminResumeService } = await import("@/lib/services");
+      const adminResumeService = createAdminResumeService();
+      const resumeResult = await adminResumeService.getSignedResumeUrl(
         application.profile_id,
         3600,
       );
