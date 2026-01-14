@@ -191,7 +191,14 @@ export class ResumeService extends FileService {
       // If listing failed or no resume found, try common resume file patterns
       // This handles cases where listing fails due to RLS (e.g., admin accessing another user's files)
       // Note: createSignedUrl may succeed even if listing fails
-      if (!resumeResult.key || !resumeResult.resume) {
+      let shouldTryCommonPatterns = false;
+      if (!resumeResult.success) {
+        shouldTryCommonPatterns = true;
+      } else if (!resumeResult.key || !resumeResult.resume) {
+        shouldTryCommonPatterns = true;
+      }
+
+      if (shouldTryCommonPatterns) {
         // Try common resume filename patterns
         const commonExtensions = [".pdf", ".docx", ".doc"];
         const commonNames = ["resume", "Resume", "RESUME", "cv", "CV"];
