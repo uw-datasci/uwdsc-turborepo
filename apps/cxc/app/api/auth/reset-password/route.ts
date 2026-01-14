@@ -24,10 +24,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     const result = await authService.resetPassword(password);
 
     if (!result.success) {
-      return NextResponse.json(
-        { error: result.error },
-        { status: 400 },
-      );
+      return NextResponse.json({ error: result.error }, { status: 400 });
     }
 
     return NextResponse.json({
