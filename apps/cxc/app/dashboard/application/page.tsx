@@ -14,11 +14,28 @@ import { AppFormValues } from "@/lib/schemas/application";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { applicationSchema } from "@/lib/schemas/application";
+import { APPLICATION_DEADLINE } from "@/constants/application";
 
 export default function ApplicationPage() {
   const { user } = useAuth();
   const [application, setApplication] = useState<AppFormValues | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isPastDeadline, setIsPastDeadline] = useState(false);
+
+  // Continuously check if past deadline
+  useEffect(() => {
+    const checkDeadline = () => {
+      setIsPastDeadline(new Date() > APPLICATION_DEADLINE);
+    };
+
+    // Check immediately
+    checkDeadline();
+
+    // Check every second
+    const interval = setInterval(checkDeadline, 1000);
+
+    return () => clearInterval(interval);
+  }, []);
 
   // Initialize form for Teams component
   const form = useForm<AppFormValues>({
@@ -70,7 +87,7 @@ export default function ApplicationPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4 }}
           >
-            <Card className="bg-black border border-white/20 rounded-none">
+            <Card className="bg-black border border-white/20 rounded-none !gap-0">
               <CardContent className="py-12 flex flex-col items-center text-center">
                 <FileTextIcon className="w-12 h-12 text-white/20 mb-6" />
                 <h2 className="text-xl font-semibold text-white mb-2 uppercase tracking-wider">
@@ -144,7 +161,7 @@ export default function ApplicationPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4, delay: 0.2 }}
           >
-            <Teams form={form} useCard={true} />
+            <Teams form={form} useCard={true} disabled={isPastDeadline} />
           </motion.div>
         </div>
       </div>
@@ -211,7 +228,7 @@ export default function ApplicationPage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: 0.2 }}
         >
-          <Teams form={form} useCard={true} />
+          <Teams form={form} useCard={true} disabled={isPastDeadline} />
         </motion.div>
       </div>
     </div>

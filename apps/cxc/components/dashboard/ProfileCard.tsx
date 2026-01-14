@@ -40,7 +40,7 @@ export function ProfileCard({
       transition={{ duration: 0.4, delay: 0.1 }}
       className={className}
     >
-      <Card className="bg-black border border-white/20 rounded-none">
+      <Card className="bg-black border border-white/20 rounded-none !gap-0">
         <CardHeader className="border-b border-white/10">
           <CardTitle className="text-white uppercase tracking-wider text-sm">
             Profile

@@ -96,7 +96,7 @@ export default function ProfilePage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: 0.1 }}
         >
-          <Card className="bg-black border border-white/20 rounded-none overflow-hidden">
+          <Card className="bg-black border border-white/20 rounded-none overflow-hidden !gap-0 !pt-0">
             {/* Profile Header */}
             <div className="bg-white/5 border-b border-white/10 p-6">
               <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
@@ -283,7 +283,7 @@ export default function ProfilePage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: 0.2 }}
         >
-          <Card className="bg-black border border-white/20 rounded-none">
+          <Card className="bg-black border border-white/20 rounded-none !gap-0">
             <CardHeader className="border-b border-white/10">
               <CardTitle className="text-white uppercase tracking-wider text-sm">
                 Hackathon Stats
