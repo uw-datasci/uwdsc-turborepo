@@ -220,7 +220,7 @@ export class ResumeService extends FileService {
                   key: objectKey,
                 };
               }
-            } catch (error) {
+            } catch {
               // File doesn't exist at this path, try next pattern
               // Supabase createSignedUrl throws error if file doesn't exist
               continue;
