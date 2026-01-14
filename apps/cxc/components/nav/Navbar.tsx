@@ -79,7 +79,7 @@ export default function Navbar() {
     // Hide navbar on dashboard routes
     pathname?.startsWith("/dashboard") ? null : (
       <motion.nav
-        className="w-full fixed top-0 left-0 right-0 bg-background z-50 cxc-app-font relative"
+        className="w-full fixed top-0 left-0 right-0 bg-background z-50 cxc-app-font"
         initial={{ y: 0 }}
         animate={{ y: isVisible ? 0 : "-100%" }}
         transition={{ duration: 0.3, ease: "easeInOut" }}
@@ -87,7 +87,7 @@ export default function Navbar() {
         {/* MLH Trust Badge */}
         <a
           id="mlh-trust-badge"
-          className="absolute top-0 right-20 sm:right-20 md:right-24 lg:right-28 w-16 md:w-20 lg:w-24 max-w-[96px] min-w-[48px] z-10"
+          className={`${isLoading ? "hidden" : " "} absolute top-0 left-20 sm:left-auto  ${isAuthenticated ? "sm:right-20 md:right-24 lg:right-28" : "sm:right-68 md:right-78"} w-16 md:w-20 lg:w-24 max-w-[96px] min-w-[48px] z-10`}
           href="https://mlh.io/na?utm_source=na-hackathon&utm_medium=TrustBadge&utm_campaign=2026-season&utm_content=white"
           target="_blank"
           rel="noopener noreferrer"
