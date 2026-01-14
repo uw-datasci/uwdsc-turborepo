@@ -64,7 +64,7 @@ export function StatusCard({ status, submittedAt }: Readonly<StatusCardProps>) {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4 }}
     >
-      <Card className="bg-black border border-white/20 rounded-none">
+      <Card className="bg-black border border-white/20 rounded-none !gap-0">
         <CardHeader className="border-b border-white/10">
           <CardTitle className="text-white flex items-center justify-between">
             <span className="uppercase tracking-wider text-sm">

@@ -152,7 +152,7 @@ export function EventTimeline({
     >
       {/* Notice about mock data */}
       <motion.div variants={item}>
-        <Card className="bg-black border border-yellow-400/40 rounded-none">
+        <Card className="bg-black border border-yellow-400/40 rounded-none !gap-0">
           <CardContent className="py-4">
             <p className="text-yellow-400/80 text-sm font-mono">
               ▶ Schedule data will be available closer to the event. Check back
@@ -164,7 +164,7 @@ export function EventTimeline({
 
       {Object.entries(groupedEvents).map(([date, dayEvents]) => (
         <motion.div key={date} variants={item}>
-          <Card className="bg-black border border-white/20 rounded-none overflow-hidden">
+          <Card className="bg-black border border-white/20 rounded-none overflow-hidden !gap-0">
             <CardHeader className="bg-white/5 border-b border-white/10">
               <CardTitle className="text-white flex items-center gap-2 uppercase tracking-wider text-sm">
                 <CalendarIcon className="w-5 h-5" />
