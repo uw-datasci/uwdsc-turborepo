@@ -172,7 +172,14 @@ export function LoginForm() {
               )}
             </CxCButton>
 
-            <div className="flex flex-col sm:flex-row justify-between">
+            <div className="flex flex-col sm:flex-row justify-between gap-4">
+              <Button
+                variant="link"
+                asChild
+                className="text-gray-400/60 hover:text-gray-200 transition-colors text-sm font-medium p-0 w-fit"
+              >
+                <Link href="/forgot-password">Forgot password?</Link>
+              </Button>
               <Button
                 variant="link"
                 asChild

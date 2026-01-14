@@ -200,4 +200,59 @@ export class AuthService {
       );
     }
   }
+
+  /**
+   * Send password reset email
+   */
+  async forgotPassword(email: string, emailRedirectTo: string) {
+    try {
+      const { error } = await this.repository.resetPasswordForEmail(
+        email,
+        emailRedirectTo,
+      );
+
+      if (error) {
+        return {
+          success: false,
+          error: error.message,
+        };
+      }
+
+      return {
+        success: true,
+        message: "Password reset email sent successfully",
+      };
+    } catch (error) {
+      throw new ApiError(
+        `Failed to send password reset email: ${(error as Error).message}`,
+        500,
+      );
+    }
+  }
+
+  /**
+   * Reset user password
+   */
+  async resetPassword(newPassword: string) {
+    try {
+      const { error } = await this.repository.updateUserPassword(newPassword);
+
+      if (error) {
+        return {
+          success: false,
+          error: error.message,
+        };
+      }
+
+      return {
+        success: true,
+        message: "Password reset successfully",
+      };
+    } catch (error) {
+      throw new ApiError(
+        `Failed to reset password: ${(error as Error).message}`,
+        500,
+      );
+    }
+  }
 }
