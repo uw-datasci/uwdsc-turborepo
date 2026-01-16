@@ -62,4 +62,9 @@ export const GENERAL_FAQ: QandA[] = [
     answer: `In the past, CXC hosted multiple data science related workshops from simpler topics such as introducing machine learning and data processing with python, to more advanced topics such as planning and structural AI projects. Our event sponsors will also be running booths where you can learn their mission and connect with them throughout the day. Be sure to check them out!
     In addition, CXC will also be running multiple fun activities throughout the event, from spicy noodle challenge to late-night karaoke. We're confident that our events will be enough for anyone to enjoy :)`,
   },
+  {
+    id: "9",
+    question: "What is the MLH Code of Conduct?",
+    answer: `CXC follows the Major League Hacking (MLH) Code of Conduct. All participants are expected to treat others with respect and create a welcoming, inclusive environment. Harassment or discrimination of any kind will not be tolerated. You can read the full [Code of Conduct](https://github.com/MLH/mlh-policies/blob/main/code-of-conduct.md).`,
+  },
 ];

@@ -52,50 +52,6 @@ export function BasicInformation({
       </div>
       <div className="p-6 space-y-4">
         <div className="space-y-2 text-sm text-white/80">
-          {application.email && (
-            <div>
-              <span className="font-medium text-white">Email:</span>{" "}
-              {application.email}
-            </div>
-          )}
-          {application.phone_number && (
-            <div>
-              <span className="font-medium text-white">Phone:</span>{" "}
-              {application.phone_number}
-            </div>
-          )}
-          {application.discord && (
-            <div>
-              <span className="font-medium text-white">Discord:</span>{" "}
-              {application.discord}
-            </div>
-          )}
-          {application.t_shirt && (
-            <div>
-              <span className="font-medium text-white">T-Shirt Size:</span>{" "}
-              {application.t_shirt}
-            </div>
-          )}
-          {application.dietary_restrictions && (
-            <div>
-              <span className="font-medium text-white">
-                Dietary Restrictions:
-              </span>{" "}
-              {application.dietary_restrictions}
-            </div>
-          )}
-          {application.gender && (
-            <div>
-              <span className="font-medium text-white">Gender:</span>{" "}
-              {application.gender}
-            </div>
-          )}
-          {application.ethnicity && (
-            <div>
-              <span className="font-medium text-white">Ethnicity:</span>{" "}
-              {application.ethnicity}
-            </div>
-          )}
           {application.uni_name && (
             <div>
               <span className="font-medium text-white">University:</span>{" "}
@@ -128,55 +84,6 @@ export function BasicInformation({
                 Hackathons Attended:
               </span>{" "}
               {application.num_hackathons}
-            </div>
-          )}
-          {application.team_members?.trim() && (
-            <div className="pt-2">
-              {application.team_name && (
-                <div className="mb-3">
-                  <span className="font-medium text-lg text-white">
-                    Team Name:{" "}
-                    <span className="font-semibold">
-                      {application.team_name}
-                    </span>
-                  </span>
-                </div>
-              )}
-              <span className="font-medium text-white block mb-2">
-                Team Members:
-              </span>
-              <div className="flex flex-wrap gap-2">
-                {application.team_members_with_names &&
-                application.team_members_with_names.length > 0
-                  ? application.team_members_with_names.map((member, index) => (
-                      <div
-                        key={index}
-                        className="flex items-center gap-2 px-3 py-1.5 bg-white/5 border border-white/20"
-                      >
-                        <span className="text-white/80">
-                          {member.display_name ? (
-                            <>
-                              <span>{member.display_name}</span>
-                              <span className="text-white/40">
-                                {" "}
-                                ({member.email})
-                              </span>
-                            </>
-                          ) : (
-                            <span>{member.email}</span>
-                          )}
-                        </span>
-                      </div>
-                    ))
-                  : application.team_members.split(",").map((email, index) => (
-                      <div
-                        key={index}
-                        className="flex items-center gap-2 px-3 py-1.5 bg-white/5 border border-white/20"
-                      >
-                        <span className="text-white/80">{email.trim()}</span>
-                      </div>
-                    ))}
-              </div>
             </div>
           )}
         </div>
