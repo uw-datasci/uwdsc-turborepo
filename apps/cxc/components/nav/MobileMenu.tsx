@@ -41,6 +41,7 @@ interface MobileMenuProps {
   navLinks: NavLink[];
   user: UserProfile | null;
   adminPages?: AdminPage[];
+  superadminPages?: AdminPage[];
 }
 
 function HamburgerIcon() {
@@ -57,11 +58,13 @@ export function MobileMenu({
   navLinks,
   user,
   adminPages = [],
+  superadminPages = [],
 }: Readonly<MobileMenuProps>) {
   const router = useRouter();
   const { mutate } = useAuth();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isAdminOpen, setIsAdminOpen] = useState(false);
+  const [isSuperadminOpen, setIsSuperadminOpen] = useState(false);
 
   const handleSignOut = async () => {
     try {
@@ -114,8 +117,8 @@ export function MobileMenu({
                 ))}
               </nav>
 
-              {/* Admin section - only show to admin users */}
-              {user?.role === "admin" && adminPages.length > 0 && (
+              {/* Admin section - only show to admin or superadmin users */}
+              {(user?.role === "admin" || user?.role === "superadmin") && adminPages.length > 0 && (
                 <div className="mt-6">
                   <Separator className="my-4 border-border/40" />
                   <Collapsible
@@ -139,6 +142,55 @@ export function MobileMenu({
                     </CollapsibleTrigger>
                     <CollapsibleContent className="space-y-2 mt-2">
                       {adminPages.map((page) => (
+                        <SheetClose key={page.href} asChild>
+                          <Button
+                            variant="ghost"
+                            className="w-full justify-start text-left text-base py-3 px-6 h-auto font-medium hover:bg-accent/10 transition-colors rounded-lg ml-4"
+                            asChild
+                          >
+                            <Link href={page.href}>
+                              <div className="flex flex-col items-start gap-0.5">
+                                <span className="font-medium">
+                                  {page.label}
+                                </span>
+                                <span className="text-xs text-muted-foreground font-normal">
+                                  {page.description}
+                                </span>
+                              </div>
+                            </Link>
+                          </Button>
+                        </SheetClose>
+                      ))}
+                    </CollapsibleContent>
+                  </Collapsible>
+                </div>
+              )}
+
+              {/* Superadmin section - only show to superadmin users */}
+              {user?.role === "superadmin" && superadminPages.length > 0 && (
+                <div className="mt-6">
+                  <Separator className="my-4 border-border/40" />
+                  <Collapsible
+                    open={isSuperadminOpen}
+                    onOpenChange={setIsSuperadminOpen}
+                    className="space-y-2"
+                  >
+                    <CollapsibleTrigger asChild>
+                      <Button
+                        variant="ghost"
+                        className="w-full justify-between text-2xl py-5 px-4 h-auto font-semibold hover:bg-accent/10 transition-colors rounded-lg"
+                      >
+                        Superadmin
+                        <ChevronDownIcon
+                          className={cn(
+                            "h-6 w-6 transition-transform duration-200",
+                            isSuperadminOpen && "rotate-180",
+                          )}
+                        />
+                      </Button>
+                    </CollapsibleTrigger>
+                    <CollapsibleContent className="space-y-2 mt-2">
+                      {superadminPages.map((page) => (
                         <SheetClose key={page.href} asChild>
                           <Button
                             variant="ghost"
