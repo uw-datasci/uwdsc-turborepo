@@ -15,7 +15,11 @@ import { PastProjects } from "@/components/home/PastProjects";
 
 export default function Home() {
   return (
+<<<<<<< HEAD
     <div>
+=======
+    <div className="mt-24">
+>>>>>>> origin
       <CxCTitle />
       <WormholeTop />
       <div className="border-t border-b border-white/50">

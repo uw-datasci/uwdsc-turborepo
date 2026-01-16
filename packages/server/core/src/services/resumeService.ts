@@ -227,7 +227,7 @@ export class ResumeService extends FileService {
             }
           }
         }
-        
+
         // If we get here, none of the common patterns worked
         // Log for debugging
         console.log(
