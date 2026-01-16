@@ -129,13 +129,18 @@ export default function MobileApplication({
       </div>
       <MobileAppNav />
       <div className="relative z-10 p-5 overflow-hidden flex flex-col gap-12 flex-1">
-        <StepIndicator
-          currentStep={getCurrentStep() + 1}
-          totalSteps={FINAL_STEP_COUNT}
-          stepName={STEP_NAMES[currentStep]}
-          subStepName={PAGE_NAMES[currentPage]}
-          label=""
-        />
+        <div className="flex flex-col gap-2">
+          <StepIndicator
+            currentStep={getCurrentStep() + 1}
+            totalSteps={FINAL_STEP_COUNT}
+            stepName={STEP_NAMES[currentStep]}
+            subStepName={PAGE_NAMES[currentPage]}
+            label=""
+          />
+          <div className="mt-4 text-xs font-mono border border-orange-300 text-orange-300 px-2 py-1 w-fit shadow-[0_0_10px_rgba(251,146,60,0.3)]">
+            Applications due Jan 15, 11:59pm
+          </div>
+        </div>
         <div className="overflow-visible flex-1 flex flex-col justify-between">
           <AnimatePresence mode="wait" custom={direction}>
             <motion.div

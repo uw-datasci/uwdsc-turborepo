@@ -16,7 +16,8 @@ export interface GetRandomApplicationResponse {
 
 export interface SubmitReviewRequest {
   application_id: string;
-  basic_info_score: number;
+  resume_score: number;
+  links_score: number;
   q1_score: number;
   q2_score: number;
 }
@@ -48,7 +49,7 @@ export async function getRandomApplication(): Promise<GetRandomApplicationRespon
 /**
  * Submit review scores for an application
  *
- * @param scores - The review scores (application_id, basic_info_score, questions_score)
+ * @param scores - The review scores (application_id, resume_score, links_score, q1_score, q2_score)
  * @returns Promise with submission result
  * @throws Error if submission fails
  */

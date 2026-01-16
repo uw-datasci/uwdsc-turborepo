@@ -5,7 +5,14 @@
  */
 
 // Export all authentication functions
-export { register, login, resendVerificationEmail, signOut } from "./auth";
+export {
+  register,
+  login,
+  resendVerificationEmail,
+  signOut,
+  forgotPassword,
+  resetPassword,
+} from "./auth";
 
 // Export all user functions
 export { getUserProfile } from "./user";

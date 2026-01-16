@@ -129,6 +129,9 @@ export default function DesktopApplication({
               totalSteps={FINAL_STEP_COUNT}
               label="CXC 2026"
             />
+            <div className="mt-8 text-sm font-mono border border-orange-300 text-orange-300 px-3 py-1 w-fit shadow-[0_0_10px_rgba(251,146,60,0.3)]">
+              Applications due Jan 15, 11:59pm
+            </div>
           </div>
           <DSCLogo size={24} className="hidden md:block" href="/" />
         </div>

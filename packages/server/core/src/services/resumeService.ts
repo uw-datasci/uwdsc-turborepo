@@ -163,36 +163,84 @@ export class ResumeService extends FileService {
     | { success: false; error: string }
   > {
     try {
-      // First, verify the user has a resume
+      // First, try to get the resume by listing files
       const resumeResult = await this.getUserResume(userId);
 
-      if (!resumeResult.success || !resumeResult.key) {
+      // If we successfully got the resume, create signed URL
+      if (resumeResult.success && resumeResult.key) {
+        const signedUrlResult = await this.createSignedUrl(
+          resumeResult.key,
+          expiresIn,
+        );
+
+        if (!signedUrlResult.success) {
+          return {
+            success: false,
+            error: "Failed to create signed URL",
+          };
+        }
+
         return {
-          success: false,
-          error: resumeResult.success
-            ? "No resume found"
-            : resumeResult.error || "Failed to get resume",
+          success: true,
+          url: signedUrlResult.url,
+          resume: resumeResult.resume,
+          key: resumeResult.key,
         };
       }
 
-      // Create signed URL for the resume
-      const signedUrlResult = await this.createSignedUrl(
-        resumeResult.key,
-        expiresIn,
-      );
-
-      if (!signedUrlResult.success) {
-        return {
-          success: false,
-          error: "Failed to create signed URL",
-        };
+      // If listing failed or no resume found, try common resume file patterns
+      // This handles cases where listing fails due to RLS (e.g., admin accessing another user's files)
+      // Note: createSignedUrl may succeed even if listing fails
+      let shouldTryCommonPatterns = false;
+      if (!resumeResult.success) {
+        shouldTryCommonPatterns = true;
+      } else if (!resumeResult.key || !resumeResult.resume) {
+        shouldTryCommonPatterns = true;
       }
 
+      if (shouldTryCommonPatterns) {
+        // Try common resume filename patterns
+        const commonExtensions = [".pdf", ".docx", ".doc"];
+        const commonNames = ["resume", "Resume", "RESUME", "cv", "CV"];
+
+        for (const name of commonNames) {
+          for (const ext of commonExtensions) {
+            const objectKey = `${userId}/${name}${ext}`;
+            try {
+              const signedUrlResult = await this.createSignedUrl(
+                objectKey,
+                expiresIn,
+              );
+              if (signedUrlResult.success && signedUrlResult.url) {
+                // Successfully created signed URL - file exists!
+                return {
+                  success: true,
+                  url: signedUrlResult.url,
+                  resume: { name: `${name}${ext}` } as FileObject,
+                  key: objectKey,
+                };
+              }
+            } catch {
+              // File doesn't exist at this path, try next pattern
+              // Supabase createSignedUrl throws error if file doesn't exist
+              continue;
+            }
+          }
+        }
+
+        // If we get here, none of the common patterns worked
+        // Log for debugging
+        console.log(
+          `Could not find resume for userId ${userId} - tried common patterns but none matched`,
+        );
+      }
+
+      // If all attempts failed, return error
       return {
-        success: true,
-        url: signedUrlResult.url,
-        resume: resumeResult.resume,
-        key: resumeResult.key,
+        success: false,
+        error: resumeResult.success
+          ? "No resume found"
+          : resumeResult.error || "Failed to get resume",
       };
     } catch (error) {
       return {

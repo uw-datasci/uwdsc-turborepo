@@ -7,6 +7,67 @@ import {
   AccordionContent,
 } from "@uwdsc/ui/index";
 
+// Helper function to parse text and render with links
+function parseTextWithLinks(text: string) {
+  // Match markdown-style links [text](url) and plain URLs
+  const markdownLinkRegex = /\[([^\]]+)\]\(([^)]+)\)/g;
+  const urlRegex = /(https?:\/\/[^\s]+)/g;
+
+  // First, handle markdown-style links
+  const textWithMarkdown = text.replace(
+    markdownLinkRegex,
+    (_, linkText, url) => {
+      return `__LINK__${url}__TEXT__${linkText}__ENDLINK__`;
+    },
+  );
+
+  // Split by our placeholder
+  const segments = textWithMarkdown.split(
+    /(__LINK__[^_]+__TEXT__[^_]+__ENDLINK__)/,
+  );
+
+  return segments.map((segment, index) => {
+    if (segment.startsWith("__LINK__")) {
+      const urlMatch = segment.match(
+        /__LINK__([^_]+)__TEXT__([^_]+)__ENDLINK__/,
+      );
+      if (urlMatch) {
+        const [, url, linkText] = urlMatch;
+        return (
+          <a
+            key={index}
+            href={url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="underline text-[#7CA3DE] hover:text-[#9BB8E5] transition-colors"
+          >
+            {linkText}
+          </a>
+        );
+      }
+    }
+
+    // Handle plain URLs in remaining text
+    const urlParts = segment.split(urlRegex);
+    return urlParts.map((part, i) => {
+      if (part.match(urlRegex)) {
+        return (
+          <a
+            key={`${index}-${i}`}
+            href={part}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="underline text-[#7CA3DE] hover:text-[#9BB8E5] transition-colors"
+          >
+            {part}
+          </a>
+        );
+      }
+      return part;
+    });
+  });
+}
+
 export function Faq() {
   return (
     // emulate mx-container with padding instead bc of w-full
@@ -35,7 +96,7 @@ export function Faq() {
               className={`leading-[1.75] font-light text-white text-sm md:text-base ${i === 0 ? "pt-5" : ""}`}
               key={i}
             >
-              {line}
+              {parseTextWithLinks(line)}
             </p>
           ));
           return (
