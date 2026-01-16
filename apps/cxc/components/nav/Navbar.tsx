@@ -39,6 +39,14 @@ const adminPages = [
   },
 ];
 
+const superadminPages = [
+  {
+    href: "/admin/assign",
+    label: "Assign Roles",
+    description: "Search for users and assign admin roles",
+  },
+];
+
 export default function Navbar() {
   const { user, isAuthenticated, isLoading } = useAuth();
   const [isVisible, setIsVisible] = useState(true);
@@ -131,8 +139,8 @@ export default function Navbar() {
                       </NavigationMenuItem>
                     ))}
 
-                    {/* Admin dropdown - only show to admin users */}
-                    {user?.role === "admin" && (
+                    {/* Admin dropdown - only show to admin or superadmin users */}
+                    {(user?.role === "admin" || user?.role === "superadmin") && (
                       <NavigationMenuItem>
                         <NavigationMenuTrigger className="!text-base font-medium">
                           Admin
@@ -140,6 +148,36 @@ export default function Navbar() {
                         <NavigationMenuContent>
                           <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
                             {adminPages.map((page) => (
+                              <li key={page.href}>
+                                <NavigationMenuLink asChild>
+                                  <Link
+                                    href={page.href}
+                                    className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
+                                  >
+                                    <div className="text-sm font-medium leading-none">
+                                      {page.label}
+                                    </div>
+                                    <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
+                                      {page.description}
+                                    </p>
+                                  </Link>
+                                </NavigationMenuLink>
+                              </li>
+                            ))}
+                          </ul>
+                        </NavigationMenuContent>
+                      </NavigationMenuItem>
+                    )}
+
+                    {/* Superadmin dropdown - only show to superadmin users */}
+                    {user?.role === "superadmin" && (
+                      <NavigationMenuItem>
+                        <NavigationMenuTrigger className="!text-base font-medium">
+                          Superadmin
+                        </NavigationMenuTrigger>
+                        <NavigationMenuContent>
+                          <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
+                            {superadminPages.map((page) => (
                               <li key={page.href}>
                                 <NavigationMenuLink asChild>
                                   <Link
@@ -178,6 +216,7 @@ export default function Navbar() {
                         navLinks={navLinks}
                         user={user ?? null}
                         adminPages={adminPages}
+                        superadminPages={superadminPages}
                       />
                     </div>
                   </>
