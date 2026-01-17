@@ -6,9 +6,9 @@ const profileService = new ProfileService();
 
 /**
  * POST /api/admin/users/assign-volunteer
- * Assign volunteer role to a user
+ * Assign hacker or volunteer role to a user
  * Admin or superadmin only endpoint
- * Body: { userId: string, role: "volunteer" }
+ * Body: { userId: string, role: "hacker" | "volunteer" }
  */
 export async function POST(request: Request) {
   try {
@@ -42,10 +42,10 @@ export async function POST(request: Request) {
       );
     }
 
-    // Validate role - only allow assigning volunteer role
-    if (role !== "volunteer") {
+    // Validate role - only allow assigning hacker or volunteer role
+    if (role !== "hacker" && role !== "volunteer") {
       return NextResponse.json(
-        { error: "Bad Request", message: "Invalid role. Only 'volunteer' role can be assigned via this endpoint" },
+        { error: "Bad Request", message: "Invalid role. Only 'hacker' or 'volunteer' roles can be assigned via this endpoint" },
         { status: 400 },
       );
     }

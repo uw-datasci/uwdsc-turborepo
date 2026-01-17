@@ -39,8 +39,8 @@ const adminPages = [
   },
   {
     href: "/admin/assign-volunteers",
-    label: "Assign Volunteers",
-    description: "Search for users and assign volunteer roles",
+    label: "Assign Roles",
+    description: "Search for users and assign hacker or volunteer roles",
   },
 ];
 

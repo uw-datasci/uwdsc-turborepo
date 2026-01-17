@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Card, CardHeader, CardTitle, CardContent, Button, Input } from "@uwdsc/ui";
-import { Search, Loader2, CheckCircle2, XCircle, Users } from "lucide-react";
+import { Search, Loader2, CheckCircle2, XCircle, Users, Code } from "lucide-react";
 
 interface User {
   id: string;
@@ -15,7 +15,7 @@ export default function AdminAssignVolunteersPage() {
   const [emailQuery, setEmailQuery] = useState<string>("");
   const [searching, setSearching] = useState(false);
   const [users, setUsers] = useState<User[]>([]);
-  const [assigning, setAssigning] = useState<string | null>(null);
+  const [assigning, setAssigning] = useState<{ userId: string; role: string } | null>(null);
   const [result, setResult] = useState<{
     success: boolean;
     message: string;
@@ -63,12 +63,12 @@ export default function AdminAssignVolunteersPage() {
     }
   };
 
-  const handleAssignVolunteer = async (userId: string, userEmail: string) => {
-    if (!confirm(`Are you sure you want to assign volunteer role to ${userEmail}?`)) {
+  const handleAssignRole = async (userId: string, userEmail: string, role: "hacker" | "volunteer") => {
+    if (!confirm(`Are you sure you want to assign ${role} role to ${userEmail}?`)) {
       return;
     }
 
-    setAssigning(userId);
+    setAssigning({ userId, role });
     setResult(null);
 
     try {
@@ -79,7 +79,7 @@ export default function AdminAssignVolunteersPage() {
         },
         body: JSON.stringify({
           userId,
-          role: "volunteer",
+          role,
         }),
       });
 
@@ -88,11 +88,11 @@ export default function AdminAssignVolunteersPage() {
       if (response.ok && data.success) {
         setResult({
           success: true,
-          message: `Successfully assigned volunteer role to ${userEmail}`,
+          message: `Successfully assigned ${role} role to ${userEmail}`,
         });
 
         // Update the user's role in the local state
-        setUsers(users.map(u => u.id === userId ? { ...u, role: "volunteer" } : u));
+        setUsers(users.map(u => u.id === userId ? { ...u, role } : u));
 
         // Clear result after 5 seconds
         setTimeout(() => {
@@ -101,14 +101,14 @@ export default function AdminAssignVolunteersPage() {
       } else {
         setResult({
           success: false,
-          message: data.message || data.error || "Failed to assign volunteer role",
+          message: data.message || data.error || `Failed to assign ${role} role`,
         });
       }
     } catch (error) {
-      console.error("Error assigning volunteer role:", error);
+      console.error(`Error assigning ${role} role:`, error);
       setResult({
         success: false,
-        message: "Failed to assign volunteer role. Please try again.",
+        message: `Failed to assign ${role} role. Please try again.`,
       });
     } finally {
       setAssigning(null);
@@ -124,9 +124,9 @@ export default function AdminAssignVolunteersPage() {
   return (
     <div className="max-w-4xl mx-auto space-y-6 p-6">
       <div>
-        <h1 className="text-3xl font-bold mb-2">Assign Volunteer Roles</h1>
+        <h1 className="text-3xl font-bold mb-2">Assign Roles</h1>
         <p className="text-muted-foreground">
-          Search for users by email and assign them volunteer roles. Only admins and superadmins can access this page.
+          Search for users by email and assign them hacker or volunteer roles. Only admins and superadmins can access this page.
         </p>
       </div>
 
@@ -206,29 +206,54 @@ export default function AdminAssignVolunteersPage() {
                       </div>
                     </div>
                     <div className="flex items-center gap-2">
-                      {user.role === "volunteer" ? (
+                      {user.role === "hacker" || user.role === "volunteer" ? (
                         <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                          <Users className="h-4 w-4" />
-                          <span>Already volunteer</span>
+                          {user.role === "hacker" ? (
+                            <Code className="h-4 w-4" />
+                          ) : (
+                            <Users className="h-4 w-4" />
+                          )}
+                          <span>Already {user.role}</span>
                         </div>
                       ) : (
-                        <Button
-                          onClick={() => handleAssignVolunteer(user.id, user.email)}
-                          disabled={assigning === user.id}
-                          variant="default"
-                        >
-                          {assigning === user.id ? (
-                            <>
-                              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                              Assigning...
-                            </>
-                          ) : (
-                            <>
-                              <Users className="mr-2 h-4 w-4" />
-                              Assign Volunteer
-                            </>
-                          )}
-                        </Button>
+                        <div className="flex items-center gap-2">
+                          <Button
+                            onClick={() => handleAssignRole(user.id, user.email, "hacker")}
+                            disabled={assigning?.userId === user.id}
+                            variant="default"
+                            size="sm"
+                          >
+                            {assigning?.userId === user.id && assigning?.role === "hacker" ? (
+                              <>
+                                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                Assigning...
+                              </>
+                            ) : (
+                              <>
+                                <Code className="mr-2 h-4 w-4" />
+                                Assign Hacker
+                              </>
+                            )}
+                          </Button>
+                          <Button
+                            onClick={() => handleAssignRole(user.id, user.email, "volunteer")}
+                            disabled={assigning?.userId === user.id}
+                            variant="default"
+                            size="sm"
+                          >
+                            {assigning?.userId === user.id && assigning?.role === "volunteer" ? (
+                              <>
+                                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                Assigning...
+                              </>
+                            ) : (
+                              <>
+                                <Users className="mr-2 h-4 w-4" />
+                                Assign Volunteer
+                              </>
+                            )}
+                          </Button>
+                        </div>
                       )}
                     </div>
                   </div>
