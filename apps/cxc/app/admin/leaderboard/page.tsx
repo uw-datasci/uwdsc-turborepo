@@ -69,13 +69,23 @@ export default function LeaderboardPage() {
       
       clearTimeout(timeoutId);
       
-      let data: any;
+      let data: {
+        leaderboard?: LeaderboardEntry[];
+        statistics?: Statistics;
+        error?: string;
+        message?: string;
+      };
       try {
         const text = await response.text();
         if (!text) {
           throw new Error("Empty response from server");
         }
-        data = JSON.parse(text);
+        data = JSON.parse(text) as {
+          leaderboard?: LeaderboardEntry[];
+          statistics?: Statistics;
+          error?: string;
+          message?: string;
+        };
       } catch (parseError) {
         console.error("Failed to parse response:", parseError);
         throw new Error("Invalid response from server. Please try again.");
@@ -149,7 +159,6 @@ export default function LeaderboardPage() {
   }
 
   const topThree = leaderboard.slice(0, 3);
-  const rest = leaderboard.slice(3);
 
   const getPodiumHeight = (position: number) => {
     if (position === 0) return "h-32"; // 1st place - tallest
@@ -442,7 +451,6 @@ export default function LeaderboardPage() {
                       </div>
                     </div>
                     <div className="flex items-center gap-2">
-                      <Star className="h-4 w-4 text-yellow-500" />
                       <span className="font-bold text-lg">
                         {entry.review_count}
                       </span>

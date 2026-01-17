@@ -31,14 +31,28 @@ export async function GET() {
 
     // Get all application summaries
     const adminApplicationService = new AdminApplicationService();
-    const applications =
-      await adminApplicationService.getAllApplicationSummaries();
-
-    return NextResponse.json({ applications });
+    
+    try {
+      const applications =
+        await adminApplicationService.getAllApplicationSummaries();
+      
+      console.log(`[API] Found ${applications.length} applications`);
+      return NextResponse.json({ applications });
+    } catch (serviceError) {
+      console.error("Error fetching applications:", serviceError);
+      throw serviceError;
+    }
   } catch (error) {
-    console.error("Error fetching applications:", error);
+    const errorMessage = error instanceof Error ? error.message : "Unknown error";
+    console.error("Error in applications route:", {
+      error: errorMessage,
+      stack: error instanceof Error ? error.stack : undefined,
+    });
     return NextResponse.json(
-      { error: "Internal server error" },
+      { 
+        error: "Internal server error",
+        message: process.env.NODE_ENV === "development" ? errorMessage : undefined,
+      },
       { status: 500 },
     );
   }
