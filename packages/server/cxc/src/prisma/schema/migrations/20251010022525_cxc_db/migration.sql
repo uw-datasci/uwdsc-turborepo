@@ -155,13 +155,6 @@ CREATE TABLE "public"."teams" (
     CONSTRAINT "teams_pkey" PRIMARY KEY ("id")
 );
 
-
--- CreateIndex
-CREATE UNIQUE INDEX IF NOT EXISTS "idx_reviews_application_id" ON "public"."reviews"("application_id");
-
--- CreateIndex
-CREATE UNIQUE INDEX IF NOT EXISTS "idx_reviews_reviewer_id" ON "public"."reviews"("reviewer_id");
-
 -- CreateIndex
 CREATE UNIQUE INDEX "applications_profile_id_key" ON "public"."applications"("profile_id");
 

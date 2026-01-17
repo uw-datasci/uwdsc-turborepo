@@ -60,17 +60,22 @@ export async function PATCH(
 
     // Build update data with only provided fields
     const updateData: Record<string, unknown> = {};
-    
+
     if (name !== undefined) updateData.name = name;
-    if (registration_required !== undefined) updateData.registration_required = registration_required;
+    if (registration_required !== undefined)
+      updateData.registration_required = registration_required;
     if (description !== undefined) updateData.description = description ?? null;
     if (location !== undefined) updateData.location = location ?? null;
     if (start_time !== undefined) updateData.start_time = new Date(start_time);
-    if (buffered_start_time !== undefined) updateData.buffered_start_time = new Date(buffered_start_time);
+    if (buffered_start_time !== undefined)
+      updateData.buffered_start_time = new Date(buffered_start_time);
     if (end_time !== undefined) updateData.end_time = new Date(end_time);
-    if (buffered_end_time !== undefined) updateData.buffered_end_time = new Date(buffered_end_time);
-    if (payment_required !== undefined) updateData.payment_required = payment_required;
-    if (image_id !== undefined) updateData.image_id = image_id ? Number(image_id) : null;
+    if (buffered_end_time !== undefined)
+      updateData.buffered_end_time = new Date(buffered_end_time);
+    if (payment_required !== undefined)
+      updateData.payment_required = payment_required;
+    if (image_id !== undefined)
+      updateData.image_id = image_id ? Number(image_id) : null;
 
     const event = await eventService.updateEvent(eventId, updateData);
 
@@ -80,7 +85,8 @@ export async function PATCH(
     return NextResponse.json(
       {
         error: "Internal server error",
-        message: error instanceof Error ? error.message : "Failed to update event",
+        message:
+          error instanceof Error ? error.message : "Failed to update event",
       },
       { status: 500 },
     );

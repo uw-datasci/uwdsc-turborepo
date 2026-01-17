@@ -3,7 +3,15 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Card, CardHeader, CardTitle, CardContent, Button } from "@uwdsc/ui";
-import { Plus, Loader2, QrCode, Edit, Radio, CheckCircle2, XCircle } from "lucide-react";
+import {
+  Plus,
+  Loader2,
+  QrCode,
+  Edit,
+  Radio,
+  CheckCircle2,
+  XCircle,
+} from "lucide-react";
 import { QrScanner } from "@/components/admin/QrScanner";
 
 // Web NFC API types
@@ -85,12 +93,20 @@ export default function AdminEventsPage() {
           setEvents(data.events || []);
           // Load cached event or set first event as default
           if (data.events && data.events.length > 0) {
-            const cachedEventId = localStorage.getItem("admin_selected_event_id");
-            if (cachedEventId && data.events.some(e => String(e.id) === cachedEventId)) {
+            const cachedEventId = localStorage.getItem(
+              "admin_selected_event_id",
+            );
+            if (
+              cachedEventId &&
+              data.events.some((e) => String(e.id) === cachedEventId)
+            ) {
               setSelectedEventId(cachedEventId);
             } else {
               setSelectedEventId(String(data.events[0].id));
-              localStorage.setItem("admin_selected_event_id", String(data.events[0].id));
+              localStorage.setItem(
+                "admin_selected_event_id",
+                String(data.events[0].id),
+              );
             }
           }
         }
@@ -129,7 +145,7 @@ export default function AdminEventsPage() {
       if ("NDEFReader" in window) {
         // Chrome 89+ API
         const reader = new (window as unknown as WindowWithNDEF).NDEFReader();
-        
+
         // Wait for NFC scan with timeout
         await new Promise<void>((resolve, reject) => {
           let resolved = false;
@@ -141,7 +157,11 @@ export default function AdminEventsPage() {
               } catch {
                 // Ignore abort errors
               }
-              reject(new Error("No NFC card detected. Please hold the card close to your device."));
+              reject(
+                new Error(
+                  "No NFC card detected. Please hold the card close to your device.",
+                ),
+              );
             }
           }, 30000); // 30 second timeout
 
@@ -149,14 +169,14 @@ export default function AdminEventsPage() {
             if (resolved) return;
             resolved = true;
             clearTimeout(timeout);
-            
+
             try {
               const message = event.message;
               if (message.records && message.records.length > 0) {
                 const record = message.records[0];
                 if (!record) return;
                 const decoder = new TextDecoder();
-                
+
                 if (record.recordType === "url") {
                   // URL records have the URL directly in the data
                   if (typeof record.data === "string") {
@@ -170,7 +190,10 @@ export default function AdminEventsPage() {
                   } else if (typeof record.data === "string") {
                     urlResult.url = record.data;
                   }
-                } else if (record.recordType === "mime" && record.mediaType === "text/plain") {
+                } else if (
+                  record.recordType === "mime" &&
+                  record.mediaType === "text/plain"
+                ) {
                   if (record.data instanceof Uint8Array) {
                     urlResult.url = decoder.decode(record.data);
                   } else if (typeof record.data === "string") {
@@ -181,7 +204,7 @@ export default function AdminEventsPage() {
             } catch (parseError) {
               console.error("Error parsing NFC record:", parseError);
             }
-            
+
             try {
               if (reader.abort) reader.abort();
             } catch {
@@ -211,7 +234,7 @@ export default function AdminEventsPage() {
       } else if ("nfc" in navigator && (navigator as NavigatorWithNFC).nfc) {
         // Chrome 89+ alternative API
         const ndef = new (navigator as NavigatorWithNFC).nfc!.NDEFReader();
-        
+
         // Wait for NFC scan with timeout
         await new Promise<void>((resolve, reject) => {
           let resolved = false;
@@ -223,7 +246,11 @@ export default function AdminEventsPage() {
               } catch {
                 // Ignore abort errors
               }
-              reject(new Error("No NFC card detected. Please hold the card close to your device."));
+              reject(
+                new Error(
+                  "No NFC card detected. Please hold the card close to your device.",
+                ),
+              );
             }
           }, 30000);
 
@@ -231,14 +258,14 @@ export default function AdminEventsPage() {
             if (resolved) return;
             resolved = true;
             clearTimeout(timeout);
-            
+
             try {
               const message = event.message;
               if (message.records && message.records.length > 0) {
                 const record = message.records[0];
                 if (!record) return;
                 const decoder = new TextDecoder();
-                
+
                 if (record.recordType === "url") {
                   if (typeof record.data === "string") {
                     urlResult.url = record.data;
@@ -256,7 +283,7 @@ export default function AdminEventsPage() {
             } catch (parseError) {
               console.error("Error parsing NFC record:", parseError);
             }
-            
+
             try {
               if (ndef.abort) ndef.abort();
             } catch {
@@ -293,7 +320,7 @@ export default function AdminEventsPage() {
           success: true,
           message: "Successfully read URL from NFC card!",
         });
-        
+
         // Extract NFC ID from URL and navigate to check-in page
         const match = url.match(/\/admin\/checkin\/([^/\s]+)/);
         if (match && match[1]) {
@@ -319,9 +346,10 @@ export default function AdminEventsPage() {
       }
     } catch (error) {
       console.error("Error reading NFC:", error);
-      const errorMessage = error instanceof Error 
-        ? error.message 
-        : "Failed to read NFC card. Make sure the card is close to your device.";
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : "Failed to read NFC card. Make sure the card is close to your device.";
       setNfcResult({
         success: false,
         message: errorMessage,
@@ -386,7 +414,8 @@ export default function AdminEventsPage() {
                 >
                   {events.map((event) => (
                     <option key={event.id} value={event.id}>
-                      {event.name} - {new Date(event.start_time).toLocaleDateString()}
+                      {event.name} -{" "}
+                      {new Date(event.start_time).toLocaleDateString()}
                     </option>
                   ))}
                 </select>
@@ -395,7 +424,8 @@ export default function AdminEventsPage() {
               {selectedEventId && (
                 <div className="p-4 bg-muted rounded-md">
                   <p className="text-sm text-muted-foreground mb-2">
-                    Selected event is cached for NFC check-ins. Go to NFC tools to check hackers in.
+                    Selected event is cached for NFC check-ins. Go to NFC tools
+                    to check hackers in.
                   </p>
                 </div>
               )}
@@ -432,7 +462,8 @@ export default function AdminEventsPage() {
         <CardContent className="space-y-4">
           <div className="p-4 rounded-md bg-yellow-500/10 text-yellow-500 border border-yellow-500/20">
             <p className="text-sm font-medium">
-              ⚠️ Please use Android and Chrome!!! This feature requires Chrome on Android with HTTPS.
+              ⚠️ Please use Android and Chrome!!! This feature requires Chrome
+              on Android with HTTPS.
             </p>
           </div>
 
@@ -474,8 +505,6 @@ export default function AdminEventsPage() {
           )}
         </CardContent>
       </Card>
-
     </div>
   );
 }
-

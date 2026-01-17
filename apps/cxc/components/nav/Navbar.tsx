@@ -45,6 +45,11 @@ const superadminPages = [
     label: "Assign Roles",
     description: "Search for users and assign admin roles",
   },
+  {
+    href: "/admin/leaderboard",
+    label: "Leaderboard",
+    description: "View review statistics and leaderboard",
+  },
 ];
 
 export default function Navbar() {
@@ -140,7 +145,8 @@ export default function Navbar() {
                     ))}
 
                     {/* Admin dropdown - only show to admin or superadmin users */}
-                    {(user?.role === "admin" || user?.role === "superadmin") && (
+                    {(user?.role === "admin" ||
+                      user?.role === "superadmin") && (
                       <NavigationMenuItem>
                         <NavigationMenuTrigger className="!text-base font-medium">
                           Admin

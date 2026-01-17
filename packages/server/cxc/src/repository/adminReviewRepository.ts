@@ -309,4 +309,202 @@ export class AdminReviewRepository extends BaseRepository {
       );
     }
   }
+
+  /**
+   * Get leaderboard data - all reviewers with their review counts and names
+   */
+  async getLeaderboard(): Promise<
+    Array<{
+      reviewer_id: string;
+      review_count: number;
+      name: string | null;
+      email: string;
+    }>
+  > {
+    try {
+      // Get review counts first, then join with user data
+      // This avoids grouping by JSONB which can cause issues
+      const result = await this.sql<
+        Array<{
+          reviewer_id: string;
+          review_count: number;
+          name: string | null;
+          email: string;
+        }>
+      >`
+        WITH review_counts AS (
+          SELECT 
+            reviewer_id,
+            COUNT(*)::int as review_count
+          FROM reviews
+          GROUP BY reviewer_id
+        )
+        SELECT 
+          rc.reviewer_id,
+          rc.review_count,
+          CASE 
+            WHEN au.raw_user_meta_data->>'first_name' IS NOT NULL 
+              AND au.raw_user_meta_data->>'last_name' IS NOT NULL
+            THEN TRIM(
+              COALESCE(au.raw_user_meta_data->>'first_name', '') || ' ' || 
+              COALESCE(au.raw_user_meta_data->>'last_name', '')
+            )
+            WHEN au.raw_user_meta_data->>'first_name' IS NOT NULL
+            THEN au.raw_user_meta_data->>'first_name'
+            WHEN au.raw_user_meta_data->>'last_name' IS NOT NULL
+            THEN au.raw_user_meta_data->>'last_name'
+            ELSE NULL
+          END as name,
+          COALESCE(au.email, '') as email
+        FROM review_counts rc
+        LEFT JOIN auth.users au ON rc.reviewer_id = au.id
+        ORDER BY rc.review_count DESC
+      `;
+
+      return result;
+    } catch (error) {
+      console.error("Error in getLeaderboard:", error);
+      throw new ApiError(
+        `Failed to get leaderboard: ${(error as Error).message}`,
+        500,
+      );
+    }
+  }
+
+  /**
+   * Get overall statistics for the dashboard
+   */
+  async getStatistics(): Promise<{
+    total_applications: number;
+    total_reviews: number;
+    total_reviewers: number;
+    avg_reviews_per_application: number;
+    avg_resume_score: number;
+    avg_links_score: number;
+    avg_q1_score: number;
+    avg_q2_score: number;
+  }> {
+    try {
+      const result = await this.sql<
+        Array<{
+          total_applications: number;
+          total_reviews: number;
+          total_reviewers: number;
+          avg_reviews_per_application: number;
+          avg_resume_score: number;
+          avg_links_score: number;
+          avg_q1_score: number;
+          avg_q2_score: number;
+        }>
+      >`
+        WITH application_stats AS (
+          SELECT COUNT(DISTINCT id)::int as total_applications
+          FROM applications
+          WHERE status = 'submitted'
+        ),
+        review_stats AS (
+          SELECT 
+            COUNT(*)::int as total_reviews,
+            COUNT(DISTINCT reviewer_id)::int as total_reviewers
+          FROM reviews
+        ),
+        avg_reviews AS (
+          SELECT 
+            CASE 
+              WHEN COUNT(DISTINCT application_id) > 0 
+              THEN ROUND(COUNT(*)::numeric / COUNT(DISTINCT application_id)::numeric, 2)
+              ELSE 0
+            END as avg_reviews_per_application
+          FROM reviews
+        ),
+        avg_scores AS (
+          SELECT 
+            CASE WHEN COUNT(*) > 0 THEN ROUND(AVG(resume_score)::numeric, 2) ELSE 0 END as avg_resume_score,
+            CASE WHEN COUNT(*) > 0 THEN ROUND(AVG(links_score)::numeric, 2) ELSE 0 END as avg_links_score,
+            CASE WHEN COUNT(*) > 0 THEN ROUND(AVG(q1_score)::numeric, 2) ELSE 0 END as avg_q1_score,
+            CASE WHEN COUNT(*) > 0 THEN ROUND(AVG(q2_score)::numeric, 2) ELSE 0 END as avg_q2_score
+          FROM reviews
+        )
+        SELECT 
+          COALESCE(aps.total_applications, 0) as total_applications,
+          COALESCE(rs.total_reviews, 0) as total_reviews,
+          COALESCE(rs.total_reviewers, 0) as total_reviewers,
+          COALESCE(ar.avg_reviews_per_application, 0) as avg_reviews_per_application,
+          COALESCE(avs.avg_resume_score, 0) as avg_resume_score,
+          COALESCE(avs.avg_links_score, 0) as avg_links_score,
+          COALESCE(avs.avg_q1_score, 0) as avg_q1_score,
+          COALESCE(avs.avg_q2_score, 0) as avg_q2_score
+        FROM application_stats aps
+        CROSS JOIN review_stats rs
+        CROSS JOIN avg_reviews ar
+        CROSS JOIN avg_scores avs
+      `;
+
+      return (
+        result[0] ?? {
+          total_applications: 0,
+          total_reviews: 0,
+          total_reviewers: 0,
+          avg_reviews_per_application: 0,
+          avg_resume_score: 0,
+          avg_links_score: 0,
+          avg_q1_score: 0,
+          avg_q2_score: 0,
+        }
+      );
+    } catch (error) {
+      console.error("Error in getStatistics:", error);
+      throw new ApiError(
+        `Failed to get statistics: ${(error as Error).message}`,
+        500,
+      );
+    }
+  }
+
+  /**
+   * Get average scores per question for a specific reviewer
+   */
+  async getReviewerAverageScores(reviewerId: string): Promise<{
+    avg_resume_score: number;
+    avg_links_score: number;
+    avg_q1_score: number;
+    avg_q2_score: number;
+    total_reviews: number;
+  }> {
+    try {
+      const result = await this.sql<
+        Array<{
+          avg_resume_score: number;
+          avg_links_score: number;
+          avg_q1_score: number;
+          avg_q2_score: number;
+          total_reviews: number;
+        }>
+      >`
+        SELECT 
+          ROUND(AVG(resume_score)::numeric, 2) as avg_resume_score,
+          ROUND(AVG(links_score)::numeric, 2) as avg_links_score,
+          ROUND(AVG(q1_score)::numeric, 2) as avg_q1_score,
+          ROUND(AVG(q2_score)::numeric, 2) as avg_q2_score,
+          COUNT(*)::int as total_reviews
+        FROM reviews
+        WHERE reviewer_id = ${reviewerId}
+      `;
+
+      return (
+        result[0] ?? {
+          avg_resume_score: 0,
+          avg_links_score: 0,
+          avg_q1_score: 0,
+          avg_q2_score: 0,
+          total_reviews: 0,
+        }
+      );
+    } catch (error) {
+      throw new ApiError(
+        `Failed to get reviewer average scores: ${(error as Error).message}`,
+        500,
+      );
+    }
+  }
 }
