@@ -63,6 +63,20 @@ export class AdminApplicationRepository extends BaseRepository {
    */
   async getAllApplicationSummaries(): Promise<ApplicationSummary[]> {
     try {
+      // First check if there are any applications at all
+      const countResult = await this.sql<Array<{ count: number }>>`
+        SELECT COUNT(*)::int as count FROM applications
+      `;
+
+      console.log(
+        `[Repository] Total applications in database: ${countResult[0]?.count ?? 0}`,
+      );
+
+      if (countResult[0]?.count === 0) {
+        return [];
+      }
+
+      // Use CTE approach to avoid grouping by JSONB - similar to leaderboard fix
       const result = await this.sql<ApplicationSummary[]>`
         WITH review_counts AS (
           SELECT 
@@ -70,10 +84,23 @@ export class AdminApplicationRepository extends BaseRepository {
             COUNT(*)::int as review_count
           FROM reviews
           GROUP BY application_id
+        ),
+        applications_with_counts AS (
+          SELECT 
+            a.id,
+            a.profile_id,
+            a.uni_name,
+            a.gender::text,
+            COALESCE(rc.review_count, 0)::int as review_count,
+            a.status::text,
+            a.submitted_at,
+            a.created_at
+          FROM applications a
+          LEFT JOIN review_counts rc ON a.id = rc.application_id
         )
         SELECT 
-          a.id,
-          a.profile_id,
+          awc.id,
+          awc.profile_id,
           CASE 
             WHEN au.raw_user_meta_data->>'first_name' IS NOT NULL 
               AND au.raw_user_meta_data->>'last_name' IS NOT NULL
@@ -87,22 +114,22 @@ export class AdminApplicationRepository extends BaseRepository {
             THEN au.raw_user_meta_data->>'last_name'
             ELSE NULL
           END as name,
-          au.email,
-          a.uni_name,
-          a.gender::text,
-          COALESCE(rc.review_count, 0)::int as review_count,
-          a.status::text,
-          a.submitted_at,
-          a.created_at
-        FROM applications a
-        LEFT JOIN auth.users au ON a.profile_id = au.id
-        LEFT JOIN review_counts rc ON a.id = rc.application_id
-        WHERE a.status = 'submitted'
-        ORDER BY a.submitted_at DESC NULLS LAST, a.created_at DESC
+          COALESCE(au.email, '') as email,
+          awc.uni_name,
+          awc.gender,
+          awc.review_count,
+          awc.status,
+          awc.submitted_at,
+          awc.created_at
+        FROM applications_with_counts awc
+        LEFT JOIN auth.users au ON awc.profile_id = au.id
+        ORDER BY awc.submitted_at DESC NULLS LAST, awc.created_at DESC
       `;
 
+      console.log(`[Repository] Returning ${result.length} applications`);
       return result;
     } catch (error) {
+      console.error("Error in getAllApplicationSummaries:", error);
       throw new ApiError(
         `Failed to fetch application summaries: ${(error as Error).message}`,
         500,
