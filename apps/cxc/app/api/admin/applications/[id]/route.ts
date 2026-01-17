@@ -22,11 +22,11 @@ export async function GET(request: Request, { params }: ApplicationParams) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    // Check if user has admin role
+    // Check if user has admin or superadmin role
     const profileService = new ProfileService();
     const profile = await profileService.getProfileByUserId(user.id);
 
-    if (profile?.role !== "admin") {
+    if (profile?.role !== "admin" && profile?.role !== "superadmin") {
       return NextResponse.json(
         { error: "Forbidden: Admin access required" },
         { status: 403 },

@@ -74,9 +74,10 @@ export async function GET() {
         2. All submitted applications have already been reviewed by this user
         3. There was an error fetching applications`);
       return NextResponse.json(
-        { 
+        {
           error: "No applications available for review",
-          message: "Either there are no submitted applications, or you have already reviewed all available applications."
+          message:
+            "Either there are no submitted applications, or you have already reviewed all available applications.",
         },
         { status: 404 },
       );

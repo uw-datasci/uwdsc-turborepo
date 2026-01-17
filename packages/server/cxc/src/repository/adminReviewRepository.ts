@@ -313,21 +313,25 @@ export class AdminReviewRepository extends BaseRepository {
   /**
    * Get leaderboard data - all reviewers with their review counts and names
    */
-  async getLeaderboard(): Promise<Array<{
-    reviewer_id: string;
-    review_count: number;
-    name: string | null;
-    email: string;
-  }>> {
+  async getLeaderboard(): Promise<
+    Array<{
+      reviewer_id: string;
+      review_count: number;
+      name: string | null;
+      email: string;
+    }>
+  > {
     try {
       // Get review counts first, then join with user data
       // This avoids grouping by JSONB which can cause issues
-      const result = await this.sql<Array<{
-        reviewer_id: string;
-        review_count: number;
-        name: string | null;
-        email: string;
-      }>>`
+      const result = await this.sql<
+        Array<{
+          reviewer_id: string;
+          review_count: number;
+          name: string | null;
+          email: string;
+        }>
+      >`
         WITH review_counts AS (
           SELECT 
             reviewer_id,
@@ -381,16 +385,18 @@ export class AdminReviewRepository extends BaseRepository {
     avg_q2_score: number;
   }> {
     try {
-      const result = await this.sql<Array<{
-        total_applications: number;
-        total_reviews: number;
-        total_reviewers: number;
-        avg_reviews_per_application: number;
-        avg_resume_score: number;
-        avg_links_score: number;
-        avg_q1_score: number;
-        avg_q2_score: number;
-      }>>`
+      const result = await this.sql<
+        Array<{
+          total_applications: number;
+          total_reviews: number;
+          total_reviewers: number;
+          avg_reviews_per_application: number;
+          avg_resume_score: number;
+          avg_links_score: number;
+          avg_q1_score: number;
+          avg_q2_score: number;
+        }>
+      >`
         WITH application_stats AS (
           SELECT COUNT(DISTINCT id)::int as total_applications
           FROM applications
@@ -434,16 +440,18 @@ export class AdminReviewRepository extends BaseRepository {
         CROSS JOIN avg_scores avs
       `;
 
-      return result[0] ?? {
-        total_applications: 0,
-        total_reviews: 0,
-        total_reviewers: 0,
-        avg_reviews_per_application: 0,
-        avg_resume_score: 0,
-        avg_links_score: 0,
-        avg_q1_score: 0,
-        avg_q2_score: 0,
-      };
+      return (
+        result[0] ?? {
+          total_applications: 0,
+          total_reviews: 0,
+          total_reviewers: 0,
+          avg_reviews_per_application: 0,
+          avg_resume_score: 0,
+          avg_links_score: 0,
+          avg_q1_score: 0,
+          avg_q2_score: 0,
+        }
+      );
     } catch (error) {
       console.error("Error in getStatistics:", error);
       throw new ApiError(
@@ -464,13 +472,15 @@ export class AdminReviewRepository extends BaseRepository {
     total_reviews: number;
   }> {
     try {
-      const result = await this.sql<Array<{
-        avg_resume_score: number;
-        avg_links_score: number;
-        avg_q1_score: number;
-        avg_q2_score: number;
-        total_reviews: number;
-      }>>`
+      const result = await this.sql<
+        Array<{
+          avg_resume_score: number;
+          avg_links_score: number;
+          avg_q1_score: number;
+          avg_q2_score: number;
+          total_reviews: number;
+        }>
+      >`
         SELECT 
           ROUND(AVG(resume_score)::numeric, 2) as avg_resume_score,
           ROUND(AVG(links_score)::numeric, 2) as avg_links_score,
@@ -481,13 +491,15 @@ export class AdminReviewRepository extends BaseRepository {
         WHERE reviewer_id = ${reviewerId}
       `;
 
-      return result[0] ?? {
-        avg_resume_score: 0,
-        avg_links_score: 0,
-        avg_q1_score: 0,
-        avg_q2_score: 0,
-        total_reviews: 0,
-      };
+      return (
+        result[0] ?? {
+          avg_resume_score: 0,
+          avg_links_score: 0,
+          avg_q1_score: 0,
+          avg_q2_score: 0,
+          total_reviews: 0,
+        }
+      );
     } catch (error) {
       throw new ApiError(
         `Failed to get reviewer average scores: ${(error as Error).message}`,

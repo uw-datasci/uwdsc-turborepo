@@ -33,12 +33,20 @@ export default function AdminEventsPage() {
           setEvents(data.events || []);
           // Load cached event or set first event as default
           if (data.events && data.events.length > 0) {
-            const cachedEventId = localStorage.getItem("admin_selected_event_id");
-            if (cachedEventId && data.events.some(e => String(e.id) === cachedEventId)) {
+            const cachedEventId = localStorage.getItem(
+              "admin_selected_event_id",
+            );
+            if (
+              cachedEventId &&
+              data.events.some((e) => String(e.id) === cachedEventId)
+            ) {
               setSelectedEventId(cachedEventId);
             } else {
               setSelectedEventId(String(data.events[0].id));
-              localStorage.setItem("admin_selected_event_id", String(data.events[0].id));
+              localStorage.setItem(
+                "admin_selected_event_id",
+                String(data.events[0].id),
+              );
             }
           }
         }
@@ -132,7 +140,8 @@ export default function AdminEventsPage() {
                 >
                   {events.map((event) => (
                     <option key={event.id} value={event.id}>
-                      {event.name} - {new Date(event.start_time).toLocaleDateString()}
+                      {event.name} -{" "}
+                      {new Date(event.start_time).toLocaleDateString()}
                     </option>
                   ))}
                 </select>
@@ -221,9 +230,7 @@ export default function AdminEventsPage() {
                         <p>
                           Start: {new Date(event.start_time).toLocaleString()}
                         </p>
-                        <p>
-                          End: {new Date(event.end_time).toLocaleString()}
-                        </p>
+                        <p>End: {new Date(event.end_time).toLocaleString()}</p>
                         {event.location && <p>Location: {event.location}</p>}
                       </div>
                     </div>

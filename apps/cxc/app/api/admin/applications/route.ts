@@ -18,11 +18,11 @@ export async function GET() {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    // Check if user has admin role
+    // Check if user has admin or superadmin role
     const profileService = new ProfileService();
     const profile = await profileService.getProfileByUserId(user.id);
 
-    if (profile?.role !== "admin") {
+    if (profile?.role !== "admin" && profile?.role !== "superadmin") {
       return NextResponse.json(
         { error: "Forbidden: Admin access required" },
         { status: 403 },
@@ -31,11 +31,11 @@ export async function GET() {
 
     // Get all application summaries
     const adminApplicationService = new AdminApplicationService();
-    
+
     try {
       const applications =
         await adminApplicationService.getAllApplicationSummaries();
-      
+
       console.log(`[API] Found ${applications.length} applications`);
       return NextResponse.json({ applications });
     } catch (serviceError) {
@@ -43,15 +43,17 @@ export async function GET() {
       throw serviceError;
     }
   } catch (error) {
-    const errorMessage = error instanceof Error ? error.message : "Unknown error";
+    const errorMessage =
+      error instanceof Error ? error.message : "Unknown error";
     console.error("Error in applications route:", {
       error: errorMessage,
       stack: error instanceof Error ? error.stack : undefined,
     });
     return NextResponse.json(
-      { 
+      {
         error: "Internal server error",
-        message: process.env.NODE_ENV === "development" ? errorMessage : undefined,
+        message:
+          process.env.NODE_ENV === "development" ? errorMessage : undefined,
       },
       { status: 500 },
     );

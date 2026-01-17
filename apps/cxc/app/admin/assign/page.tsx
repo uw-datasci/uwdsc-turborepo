@@ -1,7 +1,14 @@
 "use client";
 
 import { useState } from "react";
-import { Card, CardHeader, CardTitle, CardContent, Button, Input } from "@uwdsc/ui";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardContent,
+  Button,
+  Input,
+} from "@uwdsc/ui";
 import { Search, Loader2, CheckCircle2, XCircle, Shield } from "lucide-react";
 
 interface User {
@@ -35,7 +42,9 @@ export default function AdminAssignPage() {
     setUsers([]);
 
     try {
-      const response = await fetch(`/api/admin/users/search?email=${encodeURIComponent(emailQuery.trim())}`);
+      const response = await fetch(
+        `/api/admin/users/search?email=${encodeURIComponent(emailQuery.trim())}`,
+      );
       const data = await response.json();
 
       if (response.ok) {
@@ -64,7 +73,9 @@ export default function AdminAssignPage() {
   };
 
   const handleAssignAdmin = async (userId: string, userEmail: string) => {
-    if (!confirm(`Are you sure you want to assign admin role to ${userEmail}?`)) {
+    if (
+      !confirm(`Are you sure you want to assign admin role to ${userEmail}?`)
+    ) {
       return;
     }
 
@@ -92,7 +103,9 @@ export default function AdminAssignPage() {
         });
 
         // Update the user's role in the local state
-        setUsers(users.map(u => u.id === userId ? { ...u, role: "admin" } : u));
+        setUsers(
+          users.map((u) => (u.id === userId ? { ...u, role: "admin" } : u)),
+        );
 
         // Clear result after 5 seconds
         setTimeout(() => {
@@ -126,7 +139,8 @@ export default function AdminAssignPage() {
       <div>
         <h1 className="text-3xl font-bold mb-2">Assign Admin Roles</h1>
         <p className="text-muted-foreground">
-          Search for users by email and assign them admin roles. Only superadmins can access this page.
+          Search for users by email and assign them admin roles. Only
+          superadmins can access this page.
         </p>
       </div>
 
@@ -202,7 +216,8 @@ export default function AdminAssignPage() {
                         </div>
                       )}
                       <div className="text-xs text-muted-foreground mt-1">
-                        Current role: <span className="font-mono">{user.role}</span>
+                        Current role:{" "}
+                        <span className="font-mono">{user.role}</span>
                       </div>
                     </div>
                     <div className="flex items-center gap-2">

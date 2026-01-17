@@ -67,9 +67,11 @@ export class AdminApplicationRepository extends BaseRepository {
       const countResult = await this.sql<Array<{ count: number }>>`
         SELECT COUNT(*)::int as count FROM applications
       `;
-      
-      console.log(`[Repository] Total applications in database: ${countResult[0]?.count ?? 0}`);
-      
+
+      console.log(
+        `[Repository] Total applications in database: ${countResult[0]?.count ?? 0}`,
+      );
+
       if (countResult[0]?.count === 0) {
         return [];
       }

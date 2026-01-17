@@ -171,12 +171,14 @@ export class AdminReviewService {
   /**
    * Get leaderboard data - all reviewers with their review counts
    */
-  async getLeaderboard(): Promise<Array<{
-    reviewer_id: string;
-    review_count: number;
-    name: string | null;
-    email: string;
-  }>> {
+  async getLeaderboard(): Promise<
+    Array<{
+      reviewer_id: string;
+      review_count: number;
+      name: string | null;
+      email: string;
+    }>
+  > {
     return await this.repository.getLeaderboard();
   }
 

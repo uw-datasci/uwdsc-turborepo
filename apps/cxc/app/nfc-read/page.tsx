@@ -2,7 +2,13 @@
 
 import { useEffect, useState } from "react";
 import { Card, CardHeader, CardTitle, CardContent, Button } from "@uwdsc/ui";
-import { CheckCircle2, XCircle, Loader2, Copy, ExternalLink } from "lucide-react";
+import {
+  CheckCircle2,
+  XCircle,
+  Loader2,
+  Copy,
+  ExternalLink,
+} from "lucide-react";
 
 // Web NFC API types
 interface NDEFRecord {
@@ -66,7 +72,8 @@ export default function NfcReadPage() {
     if (!isSupported) {
       setResult({
         success: false,
-        message: "Web NFC is not supported on this device. Please use Chrome on Android.",
+        message:
+          "Web NFC is not supported on this device. Please use Chrome on Android.",
       });
       return;
     }
@@ -82,7 +89,7 @@ export default function NfcReadPage() {
       if ("NDEFReader" in window) {
         // Chrome 89+ API
         const reader = new (window as unknown as WindowWithNDEF).NDEFReader();
-        
+
         // Wait for NFC scan with timeout
         await new Promise<void>((resolve, reject) => {
           let resolved = false;
@@ -94,7 +101,11 @@ export default function NfcReadPage() {
               } catch {
                 // Ignore abort errors
               }
-              reject(new Error("No NFC card detected. Please hold the card close to your device."));
+              reject(
+                new Error(
+                  "No NFC card detected. Please hold the card close to your device.",
+                ),
+              );
             }
           }, 30000); // 30 second timeout
 
@@ -102,14 +113,14 @@ export default function NfcReadPage() {
             if (resolved) return;
             resolved = true;
             clearTimeout(timeout);
-            
+
             try {
               const message = event.message;
               if (message.records && message.records.length > 0) {
                 const record = message.records[0];
                 if (!record) return;
                 const decoder = new TextDecoder();
-                
+
                 if (record.recordType === "url") {
                   // URL records have the URL directly in the data
                   if (typeof record.data === "string") {
@@ -123,7 +134,10 @@ export default function NfcReadPage() {
                   } else if (typeof record.data === "string") {
                     url = record.data;
                   }
-                } else if (record.recordType === "mime" && record.mediaType === "text/plain") {
+                } else if (
+                  record.recordType === "mime" &&
+                  record.mediaType === "text/plain"
+                ) {
                   if (record.data instanceof Uint8Array) {
                     url = decoder.decode(record.data);
                   } else if (typeof record.data === "string") {
@@ -134,7 +148,7 @@ export default function NfcReadPage() {
             } catch (parseError) {
               console.error("Error parsing NFC record:", parseError);
             }
-            
+
             try {
               if (reader.abort) reader.abort();
             } catch {
@@ -164,7 +178,7 @@ export default function NfcReadPage() {
       } else if ("nfc" in navigator && (navigator as NavigatorWithNFC).nfc) {
         // Chrome 89+ alternative API
         const ndef = new (navigator as NavigatorWithNFC).nfc!.NDEFReader();
-        
+
         // Wait for NFC scan with timeout
         await new Promise<void>((resolve, reject) => {
           let resolved = false;
@@ -176,7 +190,11 @@ export default function NfcReadPage() {
               } catch {
                 // Ignore abort errors
               }
-              reject(new Error("No NFC card detected. Please hold the card close to your device."));
+              reject(
+                new Error(
+                  "No NFC card detected. Please hold the card close to your device.",
+                ),
+              );
             }
           }, 30000);
 
@@ -184,14 +202,14 @@ export default function NfcReadPage() {
             if (resolved) return;
             resolved = true;
             clearTimeout(timeout);
-            
+
             try {
               const message = event.message;
               if (message.records && message.records.length > 0) {
                 const record = message.records[0];
                 if (!record) return;
                 const decoder = new TextDecoder();
-                
+
                 if (record.recordType === "url") {
                   if (typeof record.data === "string") {
                     url = record.data;
@@ -209,7 +227,7 @@ export default function NfcReadPage() {
             } catch (parseError) {
               console.error("Error parsing NFC record:", parseError);
             }
-            
+
             try {
               if (ndef.abort) ndef.abort();
             } catch {
@@ -254,9 +272,10 @@ export default function NfcReadPage() {
       }
     } catch (error) {
       console.error("Error reading NFC:", error);
-      const errorMessage = error instanceof Error 
-        ? error.message 
-        : "Failed to read NFC card. Make sure the card is close to your device.";
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : "Failed to read NFC card. Make sure the card is close to your device.";
       setResult({
         success: false,
         message: errorMessage,
@@ -300,7 +319,8 @@ export default function NfcReadPage() {
           {isSupported === false && (
             <div className="p-4 rounded-md bg-yellow-500/10 text-yellow-500 border border-yellow-500/20">
               <p className="text-sm">
-                Web NFC is not supported on this device. This feature requires Chrome on Android with HTTPS.
+                Web NFC is not supported on this device. This feature requires
+                Chrome on Android with HTTPS.
               </p>
             </div>
           )}
@@ -308,7 +328,8 @@ export default function NfcReadPage() {
           {isSupported === true && (
             <div className="p-4 rounded-md bg-blue-500/10 text-blue-500 border border-blue-500/20">
               <p className="text-sm">
-                Web NFC is supported. Hold your NFC card close to your device when reading.
+                Web NFC is supported. Hold your NFC card close to your device
+                when reading.
               </p>
             </div>
           )}
@@ -378,10 +399,7 @@ export default function NfcReadPage() {
                     </>
                   )}
                 </Button>
-                <Button
-                  onClick={handleOpenUrl}
-                  className="flex-1"
-                >
+                <Button onClick={handleOpenUrl} className="flex-1">
                   <ExternalLink className="mr-2 h-4 w-4" />
                   Open URL
                 </Button>

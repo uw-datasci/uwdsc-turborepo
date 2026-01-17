@@ -2,12 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import {
-  Card,
-  CardContent,
-  Button,
-  Input,
-} from "@uwdsc/ui";
+import { Card, CardContent, Button, Input } from "@uwdsc/ui";
 import { ArrowLeft, Loader2, Save, X } from "lucide-react";
 
 interface Event {
@@ -126,7 +121,9 @@ export default function EditEventsPage() {
       if (editForm.payment_required !== undefined)
         updateData.payment_required = editForm.payment_required;
       if (editForm.image_id !== undefined)
-        updateData.image_id = editForm.image_id ? Number(editForm.image_id) : null;
+        updateData.image_id = editForm.image_id
+          ? Number(editForm.image_id)
+          : null;
 
       const response = await fetch(`/api/admin/events/${eventId}`, {
         method: "PATCH",
@@ -141,7 +138,11 @@ export default function EditEventsPage() {
       if (response.ok) {
         // Update the event in the local state
         setEvents((prev) =>
-          prev.map((e) => (String(e.id) === String(eventId) ? { ...e, ...data.event, id: e.id } : e)),
+          prev.map((e) =>
+            String(e.id) === String(eventId)
+              ? { ...e, ...data.event, id: e.id }
+              : e,
+          ),
         );
         setSuccess("Event updated successfully!");
         setEditingId(null);

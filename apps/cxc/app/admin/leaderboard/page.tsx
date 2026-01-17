@@ -1,8 +1,28 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Card, CardContent, CardHeader, CardTitle, Dialog, DialogContent, DialogHeader, DialogTitle } from "@uwdsc/ui";
-import { Trophy, Users, FileText, Star, Medal, FileCheck, Link2, MessageSquare, MessageSquareQuote, Loader2 } from "lucide-react";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@uwdsc/ui";
+import {
+  Trophy,
+  Users,
+  FileText,
+  Star,
+  Medal,
+  FileCheck,
+  Link2,
+  MessageSquare,
+  MessageSquareQuote,
+  Loader2,
+} from "lucide-react";
 import { LoadingScreen } from "@/components/LoadingScreen";
 import { motion } from "framer-motion";
 
@@ -37,8 +57,11 @@ export default function LeaderboardPage() {
   const [statistics, setStatistics] = useState<Statistics | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [selectedReviewer, setSelectedReviewer] = useState<LeaderboardEntry | null>(null);
-  const [reviewerScores, setReviewerScores] = useState<ReviewerScores | null>(null);
+  const [selectedReviewer, setSelectedReviewer] =
+    useState<LeaderboardEntry | null>(null);
+  const [reviewerScores, setReviewerScores] = useState<ReviewerScores | null>(
+    null,
+  );
   const [loadingScores, setLoadingScores] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
 
@@ -50,10 +73,10 @@ export default function LeaderboardPage() {
     try {
       setLoading(true);
       setError(null);
-      
+
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 30000); // 30 second timeout
-      
+
       let response: Response;
       try {
         response = await fetch("/api/admin/leaderboard", {
@@ -61,14 +84,18 @@ export default function LeaderboardPage() {
         });
       } catch (fetchError) {
         clearTimeout(timeoutId);
-        if (fetchError instanceof Error && fetchError.name === 'AbortError') {
-          throw new Error("Request timed out. Please check your connection and try again.");
+        if (fetchError instanceof Error && fetchError.name === "AbortError") {
+          throw new Error(
+            "Request timed out. Please check your connection and try again.",
+          );
         }
-        throw new Error("Network error. Please check your connection and try again.");
+        throw new Error(
+          "Network error. Please check your connection and try again.",
+        );
       }
-      
+
       clearTimeout(timeoutId);
-      
+
       let data: {
         leaderboard?: LeaderboardEntry[];
         statistics?: Statistics;
@@ -92,7 +119,9 @@ export default function LeaderboardPage() {
       }
 
       if (!response.ok) {
-        throw new Error(data.error || data.message || `Server error: ${response.status}`);
+        throw new Error(
+          data.error || data.message || `Server error: ${response.status}`,
+        );
       }
 
       setLeaderboard(data.leaderboard || []);
@@ -100,10 +129,14 @@ export default function LeaderboardPage() {
     } catch (err) {
       console.error("Error fetching leaderboard:", err);
       if (err instanceof Error) {
-        if (err.name === 'AbortError') {
-          setError("Request timed out. Please check your connection and try again.");
+        if (err.name === "AbortError") {
+          setError(
+            "Request timed out. Please check your connection and try again.",
+          );
         } else {
-          setError(err.message || "Failed to load leaderboard. Please try again.");
+          setError(
+            err.message || "Failed to load leaderboard. Please try again.",
+          );
         }
       } else {
         setError("Failed to load leaderboard. Please try again.");
@@ -120,7 +153,9 @@ export default function LeaderboardPage() {
     setReviewerScores(null);
 
     try {
-      const response = await fetch(`/api/admin/leaderboard?reviewerId=${reviewer.reviewer_id}`);
+      const response = await fetch(
+        `/api/admin/leaderboard?reviewerId=${reviewer.reviewer_id}`,
+      );
       const data = await response.json();
 
       if (!response.ok) {
@@ -335,9 +370,7 @@ export default function LeaderboardPage() {
                     <div
                       className={`w-24 md:w-32 ${getPodiumHeight(1)} ${getPodiumColor(1)} border-2 rounded-t-lg flex flex-col items-center justify-center p-4 relative hover:opacity-80 transition-opacity`}
                     >
-                      <div className="absolute -top-8">
-                        {getMedalIcon(1)}
-                      </div>
+                      <div className="absolute -top-8">{getMedalIcon(1)}</div>
                       <div className="text-3xl font-bold">
                         {topThree[1].review_count}
                       </div>
@@ -366,9 +399,7 @@ export default function LeaderboardPage() {
                     <div
                       className={`w-28 md:w-36 ${getPodiumHeight(0)} ${getPodiumColor(0)} border-2 rounded-t-lg flex flex-col items-center justify-center p-4 relative hover:opacity-80 transition-opacity`}
                     >
-                      <div className="absolute -top-8">
-                        {getMedalIcon(0)}
-                      </div>
+                      <div className="absolute -top-8">{getMedalIcon(0)}</div>
                       <div className="text-4xl font-bold">
                         {topThree[0].review_count}
                       </div>
@@ -397,9 +428,7 @@ export default function LeaderboardPage() {
                     <div
                       className={`w-20 md:w-28 ${getPodiumHeight(2)} ${getPodiumColor(2)} border-2 rounded-t-lg flex flex-col items-center justify-center p-4 relative hover:opacity-80 transition-opacity`}
                     >
-                      <div className="absolute -top-8">
-                        {getMedalIcon(2)}
-                      </div>
+                      <div className="absolute -top-8">{getMedalIcon(2)}</div>
                       <div className="text-2xl font-bold">
                         {topThree[2].review_count}
                       </div>
@@ -469,7 +498,8 @@ export default function LeaderboardPage() {
           <Card>
             <CardContent className="pt-6">
               <p className="text-center text-muted-foreground">
-                No reviews yet. Start reviewing applications to see the leaderboard!
+                No reviews yet. Start reviewing applications to see the
+                leaderboard!
               </p>
             </CardContent>
           </Card>
@@ -502,9 +532,13 @@ export default function LeaderboardPage() {
                     </CardHeader>
                     <CardContent>
                       <div className="text-2xl font-bold">
-                        {Number(reviewerScores.avg_resume_score || 0).toFixed(2)}
+                        {Number(reviewerScores.avg_resume_score || 0).toFixed(
+                          2,
+                        )}
                       </div>
-                      <p className="text-xs text-muted-foreground mt-1">Out of 3</p>
+                      <p className="text-xs text-muted-foreground mt-1">
+                        Out of 3
+                      </p>
                     </CardContent>
                   </Card>
 
@@ -519,7 +553,9 @@ export default function LeaderboardPage() {
                       <div className="text-2xl font-bold">
                         {Number(reviewerScores.avg_links_score || 0).toFixed(2)}
                       </div>
-                      <p className="text-xs text-muted-foreground mt-1">Out of 2</p>
+                      <p className="text-xs text-muted-foreground mt-1">
+                        Out of 2
+                      </p>
                     </CardContent>
                   </Card>
 
@@ -534,7 +570,9 @@ export default function LeaderboardPage() {
                       <div className="text-2xl font-bold">
                         {Number(reviewerScores.avg_q1_score || 0).toFixed(2)}
                       </div>
-                      <p className="text-xs text-muted-foreground mt-1">Out of 7</p>
+                      <p className="text-xs text-muted-foreground mt-1">
+                        Out of 7
+                      </p>
                     </CardContent>
                   </Card>
 
@@ -549,12 +587,15 @@ export default function LeaderboardPage() {
                       <div className="text-2xl font-bold">
                         {Number(reviewerScores.avg_q2_score || 0).toFixed(2)}
                       </div>
-                      <p className="text-xs text-muted-foreground mt-1">Out of 3</p>
+                      <p className="text-xs text-muted-foreground mt-1">
+                        Out of 3
+                      </p>
                     </CardContent>
                   </Card>
                 </div>
                 <div className="text-center text-sm text-muted-foreground pt-2">
-                  Based on {reviewerScores.total_reviews} {reviewerScores.total_reviews === 1 ? "review" : "reviews"}
+                  Based on {reviewerScores.total_reviews}{" "}
+                  {reviewerScores.total_reviews === 1 ? "review" : "reviews"}
                 </div>
               </div>
             ) : (

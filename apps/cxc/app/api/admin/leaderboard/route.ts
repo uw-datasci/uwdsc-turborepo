@@ -7,7 +7,7 @@ import { AdminReviewService } from "@uwdsc/server/cxc/services/adminReviewServic
  * GET /api/admin/leaderboard
  * Get leaderboard data and statistics
  * Superadmin only endpoint
- * 
+ *
  * Query params:
  * - reviewerId: Optional, if provided returns average scores for that reviewer
  */
@@ -38,13 +38,14 @@ export async function GET(request: NextRequest) {
     // If reviewerId is provided, return that reviewer's average scores
     if (reviewerId) {
       const adminReviewService = new AdminReviewService();
-      const reviewerScores = await adminReviewService.getReviewerAverageScores(reviewerId);
+      const reviewerScores =
+        await adminReviewService.getReviewerAverageScores(reviewerId);
       return NextResponse.json({ reviewerScores });
     }
 
     // Otherwise, get leaderboard and statistics
     const adminReviewService = new AdminReviewService();
-    
+
     try {
       // Use Promise.allSettled to handle partial failures gracefully
       const [leaderboardResult, statisticsResult] = await Promise.allSettled([
@@ -52,27 +53,29 @@ export async function GET(request: NextRequest) {
         adminReviewService.getStatistics(),
       ]);
 
-      const leaderboard = leaderboardResult.status === 'fulfilled' 
-        ? (leaderboardResult.value || [])
-        : [];
-      
-      const statistics = statisticsResult.status === 'fulfilled'
-        ? statisticsResult.value
-        : {
-            total_applications: 0,
-            total_reviews: 0,
-            total_reviewers: 0,
-            avg_reviews_per_application: 0,
-            avg_resume_score: 0,
-            avg_links_score: 0,
-            avg_q1_score: 0,
-            avg_q2_score: 0,
-          };
+      const leaderboard =
+        leaderboardResult.status === "fulfilled"
+          ? leaderboardResult.value || []
+          : [];
 
-      if (leaderboardResult.status === 'rejected') {
+      const statistics =
+        statisticsResult.status === "fulfilled"
+          ? statisticsResult.value
+          : {
+              total_applications: 0,
+              total_reviews: 0,
+              total_reviewers: 0,
+              avg_reviews_per_application: 0,
+              avg_resume_score: 0,
+              avg_links_score: 0,
+              avg_q1_score: 0,
+              avg_q2_score: 0,
+            };
+
+      if (leaderboardResult.status === "rejected") {
         console.error("Error fetching leaderboard:", leaderboardResult.reason);
       }
-      if (statisticsResult.status === 'rejected') {
+      if (statisticsResult.status === "rejected") {
         console.error("Error fetching statistics:", statisticsResult.reason);
       }
 
@@ -91,9 +94,10 @@ export async function GET(request: NextRequest) {
       stack: err instanceof Error ? err.stack : undefined,
     });
     return NextResponse.json(
-      { 
+      {
         error: "Internal server error",
-        message: process.env.NODE_ENV === "development" ? errorMessage : undefined,
+        message:
+          process.env.NODE_ENV === "development" ? errorMessage : undefined,
       },
       { status: 500 },
     );

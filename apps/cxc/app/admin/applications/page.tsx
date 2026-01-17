@@ -119,9 +119,7 @@ export default function AdminApplicationsPage() {
 
         <Card>
           <CardHeader>
-            <CardTitle>
-              All Applications ({applications.length})
-            </CardTitle>
+            <CardTitle>All Applications ({applications.length})</CardTitle>
           </CardHeader>
           <CardContent>
             <ApplicationsTable

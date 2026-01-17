@@ -140,7 +140,7 @@ export function NfcCard() {
             </div>
 
             <p className="text-white/60 text-sm">
-              Scan this QR code or use your NFC to check in at events. 
+              Scan this QR code or use your NFC to check in at events.
             </p>
           </div>
         </div>
@@ -148,4 +148,3 @@ export function NfcCard() {
     </Card>
   );
 }
-
