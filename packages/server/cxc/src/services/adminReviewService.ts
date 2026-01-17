@@ -167,4 +167,45 @@ export class AdminReviewService {
       throw new Error(`${fieldName} must be between ${min} and ${max}`);
     }
   }
+
+  /**
+   * Get leaderboard data - all reviewers with their review counts
+   */
+  async getLeaderboard(): Promise<Array<{
+    reviewer_id: string;
+    review_count: number;
+    name: string | null;
+    email: string;
+  }>> {
+    return await this.repository.getLeaderboard();
+  }
+
+  /**
+   * Get overall statistics for the dashboard
+   */
+  async getStatistics(): Promise<{
+    total_applications: number;
+    total_reviews: number;
+    total_reviewers: number;
+    avg_reviews_per_application: number;
+    avg_resume_score: number;
+    avg_links_score: number;
+    avg_q1_score: number;
+    avg_q2_score: number;
+  }> {
+    return await this.repository.getStatistics();
+  }
+
+  /**
+   * Get average scores per question for a specific reviewer
+   */
+  async getReviewerAverageScores(reviewerId: string): Promise<{
+    avg_resume_score: number;
+    avg_links_score: number;
+    avg_q1_score: number;
+    avg_q2_score: number;
+    total_reviews: number;
+  }> {
+    return await this.repository.getReviewerAverageScores(reviewerId);
+  }
 }
