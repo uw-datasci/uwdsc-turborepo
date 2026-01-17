@@ -34,6 +34,7 @@ export async function withProtected(request: NextRequest, user: any) {
         }
       } else {
         // Other admin routes require admin or superadmin
+        // /admin/assign-volunteers is accessible to both admin and superadmin
         if (profile.role !== "admin" && profile.role !== "superadmin") {
           console.log(`[Middleware] User ${user.id} (role: ${profile.role}) attempted to access ${request.nextUrl.pathname}, requires admin or superadmin`);
           return NextResponse.redirect(new URL("/", request.url));

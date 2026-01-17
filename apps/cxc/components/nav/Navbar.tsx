@@ -37,6 +37,11 @@ const adminPages = [
     label: "Review",
     description: "Review applications one at a time",
   },
+  {
+    href: "/admin/assign-volunteers",
+    label: "Assign Volunteers",
+    description: "Search for users and assign volunteer roles",
+  },
 ];
 
 const superadminPages = [
