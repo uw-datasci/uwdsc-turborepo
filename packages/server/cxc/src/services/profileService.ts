@@ -76,7 +76,10 @@ export class ProfileService {
   /**
    * Create a new profile with NFC ID
    */
-  async createProfile(userId: string, role?: string): Promise<{ success: boolean; error?: string }> {
+  async createProfile(
+    userId: string,
+    role?: string,
+  ): Promise<{ success: boolean; error?: string }> {
     try {
       // Generate NFC ID for the new user
       const nfcId = generateNfcId(userId);
@@ -104,12 +107,14 @@ export class ProfileService {
   /**
    * Search users by email
    */
-  async searchUsersByEmail(emailQuery: string): Promise<Array<{
-    id: string;
-    email: string;
-    role: string;
-    display_name: string | null;
-  }>> {
+  async searchUsersByEmail(emailQuery: string): Promise<
+    Array<{
+      id: string;
+      email: string;
+      role: string;
+      display_name: string | null;
+    }>
+  > {
     try {
       return await this.repository.searchUsersByEmail(emailQuery);
     } catch (error) {
@@ -123,7 +128,10 @@ export class ProfileService {
   /**
    * Update user role
    */
-  async updateUserRole(userId: string, role: string): Promise<{ success: boolean; error?: string }> {
+  async updateUserRole(
+    userId: string,
+    role: string,
+  ): Promise<{ success: boolean; error?: string }> {
     try {
       return await this.repository.updateUserRole(userId, role);
     } catch (error) {

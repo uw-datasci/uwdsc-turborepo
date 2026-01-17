@@ -50,7 +50,8 @@ export async function GET(request: Request) {
     return NextResponse.json(
       {
         error: "Internal server error",
-        message: error instanceof Error ? error.message : "Failed to process request",
+        message:
+          error instanceof Error ? error.message : "Failed to process request",
       },
       { status: 500 },
     );

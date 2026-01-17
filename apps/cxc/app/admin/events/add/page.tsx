@@ -102,7 +102,7 @@ export default function AddEventPage() {
       setError(
         err instanceof Error
           ? err.message
-          : "Failed to create event. Please try again."
+          : "Failed to create event. Please try again.",
       );
     } finally {
       console.log("[EVENT CREATE] Setting loading to false");
@@ -315,4 +315,3 @@ export default function AddEventPage() {
     </div>
   );
 }
-

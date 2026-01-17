@@ -40,7 +40,8 @@ export async function GET() {
     return NextResponse.json(
       {
         error: "Internal server error",
-        message: error instanceof Error ? error.message : "Failed to fetch events",
+        message:
+          error instanceof Error ? error.message : "Failed to fetch events",
       },
       { status: 500 },
     );
@@ -101,7 +102,13 @@ export async function POST(request: NextRequest) {
 
     // Validate required fields
     console.log("[API] Validating required fields...");
-    if (!name || !start_time || !buffered_start_time || !end_time || !buffered_end_time) {
+    if (
+      !name ||
+      !start_time ||
+      !buffered_start_time ||
+      !end_time ||
+      !buffered_end_time
+    ) {
       console.log("[API] Validation failed - missing fields:", {
         name: !!name,
         start_time: !!start_time,
@@ -150,10 +157,10 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(
       {
         error: "Internal server error",
-        message: error instanceof Error ? error.message : "Failed to create event",
+        message:
+          error instanceof Error ? error.message : "Failed to create event",
       },
       { status: 500 },
     );
   }
 }
-

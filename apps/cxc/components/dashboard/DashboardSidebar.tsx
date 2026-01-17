@@ -10,6 +10,7 @@ import {
   FileTextIcon,
   UsersIcon,
   ArrowLeftIcon,
+  CheckCircleIcon,
 } from "@uwdsc/ui";
 import Image from "next/image";
 
@@ -39,6 +40,11 @@ const navItems: NavItem[] = [
     href: "/dashboard/schedule",
     label: "Schedule",
     icon: <CalendarIcon className="w-5 h-5" />,
+  },
+  {
+    href: "/dashboard/results",
+    label: "Results",
+    icon: <CheckCircleIcon className="w-5 h-5" />,
   },
 ];
 

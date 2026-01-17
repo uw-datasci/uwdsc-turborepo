@@ -1,7 +1,14 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Card, CardHeader, CardTitle, CardContent, Button, Input } from "@uwdsc/ui";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardContent,
+  Button,
+  Input,
+} from "@uwdsc/ui";
 import { CheckCircle2, XCircle, Loader2, Copy } from "lucide-react";
 
 // Web NFC API types
@@ -49,9 +56,9 @@ export default function NfcWritePage() {
         // Clipboard read failed (permission denied or not available)
       }
     }
-  
+
     loadFromClipboard();
-  }, []);  
+  }, []);
 
   const handleWrite = async () => {
     if (!nfcUrl.trim()) {
@@ -104,9 +111,10 @@ export default function NfcWritePage() {
       }, 5000);
     } catch (error) {
       console.error("Error writing NFC:", error);
-      const errorMessage = error instanceof Error 
-        ? error.message 
-        : "Failed to write to NFC card. Make sure the card is close to your device.";
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : "Failed to write to NFC card. Make sure the card is close to your device.";
       setResult({
         success: false,
         message: errorMessage,
@@ -145,7 +153,8 @@ export default function NfcWritePage() {
           {/* Warning Message */}
           <div className="p-4 rounded-md bg-yellow-500/10 text-yellow-500 border border-yellow-500/20">
             <p className="text-sm font-medium">
-              ⚠️ Please use Android and Chrome!!! This feature requires Chrome on Android with HTTPS.
+              ⚠️ Please use Android and Chrome!!! This feature requires Chrome
+              on Android with HTTPS.
             </p>
           </div>
 
@@ -174,7 +183,8 @@ export default function NfcWritePage() {
               </Button>
             </div>
             <p className="text-sm text-muted-foreground mt-2">
-              Enter a URL or paste from clipboard. If you paste an NFC ID, it will be converted to a check-in URL.
+              Enter a URL or paste from clipboard. If you paste an NFC ID, it
+              will be converted to a check-in URL.
             </p>
           </div>
 

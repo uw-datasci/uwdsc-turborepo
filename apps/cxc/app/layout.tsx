@@ -63,9 +63,7 @@ export default function RootLayout({
         <ThemeProvider>
           <AuthProvider>
             <Navbar />
-            <PageWrapper>
-              {children}
-            </PageWrapper>
+            <PageWrapper>{children}</PageWrapper>
           </AuthProvider>
         </ThemeProvider>
       </body>

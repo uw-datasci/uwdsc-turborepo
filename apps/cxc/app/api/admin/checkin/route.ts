@@ -53,10 +53,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Check in user
-    const result = await eventService.checkInUser(
-      Number(event_id),
-      profile.id,
-    );
+    const result = await eventService.checkInUser(Number(event_id), profile.id);
 
     if (!result.success) {
       return NextResponse.json(
@@ -81,10 +78,10 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(
       {
         error: "Internal server error",
-        message: error instanceof Error ? error.message : "Failed to check in user",
+        message:
+          error instanceof Error ? error.message : "Failed to check in user",
       },
       { status: 500 },
     );
   }
 }
-

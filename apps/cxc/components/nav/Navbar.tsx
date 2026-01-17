@@ -140,7 +140,8 @@ export default function Navbar() {
                     ))}
 
                     {/* Admin dropdown - only show to admin or superadmin users */}
-                    {(user?.role === "admin" || user?.role === "superadmin") && (
+                    {(user?.role === "admin" ||
+                      user?.role === "superadmin") && (
                       <NavigationMenuItem>
                         <NavigationMenuTrigger className="!text-base font-medium">
                           Admin

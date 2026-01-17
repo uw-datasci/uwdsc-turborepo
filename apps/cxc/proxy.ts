@@ -28,8 +28,8 @@ export async function proxy(request: NextRequest) {
   // --- Dispatch to specific middleware handlers ---
 
   // Check if pathname starts with any protected route
-  const isProtectedRoute = Array.from(PROTECTED_ROUTES).some(route => 
-    pathname === route || pathname.startsWith(`${route}/`)
+  const isProtectedRoute = Array.from(PROTECTED_ROUTES).some(
+    (route) => pathname === route || pathname.startsWith(`${route}/`),
   );
 
   switch (true) {
