@@ -38,7 +38,7 @@ export async function proxy(request: NextRequest) {
       return withAuth(request, user);
     // 2. Handle Unauthenticated users
     case pathname === APPLY_ROUTE:
-      return withApply(request, user);
+      return withApply(request);
     // 3. Handle Authenticated users trying to access protected routes
     case isProtectedRoute:
       return await withProtected(request, user);

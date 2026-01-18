@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
@@ -7,7 +6,7 @@ import type { NextRequest } from "next/server";
  * Blocks ALL users (including admins) from accessing /apply
  * Redirects everyone to home page
  */
-export function withApply(request: NextRequest, user: any) {
+export function withApply(request: NextRequest) {
   // Block everyone, regardless of authentication or role
   return NextResponse.redirect(new URL("/", request.url));
 }
