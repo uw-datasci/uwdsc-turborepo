@@ -96,7 +96,7 @@ export default function AdminApplicationsPage() {
           <div>
             <h1 className="text-2xl sm:text-3xl font-bold">Applications</h1>
             <p className="text-muted-foreground mt-1 text-sm sm:text-base">
-              View and manage all submitted applications
+              View and manage all applications
             </p>
           </div>
           <CxCButton
@@ -119,9 +119,7 @@ export default function AdminApplicationsPage() {
 
         <Card>
           <CardHeader>
-            <CardTitle>
-              Submitted Applications ({applications.length})
-            </CardTitle>
+            <CardTitle>All Applications ({applications.length})</CardTitle>
           </CardHeader>
           <CardContent>
             <ApplicationsTable

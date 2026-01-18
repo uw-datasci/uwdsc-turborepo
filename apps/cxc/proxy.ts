@@ -9,6 +9,7 @@ import { withAuth } from "./lib/middleware/withAuth";
 
 const APPLY_ROUTE = "/apply";
 const AUTH_ROUTES = new Set(["/login", "/register", "/start"]);
+const PROTECTED_ROUTES = new Set(["/review", "/admin", "/dashboard"]);
 
 /**
  * Main middleware dispatcher
@@ -26,15 +27,20 @@ export async function proxy(request: NextRequest) {
 
   // --- Dispatch to specific middleware handlers ---
 
+  // Check if pathname starts with any protected route
+  const isProtectedRoute = Array.from(PROTECTED_ROUTES).some(
+    (route) => pathname === route || pathname.startsWith(`${route}/`),
+  );
+
   switch (true) {
     // 1. Handle Authenticated users trying to access auth pages
     case AUTH_ROUTES.has(pathname):
       return withAuth(request, user);
     // 2. Handle Unauthenticated users
     case pathname === APPLY_ROUTE:
-      return withApply(request, user);
-    // 3. Handle admin routes (require authentication and admin role)
-    case pathname.startsWith("/admin"):
+      return withApply(request);
+    // 3. Handle Authenticated users trying to access protected routes
+    case isProtectedRoute:
       return await withProtected(request, user);
   }
 

@@ -5,6 +5,7 @@ import type { Metadata, Viewport } from "next";
 import { baseMetadata, baseViewport } from "@/lib/metadata";
 import { AuthProvider } from "@/contexts/AuthContext";
 import Navbar from "@/components/nav/Navbar";
+import { PageWrapper } from "@/components/PageWrapper";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -62,7 +63,7 @@ export default function RootLayout({
         <ThemeProvider>
           <AuthProvider>
             <Navbar />
-            {children}
+            <PageWrapper>{children}</PageWrapper>
           </AuthProvider>
         </ThemeProvider>
       </body>
