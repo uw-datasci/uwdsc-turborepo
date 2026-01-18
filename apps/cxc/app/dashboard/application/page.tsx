@@ -39,7 +39,7 @@ export default function ApplicationPage() {
     const interval = setInterval(checkDeadline, 1000);
 
     return () => clearInterval(interval);
-  }, [isAdminOrSuperadmin]);
+  }, [isAdminOrSuperadmin, user]);
 
   // Initialize form for Teams component
   const form = useForm<AppFormValues>({
