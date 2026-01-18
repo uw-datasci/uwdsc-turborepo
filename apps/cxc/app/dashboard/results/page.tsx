@@ -6,7 +6,7 @@ import { getApplication } from "@/lib/api/application";
 import { updateUserRSVPRole } from "@/lib/api/user";
 import { AppFormValues } from "@/lib/schemas/application";
 import { transformDatabaseDataToForm } from "@/lib/utils/formDataTransformer";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { motion } from "framer-motion";
 import { Button, ConfettiIcon } from "@uwdsc/ui";
 import CxCButton from "@/components/CxCButton";
@@ -15,7 +15,7 @@ import { CountdownClock } from "@/components/CountdownClock";
 import { RSVP_DEADLINE } from "@/constants/application";
 
 export default function ResultsPage() {
-  const { user } = useAuth();
+  const { user, mutate: refreshUser } = useAuth();
   const [application, setApplication] = useState<AppFormValues | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isAccepting, setIsAccepting] = useState(false);
@@ -35,24 +35,32 @@ export default function ResultsPage() {
     return () => clearInterval(interval);
   }, []);
 
+  // Sync userRole with user.role from auth context
   useEffect(() => {
-    async function loadApplication() {
-      if (!user?.id) return;
-      try {
-        const data = await getApplication(user.id);
-        if (!data) return;
-
-        const formData = transformDatabaseDataToForm(data) as AppFormValues;
-        setApplication(formData);
-        setUserRole(user.role);
-      } catch (error) {
-        console.error("Error loading application:", error);
-      } finally {
-        setIsLoading(false);
-      }
+    if (user?.role) {
+      setUserRole(user.role);
     }
+  }, [user?.role]);
+
+  const loadApplication = useCallback(async () => {
+    if (!user?.id) return;
+    setIsLoading(true);
+    try {
+      const data = await getApplication(user.id);
+      if (!data) return;
+
+      const formData = transformDatabaseDataToForm(data) as AppFormValues;
+      setApplication(formData);
+    } catch (error) {
+      console.error("Error loading application:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [user?.id]);
+
+  useEffect(() => {
     loadApplication();
-  }, [user?.id, user?.role]);
+  }, [loadApplication]);
 
   const handleRSVP = async (
     action: "accept" | "unaccept" | "decline" | "undecline",
@@ -100,6 +108,8 @@ export default function ResultsPage() {
       }
       // Update local role state
       setUserRole(newRole);
+      // Refresh user data in auth context to ensure consistency
+      await refreshUser();
     } catch (error) {
       console.error("Error updating RSVP:", error);
     } finally {
