@@ -18,14 +18,18 @@ import { APPLICATION_DEADLINE } from "@/constants/application";
 
 export default function ApplicationPage() {
   const { user } = useAuth();
+  const isAdminOrSuperadmin = user?.role === "admin" || user?.role === "superadmin";
   const [application, setApplication] = useState<AppFormValues | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isPastDeadline, setIsPastDeadline] = useState(false);
 
   // Continuously check if past deadline
+  // Admins and superadmins can always edit
   useEffect(() => {
     const checkDeadline = () => {
-      setIsPastDeadline(new Date() > APPLICATION_DEADLINE);
+      const pastDeadline = new Date() > APPLICATION_DEADLINE;
+      // Admins and superadmins can always edit, so they're never past deadline for editing purposes
+      setIsPastDeadline(pastDeadline && !isAdminOrSuperadmin);
     };
 
     // Check immediately
@@ -35,7 +39,7 @@ export default function ApplicationPage() {
     const interval = setInterval(checkDeadline, 1000);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [isAdminOrSuperadmin]);
 
   // Initialize form for Teams component
   const form = useForm<AppFormValues>({
