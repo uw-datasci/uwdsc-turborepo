@@ -97,13 +97,27 @@ export default function ApplicationPage() {
                 <h2 className="text-xl font-semibold text-white mb-2 uppercase tracking-wider">
                   No Application Found
                 </h2>
-                <p className="text-white/60 mb-6 max-w-md">
-                  You haven&apos;t started your application yet. Apply now to
-                  join CxC and be part of an amazing hackathon experience!
-                </p>
-                <Link href="/apply">
-                  <CxCButton>Start Application →</CxCButton>
-                </Link>
+                {isPastDeadline ? (
+                  <div className="border border-red-400/40 bg-red-400/10 p-4 max-w-md">
+                    <p className="text-red-400 font-medium mb-1 font-mono">
+                      Application deadline passed.
+                    </p>
+                    <p className="text-red-400/70 text-sm">
+                      The application deadline has passed. We are no longer
+                      accepting new applications.
+                    </p>
+                  </div>
+                ) : (
+                  <>
+                    <p className="text-white/60 mb-6 max-w-md">
+                      You haven&apos;t started your application yet. Apply now to
+                      join CxC and be part of an amazing hackathon experience!
+                    </p>
+                    <Link href="/apply">
+                      <CxCButton>Start Application →</CxCButton>
+                    </Link>
+                  </>
+                )}
               </CardContent>
             </Card>
           </motion.div>
@@ -136,24 +150,36 @@ export default function ApplicationPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4, delay: 0.1 }}
           >
-            <div className="border border-yellow-400/40 p-4">
-              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-                <div>
-                  <h3 className="text-yellow-400 font-medium mb-1 font-mono">
-                    APPLICATION IN PROGRESS
-                  </h3>
-                  <p className="text-yellow-400/70 text-sm">
-                    Your application hasn&apos;t been submitted yet. Continue
-                    where you left off to complete it.
-                  </p>
-                </div>
-                <Link href="/apply">
-                  <CxCButton className="whitespace-nowrap">
-                    Continue Application →
-                  </CxCButton>
-                </Link>
+            {isPastDeadline ? (
+              <div className="border border-red-400/40 bg-red-400/10 p-4">
+                <p className="text-red-400 font-medium mb-1 font-mono">
+                  Application deadline passed.
+                </p>
+                <p className="text-red-400/70 text-sm">
+                  The application deadline has passed. We are no longer accepting
+                  applications or allowing edits to draft applications.
+                </p>
               </div>
-            </div>
+            ) : (
+              <div className="border border-yellow-400/40 p-4">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                  <div>
+                    <h3 className="text-yellow-400 font-medium mb-1 font-mono">
+                      APPLICATION IN PROGRESS
+                    </h3>
+                    <p className="text-yellow-400/70 text-sm">
+                      Your application hasn&apos;t been submitted yet. Continue
+                      where you left off to complete it.
+                    </p>
+                  </div>
+                  <Link href="/apply">
+                    <CxCButton className="whitespace-nowrap">
+                      Continue Application →
+                    </CxCButton>
+                  </Link>
+                </div>
+              </div>
+            )}
           </motion.div>
 
           {/* Show partial application data */}
@@ -165,7 +191,7 @@ export default function ApplicationPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4, delay: 0.2 }}
           >
-            <Teams form={form} useCard={true} disabled={isPastDeadline} />
+            <Teams form={form} useCard={true} disabled={true} />
           </motion.div>
         </div>
       </div>
@@ -232,7 +258,7 @@ export default function ApplicationPage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: 0.2 }}
         >
-          <Teams form={form} useCard={true} disabled={isPastDeadline} />
+          <Teams form={form} useCard={true} disabled={true} />
         </motion.div>
       </div>
     </div>
