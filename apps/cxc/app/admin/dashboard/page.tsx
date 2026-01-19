@@ -11,6 +11,7 @@ import {
   BarChart3,
 } from "lucide-react";
 import { LoadingScreen } from "@/components/LoadingScreen";
+import CxCButton from "@/components/CxCButton";
 import {
   LineChart,
   Line,
@@ -83,11 +84,11 @@ export default function DashboardPage() {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-background p-4 md:p-8 pt-24 md:pt-28">
+      <div className="min-h-screen bg-black text-white p-4 md:p-8 pt-24 md:pt-28">
         <div className="max-w-7xl mx-auto">
-          <Card className="border-destructive">
+          <Card className="bg-black border border-red-500/50 rounded-none">
             <CardContent className="pt-6">
-              <p className="text-destructive text-sm">{error}</p>
+              <p className="text-red-400 text-sm">{error}</p>
             </CardContent>
           </Card>
         </div>
@@ -139,85 +140,91 @@ export default function DashboardPage() {
       : "0.0";
 
   return (
-    <div className="min-h-screen bg-background p-4 md:p-8 pt-24 md:pt-28">
+    <div className="min-h-screen bg-black text-white p-4 md:p-8 pt-24 md:pt-28">
       <div className="max-w-7xl mx-auto space-y-6">
         {/* Header */}
         <div>
-          <h1 className="text-2xl sm:text-3xl font-bold">
+          <h1 className="text-2xl sm:text-3xl font-bold text-white">
             Superadmin Dashboard
           </h1>
-          <p className="text-muted-foreground mt-1 text-sm sm:text-base">
+          <p className="text-white/60 mt-1 text-sm sm:text-base">
             Application and RSVP statistics overview
           </p>
         </div>
 
         {/* Statistics Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
-          <Card>
+          <Card className="bg-black border border-white/20 rounded-none">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">
+              <CardTitle className="text-sm font-medium text-white">
                 Total Applications
               </CardTitle>
-              <FileText className="h-4 w-4 text-muted-foreground" />
+              <FileText className="h-4 w-4 text-white/60" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">
+              <div className="text-2xl font-bold text-white">
                 {data.statistics.total_applications}
               </div>
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="bg-black border border-white/20 rounded-none">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Submitted</CardTitle>
-              <Send className="h-4 w-4 text-muted-foreground" />
+              <CardTitle className="text-sm font-medium text-white">
+                Submitted
+              </CardTitle>
+              <Send className="h-4 w-4 text-white/60" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">
+              <div className="text-2xl font-bold text-white">
                 {data.statistics.total_submitted}
               </div>
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="bg-black border border-white/20 rounded-none">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Offered</CardTitle>
-              <CheckCircle className="h-4 w-4 text-muted-foreground" />
+              <CardTitle className="text-sm font-medium text-white">
+                Offered
+              </CardTitle>
+              <CheckCircle className="h-4 w-4 text-white/60" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">
+              <div className="text-2xl font-bold text-white">
                 {data.statistics.total_offered}
               </div>
-              <p className="text-xs text-muted-foreground mt-1">
+              <p className="text-xs text-white/60 mt-1">
                 {offerRate}% of applications
               </p>
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="bg-black border border-white/20 rounded-none">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">
+              <CardTitle className="text-sm font-medium text-white">
                 RSVPed (Hackers)
               </CardTitle>
-              <Users className="h-4 w-4 text-muted-foreground" />
+              <Users className="h-4 w-4 text-white/60" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">
+              <div className="text-2xl font-bold text-white">
                 {data.statistics.total_rsvped}
               </div>
-              <p className="text-xs text-muted-foreground mt-1">
+              <p className="text-xs text-white/60 mt-1">
                 {rsvpRate}% of offered
               </p>
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="bg-black border border-white/20 rounded-none">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Declined</CardTitle>
-              <XCircle className="h-4 w-4 text-muted-foreground" />
+              <CardTitle className="text-sm font-medium text-white">
+                Declined
+              </CardTitle>
+              <XCircle className="h-4 w-4 text-white/60" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">
+              <div className="text-2xl font-bold text-white">
                 {data.statistics.total_declined}
               </div>
             </CardContent>
@@ -225,34 +232,34 @@ export default function DashboardPage() {
         </div>
 
         {/* RSVP Timeline Chart */}
-        <Card>
+        <Card className="bg-black border border-white/20 rounded-none">
           <CardHeader>
             <div className="flex items-center justify-between">
-              <CardTitle className="flex items-center gap-2">
+              <CardTitle className="flex items-center gap-2 text-white">
                 <BarChart3 className="h-5 w-5" />
                 RSVP Timeline
               </CardTitle>
               <div className="flex gap-2">
-                <button
+                <CxCButton
                   onClick={() => setInterval("24")}
-                  className={`px-3 py-1 text-sm rounded-md transition-colors ${
+                  className={
                     interval === "24"
-                      ? "bg-primary text-primary-foreground"
-                      : "bg-muted text-muted-foreground hover:bg-muted/80"
-                  }`}
+                      ? "!bg-white !text-black"
+                      : "!bg-black !text-white border border-white/40 hover:!bg-white/10"
+                  }
                 >
                   Daily
-                </button>
-                <button
+                </CxCButton>
+                <CxCButton
                   onClick={() => setInterval("1")}
-                  className={`px-3 py-1 text-sm rounded-md transition-colors ${
+                  className={
                     interval === "1"
-                      ? "bg-primary text-primary-foreground"
-                      : "bg-muted text-muted-foreground hover:bg-muted/80"
-                  }`}
+                      ? "!bg-white !text-black"
+                      : "!bg-black !text-white border border-white/40 hover:!bg-white/10"
+                  }
                 >
                   Hourly
-                </button>
+                </CxCButton>
               </div>
             </div>
           </CardHeader>
@@ -272,26 +279,24 @@ export default function DashboardPage() {
                     interval="preserveStartEnd"
                     tick={{ fill: "white", fontSize: 12 }}
                   />
-                  <YAxis
-                    tick={{ fill: "hsl(var(--foreground))", fontSize: 12 }}
-                  />
+                  <YAxis tick={{ fill: "white", fontSize: 12 }} />
                   <Tooltip
                     contentStyle={{
-                      backgroundColor: "hsl(var(--card))",
-                      border: "1px solid hsl(var(--border))",
-                      borderRadius: "8px",
-                      color: "hsl(var(--foreground))",
+                      backgroundColor: "#000000",
+                      border: "1px solid rgba(255, 255, 255, 0.2)",
+                      borderRadius: "0",
+                      color: "#ffffff",
                       padding: "12px",
                       minWidth: "200px",
                     }}
                     labelStyle={{
-                      color: "hsl(var(--foreground))",
+                      color: "#ffffff",
                       fontWeight: 600,
                       marginBottom: "8px",
                       fontSize: "14px",
                     }}
                     itemStyle={{
-                      color: "hsl(var(--foreground))",
+                      color: "#ffffff",
                       fontSize: "14px",
                     }}
                     formatter={(value: number) => [value, "RSVPs"]}
@@ -302,7 +307,7 @@ export default function DashboardPage() {
                   <Line
                     type="monotone"
                     dataKey="count"
-                    stroke="hsl(var(--primary))"
+                    stroke="#ffffff"
                     strokeWidth={2}
                     name="RSVPs"
                     dot={{ r: 4 }}
@@ -310,7 +315,7 @@ export default function DashboardPage() {
                 </LineChart>
               </ResponsiveContainer>
             ) : (
-              <div className="flex items-center justify-center h-[450px] text-muted-foreground">
+              <div className="flex items-center justify-center h-[450px] text-white/60">
                 <p>No RSVP data available yet</p>
               </div>
             )}
@@ -319,28 +324,32 @@ export default function DashboardPage() {
 
         {/* Summary Stats */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <Card>
+          <Card className="bg-black border border-white/20 rounded-none">
             <CardHeader>
-              <CardTitle className="text-lg">Conversion Rates</CardTitle>
+              <CardTitle className="text-lg text-white">
+                Conversion Rates
+              </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="flex justify-between items-center">
-                <span className="text-sm text-muted-foreground">
+                <span className="text-sm text-white/60">
                   Application → Offer
                 </span>
-                <span className="text-lg font-semibold">{offerRate}%</span>
+                <span className="text-lg font-semibold text-white">
+                  {offerRate}%
+                </span>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-sm text-muted-foreground">
-                  Offer → RSVP
+                <span className="text-sm text-white/60">Offer → RSVP</span>
+                <span className="text-lg font-semibold text-white">
+                  {rsvpRate}%
                 </span>
-                <span className="text-lg font-semibold">{rsvpRate}%</span>
               </div>
-              <div className="flex justify-between items-center pt-2 border-t">
-                <span className="text-sm font-medium">
+              <div className="flex justify-between items-center pt-2 border-t border-white/20">
+                <span className="text-sm font-medium text-white">
                   Overall Acceptance Rate
                 </span>
-                <span className="text-lg font-bold">
+                <span className="text-lg font-bold text-white">
                   {data.statistics.total_applications > 0
                     ? (
                         (data.statistics.total_rsvped /
@@ -354,33 +363,33 @@ export default function DashboardPage() {
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="bg-black border border-white/20 rounded-none">
             <CardHeader>
-              <CardTitle className="text-lg">Status Breakdown</CardTitle>
+              <CardTitle className="text-lg text-white">
+                Status Breakdown
+              </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="flex justify-between items-center">
-                <span className="text-sm text-muted-foreground">Pending</span>
-                <span className="text-lg font-semibold">
+                <span className="text-sm text-white/60">Pending</span>
+                <span className="text-lg font-semibold text-white">
                   {data.statistics.total_applications -
                     data.statistics.total_offered}
                 </span>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-sm text-muted-foreground">
-                  Awaiting RSVP
-                </span>
-                <span className="text-lg font-semibold">
+                <span className="text-sm text-white/60">Awaiting RSVP</span>
+                <span className="text-lg font-semibold text-white">
                   {data.statistics.total_offered -
                     data.statistics.total_rsvped -
                     data.statistics.total_declined}
                 </span>
               </div>
-              <div className="flex justify-between items-center pt-2 border-t">
-                <span className="text-sm font-medium">
+              <div className="flex justify-between items-center pt-2 border-t border-white/20">
+                <span className="text-sm font-medium text-white">
                   Total Active Hackers
                 </span>
-                <span className="text-lg font-bold">
+                <span className="text-lg font-bold text-white">
                   {data.statistics.total_rsvped}
                 </span>
               </div>
