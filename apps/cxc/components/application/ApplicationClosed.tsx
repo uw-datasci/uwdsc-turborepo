@@ -44,7 +44,7 @@ export function ApplicationClosed() {
                 Applications for this year&apos;s hackathon are currently
                 closed. The application period was from{" "}
                 <span className="text-white font-mono">January 2, 2026</span> to{" "}
-                <span className="text-white font-mono">January 14, 2026</span>.
+                <span className="text-white font-mono">January 15, 2026</span>.
               </p>
             </div>
 
