@@ -14,7 +14,7 @@ import { DashboardService } from "@uwdsc/server/cxc/services/dashboardService";
 export async function GET(request: NextRequest) {
   try {
     console.log("[Dashboard API] Starting request");
-    
+
     // Authenticate user
     const authService = await createAuthService();
     const { user, error: userErr } = await authService.getCurrentUser();
@@ -43,8 +43,7 @@ export async function GET(request: NextRequest) {
     // Get query parameters
     const { searchParams } = new URL(request.url);
     const intervalParam = searchParams.get("interval");
-    const intervalHours: 1 | 24 =
-      intervalParam === "1" ? 1 : (24 as 1 | 24);
+    const intervalHours: 1 | 24 = intervalParam === "1" ? 1 : (24 as 1 | 24);
 
     console.log("[Dashboard API] Interval:", intervalHours);
 
@@ -69,7 +68,9 @@ export async function GET(request: NextRequest) {
       {
         error: "Internal server error",
         message:
-          error instanceof Error ? error.message : "Failed to fetch dashboard data",
+          error instanceof Error
+            ? error.message
+            : "Failed to fetch dashboard data",
       },
       { status: 500 },
     );

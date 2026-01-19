@@ -1,12 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@uwdsc/ui";
+import { Card, CardContent, CardHeader, CardTitle } from "@uwdsc/ui";
 import {
   FileText,
   Send,
@@ -108,17 +103,18 @@ export default function DashboardPage() {
   // Format timeline data for chart
   const chartData = data.timeline.map((item) => {
     const date = new Date(item.timestamp);
-    const timeLabel = interval === "24"
-      ? date.toLocaleDateString("en-US", {
-          month: "short",
-          day: "numeric",
-        })
-      : date.toLocaleString("en-US", {
-          month: "short",
-          day: "numeric",
-          hour: "numeric",
-        });
-    
+    const timeLabel =
+      interval === "24"
+        ? date.toLocaleDateString("en-US", {
+            month: "short",
+            day: "numeric",
+          })
+        : date.toLocaleString("en-US", {
+            month: "short",
+            day: "numeric",
+            hour: "numeric",
+          });
+
     return {
       time: timeLabel,
       count: item.count,
@@ -130,8 +126,7 @@ export default function DashboardPage() {
   const offerRate =
     data.statistics.total_applications > 0
       ? (
-          (data.statistics.total_offered /
-            data.statistics.total_applications) *
+          (data.statistics.total_offered / data.statistics.total_applications) *
           100
         ).toFixed(1)
       : "0.0";
@@ -149,7 +144,9 @@ export default function DashboardPage() {
       <div className="max-w-7xl mx-auto space-y-6">
         {/* Header */}
         <div>
-          <h1 className="text-2xl sm:text-3xl font-bold">Superadmin Dashboard</h1>
+          <h1 className="text-2xl sm:text-3xl font-bold">
+            Superadmin Dashboard
+          </h1>
           <p className="text-muted-foreground mt-1 text-sm sm:text-base">
             Application and RSVP statistics overview
           </p>
@@ -200,7 +197,9 @@ export default function DashboardPage() {
 
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">RSVPed (Hackers)</CardTitle>
+              <CardTitle className="text-sm font-medium">
+                RSVPed (Hackers)
+              </CardTitle>
               <Users className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
@@ -261,7 +260,10 @@ export default function DashboardPage() {
           <CardContent>
             {chartData.length > 0 ? (
               <ResponsiveContainer width="100%" height={450}>
-                <LineChart data={chartData} margin={{ bottom: 100, top: 20, right: 20 }}>
+                <LineChart
+                  data={chartData}
+                  margin={{ bottom: 100, top: 20, right: 20 }}
+                >
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis
                     dataKey="time"
@@ -271,7 +273,9 @@ export default function DashboardPage() {
                     interval="preserveStartEnd"
                     tick={{ fill: "white", fontSize: 12 }}
                   />
-                  <YAxis tick={{ fill: "hsl(var(--foreground))", fontSize: 12 }} />
+                  <YAxis
+                    tick={{ fill: "hsl(var(--foreground))", fontSize: 12 }}
+                  />
                   <Tooltip
                     contentStyle={{
                       backgroundColor: "hsl(var(--card))",
@@ -374,7 +378,9 @@ export default function DashboardPage() {
                 </span>
               </div>
               <div className="flex justify-between items-center pt-2 border-t">
-                <span className="text-sm font-medium">Total Active Hackers</span>
+                <span className="text-sm font-medium">
+                  Total Active Hackers
+                </span>
                 <span className="text-lg font-bold">
                   {data.statistics.total_rsvped}
                 </span>

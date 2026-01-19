@@ -46,20 +46,20 @@ export class DashboardService {
 
       for (const item of hourlyData) {
         const date = new Date(item.timestamp);
-        
+
         // Create daily bucket (start of day)
         const bucketDate = new Date(date);
         bucketDate.setHours(0, 0, 0, 0);
-        
+
         const bucketKey = bucketDate.toISOString();
-        
+
         if (!aggregated.has(bucketKey)) {
           aggregated.set(bucketKey, {
             count: 0,
             timestamp: bucketDate,
           });
         }
-        
+
         const bucket = aggregated.get(bucketKey)!;
         bucket.count += item.count;
       }
@@ -67,7 +67,7 @@ export class DashboardService {
       // Convert map to array and format
       return Array.from(aggregated.entries())
         .map(([key, value]) => ({
-          time_period: value.timestamp.toISOString().slice(0, 10) + ' 00:00',
+          time_period: value.timestamp.toISOString().slice(0, 10) + " 00:00",
           count: value.count,
           timestamp: value.timestamp,
         }))

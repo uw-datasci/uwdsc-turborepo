@@ -134,7 +134,8 @@ export default function ResultsPage() {
               <div className="text-center">
                 <p className="text-sm text-white/90">
                   You did not submit your application before the deadline.
-                  Unfortunately, applications are no longer being accepted for CXC 2026.
+                  Unfortunately, applications are no longer being accepted for
+                  CXC 2026.
                 </p>
               </div>
 
@@ -148,9 +149,7 @@ export default function ResultsPage() {
                     <ul className="space-y-1.5 text-sm text-white/80">
                       <li className="flex items-start gap-2">
                         <span className="text-red-400 mt-0.5">•</span>
-                        <span>
-                          The application deadline has passed
-                        </span>
+                        <span>The application deadline has passed</span>
                       </li>
                       <li className="flex items-start gap-2">
                         <span className="text-red-400 mt-0.5">•</span>

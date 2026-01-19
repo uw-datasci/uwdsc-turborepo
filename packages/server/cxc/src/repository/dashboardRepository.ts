@@ -26,11 +26,17 @@ export class DashboardRepository extends BaseRepository {
   async getDashboardStatistics(): Promise<DashboardStatistics> {
     try {
       console.log("[DashboardRepository] Fetching statistics...");
-      
+
       // Run queries sequentially to identify which one hangs
       // Use CASE statements instead of FILTER for better compatibility
       console.log("[DashboardRepository] Querying applications table...");
-      const appStats = await this.sql<Array<{ total_applications: number; total_submitted: number; total_offered: number }>>`
+      const appStats = await this.sql<
+        Array<{
+          total_applications: number;
+          total_submitted: number;
+          total_offered: number;
+        }>
+      >`
         SELECT 
           COUNT(*)::int as total_applications,
           SUM(CASE WHEN status::text = 'submitted' THEN 1 ELSE 0 END)::int as total_submitted,
@@ -40,16 +46,28 @@ export class DashboardRepository extends BaseRepository {
       console.log("[DashboardRepository] App stats query completed:", appStats);
 
       console.log("[DashboardRepository] Querying profiles table...");
-      const profileStats = await this.sql<Array<{ total_rsvped: number; total_declined: number }>>`
+      const profileStats = await this.sql<
+        Array<{ total_rsvped: number; total_declined: number }>
+      >`
         SELECT 
           SUM(CASE WHEN role::text = 'hacker' THEN 1 ELSE 0 END)::int as total_rsvped,
           SUM(CASE WHEN role::text = 'declined' THEN 1 ELSE 0 END)::int as total_declined
         FROM profiles
       `;
-      console.log("[DashboardRepository] Profile stats query completed:", profileStats);
+      console.log(
+        "[DashboardRepository] Profile stats query completed:",
+        profileStats,
+      );
 
-      const appData = appStats[0] || { total_applications: 0, total_submitted: 0, total_offered: 0 };
-      const profileData = profileStats[0] || { total_rsvped: 0, total_declined: 0 };
+      const appData = appStats[0] || {
+        total_applications: 0,
+        total_submitted: 0,
+        total_offered: 0,
+      };
+      const profileData = profileStats[0] || {
+        total_rsvped: 0,
+        total_declined: 0,
+      };
 
       const result = {
         total_applications: appData.total_applications,
@@ -58,11 +76,14 @@ export class DashboardRepository extends BaseRepository {
         total_rsvped: profileData.total_rsvped,
         total_declined: profileData.total_declined,
       };
-      
+
       console.log("[DashboardRepository] Statistics result:", result);
       return result;
     } catch (error) {
-      console.error("[DashboardRepository] Error fetching dashboard statistics:", error);
+      console.error(
+        "[DashboardRepository] Error fetching dashboard statistics:",
+        error,
+      );
       throw new ApiError(
         `Failed to fetch dashboard statistics: ${(error as Error).message}`,
         500,
@@ -77,7 +98,7 @@ export class DashboardRepository extends BaseRepository {
   async getRSVPTimelineHourly(): Promise<RSVPTimelineData[]> {
     try {
       console.log("[DashboardRepository] Fetching hourly timeline...");
-      
+
       const result = await this.sql<RSVPTimelineData[]>`
         SELECT 
           TO_CHAR(date_trunc('hour', updated_at), 'YYYY-MM-DD HH24:00') as time_period,
@@ -90,10 +111,16 @@ export class DashboardRepository extends BaseRepository {
         ORDER BY date_trunc('hour', updated_at) ASC
       `;
 
-      console.log("[DashboardRepository] Timeline result count:", result.length);
+      console.log(
+        "[DashboardRepository] Timeline result count:",
+        result.length,
+      );
       return result;
     } catch (error) {
-      console.error("[DashboardRepository] Error fetching RSVP timeline:", error);
+      console.error(
+        "[DashboardRepository] Error fetching RSVP timeline:",
+        error,
+      );
       throw new ApiError(
         `Failed to fetch RSVP timeline: ${(error as Error).message}`,
         500,
