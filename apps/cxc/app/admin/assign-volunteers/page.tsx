@@ -3,7 +3,14 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { Card, CardHeader, CardTitle, CardContent, Input } from "@uwdsc/ui";
-import { Search, Loader2, CheckCircle2, XCircle, Shield } from "lucide-react";
+import {
+  Search,
+  Loader2,
+  CheckCircle2,
+  XCircle,
+  Users,
+  Code,
+} from "lucide-react";
 import CxCButton from "@/components/CxCButton";
 
 interface User {
@@ -13,11 +20,14 @@ interface User {
   display_name: string | null;
 }
 
-export default function AdminAssignPage() {
+export default function AdminAssignVolunteersPage() {
   const [emailQuery, setEmailQuery] = useState<string>("");
   const [searching, setSearching] = useState(false);
   const [users, setUsers] = useState<User[]>([]);
-  const [assigning, setAssigning] = useState<string | null>(null);
+  const [assigning, setAssigning] = useState<{
+    userId: string;
+    role: string;
+  } | null>(null);
   const [result, setResult] = useState<{
     success: boolean;
     message: string;
@@ -40,7 +50,6 @@ export default function AdminAssignPage() {
       const response = await fetch(
         `/api/admin/users/search?email=${encodeURIComponent(emailQuery.trim())}`,
       );
-
       const data = await response.json();
 
       if (response.ok) {
@@ -68,25 +77,29 @@ export default function AdminAssignPage() {
     }
   };
 
-  const handleAssignAdmin = async (userId: string, userEmail: string) => {
+  const handleAssignRole = async (
+    userId: string,
+    userEmail: string,
+    role: "hacker" | "volunteer",
+  ) => {
     if (
-      !confirm(`Are you sure you want to assign admin role to ${userEmail}?`)
+      !confirm(`Are you sure you want to assign ${role} role to ${userEmail}?`)
     ) {
       return;
     }
 
-    setAssigning(userId);
+    setAssigning({ userId, role });
     setResult(null);
 
     try {
-      const response = await fetch("/api/admin/users/assign", {
+      const response = await fetch("/api/admin/users/assign-volunteer", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
           userId,
-          role: "admin",
+          role,
         }),
       });
 
@@ -95,13 +108,11 @@ export default function AdminAssignPage() {
       if (response.ok && data.success) {
         setResult({
           success: true,
-          message: `Successfully assigned admin role to ${userEmail}`,
+          message: `Successfully assigned ${role} role to ${userEmail}`,
         });
 
         // Update the user's role in the local state
-        setUsers(
-          users.map((u) => (u.id === userId ? { ...u, role: "admin" } : u)),
-        );
+        setUsers(users.map((u) => (u.id === userId ? { ...u, role } : u)));
 
         // Clear result after 5 seconds
         setTimeout(() => {
@@ -110,14 +121,15 @@ export default function AdminAssignPage() {
       } else {
         setResult({
           success: false,
-          message: data.message || data.error || "Failed to assign admin role",
+          message:
+            data.message || data.error || `Failed to assign ${role} role`,
         });
       }
     } catch (error) {
-      console.error("Error assigning admin role:", error);
+      console.error(`Error assigning ${role} role:`, error);
       setResult({
         success: false,
-        message: "Failed to assign admin role. Please try again.",
+        message: `Failed to assign ${role} role. Please try again.`,
       });
     } finally {
       setAssigning(null);
@@ -138,10 +150,10 @@ export default function AdminAssignPage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, ease: "easeOut" }}
         >
-          <h1 className="text-3xl font-bold mb-2">Assign Admin Roles</h1>
+          <h1 className="text-3xl font-bold mb-2">Assign Roles</h1>
           <p className="text-gray-400">
-            Search for users by email and assign them admin roles. Only
-            superadmins can access this page.
+            Search for users by email and assign them hacker or volunteer roles.
+            Only admins and superadmins can access this page.
           </p>
         </motion.div>
 
@@ -243,29 +255,125 @@ export default function AdminAssignPage() {
                           {user.role === "admin" ||
                           user.role === "superadmin" ? (
                             <div className="flex items-center gap-2 text-sm text-gray-400">
-                              <Shield className="h-4 w-4" />
-                              <span>Already {user.role}</span>
+                              <span>Cannot change {user.role} role</span>
+                            </div>
+                          ) : user.role === "hacker" ||
+                            user.role === "volunteer" ? (
+                            <div className="flex items-center gap-2">
+                              <CxCButton
+                                onClick={() =>
+                                  handleAssignRole(
+                                    user.id,
+                                    user.email,
+                                    "hacker",
+                                  )
+                                }
+                                disabled={
+                                  assigning?.userId === user.id ||
+                                  user.role === "hacker"
+                                }
+                                className={`px-3 py-1.5 text-sm ${
+                                  user.role === "hacker"
+                                    ? "!bg-blue-500 !text-white hover:!bg-blue-600 border border-blue-400"
+                                    : "!bg-blue-500/10 !text-blue-400 hover:!bg-blue-500/20 border border-blue-400/40"
+                                }`}
+                              >
+                                {assigning?.userId === user.id &&
+                                assigning?.role === "hacker" ? (
+                                  <>
+                                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                    Assigning...
+                                  </>
+                                ) : (
+                                  <>
+                                    <Code className="mr-2 h-4 w-4" />
+                                    Assign Hacker
+                                  </>
+                                )}
+                              </CxCButton>
+                              <CxCButton
+                                onClick={() =>
+                                  handleAssignRole(
+                                    user.id,
+                                    user.email,
+                                    "volunteer",
+                                  )
+                                }
+                                disabled={
+                                  assigning?.userId === user.id ||
+                                  user.role === "volunteer"
+                                }
+                                className={`px-3 py-1.5 text-sm ${
+                                  user.role === "volunteer"
+                                    ? "!bg-purple-500 !text-white hover:!bg-purple-600 border border-purple-400"
+                                    : "!bg-purple-500/10 !text-purple-400 hover:!bg-purple-500/20 border border-purple-400/40"
+                                }`}
+                              >
+                                {assigning?.userId === user.id &&
+                                assigning?.role === "volunteer" ? (
+                                  <>
+                                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                    Assigning...
+                                  </>
+                                ) : (
+                                  <>
+                                    <Users className="mr-2 h-4 w-4" />
+                                    Assign Volunteer
+                                  </>
+                                )}
+                              </CxCButton>
                             </div>
                           ) : (
-                            <CxCButton
-                              onClick={() =>
-                                handleAssignAdmin(user.id, user.email)
-                              }
-                              disabled={assigning === user.id}
-                              className="px-4 py-2"
-                            >
-                              {assigning === user.id ? (
-                                <>
-                                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                                  Assigning...
-                                </>
-                              ) : (
-                                <>
-                                  <Shield className="mr-2 h-4 w-4" />
-                                  Assign Admin
-                                </>
-                              )}
-                            </CxCButton>
+                            <div className="flex items-center gap-2">
+                              <CxCButton
+                                onClick={() =>
+                                  handleAssignRole(
+                                    user.id,
+                                    user.email,
+                                    "hacker",
+                                  )
+                                }
+                                disabled={assigning?.userId === user.id}
+                                className="px-3 py-1.5 text-sm !bg-blue-500/10 !text-blue-400 hover:!bg-blue-500/20 border border-blue-400/40"
+                              >
+                                {assigning?.userId === user.id &&
+                                assigning?.role === "hacker" ? (
+                                  <>
+                                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                    Assigning...
+                                  </>
+                                ) : (
+                                  <>
+                                    <Code className="mr-2 h-4 w-4" />
+                                    Assign Hacker
+                                  </>
+                                )}
+                              </CxCButton>
+                              <CxCButton
+                                onClick={() =>
+                                  handleAssignRole(
+                                    user.id,
+                                    user.email,
+                                    "volunteer",
+                                  )
+                                }
+                                disabled={assigning?.userId === user.id}
+                                className="px-3 py-1.5 text-sm !bg-purple-500/10 !text-purple-400 hover:!bg-purple-500/20 border border-purple-400/40"
+                              >
+                                {assigning?.userId === user.id &&
+                                assigning?.role === "volunteer" ? (
+                                  <>
+                                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                    Assigning...
+                                  </>
+                                ) : (
+                                  <>
+                                    <Users className="mr-2 h-4 w-4" />
+                                    Assign Volunteer
+                                  </>
+                                )}
+                              </CxCButton>
+                            </div>
                           )}
                         </div>
                       </motion.div>
