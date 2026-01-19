@@ -5,10 +5,10 @@ import { createAuthService } from "@/lib/services";
 const profileService = new ProfileService();
 
 /**
- * POST /api/admin/users/assign
- * Assign admin role to a user
- * Superadmin only endpoint
- * Body: { userId: string, role: "admin" }
+ * POST /api/admin/users/assign-volunteer
+ * Assign hacker or volunteer role to a user
+ * Admin or superadmin only endpoint
+ * Body: { userId: string, role: "hacker" | "volunteer" }
  */
 export async function POST(request: Request) {
   try {
@@ -23,11 +23,11 @@ export async function POST(request: Request) {
       );
     }
 
-    // Check if user is superadmin
+    // Check if user is admin or superadmin
     const profile = await profileService.getProfileByUserId(user.id);
-    if (profile?.role !== "superadmin") {
+    if (profile?.role !== "admin" && profile?.role !== "superadmin") {
       return NextResponse.json(
-        { error: "Forbidden", message: "Superadmin access required" },
+        { error: "Forbidden", message: "Admin or superadmin access required" },
         { status: 403 },
       );
     }
@@ -42,19 +42,19 @@ export async function POST(request: Request) {
       );
     }
 
-    // Validate role
-    const validRoles = ["admin", "hacker", "volunteer", "default"];
-    if (!validRoles.includes(role)) {
+    // Validate role - only allow assigning hacker or volunteer role
+    if (role !== "hacker" && role !== "volunteer") {
       return NextResponse.json(
         {
           error: "Bad Request",
-          message: `Invalid role. Must be one of: ${validRoles.join(", ")}`,
+          message:
+            "Invalid role. Only 'hacker' or 'volunteer' roles can be assigned via this endpoint",
         },
         { status: 400 },
       );
     }
 
-    // Prevent superadmin from changing their own role
+    // Prevent admin/superadmin from changing their own role
     if (userId === user.id) {
       return NextResponse.json(
         { error: "Bad Request", message: "Cannot change your own role" },
@@ -62,13 +62,16 @@ export async function POST(request: Request) {
       );
     }
 
-    // Prevent demoting other superadmins to admin (can only elevate, not demote)
+    // Prevent changing admin or superadmin roles
     const targetProfile = await profileService.getProfileByUserId(userId);
-    if (targetProfile?.role === "superadmin" && role === "admin") {
+    if (
+      targetProfile?.role === "admin" ||
+      targetProfile?.role === "superadmin"
+    ) {
       return NextResponse.json(
         {
           error: "Bad Request",
-          message: "Cannot demote superadmin to admin. Can only elevate roles.",
+          message: "Cannot change admin or superadmin roles via this endpoint",
         },
         { status: 400 },
       );
@@ -95,7 +98,7 @@ export async function POST(request: Request) {
       { status: 200 },
     );
   } catch (error: unknown) {
-    console.error("Error in user assign route:", error);
+    console.error("Error in user assign-volunteer route:", error);
     return NextResponse.json(
       {
         error: "Internal server error",

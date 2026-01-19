@@ -106,15 +106,15 @@ export function StatusCard({ status, submittedAt }: Readonly<StatusCardProps>) {
                     Application deadline passed.
                   </p>
                   <p className="text-red-400/70 text-sm">
-                    The application deadline has passed. We are no longer accepting
-                    new applications.
+                    The application deadline has passed. We are no longer
+                    accepting new applications.
                   </p>
                 </div>
               ) : (
                 <>
                   <p className="text-white/60">
-                    You haven&apos;t started your application yet. Apply now to join
-                    CxC!
+                    You haven&apos;t started your application yet. Apply now to
+                    join CxC!
                   </p>
                   <Link href="/apply">
                     <CxCButton className="w-full sm:w-auto">
