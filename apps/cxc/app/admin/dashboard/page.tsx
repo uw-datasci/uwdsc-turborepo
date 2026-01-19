@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@uwdsc/ui";
 import {
   FileText,
@@ -9,7 +9,6 @@ import {
   Users,
   XCircle,
   BarChart3,
-  Loader2,
 } from "lucide-react";
 import { LoadingScreen } from "@/components/LoadingScreen";
 import {
@@ -48,11 +47,7 @@ export default function DashboardPage() {
   const [error, setError] = useState<string | null>(null);
   const [interval, setInterval] = useState<"1" | "24">("24");
 
-  useEffect(() => {
-    fetchDashboardData();
-  }, [interval]);
-
-  const fetchDashboardData = async () => {
+  const fetchDashboardData = useCallback(async () => {
     try {
       setLoading(true);
       setError(null);
@@ -76,7 +71,11 @@ export default function DashboardPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [interval]);
+
+  useEffect(() => {
+    fetchDashboardData();
+  }, [fetchDashboardData]);
 
   if (loading) {
     return <LoadingScreen message="LOADING DASHBOARD..." />;

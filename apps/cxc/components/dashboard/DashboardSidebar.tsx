@@ -45,13 +45,11 @@ const navItems: NavItem[] = [
 interface DashboardSidebarProps {
   className?: string;
   onNavClick?: () => void;
-  applicationStatus?: string;
 }
 
 export function DashboardSidebar({
   className,
   onNavClick,
-  applicationStatus,
 }: Readonly<DashboardSidebarProps>) {
   const pathname = usePathname();
 

@@ -7,33 +7,15 @@ import { Sheet, SheetContent, SheetTrigger, HamburgerIcon } from "@uwdsc/ui";
 import { useAuth } from "@/contexts/AuthContext";
 import { DashboardSidebar } from "@/components/dashboard";
 import { LoadingScreen } from "@/components/LoadingScreen";
-import { getApplication } from "@/lib/api/application";
 
 interface DashboardLayoutProps {
   readonly children: React.ReactNode;
 }
 
 export default function DashboardLayout({ children }: DashboardLayoutProps) {
-  const { isLoading, isAuthenticated, user } = useAuth();
+  const { isLoading, isAuthenticated } = useAuth();
   const router = useRouter();
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [applicationStatus, setApplicationStatus] = useState<
-    string | undefined
-  >();
-
-  // Fetch application status
-  useEffect(() => {
-    async function fetchApplicationStatus() {
-      if (!user?.id) return;
-      try {
-        const data = await getApplication(user.id);
-        setApplicationStatus(data?.status as string | undefined);
-      } catch (error) {
-        console.error("Error fetching application status:", error);
-      }
-    }
-    fetchApplicationStatus();
-  }, [user?.id]);
 
   // Redirect to login if not authenticated
   useEffect(() => {
@@ -52,7 +34,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
     <div className="min-h-screen bg-black cxc-app-font">
       {/* Desktop Sidebar */}
       <aside className="hidden lg:fixed lg:inset-y-0 lg:left-0 lg:flex lg:w-64 lg:flex-col border-r border-white/20 bg-black">
-        <DashboardSidebar applicationStatus={applicationStatus} />
+        <DashboardSidebar />
       </aside>
 
       {/* Mobile Header */}
@@ -71,10 +53,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
               side="left"
               className="w-64 p-0 bg-black border-white/20 rounded-none"
             >
-              <DashboardSidebar
-                applicationStatus={applicationStatus}
-                onNavClick={() => setSidebarOpen(false)}
-              />
+              <DashboardSidebar onNavClick={() => setSidebarOpen(false)} />
             </SheetContent>
           </Sheet>
         </div>
