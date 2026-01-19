@@ -1,0 +1,472 @@
+# Role Management System
+
+Complete guide to managing user roles in the CxC application, including volunteer and hacker role assignments.
+
+## Overview
+
+The CxC platform includes a role-based access control system with the following roles:
+- **superadmin** - Full system access, can assign admin roles
+- **admin** - Can review applications and assign hacker/volunteer roles
+- **volunteer** - Event staff and support roles
+- **hacker** - Event participants
+- **default** - New users without assigned roles
+
+## Role Assignment Pages
+
+### Assign Volunteers & Hackers (`/admin/assign-volunteers`)
+
+Admin page for assigning participant and volunteer roles to registered users.
+
+**Access Requirements**
+- Admin or superadmin role required
+- Accessible via admin dropdown menu: "Assign Roles"
+
+**Features**
+- **User Search**: Find users by email address
+- **Role Assignment**: Assign hacker or volunteer roles with one click
+- **Visual Status**: Current role displayed for each user
+- **Role Protection**: Cannot modify admin or superadmin roles
+- **Real-time Feedback**: Success/error messages after assignment
+- **Auto-refresh**: User role updates immediately in the interface
+
+**How to Assign Roles**
+
+1. Navigate to `/admin/assign-volunteers` or use "Assign Roles" from admin menu
+2. Enter user's email address in the search field
+3. Click "Search" or press Enter
+4. Review the user's current role
+5. Click either:
+   - **"Assign Hacker"** - For event participants
+   - **"Assign Volunteer"** - For event staff and support
+6. Confirm the action in the browser prompt
+7. Role updates immediately upon success
+
+**User Search**
+
+```typescript
+// Search by full email or partial match
+"john.doe@uwaterloo.ca"
+"jane@"
+
+// Returns matching users with:
+{
+  id: string;           // User UUID
+  email: string;        // User email address
+  display_name: string; // User's display name (if set)
+  role: string;         // Current role
+}
+```
+
+**Role Assignment Rules**
+- ✅ Can assign hacker or volunteer to default users
+- ✅ Can change between hacker and volunteer roles
+- ✅ Admin and superadmin can use this page
+- ❌ Cannot change admin roles via this page
+- ❌ Cannot change superadmin roles via this page
+- ❌ Cannot change your own role
+
+### Assign Admin Roles (`/admin/assign`)
+
+Superadmin page for elevating users to admin status.
+
+**Access Requirements**
+- Superadmin role required only
+- Accessible via admin dropdown menu: "Assign Admin"
+
+**Features**
+- Similar search and assignment interface as volunteer assignment
+- Elevates users to admin role
+- Prevents demotion of superadmins to admin
+- Can only elevate roles, not demote
+
+**How to Assign Admin**
+
+1. Navigate to `/admin/assign`
+2. Search for user by email
+3. Click "Assign Admin" button
+4. User elevated to admin role immediately
+
+**Admin Assignment Rules**
+- ✅ Can elevate any non-admin user to admin
+- ✅ Only superadmins can access this page
+- ❌ Cannot demote superadmin to admin
+- ❌ Cannot change your own role
+
+## API Reference
+
+### Volunteer/Hacker Role Assignment
+
+#### Assign Volunteer or Hacker Role
+
+```typescript
+POST /api/admin/users/assign-volunteer
+
+Body: {
+  userId: string;           // User UUID to update
+  role: "hacker" | "volunteer";  // Role to assign
+}
+
+Response: {
+  success: boolean;
+  message: string;
+}
+```
+
+**Authorization**
+- Requires admin or superadmin role
+- Verified via profile role check
+
+**Validation**
+- `userId` and `role` are required
+- `role` must be exactly "hacker" or "volunteer"
+- Cannot change your own role
+- Cannot modify admin or superadmin roles
+
+**Error Responses**
+
+```typescript
+// 401 Unauthorized
+{ error: "Unauthorized", message: "Authentication required" }
+
+// 403 Forbidden
+{ error: "Forbidden", message: "Admin or superadmin access required" }
+
+// 400 Bad Request
+{ 
+  error: "Bad Request", 
+  message: "Invalid role. Only 'hacker' or 'volunteer' roles can be assigned via this endpoint" 
+}
+
+// 400 Bad Request (changing own role)
+{ error: "Bad Request", message: "Cannot change your own role" }
+
+// 400 Bad Request (changing admin/superadmin)
+{ 
+  error: "Bad Request", 
+  message: "Cannot change admin or superadmin roles via this endpoint" 
+}
+```
+
+### Admin Role Assignment
+
+#### Assign Admin Role
+
+```typescript
+POST /api/admin/users/assign
+
+Body: {
+  userId: string;           // User UUID to update
+  role: "admin" | "superadmin";  // Role to assign
+}
+
+Response: {
+  success: boolean;
+  message: string;
+}
+```
+
+**Authorization**
+- Requires superadmin role only
+- More restrictive than volunteer assignment
+
+**Validation**
+- Cannot demote superadmin to admin
+- Can only elevate roles via this endpoint
+- Cannot change your own role
+
+### User Search
+
+#### Search Users by Email
+
+```typescript
+GET /api/admin/users/search?email={emailQuery}
+
+Response: {
+  users: Array<{
+    id: string;
+    email: string;
+    display_name: string | null;
+    role: string;
+  }>
+}
+```
+
+**Authorization**
+- Requires admin or superadmin role (updated in PR #134)
+- Previously required superadmin only
+
+**Query Parameters**
+- `email` - Email address or partial match to search
+
+## Client API Functions
+
+### Role Assignment Functions
+
+```typescript
+// Assign volunteer or hacker role
+async function assignVolunteerRole(userId: string, role: "hacker" | "volunteer") {
+  const response = await fetch("/api/admin/users/assign-volunteer", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ userId, role })
+  });
+  
+  return response.json();
+}
+
+// Assign admin role
+async function assignAdminRole(userId: string) {
+  const response = await fetch("/api/admin/users/assign", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ userId, role: "admin" })
+  });
+  
+  return response.json();
+}
+
+// Search users
+async function searchUsers(emailQuery: string) {
+  const response = await fetch(
+    `/api/admin/users/search?email=${encodeURIComponent(emailQuery)}`
+  );
+  
+  return response.json();
+}
+```
+
+## Backend Services
+
+### ProfileService
+
+Role assignment is handled through the ProfileService:
+
+```typescript
+import { ProfileService } from "@uwdsc/server/cxc/services/profileService";
+
+const profileService = new ProfileService();
+
+// Update user role
+const result = await profileService.updateUserRole(
+  userId,
+  "hacker" // or "volunteer", "admin", "superadmin"
+);
+
+// Get user profile with role
+const profile = await profileService.getProfileByUserId(userId);
+console.log(profile.role); // Current role
+```
+
+**Database Update**
+```sql
+UPDATE profiles 
+SET role = $1 
+WHERE id = $2;
+```
+
+## Navigation & Access
+
+### Admin Menu
+
+The admin dropdown menu (visible only to admin and superadmin users) includes:
+
+```typescript
+const adminPages = [
+  {
+    href: "/admin/applications",
+    label: "Applications",
+    description: "View and manage all applications"
+  },
+  {
+    href: "/admin/review",
+    label: "Review",
+    description: "Review applications one at a time"
+  },
+  {
+    href: "/admin/assign-volunteers",
+    label: "Assign Roles",
+    description: "Search for users and assign hacker or volunteer roles"
+  }
+];
+
+const superadminPages = [
+  {
+    href: "/admin/assign",
+    label: "Assign Admin",
+    description: "Search for users and assign admin roles"
+  }
+];
+```
+
+### Route Protection
+
+Admin routes are protected by the `withProtected` middleware:
+
+```typescript
+// /admin/** routes require admin or superadmin
+// Exception: /admin/assign requires superadmin only
+
+if (pathname.startsWith("/admin")) {
+  if (pathname === "/admin/assign") {
+    // Superadmin only
+    if (profile.role !== "superadmin") {
+      return redirect("/");
+    }
+  } else {
+    // Admin or superadmin
+    if (profile.role !== "admin" && profile.role !== "superadmin") {
+      return redirect("/");
+    }
+  }
+}
+```
+
+## Role Visibility & Features
+
+### NFC Check-In Card
+
+The NFC check-in card on the dashboard is role-dependent:
+
+```typescript
+// Only shown for users with active roles (not default)
+{user?.id && user?.role && user.role !== "default" && <NfcCard />}
+```
+
+**Visibility Rules**
+- ✅ Shown for: hacker, volunteer, admin, superadmin
+- ❌ Hidden for: default role or no role
+
+This prevents confusion for newly registered users who haven't been assigned event roles yet.
+
+## Best Practices
+
+### Role Assignment
+
+**Do:**
+- Verify user email before assigning roles
+- Confirm role assignment with the user
+- Use appropriate role for user's function:
+  - `hacker` - Event participants
+  - `volunteer` - Event staff, check-in, support
+  - `admin` - Application reviewers, event organizers
+  - `superadmin` - System administrators
+- Keep audit trail of role changes (future enhancement)
+
+**Don't:**
+- Assign admin roles to event participants
+- Change roles without user knowledge
+- Remove admin access during active events
+- Mass-assign roles without verification
+
+### Security Considerations
+
+**Role Elevation**
+- Only elevate roles when necessary
+- Superadmin role should be extremely limited
+- Admin role should be given to trusted reviewers only
+- Review admin access regularly
+
+**API Security**
+- All role assignment endpoints require authentication
+- Role checks happen on every request
+- Cannot bypass role restrictions client-side
+- Database constraints prevent invalid role values
+
+## Troubleshooting
+
+### Cannot Find User in Search
+
+**Possible Causes:**
+1. User hasn't created an account yet
+2. Email address typo or case mismatch
+3. User's email not confirmed
+
+**Solutions:**
+1. Verify user has registered: Check auth.users table
+2. Try partial email search: "john@" instead of full email
+3. Check for extra spaces in email input
+
+### Role Assignment Fails
+
+**Possible Causes:**
+1. Trying to modify admin/superadmin role
+2. Insufficient permissions
+3. Network error
+4. User ID doesn't exist
+
+**Solutions:**
+1. Check user's current role - use `/admin/assign` for admin roles
+2. Verify your role is admin or superadmin
+3. Check browser console for error messages
+4. Verify user exists in profiles table
+
+### Access Denied to Assignment Pages
+
+**Possible Causes:**
+1. User doesn't have admin role
+2. Session expired
+3. Profile not synced with auth
+
+**Solutions:**
+1. Check role in database: `SELECT role FROM profiles WHERE id = 'user-id'`
+2. Log out and log back in
+3. Contact superadmin to assign proper role
+
+## Database Schema
+
+### Profiles Table
+
+```sql
+CREATE TABLE profiles (
+  id UUID PRIMARY KEY REFERENCES auth.users(id),
+  email TEXT NOT NULL,
+  display_name TEXT,
+  role TEXT NOT NULL DEFAULT 'default',
+  -- other fields...
+  
+  CONSTRAINT valid_role CHECK (role IN (
+    'default',
+    'hacker',
+    'volunteer', 
+    'admin',
+    'superadmin'
+  ))
+);
+```
+
+**Role Values**
+- `default` - New users, no event access
+- `hacker` - Event participants, can see event content
+- `volunteer` - Event staff, can check-in attendees
+- `admin` - Can review applications and assign participant roles
+- `superadmin` - Full system access, can assign admin roles
+
+## Future Enhancements
+
+Potential improvements to the role management system:
+
+1. **Audit Logging**
+   - Track who assigned which roles and when
+   - Audit trail for compliance and debugging
+
+2. **Bulk Role Assignment**
+   - CSV upload for mass role assignment
+   - Useful for large volunteer teams
+
+3. **Role Expiration**
+   - Time-limited roles that auto-expire after events
+   - Automatic cleanup of old event roles
+
+4. **Custom Permissions**
+   - Fine-grained permissions beyond role levels
+   - Feature flags per user or role
+
+5. **Role History**
+   - Track role changes over time
+   - View user's role progression
+
+## Next Steps
+
+- [Application Review System](/guides/application-review) - Learn about the review workflow
+- [Creating API Endpoints](/guides/creating-api) - Build new admin features
+- [Database Setup](/guides/database) - Configure role constraints

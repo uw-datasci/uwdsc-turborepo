@@ -59,6 +59,26 @@ This semester continues to build upon the foundation established in Fall 2025, w
 - Mobile menu support with admin pages section
 - Description text for each admin page
 
+### Role Management System (PR #134)
+
+**Volunteer & Hacker Role Assignment (`/admin/assign-volunteers`)**
+- New admin page for assigning hacker and volunteer roles to users
+- Search functionality to find users by email address
+- Visual role assignment buttons with real-time status updates
+- Prevents modification of admin and superadmin roles
+- Accessible to both admin and superadmin users
+- Added to admin dropdown navigation menu
+
+**Enhanced Admin Role Assignment**
+- Updated `/admin/assign` page with improved UI and animations
+- Prevents demotion of superadmin to admin (elevation only)
+- Enhanced search API accessibility for admin users
+- Better error handling and user feedback
+
+**NFC Check-In Improvements**
+- NFC check-in card now only displays for users with active roles (non-default)
+- Prevents confusion for users without assigned event roles
+
 ### Content & Branding Updates
 - **Brand Consistency (PR #114)**: Standardized "CXC" branding across all components, replacing inconsistent "CxC" usage for improved professional appearance
 
