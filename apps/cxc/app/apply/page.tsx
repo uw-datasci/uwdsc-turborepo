@@ -81,10 +81,12 @@ export default function ApplyPage() {
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const { user } = useAuth();
-  const isAdminOrSuperadmin = user?.role === "admin" || user?.role === "superadmin";
+  const isAdminOrSuperadmin =
+    user?.role === "admin" || user?.role === "superadmin";
   const [isApplicationOpen, setIsApplicationOpen] = useState<boolean>(() => {
     const now = new Date();
-    const isWithinDeadline = now >= APPLICATION_RELEASE_DATE && now <= APPLICATION_DEADLINE;
+    const isWithinDeadline =
+      now >= APPLICATION_RELEASE_DATE && now <= APPLICATION_DEADLINE;
     // Admins and superadmins can always access
     return isWithinDeadline || isAdminOrSuperadmin;
   });
