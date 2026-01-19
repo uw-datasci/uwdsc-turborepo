@@ -66,8 +66,8 @@ export class DashboardService {
 
       // Convert map to array and format
       return Array.from(aggregated.entries())
-        .map(([key, value]) => ({
-          time_period: value.timestamp.toISOString().slice(0, 10) + " 00:00",
+        .map(([, value]) => ({
+          time_period: value.timestamp.toISOString().slice(0, 10) + ' 00:00',
           count: value.count,
           timestamp: value.timestamp,
         }))
