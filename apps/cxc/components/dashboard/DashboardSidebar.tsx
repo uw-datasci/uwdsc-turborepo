@@ -55,14 +55,6 @@ export function DashboardSidebar({
 }: Readonly<DashboardSidebarProps>) {
   const pathname = usePathname();
 
-  // Filter out results tab if application is still in draft
-  const visibleNavItems = navItems.filter((item) => {
-    if (item.href === "/dashboard/results") {
-      return applicationStatus && applicationStatus !== "draft";
-    }
-    return true;
-  });
-
   return (
     <nav className={cn("flex flex-col gap-2 p-6", className)}>
       <div className="mb-8">
@@ -83,7 +75,7 @@ export function DashboardSidebar({
       </div>
 
       <div className="flex flex-col gap-1">
-        {visibleNavItems.map((item) => {
+        {navItems.map((item) => {
           const isActive =
             pathname === item.href ||
             (item.href !== "/dashboard" && pathname.startsWith(item.href));
