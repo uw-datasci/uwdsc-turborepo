@@ -237,4 +237,6 @@ export {
   SquareIcon,
   CheckSquareIcon,
   FlyingSaucerIcon,
+  CheckCircleIcon,
+  ConfettiIcon,
 } from "@phosphor-icons/react";

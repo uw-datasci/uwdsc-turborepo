@@ -29,15 +29,20 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     if (result.user?.id) {
       try {
         const profileService = new ProfileService();
-        const profileResult = await profileService.createProfile(result.user.id);
-        
+        const profileResult = await profileService.createProfile(
+          result.user.id,
+        );
+
         if (!profileResult.success) {
           console.error("Failed to create profile:", profileResult.error);
           // Don't fail registration if profile creation fails, but log it
           // The profile might already exist or be created by a trigger
         }
       } catch (profileError) {
-        console.error("Error creating profile during registration:", profileError);
+        console.error(
+          "Error creating profile during registration:",
+          profileError,
+        );
         // Don't fail registration if profile creation fails
       }
     }

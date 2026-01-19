@@ -11,9 +11,5 @@ export function PageWrapper({ children }: PageWrapperProps) {
   // Don't add padding on dashboard routes since navbar is hidden there
   const shouldAddPadding = !pathname?.startsWith("/dashboard");
 
-  return (
-    <div className={shouldAddPadding ? "pt-24" : ""}>
-      {children}
-    </div>
-  );
+  return <div className={shouldAddPadding ? "pt-24" : ""}>{children}</div>;
 }

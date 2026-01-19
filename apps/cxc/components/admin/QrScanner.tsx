@@ -60,13 +60,13 @@ export function QrScanner({ onScan, onClose }: QrScannerProps) {
           },
           () => {
             // Ignore scanning errors - they're expected during scanning
-          }
+          },
         );
       } catch (importError) {
         // Fallback: show error message
         console.error("Failed to load QR scanner:", importError);
         setError(
-          "QR scanner library not available. Please install html5-qrcode: pnpm add html5-qrcode"
+          "QR scanner library not available. Please install html5-qrcode: pnpm add html5-qrcode",
         );
         setIsScanning(false);
       }
@@ -126,4 +126,3 @@ export function QrScanner({ onScan, onClose }: QrScannerProps) {
     </Card>
   );
 }
-

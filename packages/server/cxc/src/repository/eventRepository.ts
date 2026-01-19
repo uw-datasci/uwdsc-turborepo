@@ -240,18 +240,26 @@ export class EventRepository extends BaseRepository {
     try {
       // Build update object with only provided fields
       const updateFields: Record<string, unknown> = {};
-      
+
       if (data.name !== undefined) updateFields.name = data.name;
-      if (data.registration_required !== undefined) updateFields.registration_required = data.registration_required;
-      if (data.description !== undefined) updateFields.description = data.description ?? null;
-      if (data.location !== undefined) updateFields.location = data.location ?? null;
-      if (data.start_time !== undefined) updateFields.start_time = data.start_time;
-      if (data.buffered_start_time !== undefined) updateFields.buffered_start_time = data.buffered_start_time;
+      if (data.registration_required !== undefined)
+        updateFields.registration_required = data.registration_required;
+      if (data.description !== undefined)
+        updateFields.description = data.description ?? null;
+      if (data.location !== undefined)
+        updateFields.location = data.location ?? null;
+      if (data.start_time !== undefined)
+        updateFields.start_time = data.start_time;
+      if (data.buffered_start_time !== undefined)
+        updateFields.buffered_start_time = data.buffered_start_time;
       if (data.end_time !== undefined) updateFields.end_time = data.end_time;
-      if (data.buffered_end_time !== undefined) updateFields.buffered_end_time = data.buffered_end_time;
-      if (data.payment_required !== undefined) updateFields.payment_required = data.payment_required;
-      if (data.image_id !== undefined) updateFields.image_id = data.image_id ?? null;
-      
+      if (data.buffered_end_time !== undefined)
+        updateFields.buffered_end_time = data.buffered_end_time;
+      if (data.payment_required !== undefined)
+        updateFields.payment_required = data.payment_required;
+      if (data.image_id !== undefined)
+        updateFields.image_id = data.image_id ?? null;
+
       // Always update the updated_at timestamp
       updateFields.updated_at = new Date();
 
@@ -282,4 +290,3 @@ export class EventRepository extends BaseRepository {
     }
   }
 }
-

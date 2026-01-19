@@ -24,6 +24,7 @@ import Image from "next/image";
 const navLinks = [
   { href: "/", label: "Home" },
   { href: "/dashboard", label: "Dashboard" },
+  { href: "/schedule", label: "Schedule" },
 ];
 
 const adminPages = [
@@ -49,6 +50,11 @@ const superadminPages = [
     href: "/admin/assign",
     label: "Assign Roles",
     description: "Search for users and assign admin roles",
+  },
+  {
+    href: "/admin/leaderboard",
+    label: "Leaderboard",
+    description: "View review statistics and leaderboard",
   },
   {
     href: "/admin/projects",
@@ -150,7 +156,8 @@ export default function Navbar() {
                     ))}
 
                     {/* Admin dropdown - only show to admin or superadmin users */}
-                    {(user?.role === "admin" || user?.role === "superadmin") && (
+                    {(user?.role === "admin" ||
+                      user?.role === "superadmin") && (
                       <NavigationMenuItem>
                         <NavigationMenuTrigger className="!text-base font-medium">
                           Admin

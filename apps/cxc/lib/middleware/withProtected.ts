@@ -15,21 +15,28 @@ export async function withProtected(request: NextRequest, user: any) {
   if (!user) return NextResponse.redirect(new URL("/login", request.url));
 
   // Check admin role for /review and /admin routes
-  if (request.nextUrl.pathname === "/review" || request.nextUrl.pathname.startsWith("/admin")) {
+  if (
+    request.nextUrl.pathname === "/review" ||
+    request.nextUrl.pathname.startsWith("/admin")
+  ) {
     try {
       const profileService = new ProfileService();
       const profile = await profileService.getProfileByUserId(user.id);
 
       // If profile doesn't exist, user can't access admin routes
       if (!profile) {
-        console.log(`[Middleware] User ${user.id} has no profile, blocking access to ${request.nextUrl.pathname}`);
+        console.log(
+          `[Middleware] User ${user.id} has no profile, blocking access to ${request.nextUrl.pathname}`,
+        );
         return NextResponse.redirect(new URL("/", request.url));
       }
 
       // Special handling for /admin/assign - requires superadmin
       if (request.nextUrl.pathname === "/admin/assign") {
         if (profile.role !== "superadmin") {
-          console.log(`[Middleware] User ${user.id} (role: ${profile.role}) attempted to access /admin/assign, requires superadmin`);
+          console.log(
+            `[Middleware] User ${user.id} (role: ${profile.role}) attempted to access /admin/assign, requires superadmin`,
+          );
           return NextResponse.redirect(new URL("/", request.url));
         }
       } else if (request.nextUrl.pathname === "/admin/projects") {
@@ -42,12 +49,17 @@ export async function withProtected(request: NextRequest, user: any) {
         // Other admin routes require admin or superadmin
         // /admin/assign-volunteers is accessible to both admin and superadmin
         if (profile.role !== "admin" && profile.role !== "superadmin") {
-          console.log(`[Middleware] User ${user.id} (role: ${profile.role}) attempted to access ${request.nextUrl.pathname}, requires admin or superadmin`);
+          console.log(
+            `[Middleware] User ${user.id} (role: ${profile.role}) attempted to access ${request.nextUrl.pathname}, requires admin or superadmin`,
+          );
           return NextResponse.redirect(new URL("/", request.url));
         }
       }
     } catch (error) {
-      console.error(`[Middleware] Error checking admin role for user ${user.id}:`, error);
+      console.error(
+        `[Middleware] Error checking admin role for user ${user.id}:`,
+        error,
+      );
       // On error, redirect to home for safety
       return NextResponse.redirect(new URL("/", request.url));
     }

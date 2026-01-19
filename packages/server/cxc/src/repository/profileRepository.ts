@@ -115,7 +115,8 @@ export class ProfileRepository extends BaseRepository {
       if (error instanceof Error && error.message.includes("bigint")) {
         return {
           success: false,
-          error: "Database column nfc_id is BIGINT but needs to be VARCHAR/TEXT. Please run: ALTER TABLE profiles ALTER COLUMN nfc_id TYPE VARCHAR(255);",
+          error:
+            "Database column nfc_id is BIGINT but needs to be VARCHAR/TEXT. Please run: ALTER TABLE profiles ALTER COLUMN nfc_id TYPE VARCHAR(255);",
         };
       }
       return {
@@ -130,7 +131,9 @@ export class ProfileRepository extends BaseRepository {
    * If profile already exists, ensures it has an NFC ID
    * @param data - Profile data including user ID and NFC ID
    */
-  async createProfile(data: CreateProfileData): Promise<{ success: boolean; error?: string }> {
+  async createProfile(
+    data: CreateProfileData,
+  ): Promise<{ success: boolean; error?: string }> {
     try {
       // Note: The database column might be BIGINT, but we're storing a string
       // We need to handle this by converting the string to a numeric representation
@@ -165,7 +168,8 @@ export class ProfileRepository extends BaseRepository {
       if (error instanceof Error && error.message.includes("bigint")) {
         return {
           success: false,
-          error: "Database column nfc_id is BIGINT but needs to be VARCHAR/TEXT. Please run: ALTER TABLE profiles ALTER COLUMN nfc_id TYPE VARCHAR(255);",
+          error:
+            "Database column nfc_id is BIGINT but needs to be VARCHAR/TEXT. Please run: ALTER TABLE profiles ALTER COLUMN nfc_id TYPE VARCHAR(255);",
         };
       }
       return {
@@ -180,19 +184,23 @@ export class ProfileRepository extends BaseRepository {
    * @param emailQuery - Email or partial email to search for
    * @returns Array of users with their profile information
    */
-  async searchUsersByEmail(emailQuery: string): Promise<Array<{
-    id: string;
-    email: string;
-    role: string;
-    display_name: string | null;
-  }>> {
+  async searchUsersByEmail(emailQuery: string): Promise<
+    Array<{
+      id: string;
+      email: string;
+      role: string;
+      display_name: string | null;
+    }>
+  > {
     try {
-      const result = await this.sql<Array<{
-        id: string;
-        email: string;
-        role: string;
-        display_name: string | null;
-      }>>`
+      const result = await this.sql<
+        Array<{
+          id: string;
+          email: string;
+          role: string;
+          display_name: string | null;
+        }>
+      >`
         SELECT 
           au.id,
           au.email,
@@ -236,7 +244,7 @@ export class ProfileRepository extends BaseRepository {
     try {
       // First, ensure profile exists
       const profile = await this.getProfileByUserId(userId);
-      
+
       if (!profile) {
         // Create profile if it doesn't exist
         const createResult = await this.createProfile({
@@ -244,7 +252,7 @@ export class ProfileRepository extends BaseRepository {
           role: role,
           nfc_id: "", // Will be generated later if needed
         });
-        
+
         if (!createResult.success) {
           return createResult;
         }

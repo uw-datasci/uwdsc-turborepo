@@ -5,12 +5,12 @@ enum role_enum {
     superadmin
     judge
     default
+    declined
 }
 
 enum application_status_enum {
     draft
     submitted
-    offered
     accepted
     rejected
     waitlisted
