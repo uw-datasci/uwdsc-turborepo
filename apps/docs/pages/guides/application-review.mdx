@@ -351,6 +351,20 @@ Response: {
 }
 ```
 
+#### Update User Role (RSVP)
+```typescript
+PATCH /api/users/role
+Body: {
+  role: "hacker" | "declined" | "default"
+}
+Response: {
+  success: true,
+  message: "Successfully assigned role \"hacker\" to user"
+}
+```
+
+**Note:** This endpoint enforces one-time RSVP decisions. Users cannot change their role once set to `hacker` or `declined`.
+
 ## Client API Functions
 
 ### Application Functions
@@ -404,10 +418,14 @@ await submitReview({
 ### User Functions
 
 ```typescript
-import { getUserEmails } from "@/lib/api";
+import { getUserEmails, updateUserRSVPRole } from "@/lib/api";
 
 // Get all registered users for team selection
 const { emails } = await getUserEmails();
+
+// Update user role for RSVP
+await updateUserRSVPRole("hacker");  // Accept
+await updateUserRSVPRole("declined"); // Decline
 ```
 
 ## Backend Services
@@ -581,6 +599,303 @@ function MyFormSection({ form }: { form: UseFormReturn<AppFormValues> }) {
 2. Check the user's email is confirmed
 3. Verify the user exists in auth.users table
 4. Check for typos in search query
+
+## RSVP System
+
+### Overview
+
+After applications are reviewed and decisions are made, accepted applicants can view their results and RSVP for the event through the **Results Page** (`/dashboard/results`).
+
+### Application Status Flow
+
+The RSVP system introduces additional application statuses:
+
+```
+draft → submitted → [accepted | waitlisted | rejected]
+```
+
+**Status Definitions:**
+- `draft` - Application in progress, not yet submitted
+- `submitted` - Application submitted, pending review
+- `accepted` - Application approved, awaiting RSVP
+- `waitlisted` - Application on waitlist, may be offered a spot if space opens
+- `rejected` - Application not accepted
+
+**Note:** The `offered` status was removed in PR #137. Applications move directly to `accepted` status.
+
+### User Roles for RSVP
+
+The system uses user roles to track RSVP decisions:
+
+- `default` - User has not made an RSVP decision yet
+- `hacker` - User has accepted their offer (RSVP'd "Yes")
+- `declined` - User has declined their offer (RSVP'd "No")
+
+**Important:** RSVP decisions are **final and cannot be changed** once submitted.
+
+### Results Page
+
+**Access Control:**
+- Only visible to users who have submitted applications
+- Hidden in dashboard sidebar until application status is no longer "draft"
+- Located at `/dashboard/results`
+
+**Page States:**
+
+#### 1. Waitlisted Status (`submitted`)
+Users see:
+- Amber-themed waitlist notification
+- Information about waitlist process
+- Instructions on next steps
+- No action required from user
+
+#### 2. Accepted Status (`accepted`)
+Users see:
+- Green-themed congratulations message
+- Event details (date, location, prizes)
+- Important logistics information:
+  - Event location and dates
+  - Transportation requirements
+  - Sleeping arrangements
+- RSVP instructions
+- RSVP action buttons (if deadline not passed)
+
+**RSVP Options:**
+
+**Accept Offer (RSVP "Yes")**
+- Button: "RSVP" with confetti icon
+- Updates user role to `hacker`
+- Shows confirmation message: "You're All Set!"
+- Indicates user will receive event details closer to date
+- **Decision is final** - cannot be undone
+
+**Decline Offer (RSVP "No")**
+- Button: "Cancel RSVP"
+- Updates user role to `declined`
+- Shows decline message explaining spot opened for waitlist
+- Thanks user for their time
+- **Decision is final** - cannot be undone
+
+#### 3. After RSVP Decision
+Based on user role:
+- **`hacker`**: Shows "You're All Set!" confirmation in green
+- **`declined`**: Shows "RSVP Declined" message in red
+- RSVP buttons are permanently hidden
+- User cannot change their decision
+
+### RSVP Deadline
+
+**Configuration:**
+```typescript
+// apps/cxc/constants/application.ts
+export const RSVP_DEADLINE = new Date("2026-01-21T23:59:59");
+```
+
+**Deadline Behavior:**
+- Countdown clock displays time remaining until deadline
+- Checked every second on the results page
+- After deadline passes:
+  - RSVP buttons are disabled
+  - Users cannot submit new RSVP decisions
+  - Existing RSVP decisions remain visible
+- Deadline notice displayed when time expires
+
+### RSVP API Flow
+
+#### Update User Role Endpoint
+
+**Endpoint:** `PATCH /api/users/role`
+
+**Request:**
+```typescript
+{
+  role: "hacker" | "declined" | "default"
+}
+```
+
+**Authorization:**
+- User must be authenticated
+- Can only update their own role
+- Forbidden roles: Only `hacker`, `declined`, and `default` allowed
+
+**Business Rules:**
+1. **One-Time Decision**: Users cannot change role once set to `hacker` or `declined`
+2. **Profile Required**: User must have an existing profile
+3. **Role Validation**: Server validates role is in allowed list
+
+**Response (Success):**
+```typescript
+{
+  success: true,
+  message: "Successfully assigned role \"hacker\" to user"
+}
+```
+
+**Response (Error - Final Decision):**
+```typescript
+{
+  error: "RSVP decision is final",
+  message: "You have already made your RSVP decision and cannot change it."
+}
+// Status: 403
+```
+
+**Response (Error - Invalid Role):**
+```typescript
+{
+  error: "Forbidden role. Allowed roles: hacker, declined, default"
+}
+// Status: 403
+```
+
+### Client API Function
+
+```typescript
+import { updateUserRSVPRole } from "@/lib/api/user";
+
+// Accept offer
+await updateUserRSVPRole("hacker");
+
+// Decline offer
+await updateUserRSVPRole("declined");
+
+// Response:
+{
+  success: boolean,
+  message: string
+}
+```
+
+### Backend Services
+
+#### ProfileService Enhancement
+
+```typescript
+import { ProfileService } from "@uwdsc/server/cxc/services/profileService";
+
+const service = new ProfileService();
+
+// Update user role for RSVP
+const result = await service.updateUserRole(userId, "hacker");
+
+// Returns:
+{
+  success: boolean,
+  error?: string
+}
+```
+
+**Service Logic:**
+- Checks if user profile exists
+- Validates role is not already `hacker` or `declined` (prevents changes)
+- Updates profile role in database
+- Returns success/error status
+
+### Dashboard Integration
+
+**Sidebar Visibility:**
+- Results tab hidden when application status is "draft"
+- Appears automatically once application is submitted
+- Uses CheckCircle icon to indicate results/decision
+
+**Dynamic Loading:**
+```typescript
+// Dashboard layout fetches application status
+const data = await getApplication(user.id);
+setApplicationStatus(data?.status);
+
+// Sidebar filters navigation items
+const visibleNavItems = navItems.filter((item) => {
+  if (item.href === "/dashboard/results") {
+    return applicationStatus && applicationStatus !== "draft";
+  }
+  return true;
+});
+```
+
+### Database Schema Updates
+
+**Profile Table - Role Enum:**
+```sql
+enum role_enum {
+    hacker
+    volunteer
+    admin
+    superadmin
+    default
+    declined  -- Added in PR #137
+}
+```
+
+**Application Table - Status Enum:**
+```sql
+enum application_status_enum {
+    draft
+    submitted
+    accepted
+    rejected
+    waitlisted
+    -- "offered" removed in PR #137
+}
+```
+
+### UI Components
+
+**Results Page Features:**
+- **Motion Animations**: Smooth fade-in animations using Framer Motion
+- **Countdown Clock**: Real-time countdown to RSVP deadline
+- **Loading States**: Individual loading states for accept/decline buttons
+- **Status Icons**: 
+  - Confetti icon for acceptance
+  - Clock icon for waitlist
+  - Info icons for instructions
+- **Responsive Design**: Mobile-optimized layouts with grid system
+
+### Best Practices
+
+**RSVP System:**
+
+**Do:**
+- Clearly communicate that RSVP decisions are final
+- Display deadline prominently with countdown
+- Provide all necessary event information before RSVP
+- Show confirmation after RSVP is submitted
+- Disable RSVP after deadline passes
+- Sync user role across auth context after RSVP
+
+**Don't:**
+- Allow users to change RSVP after submission
+- Hide important event details from accepted users
+- Allow RSVP submissions after deadline
+- Show RSVP buttons to users who haven't been accepted
+- Allow direct role updates without validation
+
+### Troubleshooting
+
+**Results Page Not Visible:**
+1. Check application status is not "draft"
+2. Verify user is authenticated
+3. Check dashboard sidebar filters
+4. Ensure application data loaded successfully
+
+**RSVP Button Not Working:**
+1. Verify deadline has not passed
+2. Check user role is `default` (hasn't RSVP'd yet)
+3. Verify authentication status
+4. Check browser console for API errors
+5. Ensure `/api/users/role` endpoint is accessible
+
+**Role Update Fails:**
+1. Check if user already has `hacker` or `declined` role
+2. Verify profile exists in database
+3. Check API authentication
+4. Validate role parameter is allowed value
+
+**Auth Context Not Refreshing:**
+1. Ensure `mutate()` is called after role update
+2. Check auth context provider is wrapping component
+3. Verify SWR cache is configured correctly
+4. Check for React hook dependencies
 
 ## Next Steps
 

@@ -15,6 +15,72 @@ This semester continues to build upon the foundation established in Fall 2025, w
 
 ## 🏆 CXC App (apps/cxc)
 
+### RSVP System (PR #137)
+
+**Results Page (`/dashboard/results`)**
+- New dedicated page for applicants to view their acceptance status and RSVP for the event
+- Dynamic visibility: Results tab appears in dashboard sidebar only after application submission
+- Three status-based views:
+  - **Waitlisted**: Informational page for users on the waitlist with next steps
+  - **Accepted**: Congratulations page with event details and RSVP options
+  - **Post-RSVP**: Confirmation page showing user's RSVP decision
+
+**RSVP Decision Flow**
+- Accepted users can RSVP "Yes" (become `hacker` role) or "No" (become `declined` role)
+- **One-time decision**: RSVP choices are final and cannot be changed once submitted
+- Real-time countdown clock displays time remaining until RSVP deadline
+- RSVP buttons disabled after deadline passes
+- User role syncs across application after RSVP submission
+
+**Event Information Display**
+- Event location, dates, and prize information displayed prominently
+- Important logistics: transportation requirements, sleeping arrangements
+- Clear RSVP instructions for accepted applicants
+- Post-RSVP confirmation messages based on user choice
+
+**RSVP API & Backend**
+- New `PATCH /api/users/role` endpoint for role updates with strict validation
+- Business rule enforcement: prevents role changes after initial RSVP decision
+- Role validation: only allows `hacker`, `declined`, and `default` roles
+- Profile existence check before allowing role updates
+- `ProfileService.updateUserRole()` method with database transaction safety
+
+**Application Status Updates**
+- Removed `offered` status from application workflow (simplified to `accepted`)
+- Application flow now: `draft` → `submitted` → `accepted/waitlisted/rejected`
+- Dashboard sidebar conditionally shows Results tab based on application status
+- Application status fetched dynamically in dashboard layout
+
+**User Role Extensions**
+- Added `declined` role to user role enum for tracking RSVP declines
+- Updated Prisma schema and TypeScript types for new role
+- Role used to control UI state and prevent duplicate RSVP submissions
+
+**Client-Side Features**
+- `updateUserRSVPRole()` API function for submitting RSVP decisions
+- Loading states for accept/decline buttons with individual loading indicators
+- Framer Motion animations for smooth page transitions
+- Responsive design with mobile-optimized layouts
+- CountdownClock component integration for deadline display
+
+**UI/UX Enhancements**
+- Color-coded status pages: green for accepted, amber for waitlisted, red for declined
+- Confetti icon for acceptance, clock icon for waitlist
+- Information cards with clear instructions and next steps
+- Grid layout for event details and RSVP instructions side-by-side
+
+**Removed Features**
+- Removed `EventTimeline` component (previously used for displaying event schedule)
+- Removed `/dashboard/schedule` page (event schedule view)
+- Removed schedule link from dashboard home quick actions
+- Removed placeholder "Confirm Attendance" buttons from `StatusCard` component
+- Simplified `StatusCard` by removing `offered` status display logic
+
+**Component Updates**
+- `StatusCard`: Updated `accepted` status description to prompt RSVP action
+- `DashboardSidebar`: Now accepts `applicationStatus` prop for conditional navigation
+- Dashboard home: Removed event schedule quick action link
+
 ### Account Security (PR #126)
 
 **Password Reset Flow**
@@ -207,6 +273,18 @@ This semester continues to build upon the foundation established in Fall 2025, w
 - `uploadResume()`: Improved error handling and response types
 
 ## 🎨 Design System (packages/ui)
+
+### New Icon Exports (PR #137)
+
+**CheckCircleIcon**
+- Success and completion indicator
+- Used in Results tab navigation icon
+- Phosphor icon from `@phosphor-icons/react`
+
+**ConfettiIcon**
+- Celebration and achievement indicator  
+- Used in acceptance/congratulations page
+- Phosphor icon from `@phosphor-icons/react`
 
 ### New Components
 
