@@ -45,7 +45,11 @@ export async function POST(request: Request) {
     // Validate role - only allow assigning hacker or volunteer role
     if (role !== "hacker" && role !== "volunteer") {
       return NextResponse.json(
-        { error: "Bad Request", message: "Invalid role. Only 'hacker' or 'volunteer' roles can be assigned via this endpoint" },
+        {
+          error: "Bad Request",
+          message:
+            "Invalid role. Only 'hacker' or 'volunteer' roles can be assigned via this endpoint",
+        },
         { status: 400 },
       );
     }
@@ -60,9 +64,15 @@ export async function POST(request: Request) {
 
     // Prevent changing admin or superadmin roles
     const targetProfile = await profileService.getProfileByUserId(userId);
-    if (targetProfile?.role === "admin" || targetProfile?.role === "superadmin") {
+    if (
+      targetProfile?.role === "admin" ||
+      targetProfile?.role === "superadmin"
+    ) {
       return NextResponse.json(
-        { error: "Bad Request", message: "Cannot change admin or superadmin roles via this endpoint" },
+        {
+          error: "Bad Request",
+          message: "Cannot change admin or superadmin roles via this endpoint",
+        },
         { status: 400 },
       );
     }
@@ -72,13 +82,19 @@ export async function POST(request: Request) {
 
     if (!result.success) {
       return NextResponse.json(
-        { error: "Internal server error", message: result.error || "Failed to update user role" },
+        {
+          error: "Internal server error",
+          message: result.error || "Failed to update user role",
+        },
         { status: 500 },
       );
     }
 
     return NextResponse.json(
-      { success: true, message: `Successfully assigned role "${role}" to user` },
+      {
+        success: true,
+        message: `Successfully assigned role "${role}" to user`,
+      },
       { status: 200 },
     );
   } catch (error: unknown) {
@@ -86,7 +102,8 @@ export async function POST(request: Request) {
     return NextResponse.json(
       {
         error: "Internal server error",
-        message: error instanceof Error ? error.message : "Failed to process request",
+        message:
+          error instanceof Error ? error.message : "Failed to process request",
       },
       { status: 500 },
     );

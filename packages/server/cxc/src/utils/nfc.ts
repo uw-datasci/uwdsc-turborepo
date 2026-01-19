@@ -19,4 +19,3 @@ export function generateNfcId(profileId: string): string {
 
   return mac.slice(0, SLICE_VAL);
 }
-

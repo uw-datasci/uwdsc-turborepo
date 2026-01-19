@@ -24,7 +24,7 @@ export async function GET(request: Request) {
 
     // Check if user is superadmin
     const profile = await profileService.getProfileByUserId(user.id);
-    if (profile?.role !== "superadmin") {
+    if (profile?.role !== "superadmin" && profile?.role !== "admin") {
       return NextResponse.json(
         { error: "Forbidden", message: "Superadmin access required" },
         { status: 403 },
@@ -50,7 +50,8 @@ export async function GET(request: Request) {
     return NextResponse.json(
       {
         error: "Internal server error",
-        message: error instanceof Error ? error.message : "Failed to process request",
+        message:
+          error instanceof Error ? error.message : "Failed to process request",
       },
       { status: 500 },
     );

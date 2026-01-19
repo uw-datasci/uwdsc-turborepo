@@ -45,8 +45,13 @@ export default function AdminCheckInPage() {
           setEvents(data.events || []);
           // Load cached event or set first event as default
           if (data.events && data.events.length > 0) {
-            const cachedEventId = localStorage.getItem("admin_selected_event_id");
-            if (cachedEventId && data.events.some(e => String(e.id) === cachedEventId)) {
+            const cachedEventId = localStorage.getItem(
+              "admin_selected_event_id",
+            );
+            if (
+              cachedEventId &&
+              data.events.some((e) => String(e.id) === cachedEventId)
+            ) {
               setSelectedEventId(cachedEventId);
             } else {
               setSelectedEventId(String(data.events[0].id));
@@ -58,14 +63,14 @@ export default function AdminCheckInPage() {
         const loadProfile = async () => {
           let attempts = 0;
           const maxAttempts = 10;
-          
+
           while (attempts < maxAttempts) {
             try {
               const profileRes = await fetch(`/api/admin/nfc?nfc_id=${nfcId}`);
               if (profileRes.ok) {
                 const data = await profileRes.json();
                 const profileData = data.profile;
-                
+
                 if (profileData?.email) {
                   setProfile({
                     email: profileData.email,
@@ -90,20 +95,20 @@ export default function AdminCheckInPage() {
             } catch (fetchError) {
               console.error("Error fetching profile:", fetchError);
             }
-            
+
             // Wait before retrying (polling)
             if (attempts < maxAttempts - 1) {
-              await new Promise(resolve => setTimeout(resolve, 500));
+              await new Promise((resolve) => setTimeout(resolve, 500));
             }
             attempts++;
           }
-          
+
           // If we still don't have email after polling, show what we have
           if (attempts >= maxAttempts) {
             console.warn("Failed to load email after polling");
           }
         };
-        
+
         await loadProfile();
       } catch (error) {
         console.error("Error loading data:", error);
@@ -150,9 +155,10 @@ export default function AdminCheckInPage() {
       if (response.ok && data.success) {
         // Copy check-in URL to clipboard
         // This allows admin to write it to the NFC tag
-        const baseUrl = typeof window !== "undefined" ? window.location.origin : "";
+        const baseUrl =
+          typeof window !== "undefined" ? window.location.origin : "";
         const checkInUrl = `${baseUrl}/admin/checkin/${nfcId}`;
-        
+
         try {
           await navigator.clipboard.writeText(checkInUrl);
           // Update message to indicate check-in URL was copied
@@ -161,10 +167,13 @@ export default function AdminCheckInPage() {
             message: `${data.message} Check-in URL copied to clipboard!`,
           });
         } catch (clipboardError) {
-          console.error("Failed to copy check-in URL to clipboard:", clipboardError);
+          console.error(
+            "Failed to copy check-in URL to clipboard:",
+            clipboardError,
+          );
           setCheckInResult(data);
         }
-        
+
         // Clear result after 5 seconds
         setTimeout(() => {
           setCheckInResult(null);
@@ -202,7 +211,7 @@ export default function AdminCheckInPage() {
           <div>
             <label className="text-sm font-medium mb-2 block">NFC ID</label>
             <div className="p-3 bg-muted rounded-md font-mono text-sm break-all">
-              {typeof window !== "undefined" 
+              {typeof window !== "undefined"
                 ? `${window.location.origin}/admin/checkin/${nfcId}`
                 : `/admin/checkin/${nfcId}`}
             </div>
@@ -243,7 +252,8 @@ export default function AdminCheckInPage() {
               ) : (
                 events.map((event) => (
                   <option key={event.id} value={event.id}>
-                    {event.name} - {new Date(event.start_time).toLocaleDateString()}
+                    {event.name} -{" "}
+                    {new Date(event.start_time).toLocaleDateString()}
                   </option>
                 ))
               )}
@@ -297,4 +307,3 @@ export default function AdminCheckInPage() {
     </div>
   );
 }
-

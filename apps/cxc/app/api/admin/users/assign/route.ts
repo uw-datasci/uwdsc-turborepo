@@ -54,7 +54,10 @@ export async function POST(request: Request) {
     const targetProfile = await profileService.getProfileByUserId(userId);
     if (targetProfile?.role === "superadmin" && role === "admin") {
       return NextResponse.json(
-        { error: "Bad Request", message: "Cannot demote superadmin to admin. Can only elevate roles." },
+        {
+          error: "Bad Request",
+          message: "Cannot demote superadmin to admin. Can only elevate roles.",
+        },
         { status: 400 },
       );
     }
@@ -64,13 +67,19 @@ export async function POST(request: Request) {
 
     if (!result.success) {
       return NextResponse.json(
-        { error: "Internal server error", message: result.error || "Failed to update user role" },
+        {
+          error: "Internal server error",
+          message: result.error || "Failed to update user role",
+        },
         { status: 500 },
       );
     }
 
     return NextResponse.json(
-      { success: true, message: `Successfully assigned role "${role}" to user` },
+      {
+        success: true,
+        message: `Successfully assigned role "${role}" to user`,
+      },
       { status: 200 },
     );
   } catch (error: unknown) {
@@ -78,7 +87,8 @@ export async function POST(request: Request) {
     return NextResponse.json(
       {
         error: "Internal server error",
-        message: error instanceof Error ? error.message : "Failed to process request",
+        message:
+          error instanceof Error ? error.message : "Failed to process request",
       },
       { status: 500 },
     );
