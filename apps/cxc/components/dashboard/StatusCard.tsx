@@ -33,7 +33,8 @@ const statusConfig: Record<
     label: "ACCEPTED",
     color: "text-emerald-400",
     borderColor: "border-emerald-400",
-    description: "You're all set! We can't wait to see you at CxC.",
+    description:
+      "We can't wait to see you at CxC! Make sure to RSVP to secure your spot!",
   },
   rejected: {
     label: "NOT SELECTED",
@@ -99,15 +100,15 @@ export function StatusCard({ status, submittedAt }: Readonly<StatusCardProps>) {
                     Application deadline passed.
                   </p>
                   <p className="text-red-400/70 text-sm">
-                    The application deadline has passed. We are no longer accepting
-                    new applications.
+                    The application deadline has passed. We are no longer
+                    accepting new applications.
                   </p>
                 </div>
               ) : (
                 <>
                   <p className="text-white/60">
-                    You haven&apos;t started your application yet. Apply now to join
-                    CxC!
+                    You haven&apos;t started your application yet. Apply now to
+                    join CxC!
                   </p>
                   <Link href="/apply">
                     <CxCButton className="w-full sm:w-auto">

@@ -18,7 +18,8 @@ import { APPLICATION_DEADLINE } from "@/constants/application";
 
 export default function ApplicationPage() {
   const { user } = useAuth();
-  const isAdminOrSuperadmin = user?.role === "admin" || user?.role === "superadmin";
+  const isAdminOrSuperadmin =
+    user?.role === "admin" || user?.role === "superadmin";
   const [application, setApplication] = useState<AppFormValues | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isPastDeadline, setIsPastDeadline] = useState(false);
@@ -110,8 +111,9 @@ export default function ApplicationPage() {
                 ) : (
                   <>
                     <p className="text-white/60 mb-6 max-w-md">
-                      You haven&apos;t started your application yet. Apply now to
-                      join CxC and be part of an amazing hackathon experience!
+                      You haven&apos;t started your application yet. Apply now
+                      to join CxC and be part of an amazing hackathon
+                      experience!
                     </p>
                     <Link href="/apply">
                       <CxCButton>Start Application →</CxCButton>
@@ -156,8 +158,9 @@ export default function ApplicationPage() {
                   Application deadline passed.
                 </p>
                 <p className="text-red-400/70 text-sm">
-                  The application deadline has passed. We are no longer accepting
-                  applications or allowing edits to draft applications.
+                  The application deadline has passed. We are no longer
+                  accepting applications or allowing edits to draft
+                  applications.
                 </p>
               </div>
             ) : (

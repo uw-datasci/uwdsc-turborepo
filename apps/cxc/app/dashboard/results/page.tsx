@@ -20,8 +20,6 @@ export default function ResultsPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [isAccepting, setIsAccepting] = useState(false);
   const [isDeclining, setIsDeclining] = useState(false);
-  const [isUnaccepting, setIsUnaccepting] = useState(false);
-  const [isUndeclining, setIsUndeclining] = useState(false);
   const [userRole, setUserRole] = useState<string | undefined>(undefined);
   const [isDeadlinePassed, setIsDeadlinePassed] = useState(false);
 
@@ -62,9 +60,7 @@ export default function ResultsPage() {
     loadApplication();
   }, [loadApplication]);
 
-  const handleRSVP = async (
-    action: "accept" | "unaccept" | "decline" | "undecline",
-  ) => {
+  const handleRSVP = async (action: "accept" | "decline") => {
     if (!user?.id) return;
 
     // Set the appropriate loading state
@@ -72,33 +68,21 @@ export default function ResultsPage() {
       case "accept":
         setIsAccepting(true);
         break;
-      case "unaccept":
-        setIsUnaccepting(true);
-        break;
       case "decline":
         setIsDeclining(true);
-        break;
-      case "undecline":
-        setIsUndeclining(true);
         break;
     }
 
     try {
       // Map action to role
-      let newRole: "hacker" | "default" | "declined";
+      let newRole: "hacker" | "declined";
 
       switch (action) {
         case "accept":
           newRole = "hacker";
           break;
-        case "unaccept":
-          newRole = "default";
-          break;
         case "decline":
           newRole = "declined";
-          break;
-        case "undecline":
-          newRole = "default";
           break;
       }
 
@@ -106,9 +90,7 @@ export default function ResultsPage() {
       if (!response.success) {
         throw new Error(response.message || "Failed to update RSVP");
       }
-      // Update local role state
-      setUserRole(newRole);
-      // Refresh user data in auth context to ensure consistency
+      // Refresh user data in auth context
       await refreshUser();
     } catch (error) {
       console.error("Error updating RSVP:", error);
@@ -118,14 +100,8 @@ export default function ResultsPage() {
         case "accept":
           setIsAccepting(false);
           break;
-        case "unaccept":
-          setIsUnaccepting(false);
-          break;
         case "decline":
           setIsDeclining(false);
-          break;
-        case "undecline":
-          setIsUndeclining(false);
           break;
       }
     }
@@ -318,15 +294,6 @@ export default function ResultsPage() {
                     You&apos;ve successfully RSVP&apos;d for CXC 2026.
                     We&apos;ll send you more details closer to the event date.
                   </p>
-                  {!isDeadlinePassed && (
-                    <Button
-                      className="px-6 py-2 text-xs font-semibold uppercase tracking-wider border border-red-400/50 bg-background text-red-400/70 hover:text-red-400 hover:bg-red-400/8 transition-all disabled:opacity-50 disabled:cursor-not-allowed rounded-none"
-                      onClick={() => handleRSVP("unaccept")}
-                      disabled={isUnaccepting}
-                    >
-                      {isUnaccepting ? "Processing..." : "Cancel RSVP"}
-                    </Button>
-                  )}
                 </div>
               </div>
             ) : userRole === "declined" ? (
@@ -336,19 +303,6 @@ export default function ResultsPage() {
                   <h3 className="font-semibold text-red-400 uppercase tracking-wide text-lg">
                     Offer Declined
                   </h3>
-                  <p className="text-sm text-white/90">
-                    You&apos;ve declined the offer. If you change your mind, you
-                    can undo this decision.
-                  </p>
-                  {!isDeadlinePassed && (
-                    <Button
-                      className="px-6 py-2 text-xs font-semibold uppercase tracking-wider border border-blue-400/50 bg-background text-blue-400/70 hover:text-blue-400 hover:bg-blue-400/8 transition-all disabled:opacity-50 disabled:cursor-not-allowed rounded-none"
-                      onClick={() => handleRSVP("undecline")}
-                      disabled={isUndeclining}
-                    >
-                      {isUndeclining ? "Processing..." : "Undo Decline"}
-                    </Button>
-                  )}
                 </div>
               </div>
             ) : (
@@ -406,12 +360,6 @@ export default function ResultsPage() {
                 )}
               </>
             )}
-
-            <div className="text-center pt-2">
-              <p className="text-sm text-white/60">
-                We can&apos;t wait to see you at CXC 2026!
-              </p>
-            </div>
           </div>
         </div>
       </motion.div>

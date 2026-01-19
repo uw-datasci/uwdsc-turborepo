@@ -21,8 +21,27 @@ export async function PATCH(request: NextRequest) {
       );
     }
 
-    // update role for rsvp
+    // Get current user profile to check existing role
     const profileService = new ProfileService();
+    const profile = await profileService.getProfileByUserId(user.id);
+
+    if (!profile) {
+      return NextResponse.json({ error: "Profile not found" }, { status: 404 });
+    }
+
+    // Prevent changing from hacker or declined (one-time decision)
+    if (profile.role === "hacker" || profile.role === "declined") {
+      return NextResponse.json(
+        {
+          error: "RSVP decision is final",
+          message:
+            "You have already made your RSVP decision and cannot change it.",
+        },
+        { status: 403 },
+      );
+    }
+
+    // update role for rsvp
     const result = await profileService.updateUserRole(user.id, role);
 
     if (!result.success) {
