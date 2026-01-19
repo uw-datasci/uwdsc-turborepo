@@ -112,7 +112,73 @@ export default function ResultsPage() {
   }
 
   if (application?.status === "draft") {
-    return null;
+    return (
+      <div className="min-h-screen bg-black text-white p-6 flex items-center justify-center">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="max-w-3xl w-full"
+        >
+          <div className="space-y-6">
+            <div className="text-center space-y-4">
+              <div className="flex justify-center mb-4">
+                <Info className="w-16 h-16 text-red-400" />
+              </div>
+              <h1 className="text-3xl md:text-4xl font-bold text-red-400 uppercase tracking-wider">
+                Application Not Submitted
+              </h1>
+            </div>
+
+            <div className="space-y-4">
+              <div className="text-center">
+                <p className="text-sm text-white/90">
+                  You did not submit your application before the deadline.
+                  Unfortunately, applications are no longer being accepted for CXC 2026.
+                </p>
+              </div>
+
+              <div className="bg-red-400/8 border border-red-400/30 p-5">
+                <div className="flex items-start gap-3">
+                  <Info className="w-5 h-5 text-red-400 mt-0.5 flex-shrink-0" />
+                  <div className="space-y-2">
+                    <h3 className="font-semibold text-red-400 uppercase tracking-wide text-sm">
+                      What This Means
+                    </h3>
+                    <ul className="space-y-1.5 text-sm text-white/80">
+                      <li className="flex items-start gap-2">
+                        <span className="text-red-400 mt-0.5">•</span>
+                        <span>
+                          The application deadline has passed
+                        </span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <span className="text-red-400 mt-0.5">•</span>
+                        <span>
+                          You cannot submit or be considered for CXC 2026
+                        </span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <span className="text-red-400 mt-0.5">•</span>
+                        <span>
+                          Watch for future CXC events and opportunities
+                        </span>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+
+              <div className="text-center pt-2">
+                <p className="text-sm text-white/60">
+                  We hope to see you at a future event!
+                </p>
+              </div>
+            </div>
+          </div>
+        </motion.div>
+      </div>
+    );
   }
 
   // Waitlisted Page UI
