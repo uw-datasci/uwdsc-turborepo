@@ -42,19 +42,19 @@ export async function POST(request: Request) {
       );
     }
 
-    // Validate role
-    const validRoles = ["admin", "hacker", "volunteer", "default"];
-    if (!validRoles.includes(role)) {
-      return NextResponse.json(
-        { error: "Bad Request", message: `Invalid role. Must be one of: ${validRoles.join(", ")}` },
-        { status: 400 },
-      );
-    }
-
     // Prevent superadmin from changing their own role
     if (userId === user.id) {
       return NextResponse.json(
         { error: "Bad Request", message: "Cannot change your own role" },
+        { status: 400 },
+      );
+    }
+
+    // Prevent demoting other superadmins to admin (can only elevate, not demote)
+    const targetProfile = await profileService.getProfileByUserId(userId);
+    if (targetProfile?.role === "superadmin" && role === "admin") {
+      return NextResponse.json(
+        { error: "Bad Request", message: "Cannot demote superadmin to admin. Can only elevate roles." },
         { status: 400 },
       );
     }

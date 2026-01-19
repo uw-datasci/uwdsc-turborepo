@@ -50,10 +50,19 @@ export async function POST(request: Request) {
       );
     }
 
-    // Prevent admin from changing their own role
+    // Prevent admin/superadmin from changing their own role
     if (userId === user.id) {
       return NextResponse.json(
         { error: "Bad Request", message: "Cannot change your own role" },
+        { status: 400 },
+      );
+    }
+
+    // Prevent changing admin or superadmin roles
+    const targetProfile = await profileService.getProfileByUserId(userId);
+    if (targetProfile?.role === "admin" || targetProfile?.role === "superadmin") {
+      return NextResponse.json(
+        { error: "Bad Request", message: "Cannot change admin or superadmin roles via this endpoint" },
         { status: 400 },
       );
     }

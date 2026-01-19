@@ -206,21 +206,55 @@ export default function AdminAssignVolunteersPage() {
                       </div>
                     </div>
                     <div className="flex items-center gap-2">
-                      {user.role === "hacker" || user.role === "volunteer" ? (
+                      {user.role === "admin" || user.role === "superadmin" ? (
                         <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                          {user.role === "hacker" ? (
-                            <Code className="h-4 w-4" />
-                          ) : (
-                            <Users className="h-4 w-4" />
-                          )}
-                          <span>Already {user.role}</span>
+                          <span>Cannot change {user.role} role</span>
+                        </div>
+                      ) : user.role === "hacker" || user.role === "volunteer" ? (
+                        <div className="flex items-center gap-2">
+                          <Button
+                            onClick={() => handleAssignRole(user.id, user.email, "hacker")}
+                            disabled={assigning?.userId === user.id || user.role === "hacker"}
+                            variant={user.role === "hacker" ? "default" : "outline"}
+                            size="sm"
+                          >
+                            {assigning?.userId === user.id && assigning?.role === "hacker" ? (
+                              <>
+                                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                Assigning...
+                              </>
+                            ) : (
+                              <>
+                                <Code className="mr-2 h-4 w-4" />
+                                Assign Hacker
+                              </>
+                            )}
+                          </Button>
+                          <Button
+                            onClick={() => handleAssignRole(user.id, user.email, "volunteer")}
+                            disabled={assigning?.userId === user.id || user.role === "volunteer"}
+                            variant={user.role === "volunteer" ? "default" : "outline"}
+                            size="sm"
+                          >
+                            {assigning?.userId === user.id && assigning?.role === "volunteer" ? (
+                              <>
+                                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                Assigning...
+                              </>
+                            ) : (
+                              <>
+                                <Users className="mr-2 h-4 w-4" />
+                                Assign Volunteer
+                              </>
+                            )}
+                          </Button>
                         </div>
                       ) : (
                         <div className="flex items-center gap-2">
                           <Button
                             onClick={() => handleAssignRole(user.id, user.email, "hacker")}
                             disabled={assigning?.userId === user.id}
-                            variant="default"
+                            variant="outline"
                             size="sm"
                           >
                             {assigning?.userId === user.id && assigning?.role === "hacker" ? (
@@ -238,7 +272,7 @@ export default function AdminAssignVolunteersPage() {
                           <Button
                             onClick={() => handleAssignRole(user.id, user.email, "volunteer")}
                             disabled={assigning?.userId === user.id}
-                            variant="default"
+                            variant="outline"
                             size="sm"
                           >
                             {assigning?.userId === user.id && assigning?.role === "volunteer" ? (
