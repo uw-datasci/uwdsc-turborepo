@@ -24,6 +24,7 @@ import Image from "next/image";
 const navLinks = [
   { href: "/", label: "Home" },
   { href: "/dashboard", label: "Dashboard" },
+  { href: "/schedule", label: "Schedule" },
 ];
 
 const adminPages = [
@@ -36,6 +37,11 @@ const adminPages = [
     href: "/admin/review",
     label: "Review",
     description: "Review applications one at a time",
+  },
+  {
+    href: "/admin/assign-volunteers",
+    label: "Assign Roles",
+    description: "Search for users and assign hacker or volunteer roles",
   },
 ];
 
