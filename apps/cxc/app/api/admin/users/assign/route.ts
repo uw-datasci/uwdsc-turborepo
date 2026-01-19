@@ -42,6 +42,18 @@ export async function POST(request: Request) {
       );
     }
 
+    // Validate role
+    const validRoles = ["admin", "hacker", "volunteer", "default"];
+    if (!validRoles.includes(role)) {
+      return NextResponse.json(
+        {
+          error: "Bad Request",
+          message: `Invalid role. Must be one of: ${validRoles.join(", ")}`,
+        },
+        { status: 400 },
+      );
+    }
+
     // Prevent superadmin from changing their own role
     if (userId === user.id) {
       return NextResponse.json(

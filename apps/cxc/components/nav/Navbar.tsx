@@ -50,6 +50,11 @@ const superadminPages = [
     label: "Assign Roles",
     description: "Search for users and assign admin roles",
   },
+  {
+    href: "/admin/leaderboard",
+    label: "Leaderboard",
+    description: "View review statistics and leaderboard",
+  },
 ];
 
 export default function Navbar() {

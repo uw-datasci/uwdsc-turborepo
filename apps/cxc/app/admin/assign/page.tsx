@@ -40,6 +40,9 @@ export default function AdminAssignPage() {
       const response = await fetch(
         `/api/admin/users/search?email=${encodeURIComponent(emailQuery.trim())}`,
       );
+      const response = await fetch(
+        `/api/admin/users/search?email=${encodeURIComponent(emailQuery.trim())}`,
+      );
       const data = await response.json();
 
       if (response.ok) {
