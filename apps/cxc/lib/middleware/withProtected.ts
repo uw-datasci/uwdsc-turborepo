@@ -32,6 +32,12 @@ export async function withProtected(request: NextRequest, user: any) {
           console.log(`[Middleware] User ${user.id} (role: ${profile.role}) attempted to access /admin/assign, requires superadmin`);
           return NextResponse.redirect(new URL("/", request.url));
         }
+      } else if (request.nextUrl.pathname === "/admin/projects") {
+        // /admin/projects requires superadmin
+        if (profile.role !== "superadmin") {
+          console.log(`[Middleware] User ${user.id} (role: ${profile.role}) attempted to access /admin/projects, requires superadmin`);
+          return NextResponse.redirect(new URL("/", request.url));
+        }
       } else {
         // Other admin routes require admin or superadmin
         // /admin/assign-volunteers is accessible to both admin and superadmin
@@ -42,6 +48,30 @@ export async function withProtected(request: NextRequest, user: any) {
       }
     } catch (error) {
       console.error(`[Middleware] Error checking admin role for user ${user.id}:`, error);
+      // On error, redirect to home for safety
+      return NextResponse.redirect(new URL("/", request.url));
+    }
+  }
+
+  // Check judge role for /judge routes
+  if (request.nextUrl.pathname.startsWith("/judge")) {
+    try {
+      const profileService = new ProfileService();
+      const profile = await profileService.getProfileByUserId(user.id);
+
+      // If profile doesn't exist, user can't access judge routes
+      if (!profile) {
+        console.log(`[Middleware] User ${user.id} has no profile, blocking access to ${request.nextUrl.pathname}`);
+        return NextResponse.redirect(new URL("/", request.url));
+      }
+
+      // Judge routes require judge role
+      if (profile.role !== "judge") {
+        console.log(`[Middleware] User ${user.id} (role: ${profile.role}) attempted to access ${request.nextUrl.pathname}, requires judge`);
+        return NextResponse.redirect(new URL("/", request.url));
+      }
+    } catch (error) {
+      console.error(`[Middleware] Error checking judge role for user ${user.id}:`, error);
       // On error, redirect to home for safety
       return NextResponse.redirect(new URL("/", request.url));
     }

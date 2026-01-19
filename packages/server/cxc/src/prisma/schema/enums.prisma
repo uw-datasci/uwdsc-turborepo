@@ -2,6 +2,8 @@ enum role_enum {
     hacker
     volunteer
     admin
+    superadmin
+    judge
     default
 }
 

@@ -128,6 +128,13 @@ export {
   CollapsibleTrigger,
 } from "./components/collapsible";
 
+export {
+  Tabs,
+  TabsList,
+  TabsTrigger,
+  TabsContent,
+} from "./components/tabs";
+
 export { Checkbox } from "./components/checkbox";
 export {
   Command,

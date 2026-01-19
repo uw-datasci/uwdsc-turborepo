@@ -30,6 +30,39 @@ export type { SubmitReviewRequest, SubmitReviewResponse } from "./review";
 // Export all admin functions
 export { getAllApplications, getApplicationDetails } from "./admin";
 
+// Export all project functions
+export {
+  getAllProjects,
+  getProjectById,
+  createProject,
+  updateProject,
+  deleteProject,
+  getMyProject,
+  submitProject,
+} from "./projects";
+export type {
+  Project,
+  ProjectWithTeam,
+  CreateProjectRequest,
+  UpdateProjectRequest,
+} from "./projects";
+
+// Export all judge functions
+export { getAllJudges, assignJudges } from "./judges";
+export type { Judge, AssignJudgesRequest } from "./judges";
+
+// Export all judge dashboard functions
+export {
+  getJudgeAssignments,
+  getScoreByProject,
+  submitScore,
+} from "./judge";
+export type {
+  JudgeAssignment,
+  ProjectScore,
+  SubmitScoreRequest,
+} from "./judge";
+
 // Export all team functions
 export {
   createTeam,

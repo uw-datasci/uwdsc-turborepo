@@ -1,0 +1,19 @@
+// prisma/schema/projects.prisma
+model Project {
+    id          String   @id @default(uuid()) @db.Uuid
+    team_id     String?  @db.Uuid // Nullable to allow solo hackers
+    title       String   @db.Text
+    description String?  @db.Text
+    devpost_url String?  @db.Text
+    github_url  String?  @db.Text
+    demo_url    String?  @db.Text
+    video_url   String?  @db.Text
+    created_at  DateTime @default(now())
+    updated_at  DateTime @default(now()) @updatedAt
+
+    // Relationships
+    judgeAssignments JudgeAssignment[]
+    scores           ProjectScore[]
+
+    @@map("projects")
+}

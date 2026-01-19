@@ -1,0 +1,22 @@
+// prisma/schema/projectScores.prisma
+model ProjectScore {
+    id                String   @id @default(uuid()) @db.Uuid
+    project_id        String   @db.Uuid
+    judge_id          String   @db.Uuid
+    criterion_1_score Float    // First criterion score
+    criterion_2_score Float    // Second criterion score
+    criterion_3_score Float    // Third criterion score
+    criterion_4_score Float    // Fourth criterion score
+    comments          String?  @db.Text
+    created_at        DateTime @default(now())
+    updated_at        DateTime @default(now()) @updatedAt
+
+    // Relationships
+    project Project @relation(fields: [project_id], references: [id], onDelete: Cascade)
+    judge   Profile @relation(fields: [judge_id], references: [id], onDelete: Cascade)
+
+    @@unique([project_id, judge_id])
+    @@index([judge_id])
+    @@index([project_id])
+    @@map("project_scores")
+}

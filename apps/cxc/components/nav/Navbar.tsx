@@ -50,6 +50,11 @@ const superadminPages = [
     label: "Assign Roles",
     description: "Search for users and assign admin roles",
   },
+  {
+    href: "/admin/projects",
+    label: "Projects",
+    description: "Manage projects and assign judges",
+  },
 ];
 
 export default function Navbar() {
