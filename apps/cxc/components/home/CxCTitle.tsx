@@ -5,7 +5,12 @@ import CxCButton from "../CxCButton";
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Badge, Meteors, WarpBackground } from "@uwdsc/ui/index";
+import {
+  Badge,
+  Meteors,
+  TypingAnimation,
+  WarpBackground,
+} from "@uwdsc/ui/index";
 import Image from "next/image";
 import { useIsMobile } from "@/hooks/useIsMobile";
 import {
@@ -19,9 +24,9 @@ export default function CxCTitle() {
   const [countdownOver, setCountdownOver] = useState(false);
   const [isPastDeadline, setIsPastDeadline] = useState(false);
   const isMobile = useIsMobile(640);
-  // const isTablet = useIsMobile(1024);
-  // const [cursorDone, setCursorDone] = useState(false);
-  // const [logoVisible, setLogoVisible] = useState(false);
+  const isTablet = useIsMobile(1024);
+  const [cursorDone, setCursorDone] = useState(false);
+  const [logoVisible, setLogoVisible] = useState(false);
 
   useEffect(() => {
     const checkCountdown = () => {
@@ -83,14 +88,20 @@ export default function CxCTitle() {
                 </div>
                 {/* TODO: -bottom-12 md:-bottom-10 when adding back tangerine*/}
                 <div className="flex flex-col items-center gap-6 justify-center absolute -bottom-12 md:-bottom-10">
-                  <div className="flex flex-col items-center">
+                  <div className="flex flex-col items-center gap-4">
                     <Badge
                       className="font-normal text-sm md:text-base border-white/50 bg-background"
                       variant="outline"
                     >
                       FEB 6-8 · An AI Hackathon
                     </Badge>
-                    {/* <div className="flex flex-row items-center">
+                    <CxCButton
+                      asChild
+                      className="text-sm md:text-lg py-1.5 md:py-2 px-6 md:px-10 hover:scale-105"
+                    >
+                      <Link href="/dashboard/results">Check Results</Link>
+                    </CxCButton>
+                    <div className="flex flex-row items-center">
                       <TypingAnimation
                         className="font-light text-xl sm:text-2xl lg:text-3xl text-white/80"
                         showCursor={true}
@@ -144,7 +155,7 @@ export default function CxCTitle() {
                         }}
                         className="w-36 h-8 sm:w-42 sm:h-9 lg:w-48 lg:h-10 object-contain -ml-5"
                       />
-                    </div> */}
+                    </div>
                   </div>
                   <div className="flex flex-col items-center gap-6">
                     {!isPastDeadline && (
@@ -155,9 +166,6 @@ export default function CxCTitle() {
                         <Link href="/apply">Apply</Link>
                       </CxCButton>
                     )}
-                    <div className="text-sm font-mono border border-orange-300 text-orange-300 px-3 py-1 shadow-[0_0_10px_rgba(251,146,60,0.3)]">
-                      Applications due Jan 15, 11:59pm
-                    </div>
                   </div>
                 </div>
               </motion.div>
@@ -195,7 +203,7 @@ export default function CxCTitle() {
                   >
                     FEB 6-8 · An AI Hackathon
                   </Badge>
-                  {/* <div className="flex flex-row items-center">
+                  <div className="flex flex-row items-center">
                     <TypingAnimation
                       className="font-light text-xl sm:text-2xl lg:text-3xl text-white/80"
                       showCursor={true}
@@ -249,7 +257,7 @@ export default function CxCTitle() {
                       }}
                       className="w-36 h-8 sm:w-42 sm:h-9 lg:w-48 lg:h-10 object-contain -ml-5"
                     />
-                  </div> */}
+                  </div>
                 </div>
 
                 <CountdownClock

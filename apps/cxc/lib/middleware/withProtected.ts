@@ -31,11 +31,15 @@ export async function withProtected(request: NextRequest, user: any) {
         return NextResponse.redirect(new URL("/", request.url));
       }
 
-      // Special handling for /admin/assign - requires superadmin
-      if (request.nextUrl.pathname === "/admin/assign") {
+      // Special handling for superadmin-only routes
+      if (
+        request.nextUrl.pathname === "/admin/assign" ||
+        request.nextUrl.pathname === "/admin/dashboard" ||
+        request.nextUrl.pathname === "/admin/leaderboard"
+      ) {
         if (profile.role !== "superadmin") {
           console.log(
-            `[Middleware] User ${user.id} (role: ${profile.role}) attempted to access /admin/assign, requires superadmin`,
+            `[Middleware] User ${user.id} (role: ${profile.role}) attempted to access ${request.nextUrl.pathname}, requires superadmin`,
           );
           return NextResponse.redirect(new URL("/", request.url));
         }

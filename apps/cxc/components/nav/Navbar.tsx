@@ -47,6 +47,11 @@ const adminPages = [
 
 const superadminPages = [
   {
+    href: "/admin/dashboard",
+    label: "Dashboard",
+    description: "View application and RSVP statistics",
+  },
+  {
     href: "/admin/assign",
     label: "Assign Roles",
     description: "Search for users and assign admin roles",
