@@ -137,9 +137,6 @@ export default function MobileApplication({
             subStepName={PAGE_NAMES[currentPage]}
             label=""
           />
-          <div className="mt-4 text-xs font-mono border border-orange-300 text-orange-300 px-2 py-1 w-fit shadow-[0_0_10px_rgba(251,146,60,0.3)]">
-            Applications due Jan 15, 11:59pm
-          </div>
         </div>
         <div className="overflow-visible flex-1 flex flex-col justify-between">
           <AnimatePresence mode="wait" custom={direction}>

@@ -101,7 +101,7 @@ export default function CxCTitle() {
                     >
                       <Link href="/dashboard/results">Check Results</Link>
                     </CxCButton>
-                    {/* <div className="flex flex-row items-center">
+                    <div className="flex flex-row items-center">
                       <TypingAnimation
                         className="font-light text-xl sm:text-2xl lg:text-3xl text-white/80"
                         showCursor={true}
@@ -166,9 +166,6 @@ export default function CxCTitle() {
                         <Link href="/apply">Apply</Link>
                       </CxCButton>
                     )}
-                    <div className="text-sm font-mono border border-orange-300 text-orange-300 px-3 py-1 shadow-[0_0_10px_rgba(251,146,60,0.3)]">
-                      Applications Closed
-                    </div>
                   </div>
                 </div>
               </motion.div>
