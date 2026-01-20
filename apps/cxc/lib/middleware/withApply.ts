@@ -8,5 +8,6 @@ import type { NextRequest } from "next/server";
  */
 export function withApply(request: NextRequest) {
   // Block everyone, regardless of authentication or role
-  return NextResponse.redirect(new URL("/", request.url));
+  // return NextResponse.redirect(new URL("/", request.url));
+  return NextResponse.next();
 }
