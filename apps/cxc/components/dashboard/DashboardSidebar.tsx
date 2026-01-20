@@ -45,23 +45,13 @@ const navItems: NavItem[] = [
 interface DashboardSidebarProps {
   className?: string;
   onNavClick?: () => void;
-  applicationStatus?: string;
 }
 
 export function DashboardSidebar({
   className,
   onNavClick,
-  applicationStatus,
 }: Readonly<DashboardSidebarProps>) {
   const pathname = usePathname();
-
-  // Filter out results tab if application is still in draft
-  const visibleNavItems = navItems.filter((item) => {
-    if (item.href === "/dashboard/results") {
-      return applicationStatus && applicationStatus !== "draft";
-    }
-    return true;
-  });
 
   return (
     <nav className={cn("flex flex-col gap-2 p-6", className)}>
@@ -83,7 +73,7 @@ export function DashboardSidebar({
       </div>
 
       <div className="flex flex-col gap-1">
-        {visibleNavItems.map((item) => {
+        {navItems.map((item) => {
           const isActive =
             pathname === item.href ||
             (item.href !== "/dashboard" && pathname.startsWith(item.href));
