@@ -15,6 +15,63 @@ This semester continues to build upon the foundation established in Fall 2025, w
 
 ## 🏆 CXC App (apps/cxc)
 
+### Superadmin Dashboard (PR #141)
+
+**Dashboard Overview (`/admin/dashboard`)**
+- Comprehensive analytics dashboard for tracking applications and RSVPs
+- Superadmin-only access for monitoring event metrics
+- Real-time statistics with key performance indicators:
+  - Total applications created and submitted
+  - Total offers extended (accepted applications)
+  - Total RSVPs confirmed (hackers)
+  - Total declined offers
+- Conversion rate tracking:
+  - Application → Offer rate
+  - Offer → RSVP rate
+  - Overall acceptance rate (Application → RSVP)
+- Status breakdown showing pending applications and awaiting RSVPs
+
+**RSVP Timeline Visualization**
+- Interactive line chart displaying RSVP trends over time
+- Toggle between daily and hourly views for granular insights
+- Responsive chart design with zoom and tooltip interactions
+- Built with Recharts library for smooth data visualization
+- Helps identify peak RSVP periods and track momentum
+
+**Backend Services**
+- `DashboardService` enhancements:
+  - `getDashboardStatistics()`: Aggregate application and profile metrics
+  - `getRSVPTimeline(intervalHours)`: Fetch RSVP data with hourly or daily intervals
+- `DashboardRepository` new methods:
+  - `getDashboardStatistics()`: Optimized queries for application and profile counts
+  - `getRSVPTimelineHourly()`: Time-series data for RSVP tracking
+  - Efficient aggregation using database-level grouping
+
+**API Enhancements**
+- `GET /api/admin/dashboard?interval={1|24}`: Returns statistics and timeline data
+  - `interval=1`: Hourly RSVP data points
+  - `interval=24`: Daily aggregated RSVP data (default)
+- Superadmin-only access with role verification
+- Graceful error handling with detailed error messages
+
+**UI/UX Features**
+- Statistics cards with icon indicators for each metric
+- Color-coded borders and hover effects
+- Responsive grid layout for mobile and desktop
+- Loading states with custom CXC loading screen
+- Time-based filtering for timeline granularity
+- Real-time data fetching and updates
+
+**Application Flow Updates**
+- Results page now displays informative message for users who didn't submit applications
+- Users with draft applications see explanation about missed deadline
+- Improved user experience with clear next steps messaging
+
+**Dashboard Sidebar Cleanup**
+- Removed application status prop dependency for cleaner component architecture
+- Results tab now visible to all users regardless of application status
+- Simplified navigation logic
+
 ### Review Leaderboard & Analytics (PR #132)
 
 **Admin Leaderboard Dashboard (`/admin/leaderboard`)**
@@ -214,6 +271,9 @@ This semester continues to build upon the foundation established in Fall 2025, w
 - `ApplicationService.getAllUserEmails()`: Fetches user list for team selection
 
 **New Repositories**
+- `DashboardRepository`: Analytics and statistics queries
+  - `getDashboardStatistics()`: Aggregate application and profile counts
+  - `getRSVPTimelineHourly()`: Time-series RSVP data with hourly granularity
 - `AdminApplicationRepository`: Database operations for application management
   - `getAllApplicationSummaries()`: Query for application table with review counts
   - `getApplicationById()`: Fetch complete application details with team member info
@@ -237,6 +297,7 @@ This semester continues to build upon the foundation established in Fall 2025, w
 ### API Enhancements
 
 **New Endpoints**
+- `GET /api/admin/dashboard` - Get superadmin analytics (statistics and RSVP timeline)
 - `GET /api/admin/applications` - Get all submitted applications (admin only)
 - `GET /api/admin/applications/[id]` - Get full application details by ID (admin only)
 - `GET /api/applications/random` - Get next application for review (admin only)
@@ -252,6 +313,7 @@ This semester continues to build upon the foundation established in Fall 2025, w
 
 **Admin Route Protection**
 - `/admin/**` routes now require admin role (updated from `/review`)
+- Superadmin-only routes: `/admin/assign`, `/admin/dashboard`, `/admin/leaderboard`
 - `withProtected` middleware enhanced with role-based access control
 - Non-admin users redirected to home page
 - Profile service integration for role verification
@@ -301,6 +363,14 @@ This semester continues to build upon the foundation established in Fall 2025, w
 - Fixed SelectField to handle undefined values correctly
 
 ## 🔧 Infrastructure
+
+### New Dependencies (PR #141)
+
+**Recharts** - Data visualization library
+- Added to CXC app for dashboard analytics
+- Provides responsive chart components (LineChart, BarChart, etc.)
+- Used in superadmin dashboard for RSVP timeline visualization
+- Supports interactive tooltips, legends, and customizable styling
 
 ### Authentication Services (PR #126)
 
