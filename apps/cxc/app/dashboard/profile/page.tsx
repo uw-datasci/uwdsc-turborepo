@@ -116,11 +116,6 @@ export default function ProfilePage() {
                     <span className="text-white/80 text-sm border border-white/20 px-2 py-1 font-mono uppercase">
                       {user.role}
                     </span>
-                    {user.nfc_id && (
-                      <span className="text-emerald-400 text-sm border border-emerald-400 px-2 py-1 font-mono">
-                        NFC: {user.nfc_id}
-                      </span>
-                    )}
                     {application?.status && (
                       <span className="text-blue-400 text-sm border border-blue-400 px-2 py-1 font-mono uppercase">
                         {application.status}
