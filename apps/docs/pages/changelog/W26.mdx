@@ -62,15 +62,20 @@ This semester continues to build upon the foundation established in Fall 2025, w
 - Time-based filtering for timeline granularity
 - Real-time data fetching and updates
 
-**Application Flow Updates**
-- Results page now displays informative message for users who didn't submit applications
-- Users with draft applications see explanation about missed deadline
-- Improved user experience with clear next steps messaging
+**Application Flow Updates (PR #145)**
+- Fixed issue where users without applications would encounter errors on results page
+- Added dedicated "No Application Found" page for users who never created an application
+  - Clear messaging explaining they didn't submit for CXC 2026
+  - Information about what this means for event participation
+  - Encouragement to watch for future opportunities
+- Users with draft applications continue to see explanation about missed deadline
+- Improved error handling and user experience with clear next steps messaging
 
 **Dashboard Sidebar Cleanup**
 - Removed application status prop dependency for cleaner component architecture
 - Results tab now visible to all users regardless of application status
 - Simplified navigation logic
+- Removed NFC ID display from profile page for cleaner UI
 
 ### Review Leaderboard & Analytics (PR #132)
 
