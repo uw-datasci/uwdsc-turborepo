@@ -152,9 +152,7 @@ export default function ResultsPage() {
                       </li>
                       <li className="flex items-start gap-2">
                         <span className="text-red-400 mt-0.5">•</span>
-                        <span>
-                          You cannot be considered for CXC 2026
-                        </span>
+                        <span>You cannot be considered for CXC 2026</span>
                       </li>
                       <li className="flex items-start gap-2">
                         <span className="text-red-400 mt-0.5">•</span>
