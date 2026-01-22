@@ -7,8 +7,10 @@ model Profile {
     updated_at DateTime  @default(now())
 
     // Relationships
-    applications    Application[]
-    eventAttendance EventAttendance[]
+    applications      Application[]
+    eventAttendance   EventAttendance[]
+    judgeAssignments  JudgeAssignment[]
+    projectScores     ProjectScore[]
 
     @@map("profiles")
 }

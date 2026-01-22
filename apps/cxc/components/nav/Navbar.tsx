@@ -66,6 +66,11 @@ const superadminPages = [
     label: "Leaderboard",
     description: "View review statistics and leaderboard",
   },
+  {
+    href: "/admin/projects",
+    label: "Projects",
+    description: "Manage projects and assign judges",
+  },
 ];
 
 export default function Navbar() {

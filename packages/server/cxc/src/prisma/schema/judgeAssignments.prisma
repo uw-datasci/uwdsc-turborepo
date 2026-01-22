@@ -1,0 +1,20 @@
+// prisma/schema/judgeAssignments.prisma
+model JudgeAssignment {
+    id         String   @id @default(uuid()) @db.Uuid
+    project_id String   @db.Uuid
+    judge_id   String   @db.Uuid
+    group_id   String   @db.Uuid // Groups judges together for a session
+    start_time DateTime @db.Timestamptz(6)
+    created_at DateTime @default(now())
+    updated_at DateTime @default(now()) @updatedAt
+
+    // Relationships
+    project Project @relation(fields: [project_id], references: [id], onDelete: Cascade)
+    judge   Profile @relation(fields: [judge_id], references: [id], onDelete: Cascade)
+
+    @@unique([project_id, judge_id, start_time])
+    @@index([judge_id])
+    @@index([project_id])
+    @@index([group_id])
+    @@map("judge_assignments")
+}
