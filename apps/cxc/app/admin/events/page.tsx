@@ -2,7 +2,17 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Card, CardHeader, CardTitle, CardContent, Button } from "@uwdsc/ui";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardContent,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@uwdsc/ui";
 import {
   Plus,
   Loader2,
@@ -13,6 +23,7 @@ import {
   XCircle,
 } from "lucide-react";
 import { QrScanner } from "@/components/admin/QrScanner";
+import CxCButton from "@/components/CxCButton";
 
 // Web NFC API types
 interface NDEFRecord {
@@ -361,150 +372,172 @@ export default function AdminEventsPage() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-[60vh]">
-        <Loader2 className="h-8 w-8 animate-spin" />
+      <div className="flex items-center justify-center min-h-screen bg-black">
+        <Loader2 className="h-8 w-8 animate-spin text-white" />
       </div>
     );
   }
 
   return (
-    <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <h1 className="text-3xl font-bold">Events</h1>
-        <div className="flex gap-2">
-          <Button
-            variant="outline"
-            onClick={() => router.push("/admin/events/edit")}
-          >
-            <Edit className="mr-2 h-4 w-4" />
-            Edit Event
-          </Button>
-          <Button onClick={() => router.push("/admin/events/add")}>
-            <Plus className="mr-2 h-4 w-4" />
-            Add Event
-          </Button>
-        </div>
-      </div>
-
-      {/* Event Selection */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Select Event for Check-In</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          {events.length === 0 ? (
-            <p className="text-muted-foreground">
-              No events available. Create your first event to get started.
-            </p>
-          ) : (
-            <>
-              <div>
-                <label className="text-sm font-medium mb-2 block">
-                  Current Event
-                </label>
-                <select
-                  value={selectedEventId || ""}
-                  onChange={(e) => {
-                    const eventId = e.target.value;
-                    setSelectedEventId(eventId);
-                    // Cache selected event in localStorage
-                    localStorage.setItem("admin_selected_event_id", eventId);
-                  }}
-                  className="w-full p-3 border rounded-md bg-background"
-                >
-                  {events.map((event) => (
-                    <option key={event.id} value={event.id}>
-                      {event.name} -{" "}
-                      {new Date(event.start_time).toLocaleDateString()}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              {selectedEventId && (
-                <div className="p-4 bg-muted rounded-md">
-                  <p className="text-sm text-muted-foreground mb-2">
-                    Selected event is cached for NFC check-ins. Go to NFC tools
-                    to check hackers in.
-                  </p>
-                </div>
-              )}
-            </>
-          )}
-        </CardContent>
-      </Card>
-
-      {/* QR Code Scanner */}
-      <Card>
-        <CardHeader>
-          <CardTitle>QR Code Scanner (backup)</CardTitle>
-        </CardHeader>
-        <CardContent>
-          {showScanner ? (
-            <QrScanner
-              onScan={handleQrScan}
-              onClose={() => setShowScanner(false)}
-            />
-          ) : (
-            <Button onClick={() => setShowScanner(true)} className="w-full">
-              <QrCode className="mr-2 h-4 w-4" />
-              Open QR Scanner
-            </Button>
-          )}
-        </CardContent>
-      </Card>
-
-      {/* NFC Reader */}
-      <Card>
-        <CardHeader>
-          <CardTitle>NFC Reader (backup)</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="p-4 rounded-md bg-yellow-500/10 text-yellow-500 border border-yellow-500/20">
-            <p className="text-sm font-medium">
-              ⚠️ Please use Android and Chrome!!! This feature requires Chrome
-              on Android with HTTPS.
-            </p>
+    <div className="min-h-screen bg-black text-white p-4 md:p-8 pt-24 md:pt-28">
+      <div className="max-w-5xl mx-auto space-y-6">
+        <div className="flex justify-between items-center">
+          <h1 className="text-3xl font-bold text-white">Events</h1>
+          <div className="flex gap-2">
+            <CxCButton
+              variant="outline"
+              onClick={() => router.push("/admin/events/edit")}
+              className="!bg-transparent !border-white/20 !text-white hover:!bg-white/10"
+            >
+              <Edit className="mr-2 h-4 w-4" />
+              Edit Event
+            </CxCButton>
+            <CxCButton onClick={() => router.push("/admin/events/add")}>
+              <Plus className="mr-2 h-4 w-4" />
+              Add Event
+            </CxCButton>
           </div>
+        </div>
 
-          <Button
-            onClick={handleNfcRead}
-            disabled={readingNfc}
-            className="w-full"
-            size="lg"
-          >
-            {readingNfc ? (
-              <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Reading NFC Card... (Hold card close)
-              </>
+        {/* Event Selection */}
+        <Card className="bg-black border-white/20 rounded-none">
+          <CardHeader>
+            <CardTitle className="text-white">
+              Select Event for Check-In
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            {events.length === 0 ? (
+              <p className="text-white/60">
+                No events available. Create your first event to get started.
+              </p>
             ) : (
               <>
-                <Radio className="mr-2 h-4 w-4" />
-                Read NFC Card
+                <div>
+                  <label className="text-sm font-medium mb-2 block text-purple-400">
+                    Current Event
+                  </label>
+                  <Select
+                    value={selectedEventId || ""}
+                    onValueChange={(eventId) => {
+                      setSelectedEventId(eventId);
+                      // Cache selected event in localStorage
+                      localStorage.setItem("admin_selected_event_id", eventId);
+                    }}
+                  >
+                    <SelectTrigger className="w-full border-purple-500/30 rounded-none bg-black text-purple-100 hover:bg-purple-500/10 !h-auto p-3">
+                      <SelectValue placeholder="Select an event" />
+                    </SelectTrigger>
+                    <SelectContent className="bg-black border-purple-500/30 rounded-none text-purple-100">
+                      {events.length === 0 ? (
+                        <div className="p-4 text-center text-white/60 text-sm">
+                          No events available
+                        </div>
+                      ) : (
+                        events.map((event) => (
+                          <SelectItem
+                            key={event.id}
+                            value={String(event.id)}
+                            className="focus:bg-purple-500/20 focus:text-purple-100 rounded-none p-3"
+                          >
+                            {event.name} -{" "}
+                            {new Date(event.start_time).toLocaleDateString()}
+                          </SelectItem>
+                        ))
+                      )}
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                {selectedEventId && (
+                  <div className="p-4 bg-white/5 border border-white/10 rounded-none">
+                    <p className="text-sm text-white/60">
+                      Selected event is cached for NFC check-ins. Go to NFC
+                      tools to check hackers in.
+                    </p>
+                  </div>
+                )}
               </>
             )}
-          </Button>
+          </CardContent>
+        </Card>
 
-          {/* Result Message */}
-          {nfcResult && (
-            <div
-              className={`p-4 rounded-md flex items-center gap-2 ${
-                nfcResult.success
-                  ? "bg-green-500/10 text-green-500 border border-green-500/20"
-                  : "bg-red-500/10 text-red-500 border border-red-500/20"
-              }`}
-            >
-              {nfcResult.success ? (
-                <CheckCircle2 className="h-5 w-5" />
-              ) : (
-                <XCircle className="h-5 w-5" />
-              )}
-              <span>{nfcResult.message}</span>
+        {/* QR Code Scanner */}
+        <Card className="bg-black border-white/20 rounded-none">
+          <CardHeader>
+            <CardTitle className="text-white">
+              QR Code Scanner (backup)
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            {showScanner ? (
+              <QrScanner
+                onScan={handleQrScan}
+                onClose={() => setShowScanner(false)}
+              />
+            ) : (
+              <CxCButton
+                onClick={() => setShowScanner(true)}
+                className="w-full"
+              >
+                <QrCode className="mr-2 h-4 w-4" />
+                Open QR Scanner
+              </CxCButton>
+            )}
+          </CardContent>
+        </Card>
+
+        {/* NFC Reader */}
+        <Card className="bg-black border-white/20 rounded-none">
+          <CardHeader>
+            <CardTitle className="text-white">NFC Reader (backup)</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="p-4 rounded-none bg-yellow-500/10 text-yellow-500 border border-yellow-500/20">
+              <p className="text-sm font-medium">
+                ⚠️ Please use Android and Chrome!!! This feature requires Chrome
+                on Android with HTTPS.
+              </p>
             </div>
-          )}
-        </CardContent>
-      </Card>
+
+            <CxCButton
+              onClick={handleNfcRead}
+              disabled={readingNfc}
+              className="w-full"
+            >
+              {readingNfc ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Reading NFC Card... (Hold card close)
+                </>
+              ) : (
+                <>
+                  <Radio className="mr-2 h-4 w-4" />
+                  Read NFC Card
+                </>
+              )}
+            </CxCButton>
+
+            {/* Result Message */}
+            {nfcResult && (
+              <div
+                className={`p-4 rounded-none flex items-center gap-2 ${
+                  nfcResult.success
+                    ? "bg-green-500/10 text-green-500 border border-green-500/20"
+                    : "bg-red-500/10 text-red-500 border border-red-500/20"
+                }`}
+              >
+                {nfcResult.success ? (
+                  <CheckCircle2 className="h-5 w-5" />
+                ) : (
+                  <XCircle className="h-5 w-5" />
+                )}
+                <span>{nfcResult.message}</span>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 }

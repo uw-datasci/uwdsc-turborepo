@@ -1,8 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Card, CardHeader, CardTitle, CardContent, Button } from "@uwdsc/ui";
+import { Card, CardHeader, CardTitle, CardContent } from "@uwdsc/ui";
 import { QrCode, X, Camera } from "lucide-react";
+import CxCButton from "@/components/CxCButton";
 
 interface QrScannerProps {
   onScan: (result: string) => void;
@@ -85,41 +86,50 @@ export function QrScanner({ onScan, onClose }: QrScannerProps) {
   };
 
   return (
-    <Card>
+    <Card className="bg-black border-white/10 rounded-none">
       <CardHeader>
         <div className="flex justify-between items-center">
-          <CardTitle>Scan QR Code</CardTitle>
+          <CardTitle className="text-white">Scan QR Code</CardTitle>
           {onClose && (
-            <Button variant="ghost" size="icon" onClick={handleClose}>
+            <CxCButton
+              variant="ghost"
+              size="icon"
+              onClick={handleClose}
+              className="!bg-transparent !text-white hover:!bg-white/10"
+            >
               <X className="h-4 w-4" />
-            </Button>
+            </CxCButton>
           )}
         </div>
       </CardHeader>
       <CardContent className="space-y-4">
         {error && (
-          <div className="p-4 rounded-md bg-red-500/10 text-red-500 border border-red-500/20">
+          <div className="p-4 rounded-none bg-red-500/10 text-red-500 border border-red-500/20">
             {error}
           </div>
         )}
 
         {!isScanning ? (
-          <div className="flex flex-col items-center justify-center p-12 border-2 border-dashed rounded-md">
-            <QrCode className="h-16 w-16 text-muted-foreground mb-4" />
-            <p className="text-muted-foreground mb-4 text-center">
+          <div className="flex flex-col items-center justify-center p-12 border-2 border-dashed border-white/20 rounded-none">
+            <QrCode className="h-16 w-16 text-white/60 mb-4" />
+            <p className="text-white/60 mb-4 text-center">
               Click the button below to start scanning QR codes
             </p>
-            <Button onClick={startScanning}>
+            <CxCButton onClick={startScanning}>
               <Camera className="mr-2 h-4 w-4" />
               Start Scanner
-            </Button>
+            </CxCButton>
           </div>
         ) : (
           <div className="space-y-4">
             <div id="qr-reader" className="w-full min-h-[300px]" />
-            <Button onClick={stopScanning} variant="outline" className="w-full">
+            <CxCButton
+              onClick={stopScanning}
+              variant="outline"
+              className="w-full !bg-red-400/10 !border-red-400/40 !text-red-400 hover:!bg-red-500/15 hover:!border-red-500/60"
+            >
               Stop Scanning
-            </Button>
+            </CxCButton>
           </div>
         )}
       </CardContent>
