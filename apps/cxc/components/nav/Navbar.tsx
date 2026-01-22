@@ -43,6 +43,11 @@ const adminPages = [
     label: "Assign Roles",
     description: "Search for users and assign hacker or volunteer roles",
   },
+  {
+    href: "/admin/events",
+    label: "Events",
+    description: "Manage CxC events and activities",
+  },
 ];
 
 const superadminPages = [
