@@ -36,9 +36,9 @@ export async function proxy(request: NextRequest) {
     // 1. Handle Authenticated users trying to access auth pages
     case AUTH_ROUTES.has(pathname):
       return withAuth(request, user);
-    // 2. Handle Unauthenticated users
+    // 2. Handle Unauthenticated users trying to access apply page
     case pathname === APPLY_ROUTE:
-      return withApply(request);
+      return withApply(request, user);
     // 3. Handle Authenticated users trying to access protected routes
     case isProtectedRoute:
       return await withProtected(request, user);

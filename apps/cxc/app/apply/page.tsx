@@ -33,6 +33,7 @@ import DesktopApplication from "@/components/application/DesktopApplication";
 import MobileApplication from "@/components/application/MobileApplication";
 import { Submitted } from "@/components/application/sections";
 import { ApplicationClosed } from "@/components/application/ApplicationClosed";
+import { LoadingScreen } from "@/components/LoadingScreen";
 import {
   APPLICATION_DEADLINE,
   APPLICATION_RELEASE_DATE,
@@ -419,7 +420,7 @@ export default function ApplyPage() {
   }
 
   if (!applicationStatus) {
-    return null;
+    return <LoadingScreen message="LOADING APPLICATION..." />;
   }
 
   const isSubmitted =
