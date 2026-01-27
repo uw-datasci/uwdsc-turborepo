@@ -2,8 +2,9 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Card, CardContent, Button, Input } from "@uwdsc/ui";
+import { Card, CardContent, Input, Textarea, Checkbox } from "@uwdsc/ui";
 import { ArrowLeft, Loader2, Save, X } from "lucide-react";
+import CxCButton from "@/components/CxCButton";
 
 interface Event {
   id: string | number;
@@ -161,289 +162,312 @@ export default function EditEventsPage() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-[60vh]">
-        <Loader2 className="h-8 w-8 animate-spin" />
+      <div className="flex items-center justify-center min-h-screen bg-black">
+        <Loader2 className="h-8 w-8 animate-spin text-white" />
       </div>
     );
   }
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center gap-4">
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={() => router.push("/admin/events")}
-        >
-          <ArrowLeft className="h-4 w-4" />
-        </Button>
-        <h1 className="text-3xl font-bold">Edit Events</h1>
-      </div>
+    <div className="min-h-screen bg-black text-white p-4 md:p-8 pt-24 md:pt-28">
+      <div className="max-w-5xl mx-auto space-y-6">
+        <div className="flex items-center gap-4">
+          <CxCButton
+            variant="ghost"
+            size="icon"
+            onClick={() => router.push("/admin/events")}
+            className="!bg-transparent !border-none !text-white hover:!bg-white/10"
+          >
+            <ArrowLeft className="h-4 w-4" />
+          </CxCButton>
+          <h1 className="text-3xl font-bold text-white">Edit Events</h1>
+        </div>
 
-      {error && (
-        <Card className="border-destructive">
-          <CardContent className="pt-6">
-            <p className="text-destructive text-sm">{error}</p>
-          </CardContent>
-        </Card>
-      )}
+        {error && (
+          <Card className="bg-black border-red-500/30 rounded-none">
+            <CardContent>
+              <p className="text-red-500 text-sm">{error}</p>
+            </CardContent>
+          </Card>
+        )}
 
-      {success && (
-        <Card className="border-green-500">
-          <CardContent className="pt-6">
-            <p className="text-green-500 text-sm">{success}</p>
-          </CardContent>
-        </Card>
-      )}
+        {success && (
+          <Card className="bg-black border-green-500/30 rounded-none">
+            <CardContent>
+              <p className="text-green-500 text-sm">{success}</p>
+            </CardContent>
+          </Card>
+        )}
 
-      {events.length === 0 ? (
-        <Card>
-          <CardContent className="pt-6">
-            <p className="text-muted-foreground">
-              No events available. Create your first event to get started.
-            </p>
-          </CardContent>
-        </Card>
-      ) : (
-        <div className="space-y-4">
-          {events.map((event) => (
-            <Card key={event.id}>
-              <CardContent className="pt-6">
-                {editingId === event.id ? (
-                  <div className="space-y-4">
-                    {/* Event Name */}
-                    <div>
-                      <label className="text-sm font-medium mb-2 block">
-                        Event Name *
-                      </label>
-                      <Input
-                        value={editForm.name || ""}
-                        onChange={(e) =>
-                          setEditForm({ ...editForm, name: e.target.value })
-                        }
-                        required
-                        placeholder="Enter event name"
-                      />
+        {events.length === 0 ? (
+          <Card className="bg-black border-white/20 rounded-none">
+            <CardContent>
+              <p className="text-white/60">
+                No events available. Create your first event to get started.
+              </p>
+            </CardContent>
+          </Card>
+        ) : (
+          <div className="space-y-4">
+            {events.map((event) => (
+              <Card
+                key={event.id}
+                className="bg-black border-white/20 rounded-none"
+              >
+                <CardContent>
+                  {editingId === event.id ? (
+                    <div className="space-y-4">
+                      {/* Event Name */}
+                      <div>
+                        <label className="text-sm font-medium mb-2 block text-white">
+                          Event Name *
+                        </label>
+                        <Input
+                          value={editForm.name || ""}
+                          onChange={(e) =>
+                            setEditForm({ ...editForm, name: e.target.value })
+                          }
+                          required
+                          placeholder="Enter event name"
+                          className="bg-black border-white/10 text-white rounded-none"
+                        />
+                      </div>
+
+                      {/* Description */}
+                      <div>
+                        <label className="text-sm font-medium mb-2 block text-white">
+                          Description
+                        </label>
+                        <Textarea
+                          value={editForm.description || ""}
+                          onChange={(e) =>
+                            setEditForm({
+                              ...editForm,
+                              description: e.target.value,
+                            })
+                          }
+                          placeholder="Enter event description"
+                          rows={4}
+                          className="bg-black border-white/10 text-white rounded-none resize-none"
+                        />
+                      </div>
+
+                      {/* Location */}
+                      <div>
+                        <label className="text-sm font-medium mb-2 block text-white">
+                          Location
+                        </label>
+                        <Input
+                          value={editForm.location || ""}
+                          onChange={(e) =>
+                            setEditForm({
+                              ...editForm,
+                              location: e.target.value,
+                            })
+                          }
+                          placeholder="Enter event location"
+                          className="bg-black border-white/10 text-white rounded-none"
+                        />
+                      </div>
+
+                      {/* Start Time */}
+                      <div>
+                        <label className="text-sm font-medium mb-2 block text-white">
+                          Start Time *
+                        </label>
+                        <Input
+                          type="datetime-local"
+                          value={editForm.start_time || ""}
+                          onChange={(e) =>
+                            setEditForm({
+                              ...editForm,
+                              start_time: e.target.value,
+                            })
+                          }
+                          required
+                          className="bg-black border-white/10 text-white rounded-none"
+                        />
+                      </div>
+
+                      {/* Buffered Start Time */}
+                      <div>
+                        <label className="text-sm font-medium mb-2 block text-white">
+                          Buffered Start Time
+                        </label>
+                        <Input
+                          type="datetime-local"
+                          value={editForm.buffered_start_time || ""}
+                          onChange={(e) =>
+                            setEditForm({
+                              ...editForm,
+                              buffered_start_time: e.target.value,
+                            })
+                          }
+                          className="bg-black border-white/10 text-white rounded-none"
+                        />
+                      </div>
+
+                      {/* End Time */}
+                      <div>
+                        <label className="text-sm font-medium mb-2 block text-white">
+                          End Time *
+                        </label>
+                        <Input
+                          type="datetime-local"
+                          value={editForm.end_time || ""}
+                          onChange={(e) =>
+                            setEditForm({
+                              ...editForm,
+                              end_time: e.target.value,
+                            })
+                          }
+                          required
+                          className="bg-black border-white/10 text-white rounded-none"
+                        />
+                      </div>
+
+                      {/* Buffered End Time */}
+                      <div>
+                        <label className="text-sm font-medium mb-2 block text-white">
+                          Buffered End Time
+                        </label>
+                        <Input
+                          type="datetime-local"
+                          value={editForm.buffered_end_time || ""}
+                          onChange={(e) =>
+                            setEditForm({
+                              ...editForm,
+                              buffered_end_time: e.target.value,
+                            })
+                          }
+                          className="bg-black border-white/10 text-white rounded-none"
+                        />
+                      </div>
+
+                      {/* Registration Required */}
+                      <div className="flex items-center gap-2">
+                        <Checkbox
+                          id={`reg_${event.id}`}
+                          checked={editForm.registration_required || false}
+                          onCheckedChange={(checked) =>
+                            setEditForm({
+                              ...editForm,
+                              registration_required: checked === true,
+                            })
+                          }
+                          className="border-white/20"
+                        />
+                        <label
+                          htmlFor={`reg_${event.id}`}
+                          className="text-sm text-white"
+                        >
+                          Registration Required
+                        </label>
+                      </div>
+
+                      {/* Payment Required */}
+                      <div className="flex items-center gap-2">
+                        <Checkbox
+                          id={`pay_${event.id}`}
+                          checked={editForm.payment_required || false}
+                          onCheckedChange={(checked) =>
+                            setEditForm({
+                              ...editForm,
+                              payment_required: checked === true,
+                            })
+                          }
+                          className="border-white/20"
+                        />
+                        <label
+                          htmlFor={`pay_${event.id}`}
+                          className="text-sm text-white"
+                        >
+                          Payment Required
+                        </label>
+                      </div>
+
+                      {/* Action Buttons */}
+                      <div className="flex gap-2">
+                        <CxCButton
+                          variant="outline"
+                          onClick={handleCancel}
+                          disabled={saving === event.id}
+                          className="flex-1 !bg-transparent !border-white/20 !text-white hover:!bg-white/10"
+                        >
+                          <X className="mr-2 h-4 w-4" />
+                          Cancel
+                        </CxCButton>
+                        <CxCButton
+                          onClick={() => handleSave(event.id)}
+                          disabled={saving === event.id}
+                          className="flex-1"
+                        >
+                          {saving === event.id ? (
+                            <>
+                              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                              Saving...
+                            </>
+                          ) : (
+                            <>
+                              <Save className="mr-2 h-4 w-4" />
+                              Save
+                            </>
+                          )}
+                        </CxCButton>
+                      </div>
                     </div>
-
-                    {/* Description */}
-                    <div>
-                      <label className="text-sm font-medium mb-2 block">
-                        Description
-                      </label>
-                      <textarea
-                        value={editForm.description || ""}
-                        onChange={(e) =>
-                          setEditForm({
-                            ...editForm,
-                            description: e.target.value,
-                          })
-                        }
-                        placeholder="Enter event description"
-                        rows={4}
-                        className="w-full p-3 border rounded-md bg-background resize-none"
-                      />
-                    </div>
-
-                    {/* Location */}
-                    <div>
-                      <label className="text-sm font-medium mb-2 block">
-                        Location
-                      </label>
-                      <Input
-                        value={editForm.location || ""}
-                        onChange={(e) =>
-                          setEditForm({ ...editForm, location: e.target.value })
-                        }
-                        placeholder="Enter event location"
-                      />
-                    </div>
-
-                    {/* Start Time */}
-                    <div>
-                      <label className="text-sm font-medium mb-2 block">
-                        Start Time *
-                      </label>
-                      <Input
-                        type="datetime-local"
-                        value={editForm.start_time || ""}
-                        onChange={(e) =>
-                          setEditForm({
-                            ...editForm,
-                            start_time: e.target.value,
-                          })
-                        }
-                        required
-                      />
-                    </div>
-
-                    {/* Buffered Start Time */}
-                    <div>
-                      <label className="text-sm font-medium mb-2 block">
-                        Buffered Start Time
-                      </label>
-                      <Input
-                        type="datetime-local"
-                        value={editForm.buffered_start_time || ""}
-                        onChange={(e) =>
-                          setEditForm({
-                            ...editForm,
-                            buffered_start_time: e.target.value,
-                          })
-                        }
-                      />
-                    </div>
-
-                    {/* End Time */}
-                    <div>
-                      <label className="text-sm font-medium mb-2 block">
-                        End Time *
-                      </label>
-                      <Input
-                        type="datetime-local"
-                        value={editForm.end_time || ""}
-                        onChange={(e) =>
-                          setEditForm({
-                            ...editForm,
-                            end_time: e.target.value,
-                          })
-                        }
-                        required
-                      />
-                    </div>
-
-                    {/* Buffered End Time */}
-                    <div>
-                      <label className="text-sm font-medium mb-2 block">
-                        Buffered End Time
-                      </label>
-                      <Input
-                        type="datetime-local"
-                        value={editForm.buffered_end_time || ""}
-                        onChange={(e) =>
-                          setEditForm({
-                            ...editForm,
-                            buffered_end_time: e.target.value,
-                          })
-                        }
-                      />
-                    </div>
-
-                    {/* Registration Required */}
-                    <div className="flex items-center gap-2">
-                      <input
-                        type="checkbox"
-                        id={`reg_${event.id}`}
-                        checked={editForm.registration_required || false}
-                        onChange={(e) =>
-                          setEditForm({
-                            ...editForm,
-                            registration_required: e.target.checked,
-                          })
-                        }
-                        className="h-4 w-4"
-                      />
-                      <label htmlFor={`reg_${event.id}`} className="text-sm">
-                        Registration Required
-                      </label>
-                    </div>
-
-                    {/* Payment Required */}
-                    <div className="flex items-center gap-2">
-                      <input
-                        type="checkbox"
-                        id={`pay_${event.id}`}
-                        checked={editForm.payment_required || false}
-                        onChange={(e) =>
-                          setEditForm({
-                            ...editForm,
-                            payment_required: e.target.checked,
-                          })
-                        }
-                        className="h-4 w-4"
-                      />
-                      <label htmlFor={`pay_${event.id}`} className="text-sm">
-                        Payment Required
-                      </label>
-                    </div>
-
-                    {/* Action Buttons */}
-                    <div className="flex gap-2">
-                      <Button
-                        variant="outline"
-                        onClick={handleCancel}
-                        disabled={saving === event.id}
-                        className="flex-1"
-                      >
-                        <X className="mr-2 h-4 w-4" />
-                        Cancel
-                      </Button>
-                      <Button
-                        onClick={() => handleSave(event.id)}
-                        disabled={saving === event.id}
-                        className="flex-1"
-                      >
-                        {saving === event.id ? (
-                          <>
-                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                            Saving...
-                          </>
-                        ) : (
-                          <>
-                            <Save className="mr-2 h-4 w-4" />
-                            Save
-                          </>
-                        )}
-                      </Button>
-                    </div>
-                  </div>
-                ) : (
-                  <div className="space-y-4">
-                    <div className="flex justify-between items-start">
-                      <div className="flex-1">
-                        <h3 className="font-semibold text-lg">{event.name}</h3>
-                        {event.description && (
-                          <p className="text-sm text-muted-foreground mt-1">
-                            {event.description}
-                          </p>
-                        )}
-                        <div className="mt-2 text-sm text-muted-foreground space-y-1">
-                          <p>
-                            Start: {new Date(event.start_time).toLocaleString()}
-                          </p>
-                          <p>
-                            End: {new Date(event.end_time).toLocaleString()}
-                          </p>
-                          {event.location && <p>Location: {event.location}</p>}
+                  ) : (
+                    <div className="space-y-4">
+                      <div className="flex justify-between items-start">
+                        <div className="flex-1">
+                          <h3 className="font-semibold text-lg text-white">
+                            {event.name}
+                          </h3>
+                          {event.description && (
+                            <p className="text-sm text-white/60 mt-1">
+                              {event.description}
+                            </p>
+                          )}
+                          <div className="mt-2 text-sm text-white/60 space-y-1">
+                            <p>
+                              Start:{" "}
+                              {new Date(event.start_time).toLocaleString()}
+                            </p>
+                            <p>
+                              End: {new Date(event.end_time).toLocaleString()}
+                            </p>
+                            {event.location && (
+                              <p>Location: {event.location}</p>
+                            )}
+                          </div>
+                        </div>
+                        <div className="flex gap-2">
+                          {event.registration_required && (
+                            <span className="px-2 py-1 text-xs bg-blue-500/10 text-blue-500 rounded-none border border-blue-500/20">
+                              Registration Required
+                            </span>
+                          )}
+                          {event.payment_required && (
+                            <span className="px-2 py-1 text-xs bg-green-500/10 text-green-500 rounded-none border border-green-500/20">
+                              Payment Required
+                            </span>
+                          )}
                         </div>
                       </div>
-                      <div className="flex gap-2">
-                        {event.registration_required && (
-                          <span className="px-2 py-1 text-xs bg-blue-500/10 text-blue-500 rounded">
-                            Registration Required
-                          </span>
-                        )}
-                        {event.payment_required && (
-                          <span className="px-2 py-1 text-xs bg-green-500/10 text-green-500 rounded">
-                            Payment Required
-                          </span>
-                        )}
-                      </div>
+                      <CxCButton
+                        onClick={() => handleEdit(event)}
+                        className="w-full"
+                      >
+                        Edit Event
+                      </CxCButton>
                     </div>
-                    <Button
-                      onClick={() => handleEdit(event)}
-                      variant="outline"
-                      className="w-full"
-                    >
-                      Edit Event
-                    </Button>
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-      )}
+                  )}
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   );
 }

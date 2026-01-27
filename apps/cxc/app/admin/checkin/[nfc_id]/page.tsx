@@ -2,8 +2,19 @@
 
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { Card, CardHeader, CardTitle, CardContent, Button } from "@uwdsc/ui";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardContent,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@uwdsc/ui";
 import { CheckCircle2, XCircle, Loader2 } from "lucide-react";
+import CxCButton from "@/components/CxCButton";
 
 interface CheckInResponse {
   success: boolean;
@@ -194,116 +205,137 @@ export default function AdminCheckInPage() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-[60vh]">
-        <Loader2 className="h-8 w-8 animate-spin" />
+      <div className="flex items-center justify-center min-h-screen">
+        <Loader2 className="h-8 w-8 animate-spin text-white" />
       </div>
     );
   }
 
   return (
-    <div className="max-w-2xl mx-auto space-y-6">
-      <Card>
-        <CardHeader>
-          <CardTitle>NFC Check-In</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-6">
-          {/* NFC ID Display */}
-          <div>
-            <label className="text-sm font-medium mb-2 block">NFC ID</label>
-            <div className="p-3 bg-muted rounded-md font-mono text-sm break-all">
-              {typeof window !== "undefined"
-                ? `${window.location.origin}/admin/checkin/${nfcId}`
-                : `/admin/checkin/${nfcId}`}
-            </div>
-          </div>
-
-          {/* Profile Info */}
-          {profile && (
+    <div className="flex items-center justify-center min-h-screen">
+      <div className="w-full max-w-2xl">
+        <Card className="bg-black border-white/35 rounded-none">
+          <CardHeader>
+            <CardTitle className="text-white">NFC Check-In</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            {/* NFC ID Display */}
             <div>
-              <label className="text-sm font-medium mb-2 block">User</label>
-              <div className="p-3 bg-muted rounded-md">
-                {profile.email ? (
-                  <>Email: {profile.email}</>
-                ) : (
-                  <>Loading email...</>
-                )}
+              <label className="text-sm font-medium mb-2 block text-white">
+                NFC ID
+              </label>
+              <div className="p-3 bg-white/5 border border-white/10 rounded-none font-mono text-sm break-all text-white/80">
+                {typeof window !== "undefined"
+                  ? `${window.location.origin}/admin/checkin/${nfcId}`
+                  : `/admin/checkin/${nfcId}`}
               </div>
             </div>
-          )}
 
-          {/* Event Selection */}
-          <div>
-            <label className="text-sm font-medium mb-2 block">
-              Select Event
-            </label>
-            <select
-              value={selectedEventId || ""}
-              onChange={(e) => {
-                const eventId = e.target.value;
-                setSelectedEventId(eventId);
-                // Cache selected event in localStorage
-                localStorage.setItem("admin_selected_event_id", eventId);
-              }}
-              className="w-full p-3 border rounded-md bg-background"
-              disabled={checkingIn}
-            >
-              {events.length === 0 ? (
-                <option value="">No events available</option>
-              ) : (
-                events.map((event) => (
-                  <option key={event.id} value={event.id}>
-                    {event.name} -{" "}
-                    {new Date(event.start_time).toLocaleDateString()}
-                  </option>
-                ))
-              )}
-            </select>
-          </div>
-
-          {/* Check In Button */}
-          <Button
-            onClick={handleCheckIn}
-            disabled={!selectedEventId || checkingIn || !profile}
-            className="w-full"
-          >
-            {checkingIn ? (
-              <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Checking In...
-              </>
-            ) : (
-              "Check In"
+            {/* Profile Info */}
+            {profile && (
+              <div>
+                <label className="text-sm font-medium mb-2 block text-white">
+                  User
+                </label>
+                <div className="p-3 bg-white/5 border border-white/10 rounded-none text-white/80">
+                  {profile.email ? (
+                    <>Email: {profile.email}</>
+                  ) : (
+                    <>Loading email...</>
+                  )}
+                </div>
+              </div>
             )}
-          </Button>
 
-          {/* Result Message */}
-          {checkInResult && (
-            <div
-              className={`p-4 rounded-md flex items-center gap-2 ${
-                checkInResult.success
-                  ? "bg-green-500/10 text-green-500 border border-green-500/20"
-                  : "bg-red-500/10 text-red-500 border border-red-500/20"
-              }`}
-            >
-              {checkInResult.success ? (
-                <CheckCircle2 className="h-5 w-5" />
-              ) : (
-                <XCircle className="h-5 w-5" />
-              )}
-              <span>{checkInResult.message}</span>
+            {/* Event Selection */}
+            <div>
+              <label className="text-sm font-medium mb-2 block text-purple-400">
+                Select Event
+              </label>
+              <Select
+                value={selectedEventId || ""}
+                onValueChange={(eventId) => {
+                  setSelectedEventId(eventId);
+                  // Cache selected event in localStorage
+                  localStorage.setItem("admin_selected_event_id", eventId);
+                }}
+                disabled={checkingIn}
+              >
+                <SelectTrigger className="w-full border-purple-500/30 rounded-none bg-black text-purple-100 hover:bg-purple-500/10 !h-auto p-3">
+                  <SelectValue
+                    placeholder={
+                      events.length === 0
+                        ? "No events available"
+                        : "Select an event"
+                    }
+                  />
+                </SelectTrigger>
+                <SelectContent className="bg-black border-purple-500/30 rounded-none text-purple-100">
+                  {events.length === 0 ? (
+                    <div className="p-4 text-center text-white/60 text-sm">
+                      No events available
+                    </div>
+                  ) : (
+                    events.map((event) => (
+                      <SelectItem
+                        key={event.id}
+                        value={String(event.id)}
+                        className="focus:bg-purple-500/20 focus:text-purple-100 rounded-none !h-auto p-3"
+                      >
+                        {event.name} -{" "}
+                        {new Date(event.start_time).toLocaleDateString()}
+                      </SelectItem>
+                    ))
+                  )}
+                </SelectContent>
+              </Select>
             </div>
-          )}
 
-          {/* Back Button */}
-          <Button
-            variant="outline"
-            onClick={() => router.push("/admin/events")}
-            className="w-full"
-          >
-            Back to Events
-          </Button>
-        </CardContent>
-      </Card>
+            {/* Check In Button */}
+            <CxCButton
+              onClick={handleCheckIn}
+              disabled={!selectedEventId || checkingIn || !profile}
+              className="w-full p-3"
+            >
+              {checkingIn ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Checking In...
+                </>
+              ) : (
+                "Check In"
+              )}
+            </CxCButton>
+
+            {/* Result Message */}
+            {checkInResult && (
+              <div
+                className={`p-4 rounded-none flex items-center gap-2 ${
+                  checkInResult.success
+                    ? "bg-green-500/10 text-green-500 border border-green-500/20"
+                    : "bg-red-500/10 text-red-500 border border-red-500/20"
+                }`}
+              >
+                {checkInResult.success ? (
+                  <CheckCircle2 className="h-5 w-5" />
+                ) : (
+                  <XCircle className="h-5 w-5" />
+                )}
+                <span>{checkInResult.message}</span>
+              </div>
+            )}
+
+            {/* Back Button */}
+            <CxCButton
+              variant="outline"
+              onClick={() => router.push("/admin/events")}
+              className="w-full !bg-purple-500/10 !border-purple-500/40 !text-purple-300 hover:!bg-purple-500/20 hover:!border-purple-500/60 p-3"
+            >
+              Back to Events
+            </CxCButton>
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 }

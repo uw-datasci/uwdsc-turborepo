@@ -7,10 +7,12 @@ import {
   CardHeader,
   CardTitle,
   CardContent,
-  Button,
   Input,
+  Textarea,
+  Checkbox,
 } from "@uwdsc/ui";
 import { Loader2, ArrowLeft } from "lucide-react";
+import CxCButton from "@/components/CxCButton";
 
 export default function AddEventPage() {
   const router = useRouter();
@@ -111,207 +113,222 @@ export default function AddEventPage() {
   };
 
   return (
-    <div className="max-w-2xl mx-auto space-y-6">
-      <div className="flex items-center gap-4">
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={() => router.push("/admin/events")}
-        >
-          <ArrowLeft className="h-4 w-4" />
-        </Button>
-        <h1 className="text-3xl font-bold">Add New Event</h1>
+    <div className="min-h-screen bg-black text-white p-4 md:p-8 pt-24 md:pt-28">
+      <div className="max-w-2xl mx-auto space-y-6">
+        <div className="flex items-center gap-4">
+          <CxCButton
+            variant="ghost"
+            size="icon"
+            onClick={() => router.push("/admin/events")}
+            className="!bg-transparent !border-none !text-white hover:!bg-white/10"
+          >
+            <ArrowLeft className="h-4 w-4" />
+          </CxCButton>
+          <h1 className="text-3xl font-bold text-white">Add New Event</h1>
+        </div>
+
+        <Card className="bg-black border-white/20 rounded-none">
+          <CardHeader>
+            <CardTitle className="text-white">Event Details</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <form onSubmit={handleSubmit} className="space-y-6">
+              {/* Event Name */}
+              <div>
+                <label className="text-sm font-medium mb-2 block text-white">
+                  Event Name *
+                </label>
+                <Input
+                  value={formData.name}
+                  onChange={(e) =>
+                    setFormData({ ...formData, name: e.target.value })
+                  }
+                  required
+                  placeholder="Enter event name"
+                  className="bg-black border-white/10 text-white rounded-none"
+                />
+              </div>
+
+              {/* Description */}
+              <div>
+                <label className="text-sm font-medium mb-2 block text-white">
+                  Description
+                </label>
+                <Textarea
+                  value={formData.description}
+                  onChange={(e) =>
+                    setFormData({ ...formData, description: e.target.value })
+                  }
+                  placeholder="Enter event description"
+                  rows={4}
+                  className="bg-black border-white/10 text-white rounded-none resize-none"
+                />
+              </div>
+
+              {/* Location */}
+              <div>
+                <label className="text-sm font-medium mb-2 block text-white">
+                  Location
+                </label>
+                <Input
+                  value={formData.location}
+                  onChange={(e) =>
+                    setFormData({ ...formData, location: e.target.value })
+                  }
+                  placeholder="Enter event location"
+                  className="bg-black border-white/10 text-white rounded-none"
+                />
+              </div>
+
+              {/* Start Time */}
+              <div>
+                <label className="text-sm font-medium mb-2 block text-white">
+                  Start Time *
+                </label>
+                <Input
+                  type="datetime-local"
+                  value={formData.start_time}
+                  onChange={(e) =>
+                    setFormData({ ...formData, start_time: e.target.value })
+                  }
+                  required
+                  className="bg-black border-white/10 text-white rounded-none"
+                />
+              </div>
+
+              {/* Buffered Start Time */}
+              <div>
+                <label className="text-sm font-medium mb-2 block text-white">
+                  Buffered Start Time (optional, defaults to 30 min before)
+                </label>
+                <Input
+                  type="datetime-local"
+                  value={formData.buffered_start_time}
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      buffered_start_time: e.target.value,
+                    })
+                  }
+                  className="bg-black border-white/10 text-white rounded-none"
+                />
+              </div>
+
+              {/* End Time */}
+              <div>
+                <label className="text-sm font-medium mb-2 block text-white">
+                  End Time *
+                </label>
+                <Input
+                  type="datetime-local"
+                  value={formData.end_time}
+                  onChange={(e) =>
+                    setFormData({ ...formData, end_time: e.target.value })
+                  }
+                  required
+                  className="bg-black border-white/10 text-white rounded-none"
+                />
+              </div>
+
+              {/* Buffered End Time */}
+              <div>
+                <label className="text-sm font-medium mb-2 block text-white">
+                  Buffered End Time (optional, defaults to 30 min after)
+                </label>
+                <Input
+                  type="datetime-local"
+                  value={formData.buffered_end_time}
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      buffered_end_time: e.target.value,
+                    })
+                  }
+                  className="bg-black border-white/10 text-white rounded-none"
+                />
+              </div>
+
+              {/* Registration Required */}
+              <div className="flex items-center gap-2">
+                <Checkbox
+                  id="registration_required"
+                  checked={formData.registration_required}
+                  onCheckedChange={(checked) =>
+                    setFormData({
+                      ...formData,
+                      registration_required: checked === true,
+                    })
+                  }
+                  className="border-white/20"
+                />
+                <label
+                  htmlFor="registration_required"
+                  className="text-sm text-white"
+                >
+                  Registration Required
+                </label>
+              </div>
+
+              {/* Payment Required */}
+              <div className="flex items-center gap-2">
+                <Checkbox
+                  id="payment_required"
+                  checked={formData.payment_required}
+                  onCheckedChange={(checked) =>
+                    setFormData({
+                      ...formData,
+                      payment_required: checked === true,
+                    })
+                  }
+                  className="border-white/20"
+                />
+                <label
+                  htmlFor="payment_required"
+                  className="text-sm text-white"
+                >
+                  Payment Required
+                </label>
+              </div>
+
+              {/* Error Message */}
+              {error && (
+                <div className="p-4 rounded-none bg-red-500/10 text-red-500 border border-red-500/20">
+                  {error}
+                </div>
+              )}
+
+              {/* Success Message */}
+              {success && (
+                <div className="p-4 rounded-none bg-green-500/10 text-green-500 border border-green-500/20">
+                  Event created successfully! Redirecting...
+                </div>
+              )}
+
+              {/* Submit Button */}
+              <div className="flex gap-4">
+                <CxCButton
+                  type="button"
+                  variant="outline"
+                  onClick={() => router.push("/admin/events")}
+                  className="flex-1 !bg-transparent !border-white/20 !text-white hover:!bg-white/10"
+                >
+                  Cancel
+                </CxCButton>
+                <CxCButton type="submit" disabled={loading} className="flex-1">
+                  {loading ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Creating...
+                    </>
+                  ) : (
+                    "Create Event"
+                  )}
+                </CxCButton>
+              </div>
+            </form>
+          </CardContent>
+        </Card>
       </div>
-
-      <Card>
-        <CardHeader>
-          <CardTitle>Event Details</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-6">
-            {/* Event Name */}
-            <div>
-              <label className="text-sm font-medium mb-2 block">
-                Event Name *
-              </label>
-              <Input
-                value={formData.name}
-                onChange={(e) =>
-                  setFormData({ ...formData, name: e.target.value })
-                }
-                required
-                placeholder="Enter event name"
-              />
-            </div>
-
-            {/* Description */}
-            <div>
-              <label className="text-sm font-medium mb-2 block">
-                Description
-              </label>
-              <textarea
-                value={formData.description}
-                onChange={(e) =>
-                  setFormData({ ...formData, description: e.target.value })
-                }
-                placeholder="Enter event description"
-                rows={4}
-                className="w-full p-3 border rounded-md bg-background resize-none"
-              />
-            </div>
-
-            {/* Location */}
-            <div>
-              <label className="text-sm font-medium mb-2 block">Location</label>
-              <Input
-                value={formData.location}
-                onChange={(e) =>
-                  setFormData({ ...formData, location: e.target.value })
-                }
-                placeholder="Enter event location"
-              />
-            </div>
-
-            {/* Start Time */}
-            <div>
-              <label className="text-sm font-medium mb-2 block">
-                Start Time *
-              </label>
-              <Input
-                type="datetime-local"
-                value={formData.start_time}
-                onChange={(e) =>
-                  setFormData({ ...formData, start_time: e.target.value })
-                }
-                required
-              />
-            </div>
-
-            {/* Buffered Start Time */}
-            <div>
-              <label className="text-sm font-medium mb-2 block">
-                Buffered Start Time (optional, defaults to 30 min before)
-              </label>
-              <Input
-                type="datetime-local"
-                value={formData.buffered_start_time}
-                onChange={(e) =>
-                  setFormData({
-                    ...formData,
-                    buffered_start_time: e.target.value,
-                  })
-                }
-              />
-            </div>
-
-            {/* End Time */}
-            <div>
-              <label className="text-sm font-medium mb-2 block">
-                End Time *
-              </label>
-              <Input
-                type="datetime-local"
-                value={formData.end_time}
-                onChange={(e) =>
-                  setFormData({ ...formData, end_time: e.target.value })
-                }
-                required
-              />
-            </div>
-
-            {/* Buffered End Time */}
-            <div>
-              <label className="text-sm font-medium mb-2 block">
-                Buffered End Time (optional, defaults to 30 min after)
-              </label>
-              <Input
-                type="datetime-local"
-                value={formData.buffered_end_time}
-                onChange={(e) =>
-                  setFormData({
-                    ...formData,
-                    buffered_end_time: e.target.value,
-                  })
-                }
-              />
-            </div>
-
-            {/* Registration Required */}
-            <div className="flex items-center gap-2">
-              <input
-                type="checkbox"
-                id="registration_required"
-                checked={formData.registration_required}
-                onChange={(e) =>
-                  setFormData({
-                    ...formData,
-                    registration_required: e.target.checked,
-                  })
-                }
-                className="h-4 w-4"
-              />
-              <label htmlFor="registration_required" className="text-sm">
-                Registration Required
-              </label>
-            </div>
-
-            {/* Payment Required */}
-            <div className="flex items-center gap-2">
-              <input
-                type="checkbox"
-                id="payment_required"
-                checked={formData.payment_required}
-                onChange={(e) =>
-                  setFormData({
-                    ...formData,
-                    payment_required: e.target.checked,
-                  })
-                }
-                className="h-4 w-4"
-              />
-              <label htmlFor="payment_required" className="text-sm">
-                Payment Required
-              </label>
-            </div>
-
-            {/* Error Message */}
-            {error && (
-              <div className="p-4 rounded-md bg-red-500/10 text-red-500 border border-red-500/20">
-                {error}
-              </div>
-            )}
-
-            {/* Success Message */}
-            {success && (
-              <div className="p-4 rounded-md bg-green-500/10 text-green-500 border border-green-500/20">
-                Event created successfully! Redirecting...
-              </div>
-            )}
-
-            {/* Submit Button */}
-            <div className="flex gap-4">
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => router.push("/admin/events")}
-                className="flex-1"
-              >
-                Cancel
-              </Button>
-              <Button type="submit" disabled={loading} className="flex-1">
-                {loading ? (
-                  <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Creating...
-                  </>
-                ) : (
-                  "Create Event"
-                )}
-              </Button>
-            </div>
-          </form>
-        </CardContent>
-      </Card>
     </div>
   );
 }
