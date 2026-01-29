@@ -13,12 +13,13 @@ const profileService = new ProfileService();
  */
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: { id: string } },
+  { params }: { params: Promise<{ id: string }> },
 ) {
   try {
     // Verify admin access
     const authService = await createAuthService();
     const { user, error: userError } = await authService.getCurrentUser();
+    const { id } = await params;
 
     if (userError || !user) {
       return NextResponse.json(
@@ -36,10 +37,11 @@ export async function PATCH(
       );
     }
 
-    const eventId = Number(params.id);
+    const eventId = Number(id);
     if (isNaN(eventId)) {
+      console.error(id);
       return NextResponse.json(
-        { error: "Bad Request", message: "Invalid event ID" },
+        { error: "Bad Request", message: "Invalid event ID: " + id },
         { status: 400 },
       );
     }
