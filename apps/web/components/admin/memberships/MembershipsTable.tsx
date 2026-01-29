@@ -1,0 +1,291 @@
+"use client";
+
+import * as React from "react";
+import {
+  flexRender,
+  getCoreRowModel,
+  getFilteredRowModel,
+  getPaginationRowModel,
+  getSortedRowModel,
+  useReactTable,
+  type ColumnFiltersState,
+  type SortingState,
+} from "@tanstack/react-table";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+  Card,
+  Button,
+  Input,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@uwdsc/ui";
+import {
+  ChevronLeft,
+  ChevronRight,
+  ChevronsLeft,
+  ChevronsRight,
+  Download,
+} from "lucide-react";
+import type { MemberProfile } from "@/types/api";
+import { exportToCsv } from "@/lib/utils/csv";
+import {
+  membershipColumns,
+  type MembershipActionType,
+} from "./membershipColumns";
+import { EditMemberModal, MarkAsPaidModal, DeleteMemberModal } from "./modals";
+
+interface MembershipsTableProps {
+  readonly profiles: MemberProfile[];
+}
+
+const MEMBERSHIP_CSV_HEADERS = [
+  "name",
+  "email",
+  "wat_iam",
+  "user_status",
+  "has_paid",
+  "is_math_soc_member",
+  "faculty",
+  "term",
+] as const;
+
+function getMembershipCsvValue(row: MemberProfile, key: string): unknown {
+  if (key === "name") {
+    const first = row.first_name ?? "";
+    const last = row.last_name ?? "";
+    return [first, last].filter(Boolean).join(" ");
+  }
+  return row[key as keyof MemberProfile];
+}
+
+export function MembershipsTable({ profiles }: MembershipsTableProps) {
+  const [sorting, setSorting] = React.useState<SortingState>([]);
+  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
+    [],
+  );
+  const [actionModal, setActionModal] = React.useState<{
+    type: MembershipActionType;
+    member: MemberProfile;
+  } | null>(null);
+
+  const table = useReactTable({
+    data: profiles,
+    columns: membershipColumns,
+    onSortingChange: setSorting,
+    onColumnFiltersChange: setColumnFilters,
+    getCoreRowModel: getCoreRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
+    state: { sorting, columnFilters },
+    initialState: { pagination: { pageSize: 20 } },
+    meta: { onAction: (type, member) => setActionModal({ type, member }) },
+  });
+
+  const onExportCsv = React.useCallback(() => {
+    const data = table.getFilteredRowModel().rows.map((row) => row.original);
+    exportToCsv(
+      data,
+      { headers: [...MEMBERSHIP_CSV_HEADERS], getValue: getMembershipCsvValue },
+      `memberships-${new Date().toISOString().split("T")[0]}`,
+    );
+  }, [table]);
+
+  const renderActionModal = () => {
+    if (!actionModal) return null;
+    const { type, member } = actionModal;
+    const onClose = () => setActionModal(null);
+    switch (type) {
+      case "edit":
+        return (
+          <EditMemberModal
+            open
+            onOpenChange={(open) => !open && onClose()}
+            member={member}
+          />
+        );
+      case "markPaid":
+        return (
+          <MarkAsPaidModal
+            open
+            onOpenChange={(open) => !open && onClose()}
+            member={member}
+          />
+        );
+      case "delete":
+        return (
+          <DeleteMemberModal
+            open
+            onOpenChange={(open) => !open && onClose()}
+            member={member}
+          />
+        );
+      default:
+        return null;
+    }
+  };
+
+  return (
+    <>
+      {renderActionModal()}
+
+      <Card className="p-6">
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-6">
+          <div>
+            <h2 className="text-xl font-semibold">All Members</h2>
+            <p className="text-sm text-muted-foreground mt-1">
+              {table.getFilteredRowModel().rows.length} total member
+              {table.getFilteredRowModel().rows.length === 1 ? "" : "s"}
+            </p>
+          </div>
+          <div className="flex flex-col sm:flex-row gap-2 sm:items-center">
+            <Input
+              placeholder="Filter by email..."
+              value={
+                (table.getColumn("email")?.getFilterValue() as string) ?? ""
+              }
+              onChange={(e) =>
+                table.getColumn("email")?.setFilterValue(e.target.value)
+              }
+              className="max-w-sm h-9"
+            />
+            <Button onClick={onExportCsv} variant="outline" size="sm">
+              <Download className="mr-2 h-4 w-4" />
+              Export CSV
+            </Button>
+          </div>
+        </div>
+
+        <div className="rounded-lg overflow-x-auto border">
+          <Table className="min-w-[640px]">
+            <TableHeader>
+              {table.getHeaderGroups().map((headerGroup) => (
+                <TableRow key={headerGroup.id}>
+                  {headerGroup.headers.map((header) => (
+                    <TableHead key={header.id}>
+                      {header.isPlaceholder
+                        ? null
+                        : flexRender(
+                            header.column.columnDef.header,
+                            header.getContext(),
+                          )}
+                    </TableHead>
+                  ))}
+                </TableRow>
+              ))}
+            </TableHeader>
+            <TableBody>
+              {table.getRowModel().rows?.length ? (
+                table.getRowModel().rows.map((row) => (
+                  <TableRow key={row.id}>
+                    {row.getVisibleCells().map((cell) => (
+                      <TableCell key={cell.id}>
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext(),
+                        )}
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell
+                    colSpan={membershipColumns.length}
+                    className="h-24 text-center"
+                  >
+                    No members found.
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </div>
+
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mt-4 px-1">
+          <p className="text-xs text-muted-foreground">
+            Use the filter above to search. Click column headers to sort.
+          </p>
+          <div className="flex flex-col sm:flex-row sm:items-center gap-4">
+            <div className="flex items-center gap-2">
+              <span className="text-xs font-medium whitespace-nowrap">
+                Rows per page
+              </span>
+              <Select
+                value={`${table.getState().pagination.pageSize}`}
+                onValueChange={(value) => table.setPageSize(Number(value))}
+              >
+                <SelectTrigger className="h-8 w-[70px]">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent side="top">
+                  {[10, 20, 50, 100].map((size) => (
+                    <SelectItem key={size} value={`${size}`}>
+                      {size}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="text-xs font-medium whitespace-nowrap">
+                Page {table.getState().pagination.pageIndex + 1} of{" "}
+                {table.getPageCount() || 1}
+              </span>
+              <div className="flex items-center gap-1">
+                <Button
+                  variant="outline"
+                  size="icon"
+                  className="h-8 w-8"
+                  onClick={() => table.setPageIndex(0)}
+                  disabled={!table.getCanPreviousPage()}
+                >
+                  <span className="sr-only">First page</span>
+                  <ChevronsLeft className="h-4 w-4" />
+                </Button>
+                <Button
+                  variant="outline"
+                  size="icon"
+                  className="h-8 w-8"
+                  onClick={() => table.previousPage()}
+                  disabled={!table.getCanPreviousPage()}
+                >
+                  <span className="sr-only">Previous page</span>
+                  <ChevronLeft className="h-4 w-4" />
+                </Button>
+                <Button
+                  variant="outline"
+                  size="icon"
+                  className="h-8 w-8"
+                  onClick={() => table.nextPage()}
+                  disabled={!table.getCanNextPage()}
+                >
+                  <span className="sr-only">Next page</span>
+                  <ChevronRight className="h-4 w-4" />
+                </Button>
+                <Button
+                  variant="outline"
+                  size="icon"
+                  className="h-8 w-8"
+                  onClick={() => table.setPageIndex(table.getPageCount() - 1)}
+                  disabled={!table.getCanNextPage()}
+                >
+                  <span className="sr-only">Last page</span>
+                  <ChevronsRight className="h-4 w-4" />
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </Card>
+    </>
+  );
+}

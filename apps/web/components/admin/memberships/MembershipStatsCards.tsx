@@ -5,7 +5,7 @@ import { Users, DollarSign, GraduationCap } from "lucide-react";
 import type { MembershipStats } from "@/types/api";
 
 interface MembershipStatsCardsProps {
-  stats: MembershipStats;
+  readonly stats: MembershipStats;
 }
 
 export function MembershipStatsCards({ stats }: MembershipStatsCardsProps) {
