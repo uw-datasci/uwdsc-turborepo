@@ -79,8 +79,6 @@ interface Event {
   location: string | null;
   start_time: string;
   end_time: string;
-  registration_required: boolean;
-  payment_required: boolean;
 }
 
 export default function AdminEventsPage() {
