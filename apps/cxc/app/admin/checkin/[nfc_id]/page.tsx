@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import {
+  Button,
   Card,
   CardHeader,
   CardTitle,
@@ -13,7 +14,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@uwdsc/ui";
-import { CheckCircle2, XCircle, Loader2 } from "lucide-react";
+import { CheckCircle2, XCircle, Loader2, Copy } from "lucide-react";
 import CxCButton from "@/components/CxCButton";
 
 interface CheckInResponse {
@@ -37,6 +38,7 @@ export default function AdminCheckInPage() {
   >([]);
   const [loading, setLoading] = useState(true);
   const [checkingIn, setCheckingIn] = useState(false);
+  const [isAlreadyCheckedIn, setIsAlreadyCheckedIn] = useState(false);
   const [checkInResult, setCheckInResult] = useState<CheckInResponse | null>(
     null,
   );
@@ -136,6 +138,33 @@ export default function AdminCheckInPage() {
     loadData();
   }, [nfcId]);
 
+  // Check if user is already checked in when event changes
+  useEffect(() => {
+    async function checkUserStatus() {
+      if (!selectedEventId || !profile) {
+        setIsAlreadyCheckedIn(false);
+        return;
+      }
+
+      try {
+        const response = await fetch(
+          `/api/admin/checkin?nfc_id=${nfcId}&event_id=${selectedEventId}`,
+        );
+        if (response.ok) {
+          const data = await response.json();
+          setIsAlreadyCheckedIn(data.isCheckedIn);
+        } else {
+          setIsAlreadyCheckedIn(false);
+        }
+      } catch (error) {
+        console.error("Error checking user status:", error);
+        setIsAlreadyCheckedIn(false);
+      }
+    }
+
+    checkUserStatus();
+  }, [selectedEventId, profile, nfcId]);
+
   const handleCheckIn = async () => {
     if (!selectedEventId) {
       setCheckInResult({
@@ -185,6 +214,9 @@ export default function AdminCheckInPage() {
           setCheckInResult(data);
         }
 
+        // Mark user as already checked in
+        setIsAlreadyCheckedIn(true);
+
         // Clear result after 5 seconds
         setTimeout(() => {
           setCheckInResult(null);
@@ -200,6 +232,20 @@ export default function AdminCheckInPage() {
       });
     } finally {
       setCheckingIn(false);
+    }
+  };
+
+  const getCheckInUrl = () => {
+    const baseUrl =
+      typeof window !== "undefined" ? window.location.origin : "";
+    return `${baseUrl}/admin/checkin/${nfcId}`;
+  };
+
+  const handleCopyToClipboard = async (text: string) => {
+    try{
+      await navigator.clipboard.writeText(text);
+    } catch (error) {
+      console.error("Failed to copy to clipboard:", error);
     }
   };
 
@@ -224,10 +270,17 @@ export default function AdminCheckInPage() {
               <label className="text-sm font-medium mb-2 block text-white">
                 NFC ID
               </label>
-              <div className="p-3 bg-white/5 border border-white/10 rounded-none font-mono text-sm break-all text-white/80">
-                {typeof window !== "undefined"
-                  ? `${window.location.origin}/admin/checkin/${nfcId}`
-                  : `/admin/checkin/${nfcId}`}
+              <div className="p-3 bg-white/5 border border-white/10 rounded-none font-mono text-sm break-all text-white/80 flex items-center justify-between gap-2">
+                <span>{getCheckInUrl()}</span>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => handleCopyToClipboard(getCheckInUrl())}
+                  className="h-8 w-8 hover:bg-white/10 flex-shrink-0"
+                  title="Copy to clipboard"
+                >
+                  <Copy className="h-4 w-4" />
+                </Button>
               </div>
             </div>
 
@@ -237,11 +290,22 @@ export default function AdminCheckInPage() {
                 <label className="text-sm font-medium mb-2 block text-white">
                   User
                 </label>
-                <div className="p-3 bg-white/5 border border-white/10 rounded-none text-white/80">
+                <div className="p-3 bg-white/5 border border-white/10 rounded-none text-white/80 flex items-center justify-between gap-2">
                   {profile.email ? (
-                    <>Email: {profile.email}</>
+                    <>
+                      <span>Email: {profile.email}</span>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => handleCopyToClipboard(profile.email!)}
+                        className="h-8 w-8 hover:bg-white/10 flex-shrink-0"
+                        title="Copy to clipboard"
+                      >
+                        <Copy className="h-4 w-4" />
+                      </Button>
+                    </>
                   ) : (
-                    <>Loading email...</>
+                    <span>Loading email...</span>
                   )}
                 </div>
               </div>
@@ -294,13 +358,18 @@ export default function AdminCheckInPage() {
             {/* Check In Button */}
             <CxCButton
               onClick={handleCheckIn}
-              disabled={!selectedEventId || checkingIn || !profile}
-              className="w-full p-3"
+              disabled={!selectedEventId || checkingIn || !profile || isAlreadyCheckedIn}
+              className={`w-full p-3 ${isAlreadyCheckedIn ? "opacity-60" : ""}`}
             >
               {checkingIn ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                   Checking In...
+                </>
+              ) : isAlreadyCheckedIn ? (
+                <>
+                  <CheckCircle2 className="mr-2 h-4 w-4" />
+                  Already Checked In
                 </>
               ) : (
                 "Check In"

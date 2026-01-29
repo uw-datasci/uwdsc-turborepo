@@ -87,6 +87,20 @@ export class EventService {
   }
 
   /**
+   * Check if a user is already checked in for an event
+   */
+  async isUserCheckedIn(eventId: number, profileId: string): Promise<boolean> {
+    try {
+      return await this.repository.isUserCheckedIn(eventId, profileId);
+    } catch (error) {
+      throw new ApiError(
+        `Failed to check user check-in status: ${(error as Error).message}`,
+        500,
+      );
+    }
+  }
+
+  /**
    * Update an existing event
    */
   async updateEvent(
