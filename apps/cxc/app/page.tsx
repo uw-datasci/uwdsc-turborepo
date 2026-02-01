@@ -25,7 +25,7 @@ export default function Home() {
       <div className="border-t border-b border-white/50">
         <PastProjects />
       </div>
-      <WormholeMiddle topRadius={11} bottomRadius={9.25} />
+      <WormholeMiddle topRadius={11} bottomRadius={10} />
       <div className="border-t border-b border-white/50">
         <Sponsors />
         {/* <Testimonials /> */}
