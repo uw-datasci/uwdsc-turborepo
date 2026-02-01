@@ -3,14 +3,12 @@ import { BaseRepository } from "@uwdsc/server/core/repository/baseRepository";
 export interface Event {
   id: number;
   name: string;
-  registration_required: boolean;
   description: string | null;
   location: string | null;
   start_time: Date;
   buffered_start_time: Date;
   end_time: Date;
   buffered_end_time: Date;
-  payment_required: boolean;
   image_id: number | null;
   created_at: Date;
   updated_at: Date;
@@ -18,14 +16,12 @@ export interface Event {
 
 export interface CreateEventData {
   name: string;
-  registration_required: boolean;
   description?: string;
   location?: string;
   start_time: Date;
   buffered_start_time: Date;
   end_time: Date;
   buffered_end_time: Date;
-  payment_required?: boolean;
   image_id?: number;
 }
 
@@ -94,26 +90,22 @@ export class EventRepository extends BaseRepository {
       const result = await this.sql<Event[]>`
         INSERT INTO events (
           name,
-          registration_required,
           description,
           location,
           start_time,
           buffered_start_time,
           end_time,
           buffered_end_time,
-          payment_required,
           image_id
         )
         VALUES (
           ${data.name},
-          ${data.registration_required},
           ${data.description ?? null},
           ${data.location ?? null},
           ${data.start_time},
           ${data.buffered_start_time},
           ${data.end_time},
           ${data.buffered_end_time},
-          ${data.payment_required ?? true},
           ${data.image_id ?? null}
         )
         RETURNING *
@@ -263,8 +255,6 @@ export class EventRepository extends BaseRepository {
       const updateFields: Record<string, unknown> = {};
 
       if (data.name !== undefined) updateFields.name = data.name;
-      if (data.registration_required !== undefined)
-        updateFields.registration_required = data.registration_required;
       if (data.description !== undefined)
         updateFields.description = data.description ?? null;
       if (data.location !== undefined)
@@ -276,8 +266,6 @@ export class EventRepository extends BaseRepository {
       if (data.end_time !== undefined) updateFields.end_time = data.end_time;
       if (data.buffered_end_time !== undefined)
         updateFields.buffered_end_time = data.buffered_end_time;
-      if (data.payment_required !== undefined)
-        updateFields.payment_required = data.payment_required;
       if (data.image_id !== undefined)
         updateFields.image_id = data.image_id ?? null;
 

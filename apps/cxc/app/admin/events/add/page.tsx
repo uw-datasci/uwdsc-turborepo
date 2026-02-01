@@ -9,7 +9,6 @@ import {
   CardContent,
   Input,
   Textarea,
-  Checkbox,
 } from "@uwdsc/ui";
 import { Loader2, ArrowLeft } from "lucide-react";
 import CxCButton from "@/components/CxCButton";
@@ -24,8 +23,6 @@ export default function AddEventPage() {
     name: "",
     description: "",
     location: "",
-    registration_required: false,
-    payment_required: true,
     start_time: "",
     buffered_start_time: "",
     end_time: "",
@@ -54,8 +51,6 @@ export default function AddEventPage() {
         name: formData.name,
         description: formData.description || null,
         location: formData.location || null,
-        registration_required: formData.registration_required,
-        payment_required: formData.payment_required,
         start_time: startTime.toISOString(),
         buffered_start_time: bufferedStartTime.toISOString(),
         end_time: endTime.toISOString(),
@@ -246,48 +241,6 @@ export default function AddEventPage() {
                   }
                   className="bg-black border-white/10 text-white rounded-none"
                 />
-              </div>
-
-              {/* Registration Required */}
-              <div className="flex items-center gap-2">
-                <Checkbox
-                  id="registration_required"
-                  checked={formData.registration_required}
-                  onCheckedChange={(checked) =>
-                    setFormData({
-                      ...formData,
-                      registration_required: checked === true,
-                    })
-                  }
-                  className="border-white/20"
-                />
-                <label
-                  htmlFor="registration_required"
-                  className="text-sm text-white"
-                >
-                  Registration Required
-                </label>
-              </div>
-
-              {/* Payment Required */}
-              <div className="flex items-center gap-2">
-                <Checkbox
-                  id="payment_required"
-                  checked={formData.payment_required}
-                  onCheckedChange={(checked) =>
-                    setFormData({
-                      ...formData,
-                      payment_required: checked === true,
-                    })
-                  }
-                  className="border-white/20"
-                />
-                <label
-                  htmlFor="payment_required"
-                  className="text-sm text-white"
-                >
-                  Payment Required
-                </label>
               </div>
 
               {/* Error Message */}
