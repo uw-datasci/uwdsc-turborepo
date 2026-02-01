@@ -44,8 +44,9 @@ export async function withProtected(request: NextRequest, user: any) {
           return NextResponse.redirect(new URL("/", request.url));
         }
       } else if (
-        // Volunteer-accessible routes: /admin/events only
-        request.nextUrl.pathname.startsWith("/admin/events")
+        // Volunteer-accessible routes: /admin/events and /admin/checkin
+        request.nextUrl.pathname.startsWith("/admin/events") ||
+        request.nextUrl.pathname.startsWith("/admin/checkin")
       ) {
         // Allow admin, superadmin, and volunteer
         if (

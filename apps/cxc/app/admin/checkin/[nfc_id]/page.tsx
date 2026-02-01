@@ -14,7 +14,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@uwdsc/ui";
-import { CheckCircle2, XCircle, Loader2, Copy } from "lucide-react";
+import { CheckCircle2, XCircle, Loader2, Copy, Check } from "lucide-react";
 import CxCButton from "@/components/CxCButton";
 
 interface CheckInResponse {
@@ -46,6 +46,8 @@ export default function AdminCheckInPage() {
     email: string | null;
     nfc_id: string | null;
   } | null>(null);
+  const [copiedField, setCopiedField] = useState<string | null>(null);
+  const [checkingStatus, setCheckingStatus] = useState(false);
 
   // Load events and profile on mount
   useEffect(() => {
@@ -146,6 +148,7 @@ export default function AdminCheckInPage() {
         return;
       }
 
+      setCheckingStatus(true);
       try {
         const response = await fetch(
           `/api/admin/checkin?nfc_id=${nfcId}&event_id=${selectedEventId}`,
@@ -159,6 +162,8 @@ export default function AdminCheckInPage() {
       } catch (error) {
         console.error("Error checking user status:", error);
         setIsAlreadyCheckedIn(false);
+      } finally {
+        setCheckingStatus(false);
       }
     }
 
@@ -241,9 +246,11 @@ export default function AdminCheckInPage() {
     return `${baseUrl}/admin/checkin/${nfcId}`;
   };
 
-  const handleCopyToClipboard = async (text: string) => {
-    try{
+  const handleCopyToClipboard = async (text: string, field: string) => {
+    try {
       await navigator.clipboard.writeText(text);
+      setCopiedField(field);
+      setTimeout(() => setCopiedField(null), 1000);
     } catch (error) {
       console.error("Failed to copy to clipboard:", error);
     }
@@ -275,11 +282,15 @@ export default function AdminCheckInPage() {
                 <Button
                   variant="ghost"
                   size="icon"
-                  onClick={() => handleCopyToClipboard(getCheckInUrl())}
+                  onClick={() => handleCopyToClipboard(getCheckInUrl(), "nfc")}
                   className="h-8 w-8 hover:bg-white/10 flex-shrink-0"
                   title="Copy to clipboard"
                 >
-                  <Copy className="h-4 w-4" />
+                  {copiedField === "nfc" ? (
+                    <Check className="h-4 w-4 text-green-500" />
+                  ) : (
+                    <Copy className="h-4 w-4" />
+                  )}
                 </Button>
               </div>
             </div>
@@ -297,11 +308,15 @@ export default function AdminCheckInPage() {
                       <Button
                         variant="ghost"
                         size="icon"
-                        onClick={() => handleCopyToClipboard(profile.email!)}
+                        onClick={() => handleCopyToClipboard(profile.email!, "email")}
                         className="h-8 w-8 hover:bg-white/10 flex-shrink-0"
                         title="Copy to clipboard"
                       >
-                        <Copy className="h-4 w-4" />
+                        {copiedField === "email" ? (
+                          <Check className="h-4 w-4 text-green-500" />
+                        ) : (
+                          <Copy className="h-4 w-4" />
+                        )}
                       </Button>
                     </>
                   ) : (
@@ -358,13 +373,18 @@ export default function AdminCheckInPage() {
             {/* Check In Button */}
             <CxCButton
               onClick={handleCheckIn}
-              disabled={!selectedEventId || checkingIn || !profile || isAlreadyCheckedIn}
+              disabled={!selectedEventId || checkingIn || checkingStatus || !profile || isAlreadyCheckedIn}
               className={`w-full p-3 ${isAlreadyCheckedIn ? "opacity-60" : ""}`}
             >
               {checkingIn ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                   Checking In...
+                </>
+              ) : checkingStatus ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Loading...
                 </>
               ) : isAlreadyCheckedIn ? (
                 <>
