@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Card, CardContent, Input, Textarea, Checkbox } from "@uwdsc/ui";
+import { Card, CardContent, Input, Textarea } from "@uwdsc/ui";
 import { ArrowLeft, Loader2, Save, X } from "lucide-react";
 import CxCButton from "@/components/CxCButton";
 
@@ -15,8 +15,6 @@ interface Event {
   buffered_start_time: string;
   end_time: string;
   buffered_end_time: string;
-  registration_required: boolean;
-  payment_required: boolean;
   image_id: number | null;
 }
 
@@ -72,8 +70,6 @@ export default function EditEventsPage() {
       buffered_start_time: formatDateForInput(event.buffered_start_time),
       end_time: formatDateForInput(event.end_time),
       buffered_end_time: formatDateForInput(event.buffered_end_time),
-      registration_required: event.registration_required,
-      payment_required: event.payment_required,
       image_id: event.image_id,
     });
   };
@@ -117,10 +113,6 @@ export default function EditEventsPage() {
       if (endTime) updateData.end_time = endTime.toISOString();
       if (bufferedEndTime)
         updateData.buffered_end_time = bufferedEndTime.toISOString();
-      if (editForm.registration_required !== undefined)
-        updateData.registration_required = editForm.registration_required;
-      if (editForm.payment_required !== undefined)
-        updateData.payment_required = editForm.payment_required;
       if (editForm.image_id !== undefined)
         updateData.image_id = editForm.image_id
           ? Number(editForm.image_id)
@@ -344,48 +336,6 @@ export default function EditEventsPage() {
                         />
                       </div>
 
-                      {/* Registration Required */}
-                      <div className="flex items-center gap-2">
-                        <Checkbox
-                          id={`reg_${event.id}`}
-                          checked={editForm.registration_required || false}
-                          onCheckedChange={(checked) =>
-                            setEditForm({
-                              ...editForm,
-                              registration_required: checked === true,
-                            })
-                          }
-                          className="border-white/20"
-                        />
-                        <label
-                          htmlFor={`reg_${event.id}`}
-                          className="text-sm text-white"
-                        >
-                          Registration Required
-                        </label>
-                      </div>
-
-                      {/* Payment Required */}
-                      <div className="flex items-center gap-2">
-                        <Checkbox
-                          id={`pay_${event.id}`}
-                          checked={editForm.payment_required || false}
-                          onCheckedChange={(checked) =>
-                            setEditForm({
-                              ...editForm,
-                              payment_required: checked === true,
-                            })
-                          }
-                          className="border-white/20"
-                        />
-                        <label
-                          htmlFor={`pay_${event.id}`}
-                          className="text-sm text-white"
-                        >
-                          Payment Required
-                        </label>
-                      </div>
-
                       {/* Action Buttons */}
                       <div className="flex gap-2">
                         <CxCButton
@@ -440,18 +390,6 @@ export default function EditEventsPage() {
                               <p>Location: {event.location}</p>
                             )}
                           </div>
-                        </div>
-                        <div className="flex gap-2">
-                          {event.registration_required && (
-                            <span className="px-2 py-1 text-xs bg-blue-500/10 text-blue-500 rounded-none border border-blue-500/20">
-                              Registration Required
-                            </span>
-                          )}
-                          {event.payment_required && (
-                            <span className="px-2 py-1 text-xs bg-green-500/10 text-green-500 rounded-none border border-green-500/20">
-                              Payment Required
-                            </span>
-                          )}
                         </div>
                       </div>
                       <CxCButton

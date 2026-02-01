@@ -89,14 +89,12 @@ export async function POST(request: NextRequest) {
     console.log("[API] Request body:", body);
     const {
       name,
-      registration_required,
       description,
       location,
       start_time,
       buffered_start_time,
       end_time,
       buffered_end_time,
-      payment_required,
       image_id,
     } = body;
 
@@ -124,26 +122,22 @@ export async function POST(request: NextRequest) {
 
     console.log("[API] Creating event with data:", {
       name,
-      registration_required: registration_required ?? false,
       description,
       location,
       start_time: new Date(start_time),
       buffered_start_time: new Date(buffered_start_time),
       end_time: new Date(end_time),
       buffered_end_time: new Date(buffered_end_time),
-      payment_required: payment_required ?? true,
     });
 
     const event = await eventService.createEvent({
       name,
-      registration_required: registration_required ?? false,
       description,
       location,
       start_time: new Date(start_time),
       buffered_start_time: new Date(buffered_start_time),
       end_time: new Date(end_time),
       buffered_end_time: new Date(buffered_end_time),
-      payment_required: payment_required ?? true,
       image_id: image_id ? Number(image_id) : undefined,
     });
 
