@@ -9,11 +9,11 @@ const profileService = new ProfileService();
 /**
  * GET /api/admin/checkin?nfc_id=xxx&event_id=xxx
  * Check if a user is already checked in for an event
- * Admin and superadmin only endpoint
+ * Admin, superadmin, and volunteer endpoint
  */
 export async function GET(request: NextRequest) {
   try {
-    // Verify admin access
+    // Verify admin/volunteer access
     const authService = await createAuthService();
     const { user, error: userError } = await authService.getCurrentUser();
 
@@ -24,11 +24,15 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // Check if user is admin or superadmin
+    // Check if user is admin, superadmin, or volunteer
     const adminProfile = await profileService.getProfileByUserId(user.id);
-    if (adminProfile?.role !== "admin" && adminProfile?.role !== "superadmin") {
+    if (
+      adminProfile?.role !== "admin" &&
+      adminProfile?.role !== "superadmin" &&
+      adminProfile?.role !== "volunteer"
+    ) {
       return NextResponse.json(
-        { error: "Forbidden", message: "Admin access required" },
+        { error: "Forbidden", message: "Admin or volunteer access required" },
         { status: 403 },
       );
     }
@@ -87,11 +91,11 @@ export async function GET(request: NextRequest) {
 /**
  * POST /api/admin/checkin
  * Check in a user for an event using NFC ID
- * Admin and superadmin only endpoint
+ * Admin, superadmin, and volunteer endpoint
  */
 export async function POST(request: NextRequest) {
   try {
-    // Verify admin access
+    // Verify admin/volunteer access
     const authService = await createAuthService();
     const { user, error: userError } = await authService.getCurrentUser();
 
@@ -102,11 +106,15 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Check if user is admin or superadmin
+    // Check if user is admin, superadmin, or volunteer
     const adminProfile = await profileService.getProfileByUserId(user.id);
-    if (adminProfile?.role !== "admin" && adminProfile?.role !== "superadmin") {
+    if (
+      adminProfile?.role !== "admin" &&
+      adminProfile?.role !== "superadmin" &&
+      adminProfile?.role !== "volunteer"
+    ) {
       return NextResponse.json(
-        { error: "Forbidden", message: "Admin access required" },
+        { error: "Forbidden", message: "Admin or volunteer access required" },
         { status: 403 },
       );
     }

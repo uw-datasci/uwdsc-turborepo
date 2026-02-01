@@ -46,7 +46,7 @@ export default function AdminCheckInPage() {
     email: string | null;
     nfc_id: string | null;
   } | null>(null);
-  const [copiedField, setCopiedField] = useState<string | null>(null);
+  const [copiedFields, setCopiedFields] = useState<Record<string, boolean>>({});
   const [checkingStatus, setCheckingStatus] = useState(false);
 
   // Load events and profile on mount
@@ -249,8 +249,10 @@ export default function AdminCheckInPage() {
   const handleCopyToClipboard = async (text: string, field: string) => {
     try {
       await navigator.clipboard.writeText(text);
-      setCopiedField(field);
-      setTimeout(() => setCopiedField(null), 1000);
+      setCopiedFields((prev) => ({ ...prev, [field]: true }));
+      setTimeout(() => {
+        setCopiedFields((prev) => ({ ...prev, [field]: false }));
+      }, 1000);
     } catch (error) {
       console.error("Failed to copy to clipboard:", error);
     }
@@ -286,7 +288,7 @@ export default function AdminCheckInPage() {
                   className="h-8 w-8 hover:bg-white/10 flex-shrink-0"
                   title="Copy to clipboard"
                 >
-                  {copiedField === "nfc" ? (
+                  {copiedFields.nfc ? (
                     <Check className="h-4 w-4 text-green-500" />
                   ) : (
                     <Copy className="h-4 w-4" />
@@ -312,7 +314,7 @@ export default function AdminCheckInPage() {
                         className="h-8 w-8 hover:bg-white/10 flex-shrink-0"
                         title="Copy to clipboard"
                       >
-                        {copiedField === "email" ? (
+                        {copiedFields.email ? (
                           <Check className="h-4 w-4 text-green-500" />
                         ) : (
                           <Copy className="h-4 w-4" />
