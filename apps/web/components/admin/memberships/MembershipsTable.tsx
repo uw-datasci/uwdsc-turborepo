@@ -36,6 +36,7 @@ import {
 } from "lucide-react";
 import type { MemberProfile } from "@/types/api";
 import { exportToCsv } from "@/lib/utils/csv";
+import { globalMembershipFilter } from "@/lib/utils/table";
 import {
   membershipColumns,
   type MembershipActionType,
@@ -50,11 +51,41 @@ const MEMBERSHIP_CSV_HEADERS = [
   "name",
   "email",
   "wat_iam",
-  "user_status",
+  "user_role",
   "has_paid",
   "is_math_soc_member",
   "faculty",
   "term",
+] as const;
+
+const ROLE_OPTIONS = [
+  { value: "all", label: "All Roles" },
+  { value: "member", label: "Member" },
+  { value: "exec", label: "Exec" },
+  { value: "admin", label: "Admin" },
+] as const;
+
+const PAID_OPTIONS = [
+  { value: "all", label: "All" },
+  { value: "true", label: "Paid" },
+  { value: "false", label: "Unpaid" },
+] as const;
+
+const MATH_SOC_OPTIONS = [
+  { value: "all", label: "All" },
+  { value: "true", label: "Yes" },
+  { value: "false", label: "No" },
+] as const;
+
+const FACULTY_OPTIONS = [
+  { value: "all", label: "All Faculties" },
+  { value: "math", label: "Math" },
+  { value: "engineering", label: "Engineering" },
+  { value: "science", label: "Science" },
+  { value: "arts", label: "Arts" },
+  { value: "health", label: "Health" },
+  { value: "environment", label: "Environment" },
+  { value: "other_non_waterloo", label: "Other / Non-UW" },
 ] as const;
 
 function getMembershipCsvValue(row: MemberProfile, key: string): unknown {
@@ -71,6 +102,7 @@ export function MembershipsTable({ profiles }: MembershipsTableProps) {
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     [],
   );
+  const [globalFilter, setGlobalFilter] = React.useState("");
   const [actionModal, setActionModal] = React.useState<{
     type: MembershipActionType;
     member: MemberProfile;
@@ -81,11 +113,13 @@ export function MembershipsTable({ profiles }: MembershipsTableProps) {
     columns: membershipColumns,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
+    onGlobalFilterChange: setGlobalFilter,
+    globalFilterFn: globalMembershipFilter,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
-    state: { sorting, columnFilters },
+    state: { sorting, columnFilters, globalFilter },
     initialState: { pagination: { pageSize: 20 } },
     meta: { onAction: (type, member) => setActionModal({ type, member }) },
   });
@@ -138,7 +172,7 @@ export function MembershipsTable({ profiles }: MembershipsTableProps) {
       {renderActionModal()}
 
       <Card className="p-6">
-        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-6">
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-4">
           <div>
             <h2 className="text-xl font-semibold">All Members</h2>
             <p className="text-sm text-muted-foreground mt-1">
@@ -148,19 +182,120 @@ export function MembershipsTable({ profiles }: MembershipsTableProps) {
           </div>
           <div className="flex flex-col sm:flex-row gap-2 sm:items-center">
             <Input
-              placeholder="Filter by email..."
-              value={
-                (table.getColumn("email")?.getFilterValue() as string) ?? ""
-              }
-              onChange={(e) =>
-                table.getColumn("email")?.setFilterValue(e.target.value)
-              }
-              className="max-w-sm h-9"
+              placeholder="Filter by name, email, or WatIAM..."
+              value={globalFilter ?? ""}
+              onChange={(e) => setGlobalFilter(e.target.value)}
+              className="sm:w-96 h-9"
             />
             <Button onClick={onExportCsv} variant="outline" size="sm">
               <Download className="mr-2 h-4 w-4" />
               Export CSV
             </Button>
+          </div>
+        </div>
+
+        {/* Column Filters */}
+        <div className="flex flex-wrap gap-4 mb-4">
+          <div className="flex flex-col gap-1">
+            <span className="text-xs font-medium text-muted-foreground">Role</span>
+            <Select
+              value={
+                (table.getColumn("user_role")?.getFilterValue() as string) ?? "all"
+              }
+              onValueChange={(value) =>
+                table
+                  .getColumn("user_role")
+                  ?.setFilterValue(value === "all" ? undefined : value)
+              }
+            >
+              <SelectTrigger className="h-8 w-[130px]">
+                <SelectValue placeholder="Role" />
+              </SelectTrigger>
+              <SelectContent>
+                {ROLE_OPTIONS.map((opt) => (
+                  <SelectItem key={opt.value} value={opt.value}>
+                    {opt.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="flex flex-col gap-1">
+            <span className="text-xs font-medium text-muted-foreground">Paid</span>
+            <Select
+              value={
+                (table.getColumn("has_paid")?.getFilterValue() as string) ?? "all"
+              }
+              onValueChange={(value) =>
+                table
+                  .getColumn("has_paid")
+                  ?.setFilterValue(value === "all" ? undefined : value)
+              }
+            >
+              <SelectTrigger className="h-8 w-[100px]">
+                <SelectValue placeholder="Paid" />
+              </SelectTrigger>
+              <SelectContent>
+                {PAID_OPTIONS.map((opt) => (
+                  <SelectItem key={opt.value} value={opt.value}>
+                    {opt.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="flex flex-col gap-1">
+            <span className="text-xs font-medium text-muted-foreground">MathSoc</span>
+            <Select
+              value={
+                (table
+                  .getColumn("is_math_soc_member")
+                  ?.getFilterValue() as string) ?? "all"
+              }
+              onValueChange={(value) =>
+                table
+                  .getColumn("is_math_soc_member")
+                  ?.setFilterValue(value === "all" ? undefined : value)
+              }
+            >
+              <SelectTrigger className="h-8 w-[120px]">
+                <SelectValue placeholder="MathSoc" />
+              </SelectTrigger>
+              <SelectContent>
+                {MATH_SOC_OPTIONS.map((opt) => (
+                  <SelectItem key={opt.value} value={opt.value}>
+                    {opt.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="flex flex-col gap-1">
+            <span className="text-xs font-medium text-muted-foreground">Faculty</span>
+            <Select
+              value={
+                (table.getColumn("faculty")?.getFilterValue() as string) ?? "all"
+              }
+              onValueChange={(value) =>
+                table
+                  .getColumn("faculty")
+                  ?.setFilterValue(value === "all" ? undefined : value)
+              }
+            >
+              <SelectTrigger className="h-8 w-[150px]">
+                <SelectValue placeholder="Faculty" />
+              </SelectTrigger>
+              <SelectContent>
+              {FACULTY_OPTIONS.map((opt) => (
+                  <SelectItem key={opt.value} value={opt.value}>
+                    {opt.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
         </div>
 

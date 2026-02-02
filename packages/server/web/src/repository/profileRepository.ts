@@ -65,7 +65,21 @@ export class ProfileRepository extends BaseRepository {
   async getProfileByUserId(userId: string): Promise<Profile | null> {
     try {
       const result = await this.sql<Profile[]>`
-        SELECT *
+        SELECT 
+          id,
+          first_name,
+          last_name,
+          user_role,
+          has_paid,
+          wat_iam,
+          faculty,
+          term,
+          heard_from_where,
+          payment_method,
+          payment_location,
+          verifier,
+          member_ideas,
+          is_math_soc_member
         FROM profiles
         WHERE id = ${userId}
       `;
@@ -93,17 +107,15 @@ export class ProfileRepository extends BaseRepository {
           au.email,
           p.first_name,
           p.last_name,
-          p.user_status,
+          p.user_role,
           p.has_paid,
           p.is_math_soc_member,
           p.faculty,
           p.term,
-          p.wat_iam,
-          p.created_at,
-          p.updated_at
+          p.wat_iam
         FROM profiles p
         LEFT JOIN auth.users au ON p.id = au.id
-        ORDER BY p.created_at DESC
+        ORDER BY au.created_at DESC
       `;
 
       return result;

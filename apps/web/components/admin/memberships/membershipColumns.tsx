@@ -109,20 +109,20 @@ export const membershipColumns: ColumnDef<MemberProfile>[] = [
     },
   },
   {
-    accessorKey: "user_status",
+    accessorKey: "user_role",
     header: ({ column }) => (
       <Button
         variant="ghost"
         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         className="-ml-3 h-8"
       >
-        Status
+        Role
         <SortIcon direction={column.getIsSorted()} />
       </Button>
     ),
     cell: ({ row }) => {
-      const v = row.getValue("user_status") as string | null;
-      return <span>{v ?? "—"}</span>;
+      const v = row.getValue("user_role") as string | null;
+      return <span className="capitalize">{v ?? "—"}</span>;
     },
   },
   {
@@ -147,6 +147,11 @@ export const membershipColumns: ColumnDef<MemberProfile>[] = [
         </span>
       );
     },
+    filterFn: (row, columnId, filterValue) => {
+      if (!filterValue) return true;
+      const cellValue = row.getValue(columnId) as boolean;
+      return filterValue === "true" ? cellValue === true : cellValue === false;
+    },
   },
   {
     accessorKey: "is_math_soc_member",
@@ -169,6 +174,11 @@ export const membershipColumns: ColumnDef<MemberProfile>[] = [
           {v ? "Yes" : "No"}
         </span>
       );
+    },
+    filterFn: (row, columnId, filterValue) => {
+      if (!filterValue) return true;
+      const cellValue = row.getValue(columnId) as boolean;
+      return filterValue === "true" ? cellValue === true : cellValue === false;
     },
   },
   {
