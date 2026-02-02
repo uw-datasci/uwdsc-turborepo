@@ -43,6 +43,22 @@ export async function withProtected(request: NextRequest, user: any) {
           );
           return NextResponse.redirect(new URL("/", request.url));
         }
+      } else if (
+        // Volunteer-accessible routes: /admin/events and /admin/checkin
+        request.nextUrl.pathname.startsWith("/admin/events") ||
+        request.nextUrl.pathname.startsWith("/admin/checkin")
+      ) {
+        // Allow admin, superadmin, and volunteer
+        if (
+          profile.role !== "admin" &&
+          profile.role !== "superadmin" &&
+          profile.role !== "volunteer"
+        ) {
+          console.log(
+            `[Middleware] User ${user.id} (role: ${profile.role}) attempted to access ${request.nextUrl.pathname}, requires admin, superadmin, or volunteer`,
+          );
+          return NextResponse.redirect(new URL("/", request.url));
+        }
       } else {
         // Other admin routes require admin or superadmin
         // /admin/assign-volunteers is accessible to both admin and superadmin

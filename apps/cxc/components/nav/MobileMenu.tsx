@@ -117,8 +117,10 @@ export function MobileMenu({
                 ))}
               </nav>
 
-              {/* Admin section - only show to admin or superadmin users */}
-              {(user?.role === "admin" || user?.role === "superadmin") &&
+              {/* Admin section - only show to admin, superadmin, or volunteer users*/}
+              {(user?.role === "admin" ||
+                user?.role === "superadmin" ||
+                user?.role === "volunteer") &&
                 adminPages.length > 0 && (
                   <div className="mt-6">
                     <Separator className="my-4 border-border/40" />
@@ -142,7 +144,10 @@ export function MobileMenu({
                         </Button>
                       </CollapsibleTrigger>
                       <CollapsibleContent className="space-y-2 mt-2">
-                        {adminPages.map((page) => (
+                        {(user?.role === "volunteer"
+                          ? adminPages.filter((page) => page.href === "/admin/events")
+                          : adminPages
+                        ).map((page) => (
                           <SheetClose key={page.href} asChild>
                             <Button
                               variant="ghost"
