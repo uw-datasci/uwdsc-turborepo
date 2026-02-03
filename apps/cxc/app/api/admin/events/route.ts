@@ -9,7 +9,7 @@ const profileService = new ProfileService();
 /**
  * GET /api/admin/events
  * Get all events
- * Admin and superadmin only endpoint
+ * Admin, superadmin, and volunteer endpoint
  */
 export async function GET() {
   try {
@@ -24,11 +24,15 @@ export async function GET() {
       );
     }
 
-    // Check if user is admin or superadmin
+    // Check if user is admin, superadmin, or volunteer
     const profile = await profileService.getProfileByUserId(user.id);
-    if (profile?.role !== "admin" && profile?.role !== "superadmin") {
+    if (
+      profile?.role !== "admin" &&
+      profile?.role !== "superadmin" &&
+      profile?.role !== "volunteer"
+    ) {
       return NextResponse.json(
-        { error: "Forbidden", message: "Admin access required" },
+        { error: "Forbidden", message: "Admin or volunteer access required" },
         { status: 403 },
       );
     }
@@ -89,14 +93,12 @@ export async function POST(request: NextRequest) {
     console.log("[API] Request body:", body);
     const {
       name,
-      registration_required,
       description,
       location,
       start_time,
       buffered_start_time,
       end_time,
       buffered_end_time,
-      payment_required,
       image_id,
     } = body;
 
@@ -124,26 +126,22 @@ export async function POST(request: NextRequest) {
 
     console.log("[API] Creating event with data:", {
       name,
-      registration_required: registration_required ?? false,
       description,
       location,
       start_time: new Date(start_time),
       buffered_start_time: new Date(buffered_start_time),
       end_time: new Date(end_time),
       buffered_end_time: new Date(buffered_end_time),
-      payment_required: payment_required ?? true,
     });
 
     const event = await eventService.createEvent({
       name,
-      registration_required: registration_required ?? false,
       description,
       location,
       start_time: new Date(start_time),
       buffered_start_time: new Date(buffered_start_time),
       end_time: new Date(end_time),
       buffered_end_time: new Date(buffered_end_time),
-      payment_required: payment_required ?? true,
       image_id: image_id ? Number(image_id) : undefined,
     });
 
