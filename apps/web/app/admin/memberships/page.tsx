@@ -8,11 +8,14 @@ import {
 import { getAllProfiles, getMembershipStats } from "@/lib/api";
 import type { MemberProfile, MembershipStats } from "@/types/api";
 
+export type MembershipFilterType = "all" | "paid" | "paid-mathsoc";
+
 export default function AdminMembershipsPage() {
   const [profiles, setProfiles] = useState<MemberProfile[]>([]);
   const [stats, setStats] = useState<MembershipStats | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [activeFilter, setActiveFilter] = useState<MembershipFilterType>("all");
 
   useEffect(() => {
     async function fetchData() {
@@ -70,9 +73,15 @@ export default function AdminMembershipsPage() {
         </p>
       </div>
 
-      {stats && <MembershipStatsCards stats={stats} />}
+      {stats && (
+        <MembershipStatsCards
+          stats={stats}
+          activeFilter={activeFilter}
+          onFilterChange={setActiveFilter}
+        />
+      )}
 
-      <MembershipsTable profiles={profiles} />
+      <MembershipsTable profiles={profiles} activeFilter={activeFilter} />
     </div>
   );
 }

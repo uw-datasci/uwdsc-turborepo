@@ -1,6 +1,6 @@
 "use client";
 
-import * as React from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import {
   flexRender,
   getCoreRowModel,
@@ -35,6 +35,7 @@ import {
   Download,
 } from "lucide-react";
 import type { MemberProfile } from "@/types/api";
+import type { MembershipFilterType } from "@/app/admin/memberships/page";
 import { exportToCsv } from "@/lib/utils/csv";
 import { globalMembershipFilter } from "@/lib/utils/table";
 import {
@@ -45,6 +46,7 @@ import { EditMemberModal, MarkAsPaidModal, DeleteMemberModal } from "./modals";
 
 interface MembershipsTableProps {
   readonly profiles: MemberProfile[];
+  readonly activeFilter: MembershipFilterType;
 }
 
 const MEMBERSHIP_CSV_HEADERS = [
@@ -97,16 +99,41 @@ function getMembershipCsvValue(row: MemberProfile, key: string): unknown {
   return row[key as keyof MemberProfile];
 }
 
-export function MembershipsTable({ profiles }: MembershipsTableProps) {
-  const [sorting, setSorting] = React.useState<SortingState>([]);
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
-    [],
-  );
-  const [globalFilter, setGlobalFilter] = React.useState("");
-  const [actionModal, setActionModal] = React.useState<{
+export function MembershipsTable({
+  profiles,
+  activeFilter,
+}: MembershipsTableProps) {
+  const [sorting, setSorting] = useState<SortingState>([]);
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+  const [globalFilter, setGlobalFilter] = useState("");
+  const [actionModal, setActionModal] = useState<{
     type: MembershipActionType;
     member: MemberProfile;
   } | null>(null);
+
+  // Sync column filters with activeFilter from stats cards
+  useEffect(() => {
+    setColumnFilters((prev) => {
+      // Remove existing has_paid and is_math_soc_member filters
+      const filtered = prev.filter(
+        (f) => f.id !== "has_paid" && f.id !== "is_math_soc_member",
+      );
+
+      switch (activeFilter) {
+        case "paid":
+          return [...filtered, { id: "has_paid", value: "true" }];
+        case "paid-mathsoc":
+          return [
+            ...filtered,
+            { id: "has_paid", value: "true" },
+            { id: "is_math_soc_member", value: "true" },
+          ];
+        case "all":
+        default:
+          return filtered;
+      }
+    });
+  }, [activeFilter]);
 
   const table = useReactTable({
     data: profiles,
@@ -124,7 +151,7 @@ export function MembershipsTable({ profiles }: MembershipsTableProps) {
     meta: { onAction: (type, member) => setActionModal({ type, member }) },
   });
 
-  const onExportCsv = React.useCallback(() => {
+  const onExportCsv = useCallback(() => {
     const data = table.getFilteredRowModel().rows.map((row) => row.original);
     exportToCsv(
       data,
@@ -197,10 +224,13 @@ export function MembershipsTable({ profiles }: MembershipsTableProps) {
         {/* Column Filters */}
         <div className="flex flex-wrap gap-4 mb-4">
           <div className="flex flex-col gap-1">
-            <span className="text-xs font-medium text-muted-foreground">Role</span>
+            <span className="text-xs font-medium text-muted-foreground">
+              Role
+            </span>
             <Select
               value={
-                (table.getColumn("user_role")?.getFilterValue() as string) ?? "all"
+                (table.getColumn("user_role")?.getFilterValue() as string) ??
+                "all"
               }
               onValueChange={(value) =>
                 table
@@ -222,10 +252,13 @@ export function MembershipsTable({ profiles }: MembershipsTableProps) {
           </div>
 
           <div className="flex flex-col gap-1">
-            <span className="text-xs font-medium text-muted-foreground">Paid</span>
+            <span className="text-xs font-medium text-muted-foreground">
+              Paid
+            </span>
             <Select
               value={
-                (table.getColumn("has_paid")?.getFilterValue() as string) ?? "all"
+                (table.getColumn("has_paid")?.getFilterValue() as string) ??
+                "all"
               }
               onValueChange={(value) =>
                 table
@@ -247,7 +280,9 @@ export function MembershipsTable({ profiles }: MembershipsTableProps) {
           </div>
 
           <div className="flex flex-col gap-1">
-            <span className="text-xs font-medium text-muted-foreground">MathSoc</span>
+            <span className="text-xs font-medium text-muted-foreground">
+              MathSoc
+            </span>
             <Select
               value={
                 (table
@@ -274,10 +309,13 @@ export function MembershipsTable({ profiles }: MembershipsTableProps) {
           </div>
 
           <div className="flex flex-col gap-1">
-            <span className="text-xs font-medium text-muted-foreground">Faculty</span>
+            <span className="text-xs font-medium text-muted-foreground">
+              Faculty
+            </span>
             <Select
               value={
-                (table.getColumn("faculty")?.getFilterValue() as string) ?? "all"
+                (table.getColumn("faculty")?.getFilterValue() as string) ??
+                "all"
               }
               onValueChange={(value) =>
                 table
@@ -289,7 +327,7 @@ export function MembershipsTable({ profiles }: MembershipsTableProps) {
                 <SelectValue placeholder="Faculty" />
               </SelectTrigger>
               <SelectContent>
-              {FACULTY_OPTIONS.map((opt) => (
+                {FACULTY_OPTIONS.map((opt) => (
                   <SelectItem key={opt.value} value={opt.value}>
                     {opt.label}
                   </SelectItem>
