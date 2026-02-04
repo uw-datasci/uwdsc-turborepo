@@ -47,6 +47,7 @@ import { EditMemberModal, MarkAsPaidModal, DeleteMemberModal } from "./modals";
 interface MembershipsTableProps {
   readonly profiles: MemberProfile[];
   readonly activeFilter: MembershipFilterType;
+  readonly onRefresh?: () => void;
 }
 
 const MEMBERSHIP_CSV_HEADERS = [
@@ -102,6 +103,7 @@ function getMembershipCsvValue(row: MemberProfile, key: string): unknown {
 export function MembershipsTable({
   profiles,
   activeFilter,
+  onRefresh,
 }: MembershipsTableProps) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
@@ -171,6 +173,7 @@ export function MembershipsTable({
             open
             onOpenChange={(open) => !open && onClose()}
             member={member}
+            onSuccess={onRefresh}
           />
         );
       case "markPaid":
@@ -179,6 +182,7 @@ export function MembershipsTable({
             open
             onOpenChange={(open) => !open && onClose()}
             member={member}
+            onSuccess={onRefresh}
           />
         );
       case "delete":
@@ -187,6 +191,7 @@ export function MembershipsTable({
             open
             onOpenChange={(open) => !open && onClose()}
             member={member}
+            onSuccess={onRefresh}
           />
         );
       default:

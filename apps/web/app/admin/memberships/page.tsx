@@ -17,30 +17,30 @@ export default function AdminMembershipsPage() {
   const [error, setError] = useState<string | null>(null);
   const [activeFilter, setActiveFilter] = useState<MembershipFilterType>("all");
 
-  useEffect(() => {
-    async function fetchData() {
-      try {
-        setLoading(true);
-        setError(null);
+  const fetchData = async () => {
+    try {
+      setLoading(true);
+      setError(null);
 
-        // Fetch profiles and stats in parallel
-        const [profilesData, statsData] = await Promise.all([
-          getAllProfiles(),
-          getMembershipStats(),
-        ]);
+      // Fetch profiles and stats in parallel
+      const [profilesData, statsData] = await Promise.all([
+        getAllProfiles(),
+        getMembershipStats(),
+      ]);
 
-        setProfiles(profilesData);
-        setStats(statsData);
-      } catch (err) {
-        console.error("Error fetching membership data:", err);
-        setError(
-          err instanceof Error ? err.message : "Failed to load membership data",
-        );
-      } finally {
-        setLoading(false);
-      }
+      setProfiles(profilesData);
+      setStats(statsData);
+    } catch (err) {
+      console.error("Error fetching membership data:", err);
+      setError(
+        err instanceof Error ? err.message : "Failed to load membership data",
+      );
+    } finally {
+      setLoading(false);
     }
+  };
 
+  useEffect(() => {
     fetchData();
   }, []);
 
@@ -81,7 +81,11 @@ export default function AdminMembershipsPage() {
         />
       )}
 
-      <MembershipsTable profiles={profiles} activeFilter={activeFilter} />
+      <MembershipsTable
+        profiles={profiles}
+        activeFilter={activeFilter}
+        onRefresh={fetchData}
+      />
     </div>
   );
 }
