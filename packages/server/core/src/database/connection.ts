@@ -14,7 +14,7 @@ export const sql = postgres(databaseUrl, {
   prepare: false,
 
   // Optimized for serverless + Supabase Transaction Pooler
-  max: 1, // One connection per serverless function
+  max: 10, // Allow multiple concurrent queries
   idle_timeout: 10, // Seconds before idle connections are closed
   connect_timeout: 10, // Seconds to wait for connection
   max_lifetime: 60 * 30,
