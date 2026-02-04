@@ -19,6 +19,9 @@ export {
   updateUserProfile,
   getAllProfiles,
   getMembershipStats,
+  markMemberAsPaid,
+  updateMember,
+  deleteMember,
 } from "./profile";
 
 // Export all types

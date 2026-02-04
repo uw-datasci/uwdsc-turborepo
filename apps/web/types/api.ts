@@ -61,7 +61,7 @@ export interface UserProfile {
   email: string;
   first_name: string | null;
   last_name: string | null;
-  user_status: string | null;
+  user_role: string | null;
   has_paid: boolean;
   is_math_soc_member: boolean;
   faculty: string | null;
@@ -69,8 +69,6 @@ export interface UserProfile {
   wat_iam: string | null;
   heard_from_where: string | null;
   member_ideas: string | null;
-  created_at: string;
-  updated_at: string;
 }
 
 export interface UpdateProfileRequest {
@@ -103,14 +101,12 @@ export interface MemberProfile {
   email: string;
   first_name: string | null;
   last_name: string | null;
-  user_status: string | null;
+  user_role: string | null;
   has_paid: boolean;
   is_math_soc_member: boolean;
   faculty: string | null;
   term: string | null;
   wat_iam: string | null;
-  created_at: string;
-  updated_at: string;
 }
 
 export interface GetAllProfilesResponse {

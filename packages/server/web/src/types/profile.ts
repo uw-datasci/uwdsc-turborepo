@@ -1,5 +1,5 @@
 // Enums matching Prisma schema
-export type UserStatus = "member" | "admin" | "exec";
+export type UserRole = "member" | "admin" | "exec";
 
 export type Faculty =
   | "math"
@@ -17,7 +17,7 @@ export interface Profile {
   id: string;
   first_name: string | null;
   last_name: string | null;
-  user_status: UserStatus;
+  user_role: UserRole;
   has_paid: boolean;
   wat_iam: string | null;
   faculty: Faculty | null;
@@ -28,8 +28,6 @@ export interface Profile {
   verifier: string | null;
   member_ideas: string | null;
   is_math_soc_member: boolean;
-  created_at: Date;
-  updated_at: Date;
 }
 
 // Profile with email (joined with auth.users) - used by getAllProfiles
@@ -38,12 +36,10 @@ export interface ProfileWithEmail {
   email: string | null;
   first_name: string | null;
   last_name: string | null;
-  user_status: UserStatus;
+  user_role: UserRole;
   has_paid: boolean;
   is_math_soc_member: boolean;
   faculty: Faculty | null;
   term: string | null;
   wat_iam: string | null;
-  created_at: Date;
-  updated_at: Date;
 }
