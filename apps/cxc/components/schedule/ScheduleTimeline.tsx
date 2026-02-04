@@ -12,7 +12,7 @@ import {
 import { ScheduleEvent } from "@/lib/api/schedule";
 
 interface ScheduleTimelineProps {
-  events: ScheduleEvent[];
+  readonly events: ScheduleEvent[];
 }
 
 export function ScheduleTimeline({ events }: ScheduleTimelineProps) {
@@ -21,7 +21,7 @@ export function ScheduleTimeline({ events }: ScheduleTimelineProps) {
   const [startDayIndex, setStartDayIndex] = useState(0);
   const [nowTick, setNowTick] = useState(() => Date.now());
   const PX_PER_MINUTE = 1.25;
-  const MIN_EVENT_HEIGHT = 26;
+  const MIN_EVENT_HEIGHT = 70;
   const HIDDEN_HOURS_START = 0;
   const HIDDEN_HOURS_END = 7;
   const TIME_ZONE = "America/New_York";
@@ -148,9 +148,7 @@ export function ScheduleTimeline({ events }: ScheduleTimelineProps) {
     getMinutesFromMidnight(event.start_time),
     getMinutesFromMidnight(event.end_time),
   ]);
-  if (sortedDayKeys.includes(estDayKey)) {
-    allMinutes.push(estMinutes);
-  }
+  if (sortedDayKeys.includes(estDayKey)) allMinutes.push(estMinutes);
 
   const minMinute = Math.min(...allMinutes);
   const maxMinute = Math.max(...allMinutes);
@@ -436,18 +434,21 @@ export function ScheduleTimeline({ events }: ScheduleTimelineProps) {
 
                     const tone = getEventTone(event.id);
 
+                    let eventColorClasses: string;
+                    if (isOngoing) {
+                      eventColorClasses = "border-blue-500 bg-blue-900/80 text-white";
+                    } else if (isPast) {
+                      eventColorClasses = "border-slate-600 bg-slate-900/70 text-white/60";
+                    } else {
+                      eventColorClasses = `${tone} text-white`;
+                    }
+
                     return (
                       <button
                         key={event.id}
                         type="button"
                         onClick={() => setSelectedEvent(event)}
-                        className={`absolute border-l-4 px-2 py-2 text-xs text-left overflow-hidden flex flex-col justify-start ${
-                          isOngoing
-                            ? "border-blue-500 bg-blue-900/80 text-white"
-                            : isPast
-                            ? "border-slate-600 bg-slate-900/70 text-white/60"
-                            : `${tone} text-white`
-                        } transition-colors`}
+                        className={`absolute border-l-4 px-2 py-2 text-xs text-left overflow-hidden flex flex-col justify-start ${eventColorClasses} transition-colors`}
                         style={{
                           top: `${top}px`,
                           height: `${height}px`,
