@@ -295,7 +295,6 @@ export function ScheduleTimeline({ events }: ScheduleTimelineProps) {
     return tones[Math.abs(eventId) % tones.length];
   };
 
-  const visibleDayKeys = sortedDayKeys.slice(0, maxDays);
   const clampedStartIndex = Math.max(
     0,
     Math.min(startDayIndex, Math.max(0, sortedDayKeys.length - maxDays))
@@ -307,11 +306,6 @@ export function ScheduleTimeline({ events }: ScheduleTimelineProps) {
   const columnTemplate = `80px repeat(${pagedDayKeys.length}, minmax(0, 1fr))`;
   const estLineTop = toVisibleMinutes(estMinutes) * PX_PER_MINUTE;
   const showEstLine = estMinutes >= viewStartMinute && estMinutes <= viewEndMinute;
-
-  const rangeStartLabel = pagedDayKeys[0] ? formatDayLabel(pagedDayKeys[0]) : "";
-  const rangeEndLabel = pagedDayKeys[pagedDayKeys.length - 1]
-    ? formatDayLabel(pagedDayKeys[pagedDayKeys.length - 1] as string)
-    : "";
 
   return (
     <div className="space-y-6">
