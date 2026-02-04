@@ -5,8 +5,7 @@ import { usePathname } from "next/navigation";
 import { NavigationMenuItem } from "@uwdsc/ui";
 import { motion } from "framer-motion";
 import { useTheme } from "next-themes";
-import { useEffect, useMemo, useState } from "react";
-import { UserProfile } from "@/types/api";
+import { useEffect, useState } from "react";
 
 interface NavLink {
   href: string;
@@ -14,30 +13,13 @@ interface NavLink {
 }
 
 interface NavLinksProps {
-  readonly profile: UserProfile | null;
+  readonly navLinks: NavLink[];
 }
 
-export function NavLinks({ profile }: NavLinksProps) {
+export function NavLinks({ navLinks }: NavLinksProps) {
   const pathname = usePathname();
   const { theme, systemTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
-
-  // Dynamically set nav links based on authentication
-  const navLinks: NavLink[] = useMemo(() => {
-    const baseLinks: NavLink[] = [
-      { href: "/", label: "Home" },
-      { href: "/team", label: "Team" },
-      { href: "/apply", label: "Apply" },
-      { href: "/calendar", label: "Calendar" },
-    ];
-
-    if (profile) {
-      // Insert "Check In" after "Team"
-      baseLinks.splice(2, 0, { href: "/check-in", label: "Check In" });
-    }
-
-    return baseLinks;
-  }, [profile]);
 
   useEffect(() => setMounted(true), []);
 

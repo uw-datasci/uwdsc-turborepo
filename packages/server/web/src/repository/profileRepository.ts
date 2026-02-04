@@ -11,6 +11,21 @@ export interface ProfileUpdateData {
   member_ideas?: string;
 }
 
+export interface MarkAsPaidData {
+  payment_method: "cash" | "online" | "math_soc";
+  payment_location: string;
+  verifier: string;
+}
+
+export interface UpdateMemberData {
+  first_name: string;
+  last_name: string;
+  wat_iam?: string | null;
+  faculty?: string | null;
+  term?: string | null;
+  is_math_soc_member: boolean;
+}
+
 export class ProfileRepository extends BaseRepository {
   /**
    * Update user profile by user ID
@@ -65,7 +80,21 @@ export class ProfileRepository extends BaseRepository {
   async getProfileByUserId(userId: string): Promise<Profile | null> {
     try {
       const result = await this.sql<Profile[]>`
-        SELECT *
+        SELECT 
+          id,
+          first_name,
+          last_name,
+          user_role,
+          has_paid,
+          wat_iam,
+          faculty,
+          term,
+          heard_from_where,
+          payment_method,
+          payment_location,
+          verifier,
+          member_ideas,
+          is_math_soc_member
         FROM profiles
         WHERE id = ${userId}
       `;
@@ -93,17 +122,15 @@ export class ProfileRepository extends BaseRepository {
           au.email,
           p.first_name,
           p.last_name,
-          p.user_status,
+          p.user_role,
           p.has_paid,
           p.is_math_soc_member,
           p.faculty,
           p.term,
-          p.wat_iam,
-          p.created_at,
-          p.updated_at
+          p.wat_iam
         FROM profiles p
         LEFT JOIN auth.users au ON p.id = au.id
-        ORDER BY p.created_at DESC
+        ORDER BY au.created_at DESC
       `;
 
       return result;
@@ -146,6 +173,123 @@ export class ProfileRepository extends BaseRepository {
     } catch (error: unknown) {
       console.error("Error fetching membership stats:", error);
       throw error;
+    }
+  }
+
+  /**
+   * Mark a member as paid by profile ID
+   * @param profileId - The profile ID (UUID)
+   * @param data - Payment data (method, location, verifier)
+   */
+  async markAsPaid(
+    profileId: string,
+    data: MarkAsPaidData,
+  ): Promise<{ success: boolean; error?: string }> {
+    try {
+      const result = await this.sql`
+        UPDATE profiles
+        SET 
+          has_paid = true,
+          payment_method = ${data.payment_method}::payment_method_enum,
+          payment_location = ${data.payment_location},
+          verifier = ${data.verifier},
+          updated_at = NOW()
+        WHERE id = ${profileId}
+        RETURNING *
+      `;
+
+      if (result.length === 0) {
+        return {
+          success: false,
+          error: "Profile not found",
+        };
+      }
+
+      return { success: true };
+    } catch (error: unknown) {
+      console.error("Error marking member as paid:", error);
+      return {
+        success: false,
+        error: (error as Error).message || "Failed to mark as paid",
+      };
+    }
+  }
+
+  /**
+   * Update member information by profile ID
+   * @param profileId - The profile ID (UUID)
+   * @param data - Member data to update
+   */
+  async updateMemberById(
+    profileId: string,
+    data: UpdateMemberData,
+  ): Promise<{ success: boolean; error?: string }> {
+    try {
+      // Build the update query dynamically based on whether faculty is provided
+      const facultyValue = data.faculty 
+        ? this.sql`${data.faculty}::faculty_enum` 
+        : this.sql`NULL`;
+
+      const result = await this.sql`
+        UPDATE profiles
+        SET 
+          first_name = ${data.first_name},
+          last_name = ${data.last_name},
+          wat_iam = ${data.wat_iam ?? null},
+          faculty = ${facultyValue},
+          term = ${data.term ?? null},
+          is_math_soc_member = ${data.is_math_soc_member},
+          updated_at = NOW()
+        WHERE id = ${profileId}
+        RETURNING *
+      `;
+
+      if (result.length === 0) {
+        return {
+          success: false,
+          error: "Profile not found",
+        };
+      }
+
+      return { success: true };
+    } catch (error: unknown) {
+      console.error("Error updating member:", error);
+      return {
+        success: false,
+        error: (error as Error).message || "Failed to update member",
+      };
+    }
+  }
+
+  /**
+   * Delete a member by profile ID
+   * @param profileId - The profile ID (UUID)
+   */
+  async deleteMemberById(
+    profileId: string,
+  ): Promise<{ success: boolean; error?: string }> {
+    try {
+      // First, delete the user from auth.users (this will cascade to profiles)
+      const result = await this.sql`
+        DELETE FROM auth.users
+        WHERE id = ${profileId}
+        RETURNING id
+      `;
+
+      if (result.length === 0) {
+        return {
+          success: false,
+          error: "User not found",
+        };
+      }
+
+      return { success: true };
+    } catch (error: unknown) {
+      console.error("Error deleting member:", error);
+      return {
+        success: false,
+        error: (error as Error).message || "Failed to delete member",
+      };
     }
   }
 }

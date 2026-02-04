@@ -8,7 +8,7 @@ export default function SectionWrapper({
   children,
   className,
   id,
-}: HomeSectionWrapperProps) {
+}: Readonly<HomeSectionWrapperProps>) {
   return (
     <section id={id} className={`mx-container mb-section ${className}`}>
       {children}
