@@ -16,7 +16,9 @@ interface ScheduleTimelineProps {
 }
 
 export function ScheduleTimeline({ events }: ScheduleTimelineProps) {
-  const [selectedEvent, setSelectedEvent] = useState<ScheduleEvent | null>(null);
+  const [selectedEvent, setSelectedEvent] = useState<ScheduleEvent | null>(
+    null,
+  );
   const [maxDays, setMaxDays] = useState(3);
   const [startDayIndex, setStartDayIndex] = useState(0);
   const [nowTick, setNowTick] = useState(() => Date.now());
@@ -78,7 +80,7 @@ export function ScheduleTimeline({ events }: ScheduleTimelineProps) {
     });
     const parts = formatter.formatToParts(date);
     const lookup = Object.fromEntries(
-      parts.map(part => [part.type, part.value])
+      parts.map((part) => [part.type, part.value]),
     );
     return {
       year: Number(lookup.year),
@@ -126,17 +128,20 @@ export function ScheduleTimeline({ events }: ScheduleTimelineProps) {
     return () => clearInterval(interval);
   }, []);
 
-  const eventsByDay = events.reduce((acc, event) => {
-    const dayKey = getDayKey(event.start_time);
-    if (!acc[dayKey]) {
-      acc[dayKey] = [];
-    }
-    acc[dayKey].push(event);
-    return acc;
-  }, {} as Record<string, ScheduleEvent[]>);
+  const eventsByDay = events.reduce(
+    (acc, event) => {
+      const dayKey = getDayKey(event.start_time);
+      if (!acc[dayKey]) {
+        acc[dayKey] = [];
+      }
+      acc[dayKey].push(event);
+      return acc;
+    },
+    {} as Record<string, ScheduleEvent[]>,
+  );
 
   const sortedDayKeys = Object.keys(eventsByDay).sort(
-    (a, b) => new Date(a).getTime() - new Date(b).getTime()
+    (a, b) => new Date(a).getTime() - new Date(b).getTime(),
   );
 
   const nowDate = new Date(nowTick);
@@ -144,7 +149,7 @@ export function ScheduleTimeline({ events }: ScheduleTimelineProps) {
   const estDayKey = getDayKeyFromZone(TIME_ZONE, nowDate);
   const estMinutes = estParts.hour * 60 + estParts.minute;
 
-  const allMinutes = events.flatMap(event => [
+  const allMinutes = events.flatMap((event) => [
     getMinutesFromMidnight(event.start_time),
     getMinutesFromMidnight(event.end_time),
   ]);
@@ -181,12 +186,12 @@ export function ScheduleTimeline({ events }: ScheduleTimelineProps) {
 
   const hours = Array.from({ length: maxHour - minHour + 1 }, (_, index) => {
     return minHour + index;
-  }).filter(hour => hour < HIDDEN_HOURS_START || hour >= HIDDEN_HOURS_END);
+  }).filter((hour) => hour < HIDDEN_HOURS_START || hour >= HIDDEN_HOURS_END);
 
   const isActiveDay = (dayEvents: ScheduleEvent[]) => {
     if (dayEvents.length === 0) return false;
     const now = new Date();
-    const hasOngoingEvent = dayEvents.some(event => {
+    const hasOngoingEvent = dayEvents.some((event) => {
       return (
         now >= new Date(event.start_time) && now <= new Date(event.end_time)
       );
@@ -198,7 +203,9 @@ export function ScheduleTimeline({ events }: ScheduleTimelineProps) {
     if (!firstEvent) return false;
     const todayKey = estDayKey;
     const dayKey = getDayKey(firstEvent.start_time);
-    const hasFutureEvents = dayEvents.some(event => now < new Date(event.end_time));
+    const hasFutureEvents = dayEvents.some(
+      (event) => now < new Date(event.end_time),
+    );
 
     return todayKey === dayKey && hasFutureEvents;
   };
@@ -206,7 +213,7 @@ export function ScheduleTimeline({ events }: ScheduleTimelineProps) {
   const isDayPassed = (dayEvents: ScheduleEvent[]) => {
     if (dayEvents.length === 0) return false;
     const now = new Date();
-    return dayEvents.every(event => now > new Date(event.end_time));
+    return dayEvents.every((event) => now > new Date(event.end_time));
   };
 
   type PositionedEvent = {
@@ -231,22 +238,22 @@ export function ScheduleTimeline({ events }: ScheduleTimelineProps) {
     const flushGroup = () => {
       const columnCount = Math.max(
         1,
-        ...activeGroup.map(item => item.column + 1)
+        ...activeGroup.map((item) => item.column + 1),
       );
-      activeGroup.forEach(item => {
+      activeGroup.forEach((item) => {
         item.columnCount = columnCount;
       });
       activeGroup = [];
       activeGroupEnd = -1;
     };
 
-    sorted.forEach(event => {
+    sorted.forEach((event) => {
       const startMinutes = getMinutesFromMidnight(event.start_time);
       const endMinutes = getMinutesFromMidnight(event.end_time);
       const height = Math.max(
         (toVisibleMinutes(endMinutes) - toVisibleMinutes(startMinutes)) *
           PX_PER_MINUTE,
-        MIN_EVENT_HEIGHT
+        MIN_EVENT_HEIGHT,
       );
 
       if (activeGroup.length > 0 && startMinutes >= activeGroupEnd) {
@@ -259,7 +266,7 @@ export function ScheduleTimeline({ events }: ScheduleTimelineProps) {
         activeGroupEnd = Math.max(activeGroupEnd, endMinutes);
       }
 
-      const usedColumns = new Set(activeGroup.map(item => item.column));
+      const usedColumns = new Set(activeGroup.map((item) => item.column));
       let column = 0;
       while (usedColumns.has(column)) {
         column += 1;
@@ -297,15 +304,16 @@ export function ScheduleTimeline({ events }: ScheduleTimelineProps) {
 
   const clampedStartIndex = Math.max(
     0,
-    Math.min(startDayIndex, Math.max(0, sortedDayKeys.length - maxDays))
+    Math.min(startDayIndex, Math.max(0, sortedDayKeys.length - maxDays)),
   );
   const pagedDayKeys = sortedDayKeys.slice(
     clampedStartIndex,
-    clampedStartIndex + maxDays
+    clampedStartIndex + maxDays,
   );
   const columnTemplate = `80px repeat(${pagedDayKeys.length}, minmax(0, 1fr))`;
   const estLineTop = toVisibleMinutes(estMinutes) * PX_PER_MINUTE;
-  const showEstLine = estMinutes >= viewStartMinute && estMinutes <= viewEndMinute;
+  const showEstLine =
+    estMinutes >= viewStartMinute && estMinutes <= viewEndMinute;
 
   return (
     <div className="space-y-6">
@@ -313,7 +321,7 @@ export function ScheduleTimeline({ events }: ScheduleTimelineProps) {
         <div className="flex items-center gap-2">
           <button
             type="button"
-            onClick={() => setStartDayIndex(prev => Math.max(0, prev - 1))}
+            onClick={() => setStartDayIndex((prev) => Math.max(0, prev - 1))}
             disabled={clampedStartIndex === 0}
             aria-label="Previous days"
             className="h-8 w-8 flex items-center justify-center border border-white/10 hover:border-white/30 disabled:opacity-40 disabled:cursor-not-allowed"
@@ -323,8 +331,8 @@ export function ScheduleTimeline({ events }: ScheduleTimelineProps) {
           <button
             type="button"
             onClick={() =>
-              setStartDayIndex(prev =>
-                Math.min(prev + 1, Math.max(0, sortedDayKeys.length - maxDays))
+              setStartDayIndex((prev) =>
+                Math.min(prev + 1, Math.max(0, sortedDayKeys.length - maxDays)),
               )
             }
             disabled={clampedStartIndex + maxDays >= sortedDayKeys.length}
@@ -345,7 +353,7 @@ export function ScheduleTimeline({ events }: ScheduleTimelineProps) {
             <div className="px-3 py-2 text-[11px] uppercase tracking-wider text-white/40">
               Time
             </div>
-            {pagedDayKeys.map(dayKey => {
+            {pagedDayKeys.map((dayKey) => {
               const dayEvents = eventsByDay[dayKey] ?? [];
               const activeDay = isActiveDay(dayEvents);
               const dayPassed = isDayPassed(dayEvents);
@@ -371,7 +379,7 @@ export function ScheduleTimeline({ events }: ScheduleTimelineProps) {
 
           <div className="grid" style={{ gridTemplateColumns: columnTemplate }}>
             <div className="relative border-r border-white/10">
-              {hours.map(hour => (
+              {hours.map((hour) => (
                 <div
                   key={hour}
                   className="border-t border-white/10 px-3 pt-2 text-[11px] text-white/40"
@@ -385,7 +393,7 @@ export function ScheduleTimeline({ events }: ScheduleTimelineProps) {
               ))}
             </div>
 
-            {pagedDayKeys.map(dayKey => {
+            {pagedDayKeys.map((dayKey) => {
               const dayEvents = eventsByDay[dayKey] ?? [];
               const positionedEvents = getPositionedEvents(dayEvents);
               const isTodayEst = dayKey === estDayKey;
@@ -407,7 +415,7 @@ export function ScheduleTimeline({ events }: ScheduleTimelineProps) {
                       </div>
                     </div>
                   )}
-                  {hours.map(hour => (
+                  {hours.map((hour) => (
                     <div
                       key={hour}
                       className="absolute left-0 right-0 border-t border-white/10"
@@ -417,58 +425,62 @@ export function ScheduleTimeline({ events }: ScheduleTimelineProps) {
                     />
                   ))}
 
-                  {positionedEvents.map(({ event, top, height, column, columnCount }) => {
-                    const isOngoing =
-                      new Date() >= new Date(event.start_time) &&
-                      new Date() <= new Date(event.end_time);
-                    const isPast = new Date() > new Date(event.end_time);
-                    const columnWidth = 100 / columnCount;
-                    const showTime = height >= 38;
-                    const showLocation = height >= 52;
+                  {positionedEvents.map(
+                    ({ event, top, height, column, columnCount }) => {
+                      const isOngoing =
+                        new Date() >= new Date(event.start_time) &&
+                        new Date() <= new Date(event.end_time);
+                      const isPast = new Date() > new Date(event.end_time);
+                      const columnWidth = 100 / columnCount;
+                      const showTime = height >= 38;
+                      const showLocation = height >= 52;
 
-                    const tone = getEventTone(event.id);
+                      const tone = getEventTone(event.id);
 
-                    let eventColorClasses: string;
-                    if (isOngoing) {
-                      eventColorClasses = "border-blue-500 bg-blue-900/80 text-white";
-                    } else if (isPast) {
-                      eventColorClasses = "border-slate-600 bg-slate-900/70 text-white/60";
-                    } else {
-                      eventColorClasses = `${tone} text-white`;
-                    }
+                      let eventColorClasses: string;
+                      if (isOngoing) {
+                        eventColorClasses =
+                          "border-blue-500 bg-blue-900/80 text-white";
+                      } else if (isPast) {
+                        eventColorClasses =
+                          "border-slate-600 bg-slate-900/70 text-white/60";
+                      } else {
+                        eventColorClasses = `${tone} text-white`;
+                      }
 
-                    return (
-                      <button
-                        key={event.id}
-                        type="button"
-                        onClick={() => setSelectedEvent(event)}
-                        className={`absolute border-l-4 px-2 py-2 text-xs text-left overflow-hidden flex flex-col justify-start ${eventColorClasses} transition-colors`}
-                        style={{
-                          top: `${top}px`,
-                          height: `${height}px`,
-                          left: `${column * columnWidth}%`,
-                          width: `${columnWidth}%`,
-                        }}
-                      >
-                        <div className="font-semibold line-clamp-1">
-                          {event.name}
-                        </div>
-                        {showTime && (
-                          <div className="mt-1 flex items-center text-[11px] text-white/70 line-clamp-1">
-                            <Clock className="mr-1 h-3 w-3" />
-                            {formatTime(event.start_time)} -{" "}
-                            {formatTime(event.end_time)}
+                      return (
+                        <button
+                          key={event.id}
+                          type="button"
+                          onClick={() => setSelectedEvent(event)}
+                          className={`absolute border-l-4 px-2 py-2 text-xs text-left overflow-hidden flex flex-col justify-start ${eventColorClasses} transition-colors`}
+                          style={{
+                            top: `${top}px`,
+                            height: `${height}px`,
+                            left: `${column * columnWidth}%`,
+                            width: `${columnWidth}%`,
+                          }}
+                        >
+                          <div className="font-semibold line-clamp-1">
+                            {event.name}
                           </div>
-                        )}
-                        {showLocation && event.location && (
-                          <div className="mt-1 flex items-center text-[11px] text-white/60 line-clamp-1">
-                            <MapPin className="mr-1 h-3 w-3" />
-                            {event.location}
-                          </div>
-                        )}
-                      </button>
-                    );
-                  })}
+                          {showTime && (
+                            <div className="mt-1 flex items-center text-[11px] text-white/70 line-clamp-1">
+                              <Clock className="mr-1 h-3 w-3" />
+                              {formatTime(event.start_time)} -{" "}
+                              {formatTime(event.end_time)}
+                            </div>
+                          )}
+                          {showLocation && event.location && (
+                            <div className="mt-1 flex items-center text-[11px] text-white/60 line-clamp-1">
+                              <MapPin className="mr-1 h-3 w-3" />
+                              {event.location}
+                            </div>
+                          )}
+                        </button>
+                      );
+                    },
+                  )}
                 </div>
               );
             })}
@@ -478,7 +490,7 @@ export function ScheduleTimeline({ events }: ScheduleTimelineProps) {
 
       <Dialog
         open={Boolean(selectedEvent)}
-        onOpenChange={open => {
+        onOpenChange={(open) => {
           if (!open) {
             setSelectedEvent(null);
           }
@@ -486,11 +498,13 @@ export function ScheduleTimeline({ events }: ScheduleTimelineProps) {
       >
         <DialogContent className="max-w-xl bg-black border border-white/10 text-white">
           <DialogHeader>
-            <DialogTitle className="text-2xl">{selectedEvent?.name}</DialogTitle>
+            <DialogTitle className="text-2xl">
+              {selectedEvent?.name}
+            </DialogTitle>
             <DialogDescription className="text-white/60">
               {selectedEvent
                 ? `${formatFullDate(selectedEvent.start_time)} • ${formatTime(
-                    selectedEvent.start_time
+                    selectedEvent.start_time,
                   )} - ${formatTime(selectedEvent.end_time)}`
                 : ""}
             </DialogDescription>

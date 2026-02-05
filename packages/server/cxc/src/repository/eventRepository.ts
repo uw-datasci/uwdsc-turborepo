@@ -295,4 +295,31 @@ export class EventRepository extends BaseRepository {
       throw error;
     }
   }
+
+  /**
+   * Delete an event
+   */
+  async deleteEvent(eventId: number): Promise<void> {
+    try {
+      // First delete all attendance records for this event
+      await this.sql`
+        DELETE FROM event_attendance
+        WHERE event_id = ${eventId}
+      `;
+
+      // Then delete the event itself
+      const result = await this.sql`
+        DELETE FROM events
+        WHERE id = ${eventId}
+        RETURNING id
+      `;
+
+      if (result.length === 0) {
+        throw new Error("Event not found or already deleted");
+      }
+    } catch (error: unknown) {
+      console.error("Error deleting event:", error);
+      throw error;
+    }
+  }
 }

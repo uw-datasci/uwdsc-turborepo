@@ -116,4 +116,18 @@ export class EventService {
       );
     }
   }
+
+  /**
+   * Delete an event
+   */
+  async deleteEvent(eventId: number): Promise<void> {
+    try {
+      await this.repository.deleteEvent(eventId);
+    } catch (error) {
+      throw new ApiError(
+        `Failed to delete event: ${(error as Error).message}`,
+        500,
+      );
+    }
+  }
 }

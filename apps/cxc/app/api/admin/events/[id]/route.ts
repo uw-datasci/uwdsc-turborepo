@@ -88,3 +88,71 @@ export async function PATCH(
     );
   }
 }
+
+/**
+ * DELETE /api/admin/events/[id]
+ * Delete an existing event
+ * Admin and superadmin only endpoint
+ */
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> },
+) {
+  try {
+    // Verify admin access
+    const authService = await createAuthService();
+    const { user, error: userError } = await authService.getCurrentUser();
+    const { id } = await params;
+
+    if (userError || !user) {
+      return NextResponse.json(
+        { error: "Unauthorized", message: "Authentication required" },
+        { status: 401 },
+      );
+    }
+
+    // Check if user is admin or superadmin
+    const profile = await profileService.getProfileByUserId(user.id);
+    if (profile?.role !== "admin" && profile?.role !== "superadmin") {
+      return NextResponse.json(
+        { error: "Forbidden", message: "Admin access required" },
+        { status: 403 },
+      );
+    }
+
+    const eventId = Number(id);
+    if (isNaN(eventId)) {
+      return NextResponse.json(
+        { error: "Bad Request", message: "Invalid event ID: " + id },
+        { status: 400 },
+      );
+    }
+
+    // Check if event exists
+    const existingEvent = await eventService.getEventById(eventId);
+    if (!existingEvent) {
+      return NextResponse.json(
+        { error: "Not Found", message: "Event not found" },
+        { status: 404 },
+      );
+    }
+
+    // Delete the event (this will also delete all attendance records)
+    await eventService.deleteEvent(eventId);
+
+    return NextResponse.json(
+      { message: "Event deleted successfully" },
+      { status: 200 },
+    );
+  } catch (error: unknown) {
+    console.error("Error deleting event:", error);
+    return NextResponse.json(
+      {
+        error: "Internal server error",
+        message:
+          error instanceof Error ? error.message : "Failed to delete event",
+      },
+      { status: 500 },
+    );
+  }
+}

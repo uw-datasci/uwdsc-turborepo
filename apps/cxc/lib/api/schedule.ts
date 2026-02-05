@@ -17,10 +17,10 @@ export interface ScheduleEvent {
 export async function getSchedule(): Promise<ScheduleEvent[]> {
   const response = await fetch("/api/schedule");
   const data = await response.json();
-  
+
   if (!response.ok) {
     throw createApiError(data, response.status);
   }
-  
+
   return data.events;
 }
