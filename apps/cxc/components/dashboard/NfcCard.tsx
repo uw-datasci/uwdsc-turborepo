@@ -106,39 +106,6 @@ export function NfcCard() {
 
           {/* NFC Info */}
           <div className="flex-1 space-y-4">
-            <div>
-              <label className="text-white/40 text-xs uppercase tracking-wider mb-2 block">
-                NFC ID
-              </label>
-              <div className="p-3 bg-white/5 border border-white/10 font-mono text-sm text-white break-all">
-                {checkInUrl}
-              </div>
-            </div>
-
-            <div>
-              <label className="text-white/40 text-xs uppercase tracking-wider mb-2 block">
-                Check-In URL
-              </label>
-              <div className="flex gap-2">
-                <div className="flex-1 p-3 bg-white/5 border border-white/10 font-mono text-xs text-white break-all">
-                  {checkInUrl}
-                </div>
-                <Button
-                  onClick={handleCopy}
-                  variant="outline"
-                  size="icon"
-                  className="border-white/20 text-white hover:bg-white hover:text-black"
-                  title={copied ? "Copied!" : "Copy URL"}
-                >
-                  {copied ? (
-                    <CheckCircle2 className="h-4 w-4" />
-                  ) : (
-                    <Copy className="h-4 w-4" />
-                  )}
-                </Button>
-              </div>
-            </div>
-
             <p className="text-white/60 text-sm">
               Scan this QR code or use your NFC to check in at events.
             </p>
