@@ -12,18 +12,27 @@ import {
   CheckCircleIcon,
 } from "@uwdsc/ui";
 import Image from "next/image";
+import { QrCode } from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
 
 interface NavItem {
   href: string;
   label: string;
   icon: React.ReactNode;
+  showForRoles?: string[]; // If undefined, show for all roles
 }
 
-const navItems: NavItem[] = [
+const allNavItems: NavItem[] = [
   {
     href: "/dashboard",
     label: "Overview",
     icon: <IdentificationCardIcon className="w-5 h-5" />,
+  },
+  {
+    href: "/dashboard/nfc",
+    label: "NFC Check-In",
+    icon: <QrCode className="w-5 h-5" />,
+    showForRoles: ["admin", "superadmin", "staff"], // Only show for non-default roles
   },
   {
     href: "/dashboard/application",
@@ -52,6 +61,15 @@ export function DashboardSidebar({
   onNavClick,
 }: Readonly<DashboardSidebarProps>) {
   const pathname = usePathname();
+  const { user } = useAuth();
+
+  // Filter nav items based on user role
+  const navItems = allNavItems.filter((item) => {
+    if (!item.showForRoles) return true; // Show for all roles
+    if (!user?.role) return false;
+    // Show NFC tab only for non-default roles
+    return user.role !== "default";
+  });
 
   return (
     <nav className={cn("flex flex-col gap-2 p-6", className)}>

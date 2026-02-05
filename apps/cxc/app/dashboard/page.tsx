@@ -6,7 +6,6 @@ import { useAuth } from "@/contexts/AuthContext";
 import { getApplication } from "@/lib/api/application";
 import { getMyTeam, type Team } from "@/lib/api";
 import { StatusCard, ProfileCard, TeamSection } from "@/components/dashboard";
-import { NfcCard } from "@/components/dashboard/NfcCard";
 import { AppFormValues } from "@/lib/schemas/application";
 
 export default function DashboardPage() {
@@ -88,9 +87,6 @@ export default function DashboardPage() {
 
         {/* Team Section */}
         <TeamSection team={team} />
-
-        {/* NFC Check-In Card - Only show for non-default roles */}
-        {user?.id && user?.role && user.role !== "default" && <NfcCard />}
 
         {/* Quick Links */}
         <motion.div
