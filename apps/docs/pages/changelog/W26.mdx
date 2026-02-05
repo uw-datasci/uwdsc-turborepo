@@ -15,6 +15,65 @@ This semester continues to build upon the foundation established in Fall 2025, w
 
 ## 🏆 CXC App (apps/cxc)
 
+### Schedule Timeline (PR #154)
+
+**Public Schedule Page (`/schedule`)**
+- Interactive timeline displaying all hackathon events
+- Public access - no authentication required for viewing schedule
+- Real-time updates with automatic refresh every minute using SWR
+- Events sorted chronologically by start time
+- Responsive design adapts to mobile (1 day), tablet (2 days), and desktop (3 days) views
+
+**Timeline Visualization Features**
+- Multi-day calendar view with hourly breakdown
+- Time displayed in Eastern Time (America/New_York timezone)
+- Visual indicators for event status:
+  - Active day marker (blue dot) for current day with ongoing or upcoming events
+  - "Now (EST)" red line showing current time position
+  - Color-coded event cards (emerald, indigo, fuchsia, cyan, amber)
+  - Ongoing events highlighted in blue
+  - Past events shown in muted gray
+- Intelligent time range display:
+  - Automatically hides overnight hours (12am-7am) when no events scheduled
+  - Dynamic view adjustment based on event times
+  - Smooth scrolling between days with pagination controls
+
+**Event Details**
+- Click any event to view full details in a modal:
+  - Event name and description
+  - Full date and time range
+  - Location information
+  - Start and end times with buffered periods
+- Inline event cards show:
+  - Event name and timing
+  - Location (when space permits)
+  - Time display adapts based on event card height
+
+**Smart Layout & Positioning**
+- Overlapping events displayed side-by-side in columns
+- Minimum event height for readability
+- Responsive column widths for multi-event time slots
+- Hourly grid lines for easy time reference
+
+**Backend & API**
+- `GET /api/schedule` - Fetch all events sorted by start time
+- `EventService.getAllEvents()` - Retrieve event data from database
+- Returns comprehensive event data:
+  - Basic info: name, description, location
+  - Timing: start_time, end_time, buffered times
+  - Metadata: event ID, image ID, timestamps
+
+**Client API Integration**
+- `getSchedule()` - Type-safe client function for fetching events
+- Error handling with descriptive messages
+- TypeScript `ScheduleEvent` interface for type safety
+
+**User Experience**
+- Loading state with animated spinner
+- Empty state message when no events scheduled
+- Error state with friendly message for failed data loads
+- Graceful handling of missing data (e.g., events without locations)
+
 ### Superadmin Dashboard (PR #141)
 
 **Dashboard Overview (`/admin/dashboard`)**

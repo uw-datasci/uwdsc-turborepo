@@ -549,6 +549,118 @@ async uploadAvatar(userId: string, file: File) {
 }
 ```
 
+## Real-World Example: Schedule API
+
+Here's a complete implementation from the CXC app showing a **public API endpoint** that requires no authentication:
+
+### API Route
+
+```typescript
+// apps/cxc/app/api/schedule/route.ts
+import { NextResponse } from "next/server";
+import { EventService } from "@uwdsc/server/cxc/services/eventService";
+
+const eventService = new EventService();
+
+/**
+ * GET /api/schedule
+ * Get all public events for the schedule page
+ * Public endpoint - no authentication required
+ */
+export async function GET() {
+  try {
+    const events = await eventService.getAllEvents();
+    
+    // Sort events by start time
+    const sortedEvents = events.sort((a, b) => 
+      new Date(a.start_time).getTime() - new Date(b.start_time).getTime()
+    );
+
+    return NextResponse.json({ events: sortedEvents }, { status: 200 });
+  } catch (error: unknown) {
+    console.error("Error fetching schedule:", error);
+    return NextResponse.json(
+      {
+        error: "Internal server error",
+        message: error instanceof Error ? error.message : "Failed to fetch schedule",
+      },
+      { status: 500 },
+    );
+  }
+}
+```
+
+### Client API Function
+
+```typescript
+// apps/cxc/lib/api/schedule.ts
+import { createApiError } from "./errors";
+
+export interface ScheduleEvent {
+  id: number;
+  name: string;
+  description?: string;
+  location?: string;
+  start_time: string;
+  buffered_start_time: string;
+  end_time: string;
+  buffered_end_time: string;
+  image_id?: number;
+  created_at: string;
+  updated_at: string;
+}
+
+export async function getSchedule(): Promise<ScheduleEvent[]> {
+  const response = await fetch("/api/schedule");
+  const data = await response.json();
+  
+  if (!response.ok) {
+    throw createApiError(data, response.status);
+  }
+  
+  return data.events;
+}
+```
+
+### React Component Usage
+
+```tsx
+// apps/cxc/app/schedule/page.tsx
+"use client";
+
+import useSWR from "swr";
+import { getSchedule } from "@/lib/api/schedule";
+import { ScheduleTimeline } from "@/components/schedule/ScheduleTimeline";
+
+export default function SchedulePage() {
+  const { data: events, error, isLoading } = useSWR(
+    "/api/schedule",
+    getSchedule,
+    {
+      refreshInterval: 60000, // Refresh every minute
+    }
+  );
+
+  if (isLoading) return <div>Loading...</div>;
+  if (error) return <div>Failed to load schedule</div>;
+  if (!events || events.length === 0) return <div>No events scheduled</div>;
+
+  return (
+    <div>
+      <h1>Hackathon Schedule</h1>
+      <ScheduleTimeline events={events} />
+    </div>
+  );
+}
+```
+
+**Key Features:**
+- Public endpoint (no auth required)
+- Sorting logic in API route
+- Type-safe client function
+- SWR for real-time updates
+- Graceful error handling
+
 ## Best Practices
 
 ### ✅ Do
@@ -560,6 +672,8 @@ async uploadAvatar(userId: string, file: File) {
 - Use transactions for multi-step operations
 - Add JSDoc comments
 - Write unit tests
+- Sort/filter data in API routes when appropriate
+- Use SWR or React Query for data fetching with caching
 
 ### ❌ Don't
 
@@ -568,6 +682,8 @@ async uploadAvatar(userId: string, file: File) {
 - Put business logic in API routes
 - Access database directly from routes
 - Return sensitive data
+- Forget to handle loading and error states
+- Over-fetch data (return only what's needed)
 
 ## Next Steps
 
