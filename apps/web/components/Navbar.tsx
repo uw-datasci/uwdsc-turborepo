@@ -9,7 +9,6 @@ import { usePathname } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
 import Image from "next/image";
 import Link from "next/link";
-import { useMemo } from "react";
 
 export function Navbar() {
   const pathname = usePathname();
@@ -17,27 +16,19 @@ export function Navbar() {
 
   const hideNavbar = pathname === "/login" || pathname === "/register";
 
-  // Navigation links based on authentication status
-  const navLinks = useMemo(() => {
-    const baseLinks = [
-      { href: "/", label: "Home" },
-      { href: "/team", label: "Team" },
-      { href: "/apply", label: "Apply" },
-      { href: "/calendar", label: "Calendar" },
-    ];
-
-    if (profile) {
-      baseLinks.splice(2, 0, { href: "/check-in", label: "Check In" });
-    }
-
-    return baseLinks;
-  }, [profile]);
+  // Navigation links
+  const navLinks = [
+    { href: "/", label: "Home" },
+    { href: "/team", label: "Team" },
+    { href: "/apply", label: "Apply" },
+    { href: "/calendar", label: "Calendar" },
+  ];
 
   // Check if user is admin or exec
-  const userStatus = profile?.user_status || undefined;
-  const isAdminOrExec = userStatus === "admin" || userStatus === "exec";
-  const isAdmin = userStatus === "admin";
-  const adminLabel = userStatus === "admin" ? "Admin" : "Exec";
+  const userRole = profile?.user_role || undefined;
+  const isAdminOrExec = userRole === "admin" || userRole === "exec";
+  const isAdmin = userRole === "admin";
+  const adminLabel = userRole === "admin" ? "Admin" : "Exec";
 
   const visibleAdminLinks = [
     {
@@ -84,9 +75,9 @@ export function Navbar() {
           >
             <NavigationMenu viewport={false}>
               <NavigationMenuList className="gap-4">
-                <NavLinks profile={profile} />
+                <NavLinks navLinks={navLinks} />
                 {isAdminOrExec && (
-                  <AdminDropdown userStatus={userStatus as "admin" | "exec"} />
+                  <AdminDropdown userRole={userRole as "admin" | "exec"} />
                 )}
                 <UserAvatar />
               </NavigationMenuList>

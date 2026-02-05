@@ -9,7 +9,7 @@ const profileService = new ProfileService();
 /**
  * GET /api/admin/events
  * Get all events
- * Admin and superadmin only endpoint
+ * Admin, superadmin, and volunteer endpoint
  */
 export async function GET() {
   try {
@@ -24,11 +24,15 @@ export async function GET() {
       );
     }
 
-    // Check if user is admin or superadmin
+    // Check if user is admin, superadmin, or volunteer
     const profile = await profileService.getProfileByUserId(user.id);
-    if (profile?.role !== "admin" && profile?.role !== "superadmin") {
+    if (
+      profile?.role !== "admin" &&
+      profile?.role !== "superadmin" &&
+      profile?.role !== "volunteer"
+    ) {
       return NextResponse.json(
-        { error: "Forbidden", message: "Admin access required" },
+        { error: "Forbidden", message: "Admin or volunteer access required" },
         { status: 403 },
       );
     }

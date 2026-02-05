@@ -91,15 +91,13 @@ export default function MailingList() {
                     size="lg"
                     type="submit"
                     disabled={loading}
-                    className="!w-auto absolute right-2 top-1.75 md:top-2.25 bottom-1 rounded-sm bg-gradient-purple md:text-lg font-bold p-4 md:p-6"
+                    className="w-auto! absolute right-2 top-1.75 md:top-2.25 bottom-1 rounded-sm bg-gradient-purple md:text-lg font-bold p-4 md:p-6"
                   >
                     {loading ? (
-                      <>
                         <Loader2
                           className="w-5 h-5 animate-spin"
                           strokeWidth={3}
                         />
-                      </>
                     ) : (
                       "Submit"
                     )}

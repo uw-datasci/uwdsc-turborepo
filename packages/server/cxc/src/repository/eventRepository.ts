@@ -223,6 +223,27 @@ export class EventRepository extends BaseRepository {
   }
 
   /**
+   * Check if a user is already checked in for an event
+   */
+  async isUserCheckedIn(
+    eventId: number,
+    profileId: string,
+  ): Promise<boolean> {
+    try {
+      const result = await this.sql<EventAttendance[]>`
+        SELECT *
+        FROM event_attendance
+        WHERE event_id = ${eventId} AND profile_id = ${profileId} AND checked_in = true
+      `;
+
+      return result.length > 0;
+    } catch (error: unknown) {
+      console.error("Error checking user check-in status:", error);
+      return false;
+    }
+  }
+
+  /**
    * Update an existing event
    */
   async updateEvent(

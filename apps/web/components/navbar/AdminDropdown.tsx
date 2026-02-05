@@ -18,33 +18,33 @@ const adminLinks: AdminLink[] = [
   {
     href: "/admin/events",
     title: "Manage Events 📅",
-    description: "Create and update upcoming club events",
+    description: "Create & update events",
   },
   {
     href: "/admin/applications",
     title: "Manage Exec Apps 📝",
-    description: "Review applications for the next term's exec team",
+    description: "Review apps for next term's team",
     adminOnly: true,
   },
 ];
 
 interface AdminDropdownProps {
-  readonly userStatus: "admin" | "exec";
+  readonly userRole: "admin" | "exec";
 }
 
-export function AdminDropdown({ userStatus }: AdminDropdownProps) {
-  const isAdmin = userStatus === "admin";
-  const label = userStatus === "admin" ? "Admin" : "Exec";
+export function AdminDropdown({ userRole }: AdminDropdownProps) {
+  const isAdmin = userRole === "admin";
+  const label = userRole === "admin" ? "Admin" : "Exec";
 
   // Filter links based on user status
   const visibleLinks = adminLinks.filter((link) => !link.adminOnly || isAdmin);
 
   return (
     <NavigationMenuItem>
-      <NavigationMenuTrigger className="text-sm sm:text-base !bg-transparent hover:!bg-transparent hover:text-nav-hover-blue data-[state=open]:!bg-transparent data-[state=open]:text-nav-hover-blue focus:!bg-transparent focus-visible:!bg-transparent">
+      <NavigationMenuTrigger className="text-sm sm:text-base bg-transparent! hover:bg-transparent! hover:text-nav-hover-blue data-[state=open]:bg-transparent! data-[state=open]:text-nav-hover-blue focus:bg-transparent! focus-visible:bg-transparent!">
         {label}
       </NavigationMenuTrigger>
-      <NavigationMenuContent className="!bg-transparent !border-0 !shadow-none !mt-5">
+      <NavigationMenuContent className="bg-transparent! border-0! shadow-none! mt-5!">
         <GlassSurface
           width="100%"
           height="auto"
@@ -53,7 +53,7 @@ export function AdminDropdown({ userStatus }: AdminDropdownProps) {
           brightness={95}
           className="p-0"
         >
-          <ul className="grid gap-3 p-4 md:w-[500px] md:grid-cols-[.75fr_1fr]">
+          <ul className="grid gap-3 p-4 md:w-[450px] md:grid-cols-[.75fr_1fr]">
             <li className="row-span-3">
               <NavigationMenuLink asChild>
                 <Link

@@ -50,7 +50,7 @@ export function LoginForm() {
         if (responseData.user.email_confirmed_at) {
           // Email verified, redirect to landing with full page reload
           // This ensures cookies are synced and SWR cache is fresh
-          window.location.href = "/";
+          globalThis.location.href = "/";
         } else {
           // Email not verified, show modal
           setUserEmail(data.email);
@@ -106,7 +106,7 @@ export function LoginForm() {
               size="lg"
               disabled={isLoading}
               type="submit"
-              className="w-full rounded-md xl:rounded-lg bg-gradient-purple text-lg font-bold !h-auto py-2.5"
+              className="w-full rounded-md xl:rounded-lg bg-gradient-purple text-lg font-bold h-auto! py-2.5"
             >
               {isLoading ? (
                 <>
