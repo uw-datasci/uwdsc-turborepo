@@ -1,9 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Image from "next/image";
-import { Card, CardHeader, CardTitle, CardContent, Button } from "@uwdsc/ui";
-import { Copy, CheckCircle2 } from "lucide-react";
+import { Card, CardHeader, CardTitle, CardContent } from "@uwdsc/ui";
 
 export function NfcCard() {
   const [nfcId, setNfcId] = useState<string | null>(null);
