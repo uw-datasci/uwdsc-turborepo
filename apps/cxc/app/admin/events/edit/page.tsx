@@ -101,6 +101,25 @@ export default function EditEventsPage() {
           ? new Date(endTime.getTime() + 30 * 60 * 1000)
           : null;
 
+      // Validate time constraints
+      if (startTime && endTime && startTime >= endTime) {
+        setError("Start time must be before end time");
+        setSaving(null);
+        return;
+      }
+
+      if (bufferedStartTime && startTime && bufferedStartTime >= startTime) {
+        setError("Buffered start time must be before start time");
+        setSaving(null);
+        return;
+      }
+
+      if (bufferedEndTime && endTime && bufferedEndTime <= endTime) {
+        setError("Buffered end time must be after end time");
+        setSaving(null);
+        return;
+      }
+
       const updateData: Record<string, unknown> = {};
       if (editForm.name !== undefined) updateData.name = editForm.name;
       if (editForm.description !== undefined)
