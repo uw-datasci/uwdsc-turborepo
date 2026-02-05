@@ -47,6 +47,25 @@ export default function AddEventPage() {
         ? new Date(formData.buffered_end_time)
         : new Date(endTime.getTime() + 30 * 60 * 1000); // 30 minutes after
 
+      // Validate time constraints
+      if (startTime >= endTime) {
+        setError("Start time must be before end time");
+        setLoading(false);
+        return;
+      }
+
+      if (bufferedStartTime >= startTime) {
+        setError("Buffered start time must be before start time");
+        setLoading(false);
+        return;
+      }
+
+      if (bufferedEndTime <= endTime) {
+        setError("Buffered end time must be after end time");
+        setLoading(false);
+        return;
+      }
+
       const requestBody = {
         name: formData.name,
         description: formData.description || null,

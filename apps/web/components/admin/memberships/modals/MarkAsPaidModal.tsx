@@ -90,7 +90,10 @@ export function MarkAsPaidModal({
       onSuccess?.();
     } catch (error) {
       onOpenChange(false);
-      const errorMessage = error instanceof Error ? error.message : "Failed to mark member as paid";
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : "Failed to mark member as paid";
       toast.error(errorMessage);
     } finally {
       setIsSubmitting(false);
@@ -152,7 +155,10 @@ export function MarkAsPaidModal({
                     Payment Location <span className="text-red-500">*</span>
                   </FormLabel>
                   <FormControl>
-                    <Input {...field} placeholder="e.g., MC 3003, SLC, Online" />
+                    <Input
+                      {...field}
+                      placeholder="e.g., MC 3003, SLC, Online"
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

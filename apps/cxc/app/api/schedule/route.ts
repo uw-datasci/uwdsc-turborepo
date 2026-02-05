@@ -11,10 +11,11 @@ const eventService = new EventService();
 export async function GET() {
   try {
     const events = await eventService.getAllEvents();
-    
+
     // Sort events by start time
-    const sortedEvents = events.sort((a, b) => 
-      new Date(a.start_time).getTime() - new Date(b.start_time).getTime()
+    const sortedEvents = events.sort(
+      (a, b) =>
+        new Date(a.start_time).getTime() - new Date(b.start_time).getTime(),
     );
 
     return NextResponse.json({ events: sortedEvents }, { status: 200 });
@@ -23,7 +24,8 @@ export async function GET() {
     return NextResponse.json(
       {
         error: "Internal server error",
-        message: error instanceof Error ? error.message : "Failed to fetch schedule",
+        message:
+          error instanceof Error ? error.message : "Failed to fetch schedule",
       },
       { status: 500 },
     );

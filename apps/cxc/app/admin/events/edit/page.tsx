@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Card, CardContent, Input, Textarea } from "@uwdsc/ui";
-import { ArrowLeft, Loader2, Save, X } from "lucide-react";
+import { ArrowLeft, Loader2, Save, Trash2, X } from "lucide-react";
 import CxCButton from "@/components/CxCButton";
 
 interface Event {
@@ -24,6 +24,7 @@ export default function EditEventsPage() {
   const [loading, setLoading] = useState(true);
   const [editingId, setEditingId] = useState<string | number | null>(null);
   const [saving, setSaving] = useState<string | number | null>(null);
+  const [deleting, setDeleting] = useState<string | number | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
 
@@ -48,6 +49,13 @@ export default function EditEventsPage() {
 
     loadEvents();
   }, []);
+
+  // Scroll to top when error occurs
+  useEffect(() => {
+    if (error) {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  }, [error]);
 
   const handleEdit = (event: Event) => {
     setEditingId(event.id);
@@ -79,6 +87,45 @@ export default function EditEventsPage() {
     setEditForm({});
   };
 
+  const handleDelete = async (eventId: string | number) => {
+    // Confirm deletion
+    if (
+      !confirm(
+        "Are you sure you want to delete this event? This action cannot be undone.",
+      )
+    ) {
+      return;
+    }
+
+    setDeleting(eventId);
+    setError(null);
+    setSuccess(null);
+
+    try {
+      const response = await fetch(`/api/admin/events/${eventId}`, {
+        method: "DELETE",
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        // Remove the event from the local state
+        setEvents((prev) =>
+          prev.filter((e) => String(e.id) !== String(eventId)),
+        );
+        setSuccess("Event deleted successfully!");
+        setTimeout(() => setSuccess(null), 3000);
+      } else {
+        setError(data.message || data.error || "Failed to delete event");
+      }
+    } catch (err) {
+      console.error("Error deleting event:", err);
+      setError("Failed to delete event. Please try again.");
+    } finally {
+      setDeleting(null);
+    }
+  };
+
   const handleSave = async (eventId: string | number) => {
     setSaving(eventId);
     setError(null);
@@ -100,6 +147,25 @@ export default function EditEventsPage() {
         : endTime
           ? new Date(endTime.getTime() + 30 * 60 * 1000)
           : null;
+
+      // Validate time constraints
+      if (startTime && endTime && startTime >= endTime) {
+        setError("Start time must be before end time");
+        setSaving(null);
+        return;
+      }
+
+      if (bufferedStartTime && startTime && bufferedStartTime >= startTime) {
+        setError("Buffered start time must be before start time");
+        setSaving(null);
+        return;
+      }
+
+      if (bufferedEndTime && endTime && bufferedEndTime <= endTime) {
+        setError("Buffered end time must be after end time");
+        setSaving(null);
+        return;
+      }
 
       const updateData: Record<string, unknown> = {};
       if (editForm.name !== undefined) updateData.name = editForm.name;
@@ -392,12 +458,33 @@ export default function EditEventsPage() {
                           </div>
                         </div>
                       </div>
-                      <CxCButton
-                        onClick={() => handleEdit(event)}
-                        className="w-full"
-                      >
-                        Edit Event
-                      </CxCButton>
+                      <div className="flex gap-2">
+                        <CxCButton
+                          onClick={() => handleEdit(event)}
+                          disabled={deleting === event.id}
+                          className="flex-1"
+                        >
+                          Edit Event
+                        </CxCButton>
+                        <CxCButton
+                          variant="outline"
+                          onClick={() => handleDelete(event.id)}
+                          disabled={deleting === event.id}
+                          className="flex-1 !bg-transparent !border-red-500/30 !text-red-500 hover:!bg-red-500/10"
+                        >
+                          {deleting === event.id ? (
+                            <>
+                              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                              Deleting...
+                            </>
+                          ) : (
+                            <>
+                              <Trash2 className="mr-2 h-4 w-4" />
+                              Delete
+                            </>
+                          )}
+                        </CxCButton>
+                      </div>
                     </div>
                   )}
                 </CardContent>

@@ -1,20 +1,53 @@
 import { Sponsor, QandA } from "../types/home";
 
-import Federato from "../public/logos/federato.svg";
-import Intact from "../public/logos/intact.svg";
-import MEF from "../public/logos/mef.svg";
-import Runql from "../public/logos/runql.svg";
-import Sap from "../public/logos/sap.svg";
-import Telus from "../public/logos/telus.svg";
+import Accenture from "../public/logos/sponsors/accenture.svg";
+import AroundHi from "../public/logos/sponsors/aroundhi.svg";
+import Backboardio from "../public/logos/sponsors/backboardio.svg";
+import Chef from "../public/logos/sponsors/chef.svg";
+import Conrad from "../public/logos/sponsors/conrad.svg";
+import Equitable from "../public/logos/sponsors/equitable.svg";
+import Figma from "../public/logos/sponsors/figma.svg";
+import KPMG from "../public/logos/sponsors/kpmg.svg";
+import MEF from "../public/logos/sponsors/mef.svg";
+import NomadFuturist from "../public/logos/sponsors/nomad_futurist.svg";
+import Redbull from "../public/logos/sponsors/redbull.svg";
+import Tangerine from "../public/logos/sponsors/tangerine.svg";
 
-// CXC-TODO: split into tiers later and add link field
-export const CURRENT_SPONSORS: Sponsor[] = [
-  { name: "Federato", logo: Federato },
-  { name: "Telus", logo: Telus },
-  { name: "SAP", logo: Sap },
-  { name: "Intact", logo: Intact },
-  { name: "Runql", logo: Runql },
-  { name: "MEF", logo: MEF },
+export const PLATINUM_SPONSORS: Sponsor[] = [
+  {
+    name: "Tangerine",
+    logo: Tangerine,
+    link: "https://www.tangerine.ca/en/about-us",
+  },
+];
+
+export const BRONZE_SPONSORS: Sponsor[] = [
+  { name: "Equitable", logo: Equitable, link: "https://equitable.ca/home" },
+  {
+    name: "Nomad Futurist",
+    logo: NomadFuturist,
+    link: "https://nomadfuturist.org/",
+  },
+  {
+    name: "Accenture",
+    logo: Accenture,
+    link: "https://www.accenture.com/ca-en",
+  },
+  { name: "KPMG", logo: KPMG, link: "https://kpmg.com/ca/en/home.html" },
+  {
+    name: "Conrad",
+    logo: Conrad,
+    link: "https://uwaterloo.ca/brand/uw-logo/school-logos/conrad-school-entrepreneurship-and-business",
+  },
+  { name: "Around Hi", logo: AroundHi, link: "https://aroundhisolutions.com/" },
+  { name: "Backboard.io", logo: Backboardio, link: "https://backboard.io/" },
+];
+
+export const PARTNERS: Sponsor[] = [
+  { name: "Redbull", logo: Redbull, link: "https://www.redbull.com/ca-en" },
+  { name: "Figma", logo: Figma, link: "https://www.figma.com/" },
+  { name: "Chef", logo: Chef, link: "https://thechefsignature.ca/" },
+  { name: "MEF", logo: MEF, link: "https://uwaterloo.ca/math-endowment-fund/" },
 ];
 
 export const GENERAL_FAQ: QandA[] = [

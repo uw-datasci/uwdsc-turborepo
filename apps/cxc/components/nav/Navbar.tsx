@@ -171,7 +171,9 @@ export default function Navbar() {
                         <NavigationMenuContent>
                           <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
                             {(user?.role === "volunteer"
-                              ? adminPages.filter((page) => page.href === "/admin/events")
+                              ? adminPages.filter(
+                                  (page) => page.href === "/admin/events",
+                                )
                               : adminPages
                             ).map((page) => (
                               <li key={page.href}>

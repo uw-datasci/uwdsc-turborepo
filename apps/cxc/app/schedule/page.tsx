@@ -6,13 +6,13 @@ import { getSchedule } from "@/lib/api/schedule";
 import { Calendar, Loader2 } from "lucide-react";
 
 export default function SchedulePage() {
-  const { data: events, error, isLoading } = useSWR(
-    "/api/schedule",
-    getSchedule,
-    {
-      refreshInterval: 60000, // Refresh every minute
-    }
-  );
+  const {
+    data: events,
+    error,
+    isLoading,
+  } = useSWR("/api/schedule", getSchedule, {
+    refreshInterval: 60000, // Refresh every minute
+  });
 
   if (isLoading) {
     return (
