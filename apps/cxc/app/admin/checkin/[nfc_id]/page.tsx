@@ -38,6 +38,7 @@ export default function AdminCheckInPage() {
   >([]);
   const [loading, setLoading] = useState(true);
   const [checkingIn, setCheckingIn] = useState(false);
+  const [uncheckingIn, setUncheckingIn] = useState(false);
   const [isAlreadyCheckedIn, setIsAlreadyCheckedIn] = useState(false);
   const [checkInResult, setCheckInResult] = useState<CheckInResponse | null>(
     null,
@@ -240,6 +241,55 @@ export default function AdminCheckInPage() {
     }
   };
 
+  const handleUncheckIn = async () => {
+    if (!selectedEventId) {
+      setCheckInResult({
+        success: false,
+        message: "Please select an event",
+        error: "No event selected",
+      });
+      return;
+    }
+
+    setUncheckingIn(true);
+    setCheckInResult(null);
+
+    try {
+      const response = await fetch("/api/admin/checkin", {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          nfc_id: nfcId,
+          event_id: selectedEventId,
+        }),
+      });
+
+      const data: CheckInResponse = await response.json();
+
+      if (response.ok && data.success) {
+        setCheckInResult(data);
+        setIsAlreadyCheckedIn(false);
+
+        // Clear result after 5 seconds
+        setTimeout(() => {
+          setCheckInResult(null);
+        }, 5000);
+      } else {
+        setCheckInResult(data);
+      }
+    } catch (error) {
+      setCheckInResult({
+        success: false,
+        message: "Failed to uncheck user",
+        error: String(error),
+      });
+    } finally {
+      setUncheckingIn(false);
+    }
+  };
+
   const getCheckInUrl = () => {
     const baseUrl = typeof window !== "undefined" ? window.location.origin : "";
     return `${baseUrl}/admin/checkin/${nfcId}`;
@@ -374,36 +424,66 @@ export default function AdminCheckInPage() {
             </div>
 
             {/* Check In Button */}
-            <CxCButton
-              onClick={handleCheckIn}
-              disabled={
-                !selectedEventId ||
-                checkingIn ||
-                checkingStatus ||
-                !profile ||
-                isAlreadyCheckedIn
-              }
-              className={`w-full p-3 ${isAlreadyCheckedIn ? "opacity-60" : ""}`}
-            >
-              {checkingIn ? (
-                <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Checking In...
-                </>
-              ) : checkingStatus ? (
-                <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Loading...
-                </>
-              ) : isAlreadyCheckedIn ? (
-                <>
-                  <CheckCircle2 className="mr-2 h-4 w-4" />
-                  Already Checked In
-                </>
-              ) : (
-                "Check In"
+            <div className="flex gap-2">
+              <CxCButton
+                onClick={handleCheckIn}
+                disabled={
+                  !selectedEventId ||
+                  checkingIn ||
+                  uncheckingIn ||
+                  checkingStatus ||
+                  !profile ||
+                  isAlreadyCheckedIn
+                }
+                className={`flex-1 p-3 ${isAlreadyCheckedIn ? "opacity-60" : ""}`}
+              >
+                {checkingIn ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Checking In...
+                  </>
+                ) : checkingStatus ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Loading...
+                  </>
+                ) : isAlreadyCheckedIn ? (
+                  <>
+                    <CheckCircle2 className="mr-2 h-4 w-4" />
+                    Already Checked In
+                  </>
+                ) : (
+                  "Check In"
+                )}
+              </CxCButton>
+
+              {isAlreadyCheckedIn && (
+                <CxCButton
+                  onClick={handleUncheckIn}
+                  disabled={
+                    !selectedEventId ||
+                    checkingIn ||
+                    uncheckingIn ||
+                    checkingStatus ||
+                    !profile
+                  }
+                  variant="outline"
+                  className="p-3 !bg-red-500/10 !border-red-500/40 !text-red-300 hover:!bg-red-500/20 hover:!border-red-500/60"
+                >
+                  {uncheckingIn ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Unchecking...
+                    </>
+                  ) : (
+                    <>
+                      <XCircle className="mr-2 h-4 w-4" />
+                      Uncheck
+                    </>
+                  )}
+                </CxCButton>
               )}
-            </CxCButton>
+            </div>
 
             {/* Result Message */}
             {checkInResult && (
