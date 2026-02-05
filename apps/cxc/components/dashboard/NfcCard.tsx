@@ -73,9 +73,7 @@ export function NfcCard() {
     );
   }
 
-  if (!nfcId) {
-    return null;
-  }
+  if (!nfcId) return null;
 
   // Use the actual application URL (from window.location.origin)
   const baseUrl = typeof window !== "undefined" ? window.location.origin : "";
