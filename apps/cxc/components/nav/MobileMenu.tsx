@@ -145,7 +145,9 @@ export function MobileMenu({
                       </CollapsibleTrigger>
                       <CollapsibleContent className="space-y-2 mt-2">
                         {(user?.role === "volunteer"
-                          ? adminPages.filter((page) => page.href === "/admin/events")
+                          ? adminPages.filter(
+                              (page) => page.href === "/admin/events",
+                            )
                           : adminPages
                         ).map((page) => (
                           <SheetClose key={page.href} asChild>

@@ -77,7 +77,8 @@ export function EditMemberModal({
         first_name: member.first_name || "",
         last_name: member.last_name || "",
         wat_iam: member.wat_iam || "",
-        faculty: (member.faculty as EditMemberFormValues["faculty"]) || undefined,
+        faculty:
+          (member.faculty as EditMemberFormValues["faculty"]) || undefined,
         term: member.term || "",
         is_math_soc_member: member.is_math_soc_member || false,
       });
@@ -93,7 +94,8 @@ export function EditMemberModal({
       onSuccess?.();
     } catch (error) {
       onOpenChange(false);
-      const errorMessage = error instanceof Error ? error.message : "Failed to update member";
+      const errorMessage =
+        error instanceof Error ? error.message : "Failed to update member";
       toast.error(errorMessage);
     } finally {
       setIsSubmitting(false);

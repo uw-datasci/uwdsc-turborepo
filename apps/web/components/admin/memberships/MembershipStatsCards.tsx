@@ -41,7 +41,10 @@ export function MembershipStatsCards({
     <div className="grid gap-4 md:grid-cols-3 mb-8">
       {/* Total Users */}
       <Card
-        className={cn(cardBaseStyles, activeFilter === "all" && activeCardStyles)}
+        className={cn(
+          cardBaseStyles,
+          activeFilter === "all" && activeCardStyles,
+        )}
         onClick={() => onFilterChange("all")}
         onMouseEnter={() => setHoveredCard("all")}
         onMouseLeave={() => setHoveredCard(null)}
@@ -73,7 +76,10 @@ export function MembershipStatsCards({
 
       {/* Paid Users */}
       <Card
-        className={cn(cardBaseStyles, activeFilter === "paid" && activeCardStyles)}
+        className={cn(
+          cardBaseStyles,
+          activeFilter === "paid" && activeCardStyles,
+        )}
         onClick={() => onFilterChange("paid")}
         onMouseEnter={() => setHoveredCard("paid")}
         onMouseLeave={() => setHoveredCard(null)}
@@ -116,7 +122,9 @@ export function MembershipStatsCards({
         onMouseLeave={() => setHoveredCard(null)}
       >
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">Paid MathSoc Members</CardTitle>
+          <CardTitle className="text-sm font-medium">
+            Paid MathSoc Members
+          </CardTitle>
           <GraduationCap className="h-4 w-4 text-muted-foreground" />
         </CardHeader>
         <CardContent>

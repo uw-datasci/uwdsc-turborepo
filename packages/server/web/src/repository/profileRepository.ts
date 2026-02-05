@@ -226,8 +226,8 @@ export class ProfileRepository extends BaseRepository {
   ): Promise<{ success: boolean; error?: string }> {
     try {
       // Build the update query dynamically based on whether faculty is provided
-      const facultyValue = data.faculty 
-        ? this.sql`${data.faculty}::faculty_enum` 
+      const facultyValue = data.faculty
+        ? this.sql`${data.faculty}::faculty_enum`
         : this.sql`NULL`;
 
       const result = await this.sql`

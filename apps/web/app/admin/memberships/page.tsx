@@ -69,7 +69,8 @@ export default function AdminMembershipsPage() {
       <div>
         <h1 className="text-3xl font-bold mb-2">Membership</h1>
         <p className="text-muted-foreground">
-          Manage and view all member profiles and statistics. Click on the cards to quick filter
+          Manage and view all member profiles and statistics. Click on the cards
+          to quick filter
         </p>
       </div>
 

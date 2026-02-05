@@ -225,10 +225,7 @@ export class EventRepository extends BaseRepository {
   /**
    * Check if a user is already checked in for an event
    */
-  async isUserCheckedIn(
-    eventId: number,
-    profileId: string,
-  ): Promise<boolean> {
+  async isUserCheckedIn(eventId: number, profileId: string): Promise<boolean> {
     try {
       const result = await this.sql<EventAttendance[]>`
         SELECT *

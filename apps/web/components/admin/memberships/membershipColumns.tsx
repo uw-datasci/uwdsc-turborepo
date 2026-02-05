@@ -2,7 +2,14 @@
 
 import type { ColumnDef } from "@tanstack/react-table";
 import { Button } from "@uwdsc/ui";
-import { ArrowUp, ArrowDown, Minus, Pencil, Banknote, Trash2 } from "lucide-react";
+import {
+  ArrowUp,
+  ArrowDown,
+  Minus,
+  Pencil,
+  Banknote,
+  Trash2,
+} from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 import type { MemberProfile } from "@/types/api";
 

@@ -241,8 +241,7 @@ export default function AdminCheckInPage() {
   };
 
   const getCheckInUrl = () => {
-    const baseUrl =
-      typeof window !== "undefined" ? window.location.origin : "";
+    const baseUrl = typeof window !== "undefined" ? window.location.origin : "";
     return `${baseUrl}/admin/checkin/${nfcId}`;
   };
 
@@ -310,7 +309,9 @@ export default function AdminCheckInPage() {
                       <Button
                         variant="ghost"
                         size="icon"
-                        onClick={() => handleCopyToClipboard(profile.email!, "email")}
+                        onClick={() =>
+                          handleCopyToClipboard(profile.email!, "email")
+                        }
                         className="h-8 w-8 hover:bg-white/10 flex-shrink-0"
                         title="Copy to clipboard"
                       >
@@ -375,7 +376,13 @@ export default function AdminCheckInPage() {
             {/* Check In Button */}
             <CxCButton
               onClick={handleCheckIn}
-              disabled={!selectedEventId || checkingIn || checkingStatus || !profile || isAlreadyCheckedIn}
+              disabled={
+                !selectedEventId ||
+                checkingIn ||
+                checkingStatus ||
+                !profile ||
+                isAlreadyCheckedIn
+              }
               className={`w-full p-3 ${isAlreadyCheckedIn ? "opacity-60" : ""}`}
             >
               {checkingIn ? (

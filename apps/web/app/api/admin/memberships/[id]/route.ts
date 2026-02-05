@@ -1,10 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { ProfileService } from "@uwdsc/server/web/services/profileService";
 import { createAuthService } from "@/lib/services";
-import {
-  markAsPaidSchema,
-  editMemberSchema,
-} from "@/lib/schemas/membership";
+import { markAsPaidSchema, editMemberSchema } from "@/lib/schemas/membership";
 
 const profileService = new ProfileService();
 
@@ -45,7 +42,8 @@ export async function PATCH(
         return NextResponse.json(
           {
             error: "Validation error",
-            message: validationResult.error.errors[0]?.message || "Invalid data",
+            message:
+              validationResult.error.errors[0]?.message || "Invalid data",
           },
           { status: 400 },
         );
@@ -75,7 +73,8 @@ export async function PATCH(
         return NextResponse.json(
           {
             error: "Validation error",
-            message: validationResult.error.errors[0]?.message || "Invalid data",
+            message:
+              validationResult.error.errors[0]?.message || "Invalid data",
           },
           { status: 400 },
         );
@@ -103,7 +102,8 @@ export async function PATCH(
     return NextResponse.json(
       {
         error: "Internal server error",
-        message: error instanceof Error ? error.message : "Failed to update member",
+        message:
+          error instanceof Error ? error.message : "Failed to update member",
       },
       { status: 500 },
     );
@@ -153,7 +153,8 @@ export async function DELETE(
     return NextResponse.json(
       {
         error: "Internal server error",
-        message: error instanceof Error ? error.message : "Failed to delete member",
+        message:
+          error instanceof Error ? error.message : "Failed to delete member",
       },
       { status: 500 },
     );
