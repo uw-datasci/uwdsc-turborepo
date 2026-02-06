@@ -53,6 +53,26 @@ export class EventRepository extends BaseRepository {
   }
 
   /**
+   * Get events that are currently happening (now within buffered_start_time and buffered_end_time).
+   * Uses buffer times so e.g. an event 4–6pm shows from buffered_start through buffered_end.
+   */
+  async getEventsHappeningNow(): Promise<Event[]> {
+    try {
+      const result = await this.sql<Event[]>`
+        SELECT *
+        FROM events
+        WHERE NOW() >= buffered_start_time AND NOW() <= buffered_end_time
+        ORDER BY start_time ASC
+      `;
+
+      return result;
+    } catch (error: unknown) {
+      console.error("Error fetching events happening now:", error);
+      throw error;
+    }
+  }
+
+  /**
    * Get event by ID
    */
   async getEventById(eventId: number): Promise<Event | null> {
@@ -237,6 +257,39 @@ export class EventRepository extends BaseRepository {
     } catch (error: unknown) {
       console.error("Error checking user check-in status:", error);
       return false;
+    }
+  }
+
+  /**
+   * Uncheck a user from an event
+   */
+  async uncheckInUser(
+    eventId: number,
+    profileId: string,
+  ): Promise<{ success: boolean; error?: string }> {
+    try {
+      // Update checked_in status to false
+      const result = await this.sql`
+        UPDATE event_attendance
+        SET checked_in = false
+        WHERE event_id = ${eventId} AND profile_id = ${profileId}
+        RETURNING *
+      `;
+
+      if (result.length === 0) {
+        return {
+          success: false,
+          error: "Attendance record not found",
+        };
+      }
+
+      return { success: true };
+    } catch (error: unknown) {
+      console.error("Error unchecking user:", error);
+      return {
+        success: false,
+        error: (error as Error).message || "Failed to uncheck user",
+      };
     }
   }
 
