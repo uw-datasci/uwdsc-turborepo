@@ -9,6 +9,7 @@ import {
   Users,
   XCircle,
   BarChart3,
+  UserCheck,
 } from "lucide-react";
 import { LoadingScreen } from "@/components/LoadingScreen";
 import CxCButton from "@/components/CxCButton";
@@ -29,6 +30,7 @@ interface DashboardStatistics {
   total_offered: number;
   total_rsvped: number;
   total_declined: number;
+  total_checked_in: number;
 }
 
 interface RSVPTimelineData {
@@ -153,7 +155,7 @@ export default function DashboardPage() {
         </div>
 
         {/* Statistics Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-4">
           <Card className="bg-black border border-white/20 rounded-none">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium text-white">
@@ -226,6 +228,20 @@ export default function DashboardPage() {
             <CardContent>
               <div className="text-2xl font-bold text-white">
                 {data.statistics.total_declined}
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="bg-black border border-white/20 rounded-none">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium text-white">
+                Checked In
+              </CardTitle>
+              <UserCheck className="h-4 w-4 text-white/60" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold text-white">
+                {data.statistics.total_checked_in}
               </div>
             </CardContent>
           </Card>

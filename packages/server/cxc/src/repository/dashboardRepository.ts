@@ -7,6 +7,7 @@ export interface DashboardStatistics {
   total_offered: number;
   total_rsvped: number;
   total_declined: number;
+  total_checked_in: number;
 }
 
 export interface RSVPTimelineData {
@@ -59,6 +60,19 @@ export class DashboardRepository extends BaseRepository {
         profileStats,
       );
 
+      console.log("[DashboardRepository] Querying event_attendance table...");
+      const checkedInStats = await this.sql<
+        Array<{ total_checked_in: number }>
+      >`
+        SELECT COUNT(*)::int as total_checked_in
+        FROM event_attendance
+        WHERE event_id = 1
+      `;
+      console.log(
+        "[DashboardRepository] Checked-in stats query completed:",
+        checkedInStats,
+      );
+
       const appData = appStats[0] || {
         total_applications: 0,
         total_submitted: 0,
@@ -68,6 +82,9 @@ export class DashboardRepository extends BaseRepository {
         total_rsvped: 0,
         total_declined: 0,
       };
+      const checkedInData = checkedInStats[0] || {
+        total_checked_in: 0,
+      };
 
       const result = {
         total_applications: appData.total_applications,
@@ -75,6 +92,7 @@ export class DashboardRepository extends BaseRepository {
         total_offered: appData.total_offered,
         total_rsvped: profileData.total_rsvped,
         total_declined: profileData.total_declined,
+        total_checked_in: checkedInData.total_checked_in,
       };
 
       console.log("[DashboardRepository] Statistics result:", result);
