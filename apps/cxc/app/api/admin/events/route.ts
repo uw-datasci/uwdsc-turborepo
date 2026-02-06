@@ -8,10 +8,11 @@ const profileService = new ProfileService();
 
 /**
  * GET /api/admin/events
- * Get all events
+ * Get all events, or only events currently happening (within buffer times).
+ * Query: current_only=true to restrict to events where now is between buffered_start_time and buffered_end_time.
  * Admin, superadmin, and volunteer endpoint
  */
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
     // Verify admin access
     const authService = await createAuthService();
@@ -37,7 +38,12 @@ export async function GET() {
       );
     }
 
-    const events = await eventService.getAllEvents();
+    const { searchParams } = new URL(request.url);
+    const currentOnly = searchParams.get("current_only") === "true";
+
+    const events = currentOnly
+      ? await eventService.getEventsHappeningNow()
+      : await eventService.getAllEvents();
     return NextResponse.json({ events }, { status: 200 });
   } catch (error: unknown) {
     console.error("Error fetching events:", error);

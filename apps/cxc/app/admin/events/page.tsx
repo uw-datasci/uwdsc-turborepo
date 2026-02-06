@@ -96,7 +96,9 @@ export default function AdminEventsPage() {
   useEffect(() => {
     async function loadEvents() {
       try {
-        const response = await fetch("/api/admin/events");
+        const response = await fetch(
+          "/api/admin/events?current_only=true",
+        );
         if (response.ok) {
           const data = await response.json();
           setEvents(data.events || []);
