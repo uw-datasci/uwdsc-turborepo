@@ -106,14 +106,14 @@ export default function NfcPage() {
   const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(checkInUrl)}`;
 
   return (
-    <div className="p-6 lg:p-8">
-      <div className="max-w-4xl mx-auto space-y-6">
+    <div className="flex items-center justify-center min-h-[calc(100vh-200px)] p-4">
+      <div className="w-full max-w-md mx-auto space-y-4">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4 }}
-          className="border-b border-white/10 pb-6"
+          className="text-center border-b border-white/10 pb-4"
         >
           <h1 className="text-2xl lg:text-3xl font-bold text-white">
             NFC Check-In
@@ -130,32 +130,25 @@ export default function NfcPage() {
           transition={{ duration: 0.4, delay: 0.1 }}
         >
           <Card className="bg-black border border-white/20 rounded-none">
-            <CardHeader className="border-b border-white/10">
+            <CardHeader className="border-b border-white/10 pb-4">
               <CardTitle className="text-white uppercase tracking-wider text-sm flex items-center gap-2">
                 <QrCode className="w-5 h-5" />
-                Check-In Code
+                Check-In
               </CardTitle>
+              <p className="text-white/60 text-sm mt-2">
+                Scan this QR code or use your NFC to check in at events.
+              </p>
             </CardHeader>
-            <CardContent className="pt-6 space-y-6">
-              <div className="flex flex-col sm:flex-row gap-6 items-start">
-                {/* QR Code */}
-                <div className="flex-shrink-0">
-                  <div className="p-4 bg-white border border-white/20">
-                    <Image
-                      src={qrCodeUrl}
-                      alt="QR Code for check-in"
-                      width={192}
-                      height={192}
-                      unoptimized
-                    />
-                  </div>
-                </div>
-
-                {/* NFC Info */}
-                <div className="flex-1 space-y-4">
-                  <p className="text-white/60 text-sm">
-                    Scan this QR code or use your NFC to check in at events.
-                  </p>
+            <CardContent className="py-4 flex justify-center">
+              <div className="flex-shrink-0">
+                <div className="p-4 bg-white border border-white/20">
+                  <Image
+                    src={qrCodeUrl}
+                    alt="QR Code for check-in"
+                    width={192}
+                    height={192}
+                    unoptimized
+                  />
                 </div>
               </div>
             </CardContent>
