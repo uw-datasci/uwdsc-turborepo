@@ -53,6 +53,26 @@ export class EventRepository extends BaseRepository {
   }
 
   /**
+   * Get events that are currently happening (now within buffered_start_time and buffered_end_time).
+   * Uses buffer times so e.g. an event 4–6pm shows from buffered_start through buffered_end.
+   */
+  async getEventsHappeningNow(): Promise<Event[]> {
+    try {
+      const result = await this.sql<Event[]>`
+        SELECT *
+        FROM events
+        WHERE NOW() >= buffered_start_time AND NOW() <= buffered_end_time
+        ORDER BY start_time ASC
+      `;
+
+      return result;
+    } catch (error: unknown) {
+      console.error("Error fetching events happening now:", error);
+      throw error;
+    }
+  }
+
+  /**
    * Get event by ID
    */
   async getEventById(eventId: number): Promise<Event | null> {
