@@ -51,8 +51,9 @@ export async function GET(request: Request) {
         );
       }
 
-      // Get user email
+      // Get user email and metadata
       const email = await profileService.getUserEmail(profile.id);
+      const metadata = await profileService.getUserMetadata(profile.id);
 
       return NextResponse.json(
         {
@@ -60,6 +61,8 @@ export async function GET(request: Request) {
             id: profile.id,
             email: email,
             nfc_id: profile.nfc_id,
+            first_name: metadata?.first_name || null,
+            last_name: metadata?.last_name || null,
           },
         },
         { status: 200 },

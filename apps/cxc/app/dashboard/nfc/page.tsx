@@ -3,8 +3,8 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
-import { Card, CardHeader, CardTitle, CardContent, Button } from "@uwdsc/ui";
-import { Copy, CheckCircle2, QrCode, AlertCircle } from "lucide-react";
+import { Card, CardHeader, CardTitle, CardContent } from "@uwdsc/ui";
+import { QrCode, AlertCircle } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 
 export default function NfcPage() {
@@ -78,29 +78,38 @@ export default function NfcPage() {
     );
   }
 
-  if (!user?.role || user.role === "default" || user.role === "declined" || !nfcId) {
+  if (
+    !user?.role ||
+    user.role === "default" ||
+    user.role === "declined" ||
+    !nfcId
+  ) {
     const getMessage = () => {
       if (!user?.role) {
         return {
           title: "Role Not Assigned",
-          description: "Your account doesn't have a role assigned yet. Please contact an administrator to get access to NFC check-in.",
+          description:
+            "Your account doesn't have a role assigned yet. Please contact an administrator to get access to NFC check-in.",
         };
       }
       if (user.role === "declined") {
         return {
           title: "Access Not Available",
-          description: "Your application has been declined. NFC check-in is only available for approved staff and administrators.",
+          description:
+            "Your application has been declined. NFC check-in is only available for approved staff and administrators.",
         };
       }
       if (user.role === "default") {
         return {
           title: "Access Restricted",
-          description: "NFC check-in is only available for staff and administrators. Your current role doesn't have access to this feature.",
+          description:
+            "NFC check-in is only available for staff and administrators. Your current role doesn't have access to this feature.",
         };
       }
       return {
         title: "NFC ID Not Available",
-        description: "Your NFC ID hasn't been generated yet. Please contact an administrator for assistance.",
+        description:
+          "Your NFC ID hasn't been generated yet. Please contact an administrator for assistance.",
       };
     };
 

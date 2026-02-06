@@ -46,6 +46,8 @@ export default function AdminCheckInPage() {
   const [profile, setProfile] = useState<{
     email: string | null;
     nfc_id: string | null;
+    first_name: string | null;
+    last_name: string | null;
   } | null>(null);
   const [copiedFields, setCopiedFields] = useState<Record<string, boolean>>({});
   const [checkingStatus, setCheckingStatus] = useState(false);
@@ -91,6 +93,8 @@ export default function AdminCheckInPage() {
                   setProfile({
                     email: profileData.email,
                     nfc_id: profileData.nfc_id || nfcId,
+                    first_name: profileData.first_name || null,
+                    last_name: profileData.last_name || null,
                   });
                   return;
                 } else if (profileData) {
@@ -98,6 +102,8 @@ export default function AdminCheckInPage() {
                   setProfile({
                     email: null,
                     nfc_id: profileData.nfc_id || nfcId,
+                    first_name: profileData.first_name || null,
+                    last_name: profileData.last_name || null,
                   });
                 }
               } else if (profileRes.status === 404) {
@@ -323,28 +329,32 @@ export default function AdminCheckInPage() {
             <CardTitle className="text-white">NFC Check-In</CardTitle>
           </CardHeader>
           <CardContent className="space-y-6">
-            {/* NFC ID Display */}
-            <div>
-              <label className="text-sm font-medium mb-2 block text-white">
-                NFC ID
-              </label>
-              <div className="p-3 bg-white/5 border border-white/10 rounded-none font-mono text-sm break-all text-white/80 flex items-center justify-between gap-2">
-                <span>{getCheckInUrl()}</span>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => handleCopyToClipboard(getCheckInUrl(), "nfc")}
-                  className="h-8 w-8 hover:bg-white/10 flex-shrink-0"
-                  title="Copy to clipboard"
-                >
-                  {copiedFields.nfc ? (
-                    <Check className="h-4 w-4 text-green-500" />
-                  ) : (
-                    <Copy className="h-4 w-4" />
-                  )}
-                </Button>
+            {/* NFC ID Display - Only visible after check-in */}
+            {isAlreadyCheckedIn && (
+              <div>
+                <label className="text-sm font-medium mb-2 block text-white">
+                  NFC ID
+                </label>
+                <div className="p-3 bg-white/5 border border-white/10 rounded-none font-mono text-sm break-all text-white/80 flex items-center justify-between gap-2">
+                  <span>{getCheckInUrl()}</span>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() =>
+                      handleCopyToClipboard(getCheckInUrl(), "nfc")
+                    }
+                    className="h-8 w-8 hover:bg-white/10 flex-shrink-0"
+                    title="Copy to clipboard"
+                  >
+                    {copiedFields.nfc ? (
+                      <Check className="h-4 w-4 text-green-500" />
+                    ) : (
+                      <Copy className="h-4 w-4" />
+                    )}
+                  </Button>
+                </div>
               </div>
-            </div>
+            )}
 
             {/* Profile Info */}
             {profile && (
@@ -352,29 +362,57 @@ export default function AdminCheckInPage() {
                 <label className="text-sm font-medium mb-2 block text-white">
                   User
                 </label>
-                <div className="p-3 bg-white/5 border border-white/10 rounded-none text-white/80 flex items-center justify-between gap-2">
-                  {profile.email ? (
-                    <>
-                      <span>Email: {profile.email}</span>
+                <div className="space-y-2">
+                  {(profile.first_name || profile.last_name) && (
+                    <div className="p-3 bg-white/5 border border-white/10 rounded-none text-white/80 flex items-center justify-between gap-2">
+                      <span>
+                        Name: {profile.first_name || ""}{" "}
+                        {profile.last_name || ""}
+                      </span>
                       <Button
                         variant="ghost"
                         size="icon"
                         onClick={() =>
-                          handleCopyToClipboard(profile.email!, "email")
+                          handleCopyToClipboard(
+                            `${profile.first_name || ""} ${profile.last_name || ""}`.trim(),
+                            "name",
+                          )
                         }
                         className="h-8 w-8 hover:bg-white/10 flex-shrink-0"
                         title="Copy to clipboard"
                       >
-                        {copiedFields.email ? (
+                        {copiedFields.name ? (
                           <Check className="h-4 w-4 text-green-500" />
                         ) : (
                           <Copy className="h-4 w-4" />
                         )}
                       </Button>
-                    </>
-                  ) : (
-                    <span>Loading email...</span>
+                    </div>
                   )}
+                  <div className="p-3 bg-white/5 border border-white/10 rounded-none text-white/80 flex items-center justify-between gap-2">
+                    {profile.email ? (
+                      <>
+                        <span>Email: {profile.email}</span>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() =>
+                            handleCopyToClipboard(profile.email!, "email")
+                          }
+                          className="h-8 w-8 hover:bg-white/10 flex-shrink-0"
+                          title="Copy to clipboard"
+                        >
+                          {copiedFields.email ? (
+                            <Check className="h-4 w-4 text-green-500" />
+                          ) : (
+                            <Copy className="h-4 w-4" />
+                          )}
+                        </Button>
+                      </>
+                    ) : (
+                      <span>Loading email...</span>
+                    )}
+                  </div>
                 </div>
               </div>
             )}

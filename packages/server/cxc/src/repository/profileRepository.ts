@@ -83,6 +83,35 @@ export class ProfileRepository extends BaseRepository {
   }
 
   /**
+   * Get user metadata (first_name, last_name) by profile ID (user ID)
+   * @param profileId - The profile ID (same as auth.users.id)
+   */
+  async getUserMetadata(profileId: string): Promise<{
+    first_name: string | null;
+    last_name: string | null;
+  } | null> {
+    try {
+      const result = await this.sql<
+        Array<{ first_name: string | null; last_name: string | null }>
+      >`
+        SELECT 
+          raw_user_meta_data->>'first_name' as first_name,
+          raw_user_meta_data->>'last_name' as last_name
+        FROM auth.users 
+        WHERE id = ${profileId} 
+        LIMIT 1
+      `;
+
+      if (result.length === 0 || !result[0]) return null;
+
+      return result[0];
+    } catch (error: unknown) {
+      console.error("Error fetching user metadata:", error);
+      return null;
+    }
+  }
+
+  /**
    * Update or set NFC ID for a profile
    * @param userId - The auth.users.id (UUID)
    * @param nfcId - The NFC ID to set (string)

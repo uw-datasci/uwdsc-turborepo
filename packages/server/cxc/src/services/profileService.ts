@@ -155,4 +155,21 @@ export class ProfileService {
       );
     }
   }
+
+  /**
+   * Get user metadata (first_name, last_name) by profile ID
+   */
+  async getUserMetadata(profileId: string): Promise<{
+    first_name: string | null;
+    last_name: string | null;
+  } | null> {
+    try {
+      return await this.repository.getUserMetadata(profileId);
+    } catch (error) {
+      throw new ApiError(
+        `Failed to get user metadata: ${(error as Error).message}`,
+        500,
+      );
+    }
+  }
 }
