@@ -232,61 +232,67 @@ export function ScheduleTimeline({ events }: ScheduleTimelineProps) {
     });
 
     const positions: PositionedEvent[] = [];
-    let activeGroup: PositionedEvent[] = [];
-    let activeGroupEnd = -1;
-
-    const flushGroup = () => {
-      const columnCount = Math.max(
-        1,
-        ...activeGroup.map((item) => item.column + 1),
-      );
-      activeGroup.forEach((item) => {
-        item.columnCount = columnCount;
+    const columns: PositionedEvent[][] = [[], []];
+    const eventRanges = sorted.map((event) => ({
+      startMinutes: getMinutesFromMidnight(event.start_time),
+      endMinutes: getMinutesFromMidnight(event.end_time),
+    }));
+    const hasOverlaps = eventRanges.map((range, index) => {
+      return eventRanges.some((otherRange, otherIndex) => {
+        if (otherIndex === index) return false;
+        return (
+          range.startMinutes < otherRange.endMinutes &&
+          range.endMinutes > otherRange.startMinutes
+        );
       });
-      activeGroup = [];
-      activeGroupEnd = -1;
+    });
+
+    const getOverlapCount = (
+      columnEvents: PositionedEvent[],
+      startMinutes: number,
+      endMinutes: number,
+    ) => {
+      return columnEvents.reduce((count, existing) => {
+        const existingStart = getMinutesFromMidnight(existing.event.start_time);
+        const existingEnd = getMinutesFromMidnight(existing.event.end_time);
+        const overlaps = startMinutes < existingEnd && endMinutes > existingStart;
+        return overlaps ? count + 1 : count;
+      }, 0);
     };
 
-    sorted.forEach((event) => {
-      const startMinutes = getMinutesFromMidnight(event.start_time);
-      const endMinutes = getMinutesFromMidnight(event.end_time);
+    sorted.forEach((event, index) => {
+      const range = eventRanges[index];
+      if (!range) return;
+      const { startMinutes, endMinutes } = range;
       const height = Math.max(
         (toVisibleMinutes(endMinutes) - toVisibleMinutes(startMinutes)) *
           PX_PER_MINUTE,
         MIN_EVENT_HEIGHT,
       );
 
-      if (activeGroup.length > 0 && startMinutes >= activeGroupEnd) {
-        flushGroup();
-      }
-
-      if (activeGroup.length === 0) {
-        activeGroupEnd = endMinutes;
-      } else {
-        activeGroupEnd = Math.max(activeGroupEnd, endMinutes);
-      }
-
-      const usedColumns = new Set(activeGroup.map((item) => item.column));
-      let column = 0;
-      while (usedColumns.has(column)) {
-        column += 1;
-      }
+      const overlaps = hasOverlaps[index] ?? false;
+      const overlapCounts = columns.map((columnEvents) =>
+        getOverlapCount(columnEvents, startMinutes, endMinutes),
+      );
+      const firstCount = overlapCounts[0] ?? 0;
+      const secondCount = overlapCounts[1] ?? 0;
+      const column = overlaps
+        ? firstCount <= secondCount
+          ? 0
+          : 1
+        : 0;
 
       const positioned: PositionedEvent = {
         event,
         top: toVisibleMinutes(startMinutes) * PX_PER_MINUTE,
         height,
         column,
-        columnCount: 1,
+        columnCount: overlaps ? 2 : 1,
       };
 
-      activeGroup.push(positioned);
+      columns[column]?.push(positioned);
       positions.push(positioned);
     });
-
-    if (activeGroup.length > 0) {
-      flushGroup();
-    }
 
     return positions;
   };
