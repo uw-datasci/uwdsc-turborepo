@@ -171,3 +171,87 @@ export async function POST(request: NextRequest) {
     );
   }
 }
+
+/**
+ * DELETE /api/admin/checkin
+ * Uncheck a user from an event using NFC ID
+ * Admin, superadmin, and volunteer endpoint
+ */
+export async function DELETE(request: NextRequest) {
+  try {
+    // Verify admin/volunteer access
+    const authService = await createAuthService();
+    const { user, error: userError } = await authService.getCurrentUser();
+
+    if (userError || !user) {
+      return NextResponse.json(
+        { error: "Unauthorized", message: "Authentication required" },
+        { status: 401 },
+      );
+    }
+
+    // Check if user is admin, superadmin, or volunteer
+    const adminProfile = await profileService.getProfileByUserId(user.id);
+    if (
+      adminProfile?.role !== "admin" &&
+      adminProfile?.role !== "superadmin" &&
+      adminProfile?.role !== "volunteer"
+    ) {
+      return NextResponse.json(
+        { error: "Forbidden", message: "Admin or volunteer access required" },
+        { status: 403 },
+      );
+    }
+
+    const body = await request.json();
+    const { nfc_id, event_id } = body;
+
+    if (!nfc_id || !event_id) {
+      return NextResponse.json(
+        { error: "Bad Request", message: "Missing nfc_id or event_id" },
+        { status: 400 },
+      );
+    }
+
+    // Get profile by NFC ID
+    const profile = await profileService.getProfileByNfcId(nfc_id);
+    if (!profile) {
+      return NextResponse.json(
+        { error: "Not Found", message: "Profile not found for NFC ID" },
+        { status: 404 },
+      );
+    }
+
+    // Uncheck user
+    const result = await eventService.uncheckInUser(Number(event_id), profile.id);
+
+    if (!result.success) {
+      return NextResponse.json(
+        { error: "Internal Server Error", message: result.error },
+        { status: 500 },
+      );
+    }
+
+    return NextResponse.json(
+      {
+        success: true,
+        message: "User unchecked successfully",
+        profile: {
+          id: profile.id,
+          role: profile.role,
+        },
+      },
+      { status: 200 },
+    );
+  } catch (error: unknown) {
+    console.error("Error unchecking user:", error);
+    return NextResponse.json(
+      {
+        error: "Internal server error",
+        message:
+          error instanceof Error ? error.message : "Failed to uncheck user",
+      },
+      { status: 500 },
+    );
+  }
+}

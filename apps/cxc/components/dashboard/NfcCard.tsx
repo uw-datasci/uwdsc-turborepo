@@ -1,9 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Image from "next/image";
-import { Card, CardHeader, CardTitle, CardContent, Button } from "@uwdsc/ui";
-import { Copy, CheckCircle2 } from "lucide-react";
+import { Card, CardHeader, CardTitle, CardContent } from "@uwdsc/ui";
 
 export function NfcCard() {
   const [nfcId, setNfcId] = useState<string | null>(null);
@@ -73,9 +71,7 @@ export function NfcCard() {
     );
   }
 
-  if (!nfcId) {
-    return null;
-  }
+  if (!nfcId) return null;
 
   // Use the actual application URL (from window.location.origin)
   const baseUrl = typeof window !== "undefined" ? window.location.origin : "";
@@ -90,27 +86,7 @@ export function NfcCard() {
         </CardTitle>
       </CardHeader>
       <CardContent className="pt-6 space-y-4">
-        <div className="flex flex-col sm:flex-row gap-6 items-start">
-          {/* QR Code */}
-          <div className="flex-shrink-0">
-            <div className="p-4 bg-white border border-white/20">
-              <Image
-                src={qrCodeUrl}
-                alt="QR Code for check-in"
-                width={192}
-                height={192}
-                unoptimized
-              />
-            </div>
-          </div>
-
-          {/* NFC Info */}
-          <div className="flex-1 space-y-4">
-            <p className="text-white/60 text-sm">
-              Scan this QR code or use your NFC to check in at events.
-            </p>
-          </div>
-        </div>
+        {/* NFC info moved to sidebar */}
       </CardContent>
     </Card>
   );

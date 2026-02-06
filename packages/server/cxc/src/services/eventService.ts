@@ -28,6 +28,20 @@ export class EventService {
   }
 
   /**
+   * Get events that are currently happening (now within buffered_start_time and buffered_end_time).
+   */
+  async getEventsHappeningNow(): Promise<Event[]> {
+    try {
+      return await this.repository.getEventsHappeningNow();
+    } catch (error) {
+      throw new ApiError(
+        `Failed to get events happening now: ${(error as Error).message}`,
+        500,
+      );
+    }
+  }
+
+  /**
    * Get event by ID
    */
   async getEventById(eventId: number): Promise<Event | null> {
@@ -95,6 +109,23 @@ export class EventService {
     } catch (error) {
       throw new ApiError(
         `Failed to check user check-in status: ${(error as Error).message}`,
+        500,
+      );
+    }
+  }
+
+  /**
+   * Uncheck a user from an event
+   */
+  async uncheckInUser(
+    eventId: number,
+    profileId: string,
+  ): Promise<{ success: boolean; error?: string }> {
+    try {
+      return await this.repository.uncheckInUser(eventId, profileId);
+    } catch (error) {
+      throw new ApiError(
+        `Failed to uncheck user: ${(error as Error).message}`,
         500,
       );
     }
