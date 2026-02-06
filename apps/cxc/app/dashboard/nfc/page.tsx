@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { Card, CardHeader, CardTitle, CardContent, Button } from "@uwdsc/ui";
-import { Copy, CheckCircle2, QrCode } from "lucide-react";
+import { Copy, CheckCircle2, QrCode, AlertCircle } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 
 export default function NfcPage() {
@@ -15,8 +15,8 @@ export default function NfcPage() {
 
   useEffect(() => {
     async function loadNfcId() {
-      // Only load NFC ID for non-default roles
-      if (!user?.role || user.role === "default") {
+      // Only load NFC ID for non-default, non-declined roles
+      if (!user?.role || user.role === "default" || user.role === "declined") {
         setLoading(false);
         return;
       }
@@ -78,22 +78,70 @@ export default function NfcPage() {
     );
   }
 
-  if (!user?.role || user.role === "default" || !nfcId) {
+  if (!user?.role || user.role === "default" || user.role === "declined" || !nfcId) {
+    const getMessage = () => {
+      if (!user?.role) {
+        return {
+          title: "Role Not Assigned",
+          description: "Your account doesn't have a role assigned yet. Please contact an administrator to get access to NFC check-in.",
+        };
+      }
+      if (user.role === "declined") {
+        return {
+          title: "Access Not Available",
+          description: "Your application has been declined. NFC check-in is only available for approved staff and administrators.",
+        };
+      }
+      if (user.role === "default") {
+        return {
+          title: "Access Restricted",
+          description: "NFC check-in is only available for staff and administrators. Your current role doesn't have access to this feature.",
+        };
+      }
+      return {
+        title: "NFC ID Not Available",
+        description: "Your NFC ID hasn't been generated yet. Please contact an administrator for assistance.",
+      };
+    };
+
+    const message = getMessage();
+
     return (
-      <div className="p-6 lg:p-8">
-        <div className="max-w-4xl mx-auto space-y-6">
+      <div className="flex items-center justify-center min-h-[calc(100vh-200px)] p-4">
+        <div className="w-full max-w-md mx-auto">
           <motion.div
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4 }}
-            className="border-b border-white/10 pb-6"
+            className="text-center border-b border-white/10 pb-4 mb-6"
           >
             <h1 className="text-2xl lg:text-3xl font-bold text-white">
               NFC Check-In
             </h1>
-            <p className="text-white/60 mt-1">
-              NFC check-in is only available for staff and administrators.
-            </p>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, delay: 0.1 }}
+          >
+            <Card className="bg-black border border-white/20 rounded-none">
+              <CardContent className="py-8 px-6">
+                <div className="flex flex-col items-center text-center space-y-4">
+                  <div className="p-3 bg-white/10 rounded-full">
+                    <AlertCircle className="w-8 h-8 text-white/60" />
+                  </div>
+                  <div className="space-y-2">
+                    <h2 className="text-xl font-semibold text-white">
+                      {message.title}
+                    </h2>
+                    <p className="text-white/60 text-sm leading-relaxed">
+                      {message.description}
+                    </p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
           </motion.div>
         </div>
       </div>
