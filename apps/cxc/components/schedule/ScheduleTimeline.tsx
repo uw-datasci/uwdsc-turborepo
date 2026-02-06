@@ -255,7 +255,8 @@ export function ScheduleTimeline({ events }: ScheduleTimelineProps) {
       return columnEvents.reduce((count, existing) => {
         const existingStart = getMinutesFromMidnight(existing.event.start_time);
         const existingEnd = getMinutesFromMidnight(existing.event.end_time);
-        const overlaps = startMinutes < existingEnd && endMinutes > existingStart;
+        const overlaps =
+          startMinutes < existingEnd && endMinutes > existingStart;
         return overlaps ? count + 1 : count;
       }, 0);
     };
@@ -276,11 +277,7 @@ export function ScheduleTimeline({ events }: ScheduleTimelineProps) {
       );
       const firstCount = overlapCounts[0] ?? 0;
       const secondCount = overlapCounts[1] ?? 0;
-      const column = overlaps
-        ? firstCount <= secondCount
-          ? 0
-          : 1
-        : 0;
+      const column = overlaps ? (firstCount <= secondCount ? 0 : 1) : 0;
 
       const positioned: PositionedEvent = {
         event,

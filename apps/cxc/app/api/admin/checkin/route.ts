@@ -223,7 +223,10 @@ export async function DELETE(request: NextRequest) {
     }
 
     // Uncheck user
-    const result = await eventService.uncheckInUser(Number(event_id), profile.id);
+    const result = await eventService.uncheckInUser(
+      Number(event_id),
+      profile.id,
+    );
 
     if (!result.success) {
       return NextResponse.json(
