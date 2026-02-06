@@ -65,8 +65,10 @@ export class DashboardRepository extends BaseRepository {
         Array<{ total_checked_in: number }>
       >`
         SELECT COUNT(*)::int as total_checked_in
-        FROM event_attendance
+        FROM event_attendance e
+        JOIN profiles p ON e.profile_id = p.id
         WHERE event_id = 1
+        AND p.role = 'hacker'
       `;
       console.log(
         "[DashboardRepository] Checked-in stats query completed:",
