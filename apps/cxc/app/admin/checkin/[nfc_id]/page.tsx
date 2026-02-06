@@ -329,28 +329,32 @@ export default function AdminCheckInPage() {
             <CardTitle className="text-white">NFC Check-In</CardTitle>
           </CardHeader>
           <CardContent className="space-y-6">
-            {/* NFC ID Display */}
-            <div>
-              <label className="text-sm font-medium mb-2 block text-white">
-                NFC ID
-              </label>
-              <div className="p-3 bg-white/5 border border-white/10 rounded-none font-mono text-sm break-all text-white/80 flex items-center justify-between gap-2">
-                <span>{getCheckInUrl()}</span>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => handleCopyToClipboard(getCheckInUrl(), "nfc")}
-                  className="h-8 w-8 hover:bg-white/10 flex-shrink-0"
-                  title="Copy to clipboard"
-                >
-                  {copiedFields.nfc ? (
-                    <Check className="h-4 w-4 text-green-500" />
-                  ) : (
-                    <Copy className="h-4 w-4" />
-                  )}
-                </Button>
+            {/* NFC ID Display - Only visible after check-in */}
+            {isAlreadyCheckedIn && (
+              <div>
+                <label className="text-sm font-medium mb-2 block text-white">
+                  NFC ID
+                </label>
+                <div className="p-3 bg-white/5 border border-white/10 rounded-none font-mono text-sm break-all text-white/80 flex items-center justify-between gap-2">
+                  <span>{getCheckInUrl()}</span>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() =>
+                      handleCopyToClipboard(getCheckInUrl(), "nfc")
+                    }
+                    className="h-8 w-8 hover:bg-white/10 flex-shrink-0"
+                    title="Copy to clipboard"
+                  >
+                    {copiedFields.nfc ? (
+                      <Check className="h-4 w-4 text-green-500" />
+                    ) : (
+                      <Copy className="h-4 w-4" />
+                    )}
+                  </Button>
+                </div>
               </div>
-            </div>
+            )}
 
             {/* Profile Info */}
             {profile && (
