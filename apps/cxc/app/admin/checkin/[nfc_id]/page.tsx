@@ -55,7 +55,7 @@ export default function AdminCheckInPage() {
     async function loadData() {
       try {
         // Load events
-        const eventsRes = await fetch("/api/admin/events");
+        const eventsRes = await fetch("/api/admin/events?current_only=true");
         if (eventsRes.ok) {
           const data = await eventsRes.json();
           setEvents(data.events || []);
