@@ -261,6 +261,39 @@ export class EventRepository extends BaseRepository {
   }
 
   /**
+   * Uncheck a user from an event
+   */
+  async uncheckInUser(
+    eventId: number,
+    profileId: string,
+  ): Promise<{ success: boolean; error?: string }> {
+    try {
+      // Update checked_in status to false
+      const result = await this.sql`
+        UPDATE event_attendance
+        SET checked_in = false
+        WHERE event_id = ${eventId} AND profile_id = ${profileId}
+        RETURNING *
+      `;
+
+      if (result.length === 0) {
+        return {
+          success: false,
+          error: "Attendance record not found",
+        };
+      }
+
+      return { success: true };
+    } catch (error: unknown) {
+      console.error("Error unchecking user:", error);
+      return {
+        success: false,
+        error: (error as Error).message || "Failed to uncheck user",
+      };
+    }
+  }
+
+  /**
    * Update an existing event
    */
   async updateEvent(

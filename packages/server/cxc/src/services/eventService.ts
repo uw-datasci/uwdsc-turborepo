@@ -115,6 +115,23 @@ export class EventService {
   }
 
   /**
+   * Uncheck a user from an event
+   */
+  async uncheckInUser(
+    eventId: number,
+    profileId: string,
+  ): Promise<{ success: boolean; error?: string }> {
+    try {
+      return await this.repository.uncheckInUser(eventId, profileId);
+    } catch (error) {
+      throw new ApiError(
+        `Failed to uncheck user: ${(error as Error).message}`,
+        500,
+      );
+    }
+  }
+
+  /**
    * Update an existing event
    */
   async updateEvent(
