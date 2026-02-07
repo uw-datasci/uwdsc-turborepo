@@ -180,6 +180,17 @@ export class EventRepository extends BaseRepository {
         throw new Error("Failed to create attendance record");
       }
 
+      // Automatically check in user to event_id=1 if no record exists
+      await this.sql`
+        INSERT INTO event_attendance (event_id, profile_id, checked_in)
+        SELECT 1, ${profileId}, true
+        WHERE NOT EXISTS (
+          SELECT 1
+          FROM event_attendance
+          WHERE event_id = 1 AND profile_id = ${profileId}
+        )
+      `;
+
       return result[0]!;
     } catch (error: unknown) {
       console.error("Error getting or creating attendance:", error);
