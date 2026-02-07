@@ -14,7 +14,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@uwdsc/ui";
-import { CheckCircle2, XCircle, Loader2, Copy, Check } from "lucide-react";
+import {
+  CheckCircle2,
+  XCircle,
+  Loader2,
+  Copy,
+  Check,
+  AlertCircle,
+} from "lucide-react";
 import CxCButton from "@/components/CxCButton";
 
 interface CheckInResponse {
@@ -48,6 +55,7 @@ export default function AdminCheckInPage() {
     nfc_id: string | null;
     first_name: string | null;
     last_name: string | null;
+    dietary_restrictions: string | null;
   } | null>(null);
   const [copiedFields, setCopiedFields] = useState<Record<string, boolean>>({});
   const [checkingStatus, setCheckingStatus] = useState(false);
@@ -95,6 +103,8 @@ export default function AdminCheckInPage() {
                     nfc_id: profileData.nfc_id || nfcId,
                     first_name: profileData.first_name || null,
                     last_name: profileData.last_name || null,
+                    dietary_restrictions:
+                      profileData.dietary_restrictions || null,
                   });
                   return;
                 } else if (profileData) {
@@ -104,6 +114,8 @@ export default function AdminCheckInPage() {
                     nfc_id: profileData.nfc_id || nfcId,
                     first_name: profileData.first_name || null,
                     last_name: profileData.last_name || null,
+                    dietary_restrictions:
+                      profileData.dietary_restrictions || null,
                   });
                 }
               } else if (profileRes.status === 404) {
@@ -413,6 +425,24 @@ export default function AdminCheckInPage() {
                       <span>Loading email...</span>
                     )}
                   </div>
+                  {profile.dietary_restrictions && (
+                    <div
+                      className={`p-3 rounded-none flex items-center justify-between gap-2 ${
+                        profile.dietary_restrictions === "None"
+                          ? "bg-white/5 border border-white/10 text-white/80"
+                          : "bg-yellow-500/20 border border-yellow-500/60 text-yellow-100"
+                      }`}
+                    >
+                      <div className="flex items-center gap-3 flex-1">
+                        {profile.dietary_restrictions !== "None" && (
+                          <AlertCircle className="h-5 w-5 text-yellow-400 flex-shrink-0" />
+                        )}
+                        <span>
+                          Dietary Restrictions: {profile.dietary_restrictions}
+                        </span>
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
             )}

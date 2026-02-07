@@ -289,4 +289,33 @@ export class AdminApplicationRepository extends BaseRepository {
       );
     }
   }
+
+  /**
+   * Get application by profile ID
+   */
+  async getApplicationByProfileId(
+    profileId: string,
+  ): Promise<{ dietary_restrictions: string | null } | null> {
+    try {
+      const result = await this.sql<
+        Array<{ dietary_restrictions: string | null }>
+      >`
+        SELECT dietary_restrictions
+        FROM applications
+        WHERE profile_id = ${profileId}
+        LIMIT 1
+      `;
+
+      if (result.length === 0 || !result[0]) {
+        return null;
+      }
+
+      return result[0];
+    } catch (error) {
+      throw new ApiError(
+        `Failed to fetch application by profile ID: ${(error as Error).message}`,
+        500,
+      );
+    }
+  }
 }

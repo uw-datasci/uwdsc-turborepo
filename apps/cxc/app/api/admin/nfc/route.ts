@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { ProfileService } from "@uwdsc/server/cxc/services/profileService";
+import { AdminApplicationService } from "@uwdsc/server/cxc/services/adminApplicationService";
 import { createAuthService } from "@/lib/services";
 
 const profileService = new ProfileService();
@@ -55,6 +56,18 @@ export async function GET(request: Request) {
       const email = await profileService.getUserEmail(profile.id);
       const metadata = await profileService.getUserMetadata(profile.id);
 
+      // Get dietary restrictions from application
+      const adminApplicationService = new AdminApplicationService();
+      let dietaryRestrictions: string | null = null;
+      try {
+        const application =
+          await adminApplicationService.getApplicationByProfileId(profile.id);
+        dietaryRestrictions = application?.dietary_restrictions || null;
+      } catch (error) {
+        console.warn("Could not fetch dietary restrictions:", error);
+        // Don't fail the request if we can't get dietary restrictions
+      }
+
       return NextResponse.json(
         {
           profile: {
@@ -63,6 +76,7 @@ export async function GET(request: Request) {
             nfc_id: profile.nfc_id,
             first_name: metadata?.first_name || null,
             last_name: metadata?.last_name || null,
+            dietary_restrictions: dietaryRestrictions,
           },
         },
         { status: 200 },

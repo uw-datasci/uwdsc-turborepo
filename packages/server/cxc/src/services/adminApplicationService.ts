@@ -26,4 +26,13 @@ export class AdminApplicationService {
   ): Promise<FullApplicationDetails | null> {
     return this.repository.getApplicationById(applicationId);
   }
+
+  /**
+   * Get application dietary restrictions by profile ID
+   */
+  async getApplicationByProfileId(
+    profileId: string,
+  ): Promise<{ dietary_restrictions: string | null } | null> {
+    return this.repository.getApplicationByProfileId(profileId);
+  }
 }
